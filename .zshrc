@@ -99,3 +99,7 @@ alias c='clear'
 # Shell integrations
 eval "$(fzf --zsh)"
 eval "$(zoxide init --cmd cd zsh)"
+
+# Add mise to PATH
+eval "$(mise activate zsh)"
+
