@@ -1,0 +1,5 @@
+[tools]
+node = "latest"
+deno = "latest"
+go = "1.23.2"
+bun = "latest"

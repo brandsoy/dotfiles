@@ -1,4 +1,4 @@
-#+TITLE: dotfiles
+# dotfiles
 
 This repo contains my dotfile configuration, allowing for a consistent computing experience across multiple machines.
 
@@ -10,3 +10,11 @@ stow .
 
 * Inspiration
 Dream of Automation : https://www.youtube.com/watch?v=y6XCebnB9gs&t=1s
+
+* To add config to dotfiles
+ - When in dotfiles dir
+#+begin_src sh
+cp -r ~/.config/alacritty .config
+stow --adopt .
+#+end_src
+

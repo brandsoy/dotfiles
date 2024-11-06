@@ -95,10 +95,9 @@ semantic_escape_chars = ",│`|:\"' ()[]{}<>"
 program = "/bin/zsh"
 
 [window]
-decorations = "full"
+decorations = "none"
 dynamic_title = true
 option_as_alt = "Both"
-alt_send_ecs = false
 #startup_mode = "Maximized"
 
 
