@@ -18,3 +18,4 @@ cp -r ~/.config/alacritty .config
 stow --adopt .
 #+end_src
 
+

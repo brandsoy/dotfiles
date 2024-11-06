@@ -50,7 +50,7 @@ draw_bold_text_with_bright_colors = true
 [cursor]
 blink_interval = 500
 blink_timeout = 5
-unfocused_hollow = false
+unfocused_hollow = true 
 
 [cursor.style]
 blinking = "Off"
@@ -90,6 +90,9 @@ mouse = "Middle"
 
 [selection]
 semantic_escape_chars = ",│`|:\"' ()[]{}<>"
+# Share buffer with primary clipboard
+save_to_clipboard = true
+
 
 [shell]
 program = "/bin/zsh"
@@ -97,7 +100,8 @@ program = "/bin/zsh"
 [window]
 decorations = "none"
 dynamic_title = true
-option_as_alt = "Both"
+# If set to "Both" it does not work
+option_as_alt = "OnlyLeft"
 #startup_mode = "Maximized"
 
 
