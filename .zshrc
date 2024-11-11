@@ -93,8 +93,10 @@ zstyle ':fzf-tab:complete:__zoxide_z:*' fzf-preview 'ls --color $realpath'
 
 # Aliases
 alias ls='ls --color'
+alias l='ls -lah --color'
 alias vim='nvim'
 alias c='clear'
+alias ..='cd ..'
 
 # Shell integrations
 eval "$(fzf --zsh)"
@@ -102,4 +104,9 @@ eval "$(zoxide init --cmd cd zsh)"
 
 # Add mise to PATH
 eval "$(mise activate zsh)"
+
+# Add TheFuck
+eval $(thefuck --alias)
+
+
 
