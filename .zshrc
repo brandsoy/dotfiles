@@ -107,6 +107,3 @@ eval "$(mise activate zsh)"
 
 # Add TheFuck
 eval $(thefuck --alias)
-
-
-
