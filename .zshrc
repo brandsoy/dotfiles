@@ -70,6 +70,9 @@ bindkey -e
 bindkey '^p' history-search-backward
 bindkey '^n' history-search-forward
 bindkey '^[w' kill-region
+# completion using arrow keys (based on history)
+bindkey '^[[A' history-search-backward
+bindkey '^[[B' history-search-forward
 
 zle_highlight+=(paste:none)
 
@@ -93,12 +96,24 @@ zstyle ':completion:*' menu no
 zstyle ':fzf-tab:complete:cd:*' fzf-preview 'ls --color $realpath'
 zstyle ':fzf-tab:complete:__zoxide_z:*' fzf-preview 'ls --color $realpath'
 
-# Aliases
-alias ls='ls --color'
-alias l='ls -lah --color'
+# ----- Bat (better cat) -----
+
+export BAT_THEME=tokyonight_night
+
+# ---- Eza (better ls) -----
+
+alias ls="eza --icons=always"
+alias l="eza -all --icons=always"
+# alias ls='ls --color'
+# alias l='ls -lah --color'
+
 alias vim='nvim'
 alias c='clear'
 alias ..='cd ..'
+alias nf='nvim $(fzf --preview="bat --color=always {}")'
+
+alias ld='lazydocker'
+alias lg='lazygit'
 
 # Shell integrations
 eval "$(fzf --zsh)"
@@ -109,3 +124,17 @@ eval "$(mise activate zsh)"
 
 # Add TheFuck
 eval $(thefuck --alias)
+eval $(thefuck --alias fk)
+
+# ---- Zoxide (better cd) ----
+eval "$(zoxide init zsh)"
+
+alias cd="z"
+
+# pnpm
+export PNPM_HOME="/Users/mattis/Library/pnpm"
+case ":$PATH:" in
+  *":$PNPM_HOME:"*) ;;
+  *) export PATH="$PNPM_HOME:$PATH" ;;
+esac
+# pnpm end

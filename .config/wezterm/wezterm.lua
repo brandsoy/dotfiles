@@ -2,25 +2,29 @@ local wezterm = require("wezterm")
 
 local config = wezterm.config_builder()
 
-config.ssh_domains = {
-	{
-		-- This name identifies the domain
-		name = "docksrv",
-		-- The hostname or address to connect to. Will be used to match settings
-		-- from your ssh config file
-		remote_address = "ssh.docksrv.com -p 9999",
-		-- The username to use on the remote host
-		username = "mattis",
-	},
+config.enable_tab_bar = false
+config.macos_window_background_blur = 10
+config.window_background_opacity = 0.96
+config.window_decorations = "RESIZE"
+
+-- config.color_scheme = "Tokyo Night"
+config.color_scheme = "catppuccin-mocha"
+-- my coolnight colorscheme
+config.colors = {
+	-- foreground = "#CBE0F0",
+	background = "#011423",
+	cursor_bg = "#47FF9C",
+	cursor_border = "#47FF9C",
+	cursor_fg = "#011423",
+	selection_bg = "#033259",
+	selection_fg = "#CBE0F0",
+	-- ansi = { "#214969", "#E52E2E", "#44FFB1", "#FFE073", "#0FC5ED", "#a277ff", "#24EAF7", "#24EAF7" },
+	-- brights = { "#214969", "#E52E2E", "#44FFB1", "#FFE073", "#A277FF", "#a277ff", "#24EAF7", "#24EAF7" },
 }
 
-config.color_scheme = "Tokyo Night"
-config.enable_tab_bar = false
-config.font_size = 16.0
 config.font = wezterm.font("JetBrains Mono")
-config.macos_window_background_blur = 30
-config.window_background_opacity = 0.92
-config.window_decorations = "RESIZE"
+-- config.font = wezterm.font("MesloLGS Nerd Font Mono")
+config.font_size = 16
 
 -- window_background_image = '/Users/omerhamerman/Downloads/3840x1080-Wallpaper-041.jpg',
 -- window_background_image_hsb = {
