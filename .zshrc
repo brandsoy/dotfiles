@@ -110,6 +110,7 @@ alias l="eza -all --icons=always"
 alias vim='nvim'
 alias c='clear'
 alias ..='cd ..'
+alias ...='cd ...'
 alias nf='nvim $(fzf --preview="bat --color=always {}")'
 
 alias ld='lazydocker'
