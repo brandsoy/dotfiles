@@ -70,10 +70,6 @@ zinit ice wait"0" lucid from"gh-r" as"command" mv"mise* -> mise" \
     atload'eval "$(mise activate zsh)"'
 zinit light jdx/mise
 
-# Install thefuck
-zinit ice wait"0" lucid as"command" pick"bin/thefuck" pick"bin/fuck" \
-    atload"eval $(thefuck --alias)"
-zinit light nvbn/thefuck
 
 # Load completions
 autoload -Uz compinit && compinit
