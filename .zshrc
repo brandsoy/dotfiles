@@ -57,6 +57,24 @@ zinit snippet OMZP::sudo
 # zinit snippet OMZP::kubectx
 zinit snippet OMZP::command-not-found
 
+
+# Install zoxide
+zinit ice wait"0" lucid from"gh-r" as"command" mv"zoxide*/zoxide -> zoxide" \
+    atclone"./zoxide init zsh > init.zsh" atpull"%atclone" src"init.zsh" \
+    atload'eval "$(zoxide init zsh)"'
+zinit light ajeetdsouza/zoxide
+
+# Install mise (formerly known as rtx)
+zinit ice wait"0" lucid from"gh-r" as"command" mv"mise* -> mise" \
+    atclone"./mise activate zsh > init.zsh" atpull"%atclone" src"init.zsh" \
+    atload'eval "$(mise activate zsh)"'
+zinit light jdx/mise
+
+# Install thefuck
+zinit ice wait"0" lucid as"command" pick"bin/thefuck" pick"bin/fuck" \
+    atload"eval $(thefuck --alias)"
+zinit light nvbn/thefuck
+
 # Load completions
 autoload -Uz compinit && compinit
 
