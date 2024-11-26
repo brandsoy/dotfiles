@@ -3,8 +3,8 @@ local wezterm = require("wezterm")
 local config = wezterm.config_builder()
 
 config.enable_tab_bar = false
-config.macos_window_background_blur = 10
-config.window_background_opacity = 0.96
+config.macos_window_background_blur = 30
+config.window_background_opacity = 1
 config.window_decorations = "RESIZE"
 
 -- config.color_scheme = "Tokyo Night"
@@ -23,7 +23,6 @@ config.colors = {
 }
 
 config.font = wezterm.font("JetBrainsMono Nerd Font")
--- config.font = wezterm.font("MesloLGS Nerd Font Mono")
 config.font_size = 16
 
 -- window_background_image = '/Users/omerhamerman/Downloads/3840x1080-Wallpaper-041.jpg',

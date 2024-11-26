@@ -1,9 +1,9 @@
-# Enable Powerlevel10k instant prompt. Should stay close to the top of ~/.zshrc.
-# Initialization code that may require console input (password prompts, [y/n]
-# confirmations, etc.) must go above this block; everything else may go below.
-if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]; then
-  source "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh"
-fi
+# Reevaluate the prompt string each time it's displaying a prompt
+setopt prompt_subst
+zstyle ':completion:*' matcher-list 'm:{a-z}={A-Za-z}'
+autoload bashcompinit && bashcompinit
+autoload -Uz compinit
+compinit
 
 # Set the GPG_TTY to be the same as the TTY, either via the env var
 # or via the tty command.
@@ -18,6 +18,11 @@ if [[ -f "/opt/homebrew/bin/brew" ]] then
   # If you're using macOS, you'll want this enabled
   eval "$(/opt/homebrew/bin/brew shellenv)"
 fi
+
+
+# Load starship 
+eval "$(starship init zsh)"
+export STARSHIP_CONFIG=~/.config/starship/starship.toml
 
 export EDITOR=nvim
 
@@ -38,9 +43,6 @@ fi
 source "${ZINIT_HOME}/zinit.zsh"
 
 source <(fzf --zsh)
-
-# Add in Powerlevel10k
-zinit ice depth=1; zinit light romkatv/powerlevel10k
 
 # Add in zsh plugins
 zinit light zsh-users/zsh-syntax-highlighting
@@ -70,14 +72,7 @@ zinit ice wait"0" lucid from"gh-r" as"command" mv"mise* -> mise" \
     atload'eval "$(mise activate zsh)"'
 zinit light jdx/mise
 
-
-# Load completions
-autoload -Uz compinit && compinit
-
 zinit cdreplay -q
-
-# To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
-[[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
 
 # Keybindings
 bindkey -e
@@ -116,10 +111,15 @@ export BAT_THEME=tokyonight_night
 
 # ---- Eza (better ls) -----
 
-alias ls="eza --icons=always"
-alias l="eza -all --icons=always"
+# alias ls="eza --icons=always"
+# alias l="eza -all --icons=always"
 # alias ls='ls --color'
 # alias l='ls -lah --color'
+
+# Eza
+alias l="eza -l --icons --git -a"
+alias lt="eza --tree --level=2 --long --icons --git"
+alias ltree="eza --tree --level=2  --icons --git"
 
 alias vim='nvim'
 alias c='clear'
@@ -146,6 +146,18 @@ eval "$(zoxide init zsh)"
 
 alias cd="z"
 
+### FZF ###
+export FZF_DEFAULT_COMMAND='fd --type f --hidden --follow'
+[ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
+
+
+# navigation
+cx() { cd "$@" && l; }
+fcd() { cd "$(find . -type d -not -path '*/.*' | fzf)" && l; }
+f() { echo "$(find . -type f -not -path '*/.*' | fzf)" | pbcopy }
+fv() { nvim "$(find . -type f -not -path '*/.*' | fzf)" }
+
+
 # pnpm
 export PNPM_HOME="/Users/mattis/Library/pnpm"
 case ":$PATH:" in
@@ -153,3 +165,5 @@ case ":$PATH:" in
   *) export PATH="$PNPM_HOME:$PATH" ;;
 esac
 # pnpm end
+export PATH="/Users/mattis/.config/herd-lite/bin:$PATH"
+export PHP_INI_SCAN_DIR="/Users/mattis/.config/herd-lite/bin:$PHP_INI_SCAN_DIR"
