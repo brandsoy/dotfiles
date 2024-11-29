@@ -5,6 +5,9 @@ autoload bashcompinit && bashcompinit
 autoload -Uz compinit
 compinit
 
+# Display neofetch
+neofetch
+
 # Set the GPG_TTY to be the same as the TTY, either via the env var
 # or via the tty command.
 if [ -n "$TTY" ]; then
@@ -53,10 +56,6 @@ zinit light Aloxaf/fzf-tab
 # Add in snippets
 zinit snippet OMZP::git
 zinit snippet OMZP::sudo
-# zinit snippet OMZP::archlinux
-# zinit snippet OMZP::aws
-# zinit snippet OMZP::kubectl
-# zinit snippet OMZP::kubectx
 zinit snippet OMZP::command-not-found
 
 
