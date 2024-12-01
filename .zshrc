@@ -60,10 +60,12 @@ zinit snippet OMZP::command-not-found
 
 
 # Install zoxide
-zinit ice wait"0" lucid from"gh-r" as"command" mv"zoxide*/zoxide -> zoxide" \
-    atclone"./zoxide init zsh > init.zsh" atpull"%atclone" src"init.zsh" \
-    atload'eval "$(zoxide init zsh)"'
+zinit ice wait"2" as"command" from"gh-r" lucid \
+  mv"zoxide*/zoxide -> zoxide" \
+  atclone"./zoxide init zsh > init.zsh" \
+  atpull"%atclone" src"init.zsh" nocompile'!'
 zinit light ajeetdsouza/zoxide
+
 
 # Install mise (formerly known as rtx)
 zinit ice wait"0" lucid from"gh-r" as"command" mv"mise* -> mise" \
@@ -136,10 +138,6 @@ eval "$(zoxide init --cmd cd zsh)"
 # Add mise to PATH
 eval "$(mise activate zsh)"
 
-# Add TheFuck
-eval $(thefuck --alias)
-eval $(thefuck --alias fk)
-
 # ---- Zoxide (better cd) ----
 eval "$(zoxide init zsh)"
 
@@ -164,5 +162,3 @@ case ":$PATH:" in
   *) export PATH="$PNPM_HOME:$PATH" ;;
 esac
 # pnpm end
-export PATH="/Users/mattis/.config/herd-lite/bin:$PATH"
-export PHP_INI_SCAN_DIR="/Users/mattis/.config/herd-lite/bin:$PHP_INI_SCAN_DIR"
