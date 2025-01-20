@@ -23,3 +23,20 @@ aerospace                       cheatsheet                      docker          
 another-redis-desktop-manager   cyberduck                       dotnet-sdk                      font-hack-nerd-font             gswitch                         microsoft-auto-update           microsoft-teams                 postman                         visual-studio-code              wireshark
 azure-data-studio               discord                         firefox@developer-edition       font-meslo-lg-nerd-font         karabiner-elements              microsoft-edge                  obsidian                        raycast                         visual-studio-code@insiders     zed
 bruno                           displaylink                     font-caskaydia-cove-nerd-font   ghostty                         logitech-options                microsoft-excel                 orbstack                        teamviewer                      vlc                             zen-browser
+
+/Applications🔒 ➜ ls
+AeroSpace.app                           Ghostty.app                             Obsidian.app                            Utilities
+Amphetamine.app                         GoLand.app                              OneDrive.app                            VLC.app
+Another Redis Desktop Manager.app       Google Chrome.app                       OrbStack.app                            Visual Studio Code - Insiders.app
+AppCleaner.app                          HandBrake.app                           Pages.app                               Visual Studio Code.app
+Azure Data Studio.app                   Karabiner-Elements.app                  Parallels Desktop.app                   WezTerm.app
+Bitwarden.app                           Karabiner-EventViewer.app               Peugeot Update.app                      Windsurf.app
+Bruno.app                               Keynote.app                             Postgres.app                            Wireshark.app
+CheatSheet.app                          Logi Options.app                        Postico 2.app                           Zed.app
+Cyberduck.app                           LuLu.app                                Postman.app                             Zen Browser.app
+DaisyDisk.app                           Microsoft Edge.app                      Raycast.app                             draw.io.app
+Discord.app                             Microsoft Excel.app                     Rider.app                               gSwitch.app
+DisplayLink Manager.app                 Microsoft Outlook.app                   SALUS_EU_Coordinator_Upgrade_Tool.app   zoom.us.app
+Firefox Developer Edition.app           Microsoft Remote Desktop.app            Safari.app
+FortiClient.app                         Microsoft Teams.app                     TeamViewer.app
+FortiClientUninstaller.app              Numbers.app                             The Unarchiver.app
