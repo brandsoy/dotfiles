@@ -1,12 +1,10 @@
+
+# Theme
+bold-is-bright = true
+background-opacity = 0.9
+background-blur-radius = 30
+mouse-hide-while-typing = true
 theme = catppuccin-mocha
-font-size =16
-adjust-cell-height = 20%
-
-font-family = FiraCode Nerd Font Mono
-shell-integration-features = no-cursor,sudo,no-title
-cursor-style = block
-background-opacity = 0.96
-
 foreground = CBE0F0
 background = 011423
 cursor-color= 47FF9C
@@ -15,16 +13,45 @@ selection-foreground = CBE0F0
 # ansi = { 214969, E52E2E, 44FFB1, "#FFE073", "#0FC5ED", "#a277ff", "#24EAF7", "#24EAF7" },
 # brights = { 214969", "#E52E2E", "#44FFB1", "#FFE073", "#A277FF", "#a277ff", "#24EAF7", "#24EAF7" },
 
-mouse-hide-while-typing = true
-mouse-scroll-multiplier = 2
+# Titlebar
+macos-titlebar-style = "transparent"
+macos-titlebar-proxy-icon = "hidden"
 
+# Font
+font-family = "JetBrains Mono NerdFont"
+font-size = 20
+adjust-cell-height = 20%
+
+# Misc
+shell-integration-features = "sudo,title"
+quit-after-last-window-closed = "true"
+cursor-style = block
+
+# Icon
+macos-icon = custom-style
+macos-icon-frame = "plastic"
+macos-icon-ghost-color = purple
+
+mouse-scroll-multiplier = 2
 window-padding-balance = true
 window-save-state = always
-macos-titlebar-style = transparent
 window-colorspace = "display-p3"
 
-# keybindings
+# Key bindings
+keybind = ctrl+h=goto_split:left
 keybind = cmd+s>n=new_window
+keybind = ctrl+j=goto_split:bottom
+keybind = ctrl+k=goto_split:top
+keybind = ctrl+l=goto_split:right
+keybind = ctrl+shift+h=new_split:left
+keybind = ctrl+shift+j=new_split:down
+keybind = ctrl+shift+k=new_split:up
+keybind = ctrl+shift+l=new_split:right
+keybind = super+shift+enter=new_split:auto
+keybind = super+shift+i=inspector:toggle
+keybind = super+shift+r=reload_config
+keybind = super+t=new_tab
+# custom-shader = "/Users/pdz/.config/ghostty/ghostty-shaders/sparks-from-fire.glsl"
 
 # tabs
 keybind = cmd+s>c=new_tab
@@ -33,28 +60,14 @@ keybind = cmd+s>shift+h=previous_tab
 keybind = cmd+s>comma=move_tab:-1
 keybind = cmd+s>period=move_tab:1
 
-# quick tab switch
-keybind = cmd+s>1=goto_tab:1
-keybind = cmd+s>2=goto_tab:2
-keybind = cmd+s>3=goto_tab:3
-keybind = cmd+s>4=goto_tab:4
-keybind = cmd+s>5=goto_tab:5
-keybind = cmd+s>6=goto_tab:6
-keybind = cmd+s>7=goto_tab:7
-keybind = cmd+s>8=goto_tab:8
-keybind = cmd+s>9=goto_tab:9
-
 # split
 keybind = cmd+s>\=new_split:right
 keybind = cmd+s>-=new_split:down
-
 keybind = cmd+s>j=goto_split:bottom
 keybind = cmd+s>k=goto_split:top
 keybind = cmd+s>h=goto_split:left
 keybind = cmd+s>l=goto_split:right
-
 keybind = cmd+s>z=toggle_split_zoom
-
 keybind = cmd+s>e=equalize_splits
 
 # other
