@@ -2,6 +2,8 @@
 
 *duckdns in cronjob: <https://www.duckdns.org/install.jsp?tab=linux-cron&domain=dockserv>*
 
+After install run TMP : git clone <https://github.com/tmux-plugins/tpm> ~/.tmux/plugins/tpm
+
 ~/Downloads ➜ brew list                                                                                                                                                                                                                                                                                                                via 💠 default
 ==> Formulae
 aom                     elixir                  giflib                  harfbuzz                kerl                    libevent                libomp                  libx11                  lzo                     nushell                 pinentry                rtmpdump                tree-sitter             xz

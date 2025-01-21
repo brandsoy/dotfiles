@@ -19,7 +19,7 @@ macos-titlebar-proxy-icon = "hidden"
 
 # Font
 font-family = "JetBrains Mono NerdFont"
-font-size = 20
+font-size = 16
 adjust-cell-height = 20%
 
 # Misc

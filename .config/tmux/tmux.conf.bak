@@ -1,5 +1,5 @@
 unbind r
-bind r source-file ~/.tmux.conf
+bind r source-file ~/.tmux/tmux.conf
 
 set -g prefix C-s
 
@@ -25,7 +25,7 @@ set -g mouse on
 set -g default-terminal "tmux-256color"
 
 # Load theme
-run ~/.config/tmux/plugins/catppuccin/tmux/catppuccin.tmux
+run ~/.tmux/plugins/catppuccin/tmux/catppuccin.tmux
 
 # List of plugins
 set -g @plugin 'tmux-plugins/tpm'
