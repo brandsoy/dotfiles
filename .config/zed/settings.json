@@ -7,19 +7,21 @@
 // custom settings, run the `open default settings` command
 // from the command palette or from `Zed` application menu.
 {
+	"icon_theme": "Zed (Default)",
 	"assistant": {
-  "default_model": {
-   "provider": "copilot_chat",
-   "model": "gpt-4o"
-  },
-  "version": "2"
- },
- "base_keymap": "VSCode",
+		"default_model": {
+			"provider": "google",
+			"model": "gemini-2.0-flash"
+		},
+		"version": "2"
+	},
+
+	"base_keymap": "VSCode",
 	"vim_mode": true,
 	"relative_line_numbers": true,
 	"theme": "Andromeda",
 	"ui_font_size": 16,
-	"buffer_font_size": 16,
+	"buffer_font_size": 13.0,
 	"ui_font_family": "JetBrainsMono Nerd Font",
 	"features": {
 		"inline_completion_provider": "copilot"

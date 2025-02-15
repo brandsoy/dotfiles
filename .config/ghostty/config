@@ -18,7 +18,7 @@ macos-titlebar-style = "transparent"
 macos-titlebar-proxy-icon = "hidden"
 
 # Font
-font-family = "JetBrains Mono NerdFont"
+font-family = "JetBrainsMono Nerd Font Mono"
 font-size = 16
 adjust-cell-height = 20%
 

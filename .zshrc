@@ -157,3 +157,15 @@ case ":$PATH:" in
   *) export PATH="$PNPM_HOME:$PATH" ;;
 esac
 # pnpm end
+
+export PATH=$PATH:$HOME/go/bin
+
+# bun completions
+[ -s "/Users/mattis/.bun/_bun" ] && source "/Users/mattis/.bun/_bun"
+
+# bun
+export BUN_INSTALL="$HOME/.bun"
+export PATH="$BUN_INSTALL/bin:$PATH"
+
+
+PATH=~/.console-ninja/.bin:$PATH
