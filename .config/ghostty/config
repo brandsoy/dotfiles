@@ -22,7 +22,7 @@ macos-titlebar-proxy-icon = "hidden"
 # font-family = "JetBrainsMono Nerd Font Mono"
 # font-size = 16
 font-family = MesloLGS Nerd Font Mono
-font-size = 19
+font-size = 16
 
 # adjust-cell-height = 20%
 
@@ -40,17 +40,25 @@ mouse-scroll-multiplier = 2
 window-padding-balance = true
 window-save-state = always
 window-colorspace = "display-p3"
+window-padding-x = 4
+window-padding-y = 4
 
 # Key bindings
-keybind = ctrl+h=goto_split:left
 keybind = cmd+s>n=new_window
+
+keybind = ctrl+h=goto_split:left
 keybind = ctrl+j=goto_split:bottom
 keybind = ctrl+k=goto_split:top
 keybind = ctrl+l=goto_split:right
+
 keybind = ctrl+shift+h=new_split:left
 keybind = ctrl+shift+j=new_split:down
 keybind = ctrl+shift+k=new_split:up
 keybind = ctrl+shift+l=new_split:right
+
+keybind = cmd+s>e=equalize_splits
+keybind = cmd+s>z=toggle_split_zoom
+
 keybind = super+shift+enter=new_split:auto
 keybind = super+shift+i=inspector:toggle
 keybind = super+shift+r=reload_config
@@ -65,14 +73,12 @@ keybind = cmd+s>comma=move_tab:-1
 keybind = cmd+s>period=move_tab:1
 
 # split
-keybind = cmd+s>\=new_split:right
-keybind = cmd+s>-=new_split:down
-keybind = cmd+s>j=goto_split:bottom
-keybind = cmd+s>k=goto_split:top
-keybind = cmd+s>h=goto_split:left
-keybind = cmd+s>l=goto_split:right
-keybind = cmd+s>z=toggle_split_zoom
-keybind = cmd+s>e=equalize_splits
+# keybind = cmd+s>\=new_split:right
+# keybind = cmd+s>-=new_split:down
+# keybind = cmd+s>j=goto_split:bottom
+# keybind = cmd+s>k=goto_split:top
+# keybind = cmd+s>h=goto_split:left
+# keybind = cmd+s>l=goto_split:right
 
 # other
 copy-on-select = clipboard

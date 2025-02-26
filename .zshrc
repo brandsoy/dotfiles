@@ -113,7 +113,7 @@ zstyle ':fzf-tab:complete:__zoxide_z:*' fzf-preview 'ls --color $realpath'
 # alias l='ls -lah --color'
 
 # Eza
-alias l="eza -l --icons --git -a"
+alias l='eza -l --icons --git -a' 
 alias lt="eza --tree --level=2 --long --icons --git"
 alias ltree="eza --tree --level=2  --icons --git"
 
@@ -168,4 +168,3 @@ export BUN_INSTALL="$HOME/.bun"
 export PATH="$BUN_INSTALL/bin:$PATH"
 
 
-PATH=~/.console-ninja/.bin:$PATH
