@@ -1,11 +1,20 @@
 return {
-  -- add tokyonight
-  -- {
-  --   "folke/tokyonight.nvim",
-  --   lazy = true,
-  --   opts = { transparent_background = true, style = "night" },
-  -- },
-  --
+  {
+    "LazyVim/LazyVim",
+    opts = {
+      colorscheme = "catppuccin",
+    },
+  },
+  {
+    "nvim-lualine/lualine.nvim",
+    opts = {
+      options = {
+        theme = "catppuccin",
+        section_separators = { "", "" },
+        component_separators = { "", "" },
+      },
+    },
+  },
   {
     "catppuccin/nvim",
     lazy = true,
@@ -59,12 +68,6 @@ return {
           end
         end,
       },
-    },
-  },
-  {
-    "LazyVim/LazyVim",
-    opts = {
-      colorscheme = "catppuccin",
     },
   },
 }

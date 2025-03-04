@@ -4,8 +4,10 @@
 background-opacity = 0.9
 background-blur-radius = 30
 mouse-hide-while-typing = true
-theme = xcodedarkhc
-# theme = catppuccin-mocha
+# theme = ayu
+# theme = xcodedarkhc
+theme = catppuccin-mocha
+
 # foreground = CBE0F0
 # background = 011423
 # cursor-color= 47FF9C
