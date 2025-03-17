@@ -19,16 +19,15 @@
 	"base_keymap": "VSCode",
 	"vim_mode": true,
 	"relative_line_numbers": true,
-	"theme": "Tailwind Syntax",
+	"theme": "Catppuccin Mocha",
 	"ui_font_size": 16,
 	"buffer_font_size": 13.0,
-	"buffer_font_family": "JetBrainsMono Nerd Font",
-	// "ui_font_family": "MonaspiceAr Nerd Font Mono",
+	"buffer_font_family": "BlexMono Nerd Font Mono",
 	"features": {
 		"edit_prediction_provider": "zed"
 	},
 	"terminal": {
-		"font_family": "MonaspiceAr Nerd Font Mono"
+		"font_family": "BlexMono Nerd Font Mono"
 	},
 	"lsp": {
 		"biome": {
@@ -37,13 +36,5 @@
 			}
 		}
 	},
-	"formatter": {
-		"language_server": {
-			"name": "biome"
-		}
-	},
-	"code_actions_on_format": {
-		"source.fixAll.biome": true,
-		"source.organizeImports.biome": true
-	}
+	"soft_wrap": "editor_width"
 }
