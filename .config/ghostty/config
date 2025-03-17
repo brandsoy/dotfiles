@@ -2,7 +2,7 @@
 # Theme
 
 bold-is-bright = true
-background-opacity = 0.95
+background-opacity = 0.98
 background-blur-radius = 30
 mouse-hide-while-typing = true
 
