@@ -1,7 +1,0 @@
-[tools]
-node = "lts"
-deno = "latest"
-go = "latest"
-bun = "latest"
-dotnet = "latest"
-python = "latest"
