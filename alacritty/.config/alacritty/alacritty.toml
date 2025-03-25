@@ -61,6 +61,6 @@ y = 4
 
 [general]
 live_config_reload = true
-import = ["~/.dotfiles/.config/alacritty/themes/themes/kanagawa_dragon.toml"]
+import = ["./themes/themes/catppuccin_mocha.toml"]
 
 [terminal]
