@@ -13,3 +13,6 @@
 
 2025/02/07 (12:44:51) | ===> btop++ v.1.4.0
 2025/02/07 (12:44:51) | ERROR: Stall in Runner thread, restarting!
+
+2025/03/25 (01:44:57) | ===> btop++ v.1.4.0
+2025/03/25 (01:44:57) | WARNING: Failed to set locale UTF-8 continuing anyway.

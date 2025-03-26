@@ -57,7 +57,11 @@ if.app-id = 'com.apple.Passwords'
 run = 'layout floating'
 
 [[on-window-detected]]
-if.app-id = "com.mitchellh.ghostty"
+if.app-id = 'com.apple.Passwords'
+run = 'layout floating'
+
+[[on-window-detected]]
+if.app-id = "dev.kdrag0n.MacVirt"
 run = ["layout floating"]
 
 # Possible values: (qwerty|dvorak)
