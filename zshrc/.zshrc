@@ -10,6 +10,9 @@ autoload bashcompinit && bashcompinit
 autoload -Uz compinit
 compinit
 
+# Tmux hack for window title
+DISABLE_AUTO_TITLE=true
+
 # --- Environment Variables ---
 
 # GPG Configuration
@@ -52,7 +55,7 @@ export FZF_DEFAULT_COMMAND='fd --type f --hidden --follow'
 eval "$(zoxide init zsh)"
 alias cd="z"
 
-# Mise (formerly RTX)
+# Mise 
 eval "$(mise activate zsh)"
 
 # --- Zinit Configuration ---
