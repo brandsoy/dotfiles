@@ -2,13 +2,14 @@
 # Theme
 
 bold-is-bright = true
-background-opacity = 0.98
+background-opacity = 0.95
 background-blur-radius = 30
 mouse-hide-while-typing = true
 
-theme = catppuccin-mocha
+# theme = catppuccin-mocha
+# theme = catppuccin-mocha
 # theme = xcodedark
-# theme = kanagawabones
+theme = kanagawabones
 
 # Titlebar
 macos-titlebar-style = "transparent"
