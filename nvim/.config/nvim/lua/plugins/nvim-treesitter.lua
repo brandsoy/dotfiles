@@ -31,6 +31,8 @@ return {
             highlight = { enable = true },
             indent = { enable = true },
 
+            -- enable treesitter folding
+            fold = { enable = true },
             incremental_selection = {
                 enable = true,
                 keymaps = {
@@ -41,5 +43,9 @@ return {
                 },
             },
         })
+        vim.opt.foldmethod = "expr"
+        vim.opt.foldexpr = "nvim_treesitter#foldexpr()"
+        vim.opt.foldenable = false
+        vim.opt.foldlevel = 99
     end,
 }

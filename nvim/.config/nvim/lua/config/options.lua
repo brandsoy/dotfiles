@@ -51,6 +51,9 @@ vim.opt.listchars = { tab = "» ", trail = "·", nbsp = "␣" }
 -- Minimal number of screen lines to keep above and below the cursor.
 vim.opt.scrolloff = 5
 
+-- For init.lua
+vim.o.clipboard = "unnamedplus"
+
 -- FROM OLD OPTIONS FILE
 --- Disable hiding of markup
 -- vim.opt.conceallevel = 0
