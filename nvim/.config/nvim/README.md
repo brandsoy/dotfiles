@@ -110,3 +110,4 @@ Uses [lazy.nvim](https://github.com/folke/lazy.nvim) for efficient plugin manage
 1. Make sure Neovim 0.9.0 or later is installed
 2. Place these configuration files in your Neovim config directory (~/.config/nvim/)
 3. Start Neovim - lazy.nvim will automatically install all plugins on first run
+
