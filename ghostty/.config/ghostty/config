@@ -9,7 +9,7 @@ mouse-hide-while-typing = true
 # theme = catppuccin-mocha
 # theme = catppuccin-mocha
 # theme = xcodedark
-theme = kanagawabones
+theme = rose-pine
 
 # Titlebar
 macos-titlebar-style = "transparent"
