@@ -1,0 +1,7 @@
+[tools]
+node = "lts"
+deno = "latest"
+go = "latest"
+bun = "latest"
+dotnet = "8.0.407"
+python = "latest"
