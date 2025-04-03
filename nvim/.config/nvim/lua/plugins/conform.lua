@@ -4,6 +4,9 @@ return {
     formatters_by_ft = {
       sql = { "sqlfluff" },
       pgsql = { "sqlfluff" },
+      go = { "gofumpt, goimports-reviser" },
+      javascript = { "biome" },
+      typescript = { "biome" },
     },
     formatters = {
       sqlfluff = {
