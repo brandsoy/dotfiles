@@ -13,13 +13,16 @@ vim.g.autoformat = true
 
 -- Snacks animations
 -- Set to `false` to globally disable all snacks animations
-vim.g.snacks_animate = false
+-- vim.g.snacks_animate = false
 
 -- LazyVim picker to use.
 -- Can be one of: telescope, fzf
 -- Leave it to "auto" to automatically use the picker
 -- enabled with `:LazyExtras`
 vim.g.lazyvim_picker = "auto"
+
+vim.g.lazyvim_python_lsp = "basedpyright"
+vim.g.lazyvim_python_ruff = "ruff"
 
 -- LazyVim completion engine to use.
 -- Can be one of: nvim-cmp, blink.cmp
@@ -92,11 +95,10 @@ opt.pumheight = 10 -- Maximum number of entries in a popup
 opt.relativenumber = true -- Relative line numbers
 opt.ruler = false -- Disable the default ruler
 opt.scrolloff = 4 -- Lines of context
-opt.sessionoptions =
-  { "buffers", "curdir", "tabpages", "winsize", "help", "globals", "skiprtp", "folds", "localoptions" }
+opt.sessionoptions = { "buffers", "curdir", "tabpages", "winsize", "help", "globals", "skiprtp", "folds", "localoptions" }
 opt.shiftround = true -- Round indent
 opt.shiftwidth = 2 -- Size of an indent
-opt.shortmess:append({ W = true, I = true, c = true, C = true })
+opt.shortmess:append { W = true, I = true, c = true, C = true }
 opt.showmode = false -- Dont show mode since we have a statusline
 opt.sidescrolloff = 8 -- Columns of context
 opt.signcolumn = "yes" -- Always show the signcolumn, otherwise it would shift the text each time
@@ -118,7 +120,7 @@ opt.wildmode = "longest:full,full" -- Command-line completion mode
 opt.winminwidth = 5 -- Minimum window width
 opt.wrap = false -- Disable line wrap
 
-if vim.fn.has("nvim-0.10") == 1 then
+if vim.fn.has "nvim-0.10" == 1 then
   opt.smoothscroll = true
   opt.foldexpr = "v:lua.require'lazyvim.util'.ui.foldexpr()"
   opt.foldmethod = "expr"
