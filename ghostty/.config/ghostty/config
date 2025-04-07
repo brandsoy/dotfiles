@@ -1,6 +1,6 @@
 # Theme
 
-bold-is-bright = true
+# bold-is-bright = true
 background-opacity = 0.90
 background-blur-radius = 30
 mouse-hide-while-typing = true
@@ -15,14 +15,12 @@ macos-titlebar-style = "transparent"
 macos-titlebar-proxy-icon = "hidden"
 
 # Font
-# font-family = "JetBrainsMono Nerd Font Mono"
+font-family = "JetBrainsMono Nerd Font Mono"
+font-size = 14
 # font-family = "MesloLGS Nerd Font Mono"
-font-family = "CaskaydiaCove Nerd Font Mono"
+# font-family = "CaskaydiaCove Nerd Font Mono"
 # font-family = "IBM Plex Mono"
 # font-family = "BlexMono Nerd Font Mono"
-font-size = 14
-font-style-bold = false
-font-thicken = false
 font-feature = calt
 font-feature = liga
 font-feature = dlig
@@ -48,38 +46,39 @@ window-colorspace = "display-p3"
 fullscreen = true
 maximize = true
 
+# Windows Padding
 window-padding-balance = true
 window-padding-x = 2
 window-padding-y = 1
 
 # Key bindings
-keybind = cmd+s>n=new_window
+# keybind = cmd+s>n=new_window
 
-keybind = ctrl+h=goto_split:left
-keybind = ctrl+j=goto_split:bottom
-keybind = ctrl+k=goto_split:top
-keybind = ctrl+l=goto_split:right
+# keybind = ctrl+h=goto_split:left
+# keybind = ctrl+j=goto_split:bottom
+# keybind = ctrl+k=goto_split:top
+# keybind = ctrl+l=goto_split:right
 
-keybind = ctrl+shift+h=new_split:left
-keybind = ctrl+shift+j=new_split:down
-keybind = ctrl+shift+k=new_split:up
-keybind = ctrl+shift+l=new_split:right
+# keybind = ctrl+shift+h=new_split:left
+# keybind = ctrl+shift+j=new_split:down
+# keybind = ctrl+shift+k=new_split:up
+# keybind = ctrl+shift+l=new_split:right
 
-keybind = cmd+s>e=equalize_splits
-keybind = cmd+s>z=toggle_split_zoom
+# keybind = cmd+s>e=equalize_splits
+# keybind = cmd+s>z=toggle_split_zoom
 
-keybind = super+shift+enter=new_split:auto
-keybind = super+shift+i=inspector:toggle
-keybind = super+shift+r=reload_config
-keybind = super+t=new_tab
+# keybind = super+shift+enter=new_split:auto
+# keybind = super+shift+i=inspector:toggle
+# keybind = super+shift+r=reload_config
+# keybind = super+t=new_tab
 # custom-shader = "/Users/pdz/.config/ghostty/ghostty-shaders/sparks-from-fire.glsl"
 
 # tabs
-keybind = cmd+s>c=new_tab
-keybind = cmd+s>shift+l=next_tab
-keybind = cmd+s>shift+h=previous_tab
-keybind = cmd+s>comma=move_tab:-1
-keybind = cmd+s>period=move_tab:1
+# keybind = cmd+s>c=new_tab
+# keybind = cmd+s>shift+l=next_tab
+# keybind = cmd+s>shift+h=previous_tab
+# keybind = cmd+s>comma=move_tab:-1
+# keybind = cmd+s>period=move_tab:1
 
 # split
 # keybind = cmd+s>\=new_split:right
