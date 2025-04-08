@@ -12,5 +12,5 @@ return { -- Autoformat
       desc = '[F]ormat buffer',
     },
   },
-  opts = require 'custom.config.conform',
+  opts = require 'config.conform',
 }
