@@ -1,10 +1,10 @@
 return { -- Autoformat
   'stevearc/conform.nvim',
-  event = { 'BufWritePre' },
+  event = { 'BufWritePre', 'BufNewFile' },
   cmd = { 'ConformInfo' },
   keys = {
     {
-      '<leader>f',
+      '<leader>cf',
       function()
         require('conform').format { async = true, lsp_format = 'fallback' }
       end,
@@ -12,5 +12,5 @@ return { -- Autoformat
       desc = '[F]ormat buffer',
     },
   },
-  opts = require 'config.conform',
+  opts = require 'plugins.config.conform',
 }

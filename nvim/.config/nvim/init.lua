@@ -93,9 +93,9 @@ vim.g.maplocalleader = ' '
 vim.g.have_nerd_font = true
 
 -- [[Load Stuff ]]
-require 'config.lazy' -- Lazyloads all plugins in plugin folder
 require 'config.autocmds'
 require 'config.keymaps'
+require 'config.lazy' -- Lazyloads all plugins in plugin folder
 require 'config.options'
 require 'health'
 

@@ -78,16 +78,7 @@ alias vim='nvim'
 alias c='clear'
 alias ld='lazydocker'
 alias lg='lazygit'
-# alias vf='nvim $(fzf --preview="bat --color=always {}" --preview-window=right:60% )'
 alias nf='nvim $(fzf --preview="bat --color=always {}")'
-
-# --- Custom Functions ---
-cx() { cd "$@" && l; }
-fcd() { cd "$(find . -type d -not -path '*/.*' | fzf)" && l; }
-f() { echo "$(find . -type f -not -path '*/.*' | fzf)" | pbcopy; }
-fv() { nvim "$(find . -type f -not -path '*/.*' | fzf)"; }
-
-
 
 # Shell integrations
 eval "$(fzf --zsh)"
