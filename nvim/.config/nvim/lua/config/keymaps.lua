@@ -6,7 +6,10 @@
 vim.keymap.set('n', '<Esc>', '<cmd>nohlsearch<CR>')
 
 -- Diagnostic keymaps
-vim.keymap.set('n', '<leader>q', vim.diagnostic.setloclist, { desc = 'Open diagnostic [Q]uickfix list' })
+vim.keymap.set('n', '<leader>dq', vim.diagnostic.setloclist, { desc = 'Open diagnostic [Q]uickfix list' })
+vim.keymap.set('n', 'gl', function()
+  vim.diagnostic.open_float()
+end, { desc = 'Open Diagnostics in Float' })
 
 -- Exit terminal mode in the builtin terminal with a shortcut that is a bit easier
 -- for people to discover. Otherwise, you normally need to press <C-\><C-n>, which
@@ -65,3 +68,6 @@ end, { desc = 'Spell check: English' })
 -- Center line on page up and down
 vim.api.nvim_set_keymap('n', '<C-d>', '<C-d>zz', { noremap = true, silent = true })
 vim.api.nvim_set_keymap('n', '<C-u>', '<C-u>zz', { noremap = true, silent = true })
+
+-- Open Oil
+vim.keymap.set('n', '-', '<cmd>Oil --float<CR>', { desc = 'Open Parent Directory in Oil' })

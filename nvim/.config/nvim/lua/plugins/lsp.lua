@@ -244,6 +244,7 @@ return {
       'jsonlint',
       'markdownlint',
       'golangci-lint',
+      'taplo',
       'sqlfluff',
       -- 'pgformatter',
     })

@@ -83,3 +83,8 @@ alias nf='nvim $(fzf --preview="bat --color=always {}")'
 # Shell integrations
 eval "$(fzf --zsh)"
 eval "$(zoxide init --cmd cd zsh)"
+
+# Add GOPATH to shell config (e.g., ~/.zshrc or ~/.bashrc)  
+export GOPATH="$(go env GOPATH)"  
+export PATH="$PATH:$GOPATH/bin"
+
