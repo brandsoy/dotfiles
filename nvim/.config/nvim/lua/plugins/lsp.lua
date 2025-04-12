@@ -237,8 +237,8 @@ return {
     vim.list_extend(ensure_installed, {
       'stylua',
       'prettierd',
-      'isort',
-      'black',
+      'ruff',
+      'pylint',
       'eslint_d',
       'yamllint',
       'jsonlint',

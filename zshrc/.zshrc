@@ -74,11 +74,11 @@ zstyle ':fzf-tab:complete:__zoxide_z:*' fzf-preview 'ls --color $realpath'
 # Aliases
 alias ls='ls --color'
 alias l='ls -la --color'
-alias vim='nvim'
 alias c='clear'
 alias ld='lazydocker'
 alias lg='lazygit'
-alias nf='nvim $(fzf --preview="bat --color=always {}")'
+alias vim='nvim'
+alias vf='nvim $(fzf --preview="bat --color=always {}")'
 
 # FZF Snacks
 # Fuzzy file search (CTRL-T replacement)
@@ -106,4 +106,20 @@ eval "$(zoxide init --cmd cd zsh)"
 # Add GOPATH to shell config (e.g., ~/.zshrc or ~/.bashrc)  
 export GOPATH="$(go env GOPATH)"  
 export PATH="$PATH:$GOPATH/bin"
+
+
+# >>> conda initialize >>>
+# !! Contents within this block are managed by 'conda init' !!
+__conda_setup="$('/Users/mattis/micromamba/bin/conda' 'shell.zsh' 'hook' 2> /dev/null)"
+if [ $? -eq 0 ]; then
+    eval "$__conda_setup"
+else
+    if [ -f "/Users/mattis/micromamba/etc/profile.d/conda.sh" ]; then
+        . "/Users/mattis/micromamba/etc/profile.d/conda.sh"
+    else
+        export PATH="/Users/mattis/micromamba/bin:$PATH"
+    fi
+fi
+unset __conda_setup
+# <<< conda initialize <<<
 
