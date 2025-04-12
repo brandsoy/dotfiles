@@ -80,6 +80,25 @@ alias ld='lazydocker'
 alias lg='lazygit'
 alias nf='nvim $(fzf --preview="bat --color=always {}")'
 
+# FZF Snacks
+# Fuzzy file search (CTRL-T replacement)
+# alias ff="fd --type f --hidden --exclude .git | fzf --preview 'bat --color=always {}'"
+
+# Directory navigation (ALT-C replacement)
+alias fd="cd \$(find * -type d | fzf --height 40% --reverse --preview 'tree -C {}')"
+
+# Command history search (CTRL-R replacement)
+alias fh="history | fzf --tac --no-sort --prompt='  ' --header='Command History'"
+
+# Fuzzy git log browser
+alias fgl="git log --oneline --graph --color=always | fzf --ansi --preview 'git show --color=always {1}'"
+
+# Git branch selector
+alias fgb="git branch --all | fzf --header 'Switch Branch' | xargs git checkout"
+
+# Fuzzy kill process
+alias fkill="ps -ef | fzf --header='Kill Process' | awk '{print \$2}' | xargs kill"
+
 # Shell integrations
 eval "$(fzf --zsh)"
 eval "$(zoxide init --cmd cd zsh)"

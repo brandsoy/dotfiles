@@ -4,7 +4,7 @@ return {
     opts = {},
     dependencies = { 'nvim-treesitter/nvim-treesitter', 'echasnovski/mini.icons' },
   },
-  { 'folke/neodev.nvim', opts = {} },
+  -- { 'folke/neodev.nvim', opts = {} },
   {
     'chentoast/marks.nvim',
     config = function()
