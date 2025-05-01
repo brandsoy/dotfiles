@@ -200,6 +200,7 @@ return {
       vtsls = {},
       html = {},
       tailwindcss = {},
+      taplo = {},
       lua_ls = {
         -- cmd = { ... },
         -- filetypes = { ... },

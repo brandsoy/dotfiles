@@ -45,24 +45,56 @@ zinit cdreplay -q
 # To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
 [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
 
-# Keybindings
-bindkey -e
-bindkey '^p' history-search-backward
-bindkey '^n' history-search-forward
-bindkey '^[w' kill-region
 
-# History
-HISTSIZE=5000
-HISTFILE=~/.zsh_history
-SAVEHIST=$HISTSIZE
-HISTDUP=erase
-setopt appendhistory
-setopt sharehistory
-setopt hist_ignore_space
-setopt hist_ignore_all_dups
-setopt hist_save_no_dups
-setopt hist_ignore_dups
-setopt hist_find_no_dups
+# ~/.zshrc history configuration
+
+# Keybindings
+bindkey -e # Use Emacs keybindings (ensure this is set)
+bindkey '^p' history-beginning-search-backward  # Search backward based on prefix
+bindkey '^n' history-beginning-search-forward   # Search forward based on prefix
+bindkey '^[w' kill-region                       # Your existing binding (Alt+W or Esc+W)
+
+# History settings
+HISTSIZE=10000                   # Number of lines kept in memory per session
+SAVEHIST=10000                   # Number of lines saved to the history file
+HISTFILE=~/.zsh_history          # Location of history file
+
+setopt appendhistory             # Append to the history file, don't overwrite
+setopt extended_history          # Record timestamp and duration
+setopt hist_expire_dups_first    # Expire duplicates first when trimming history
+setopt hist_ignore_dups          # Ignore immediately consecutive duplicates
+setopt hist_ignore_space         # Ignore commands starting with space
+setopt hist_verify               # Show history expansion before executing
+setopt inc_append_history        # Append commands to history file immediately
+setopt share_history             # Share history between running shells (implies inc_append_history and appendhistory)
+setopt hist_find_no_dups         # Skip duplicates when searching
+
+# Optional: Remove superfluous blanks before saving
+# setopt hist_reduce_blanks
+
+
+
+# # Keybindings
+# bindkey -e
+# # bindkey '^p' history-search-backward
+# # bindkey '^n' history-search-forward
+# # Keybindings for prefix-based history search
+# bindkey '^p' history-beginning-search-backward
+# bindkey '^n' history-beginning-search-forward
+# bindkey '^[w' kill-region
+#
+# # History
+# HISTSIZE=5000
+# HISTFILE=~/.zsh_history
+# SAVEHIST=$HISTSIZE
+# HISTDUP=erase
+# setopt appendhistory
+# setopt sharehistory
+# setopt hist_ignore_space
+# setopt hist_ignore_all_dups
+# setopt hist_save_no_dups
+# setopt hist_ignore_dups
+# setopt hist_find_no_dups
 
 # Completion styling
 zstyle ':completion:*' matcher-list 'm:{a-z}={A-Za-z}'
@@ -123,3 +155,23 @@ fi
 unset __conda_setup
 # <<< conda initialize <<<
 
+
+# pnpm
+export PNPM_HOME="/Users/mattis/Library/pnpm"
+case ":$PATH:" in
+  *":$PNPM_HOME:"*) ;;
+  *) export PATH="$PNPM_HOME:$PATH" ;;
+esac
+# pnpm end
+
+# bun completions
+[ -s "/Users/mattis/.bun/_bun" ] && source "/Users/mattis/.bun/_bun"
+
+# bun
+export BUN_INSTALL="$HOME/.bun"
+export PATH="$BUN_INSTALL/bin:$PATH"
+
+# bun
+export BUN_INSTALL="$HOME/.bun"
+export PATH="$BUN_INSTALL/bin:$PATH"
+export PATH="/usr/local/opt/libpq/bin:$PATH"

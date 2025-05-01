@@ -15,32 +15,66 @@
     },
     "version": "2"
   },
-
+  "project_panel": {
+    "dock": "right"
+  },
   "base_keymap": "VSCode",
+  // Vim mode settings
   "vim_mode": true,
+  "vim": {
+    "enable_vim_sneak": true
+  },
   "relative_line_numbers": true,
-  "theme": "Rosé Pine",
+  "buffer_font_family": "MonaspiceNe Nerd Font",
+  "ui_font_family": "MonaspiceNe Nerd Font",
   "ui_font_size": 16,
-  "buffer_font_size": 13.0,
-  // "buffer_font_family": "MonaspiceKr Nerd Font Mono",
-  // "buffer_font_family": "MesloLGS Nerd Font Mono",
-  // "buffer_font_family": "JetBrainsMono Nerd Font Mono",
-  // "buffer_font_family": "FiraCode Nerd Font Mono",
-  "buffer_font_family": "CaskaydiaCove Nerd Font Mono",
-  // "buffer_font_family": "Iosevka Nerd Font Mono",
-  // "buffer_font_family": "BlexMono Nerd Font Mono",
+  "buffer_font_size": 16.0,
   "features": {
     "edit_prediction_provider": "zed"
   },
   "terminal": {
     "font_family": "BlexMono Nerd Font Mono"
   },
-  "lsp": {
-    "biome": {
-      "settings": {
-        "require_config_file": false
-      }
-    }
+  "theme": "GitHub Dark Default",
+  "telemetry": {
+    "metrics": false,
+    "diagnostics": false
   },
-  "soft_wrap": "editor_width"
+  "soft_wrap": "editor_width",
+  "indent_guides": {
+    "enabled": true,
+    "coloring": "indent_aware"
+  },
+  // File syntax highlighting
+  "file_types": {
+    "Dockerfile": ["Dockerfile", "Dockerfile.*"],
+    "JSON": ["json", "jsonc", "*.code-snippets"]
+  },
+  "scrollbar": {
+    "show": "never"
+  },
+  // File scan exclusions, hide on the file explorer and search
+  "file_scan_exclusions": [
+    "**/.git",
+    "**/.svn",
+    "**/.hg",
+    "**/CVS",
+    "**/.DS_Store",
+    "**/Thumbs.db",
+    "**/.classpath",
+    "**/.settings",
+    // above is default from Zed
+    "**/out",
+    "**/dist",
+    "**/.husky",
+    "**/.turbo",
+    "**/.vscode-test",
+    "**/.vscode",
+    "**/.next",
+    "**/.storybook",
+    "**/.tap",
+    "**/.nyc_output",
+    "**/report",
+    "**/node_modules"
+  ]
 }
