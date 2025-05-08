@@ -71,3 +71,7 @@ vim.api.nvim_set_keymap('n', '<C-u>', '<C-u>zz', { noremap = true, silent = true
 
 -- Open Oil
 vim.keymap.set('n', '-', '<cmd>Oil --float<CR>', { desc = 'Open Parent Directory in Oil' })
+
+local checkbox = require 'user.checkbox'
+
+vim.keymap.set('n', '<leader>tt', checkbox.toggle, { desc = 'Toggle Markdown checkbox' })

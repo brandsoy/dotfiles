@@ -53,3 +53,10 @@ vim.api.nvim_create_autocmd({ 'FileType' }, {
     vim.opt_local.conceallevel = 0
   end,
 })
+
+-- Fix fold under cursor
+vim.api.nvim_create_autocmd({ 'BufReadPost' }, {
+  callback = function()
+    vim.cmd 'norm zx'
+  end,
+})

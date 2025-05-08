@@ -8,10 +8,10 @@
 // from the command palette or from `Zed` application menu.
 {
   "icon_theme": "Zed (Default)",
-  "assistant": {
+  "agent": {
     "default_model": {
-      "provider": "zed.dev",
-      "model": "claude-3-7-sonnet-latest"
+      "provider": "copilot_chat",
+      "model": "gemini-2.5-pro"
     },
     "version": "2"
   },
@@ -35,7 +35,7 @@
   "terminal": {
     "font_family": "BlexMono Nerd Font Mono"
   },
-  "theme": "GitHub Dark Default",
+  "theme": "Rosé Pine",
   "telemetry": {
     "metrics": false,
     "diagnostics": false
