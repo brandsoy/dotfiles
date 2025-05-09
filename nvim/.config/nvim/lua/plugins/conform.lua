@@ -42,7 +42,12 @@ return { -- Autoformat
     formatters = {
       sqlfluff = {
         -- Add SQL dialect configuration
-        args = { 'fix', '--dialect', 'postgres', '--disable-progress-bar', '-' },
+        -- args = { 'fix', '--dialect', 'postgres', '--disable-progress-bar', '-' },
+        args = {
+          'lint',
+          '--format=json',
+          '--dialect=postgres',
+        },
         -- Specify stdin for input
         stdin = true,
       },
