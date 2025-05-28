@@ -108,7 +108,7 @@ return {
   },
   build = 'make',
   dependencies = {
-    'stevearc/dressing.nvim',
+    -- 'stevearc/dressing.nvim',
     'nvim-lua/plenary.nvim',
     'MunifTanjim/nui.nvim',
     {

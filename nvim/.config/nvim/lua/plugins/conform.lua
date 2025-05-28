@@ -18,11 +18,54 @@ return { -- Autoformat
       -- Use gofumpt for Go files
       go = { 'gofumpt' },
       lua = { 'stylua' },
+
+      formatters_by_ft = {
+        javascript = function(bufnr)
+          local utils = require 'conform.util'
+          local root = utils.root_pattern('biome.json', 'biome.jsonc', '.eslintrc', '.eslintrc.js', '.prettierrc', '.prettierrc.js', '.prettierrc.json')(bufnr)
+          if root then
+            if utils.file_exists(root .. '/biome.json') or utils.file_exists(root .. '/biome.jsonc') then
+              return { 'biome' }
+            elseif utils.file_exists(root .. '/.eslintrc') or utils.file_exists(root .. '/.eslintrc.js') then
+              return { 'eslint' }
+            elseif
+              utils.file_exists(root .. '/.prettierrc')
+              or utils.file_exists(root .. '/.prettierrc.js')
+              or utils.file_exists(root .. '/.prettierrc.json')
+            then
+              return { 'prettier' }
+            end
+          end
+          -- Fallback if nothing found
+          return { 'prettier' }
+        end,
+        typescript = function(bufnr)
+          -- Repeat the same logic for typescript
+          local utils = require 'conform.util'
+          local root = utils.root_pattern('biome.json', 'biome.jsonc', '.eslintrc', '.eslintrc.js', '.prettierrc', '.prettierrc.js', '.prettierrc.json')(bufnr)
+          if root then
+            if utils.file_exists(root .. '/biome.json') or utils.file_exists(root .. '/biome.jsonc') then
+              return { 'biome' }
+            elseif utils.file_exists(root .. '/.eslintrc') or utils.file_exists(root .. '/.eslintrc.js') then
+              return { 'eslint' }
+            elseif
+              utils.file_exists(root .. '/.prettierrc')
+              or utils.file_exists(root .. '/.prettierrc.js')
+              or utils.file_exists(root .. '/.prettierrc.json')
+            then
+              return { 'prettier' }
+            end
+          end
+          return { 'prettier' }
+        end,
+        -- Repeat for other filetypes if needed
+      },
+
       -- Javascript/Typescript ecosystem
-      javascript = { 'prettierd', 'prettier' },
-      typescript = { 'prettierd', 'prettier' },
-      javascriptreact = { 'prettierd', 'prettier' },
-      typescriptreact = { 'prettierd', 'prettier' },
+      -- javascript = { 'prettierd', 'prettier' },
+      -- typescript = { 'prettierd', 'prettier' },
+      -- javascriptreact = { 'prettierd', 'prettier' },
+      -- typescriptreact = { 'prettierd', 'prettier' },
       json = { 'prettierd' },
       jsonc = { 'prettierd' },
       html = { 'prettierd' },
@@ -30,25 +73,19 @@ return { -- Autoformat
       scss = { 'prettierd' },
       yaml = { 'prettierd' },
       -- Python
-      python = { 'isort', 'black' },
+      -- python = { 'isort', 'black' },
       -- Others
-      markdown = { 'markdownlint' },
+      markdown = { 'markdownlint-cli2' },
       toml = { 'taplo' },
       -- Add SQL formatter
-      sql = { 'sqlfluff' },
+      sql = { 'pg_format' },
     },
 
     -- Add formatter configuration
     formatters = {
-      sqlfluff = {
-        -- Add SQL dialect configuration
-        -- args = { 'fix', '--dialect', 'postgres', '--disable-progress-bar', '-' },
-        args = {
-          'lint',
-          '--format=json',
-          '--dialect=postgres',
-        },
-        -- Specify stdin for input
+      pg_format = {
+        command = 'pg_format',
+        args = { '-' }, -- Reads input from stdin
         stdin = true,
       },
     },

@@ -1,7 +1,7 @@
 [tools]
-node = "lts"
+node = "22.15.0"
 deno = "latest"
-go = "latest"
+go = "1.24.3"
 bun = "latest"
 dotnet = "8.0.407"
 python = "latest"

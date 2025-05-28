@@ -33,12 +33,12 @@ return {
           vim.keymap.set(mode, keys, func, { buffer = event.buf, desc = 'LSP: ' .. desc })
         end
 
-        map('gd', require('fzf-lua').lsp_definitions, '[G]oto [D]efinition')
-        map('gr', require('fzf-lua').lsp_references, '[G]oto [R]eferences')
-        map('gI', require('fzf-lua').lsp_implementations, '[G]oto [I]mplementation')
-        map('<leader>D', require('fzf-lua').lsp_typedefs, 'Type [D]efinition')
-        map('<leader>ds', require('fzf-lua').lsp_document_symbols, '[D]ocument [S]ymbols')
-        map('<leader>ws', require('fzf-lua').lsp_live_workspace_symbols, '[W]orkspace [S]ymbols')
+        -- map('gd', require('fzf-lua').lsp_definitions, '[G]oto [D]efinition')
+        -- map('gr', require('fzf-lua').lsp_references, '[G]oto [R]eferences')
+        -- map('gI', require('fzf-lua').lsp_implementations, '[G]oto [I]mplementation')
+        -- map('<leader>D', require('fzf-lua').lsp_typedefs, 'Type [D]efinition')
+        -- map('<leader>ds', require('fzf-lua').lsp_document_symbols, '[D]ocument [S]ymbols')
+        -- map('<leader>ws', require('fzf-lua').lsp_live_workspace_symbols, '[W]orkspace [S]ymbols')
         map('<leader>cr', vim.lsp.buf.rename, '[R]e[n]ame')
         map('<leader>ca', vim.lsp.buf.code_action, '[C]ode [A]ction', { 'n', 'x' })
         map('gD', vim.lsp.buf.declaration, '[G]oto [D]eclaration')
@@ -113,7 +113,7 @@ return {
     -- capabilities = vim.tbl_deep_extend('force', capabilities, require('cmp_nvim_lsp').default_capabilities())
 
     local servers = {
-      -- bashls = {},
+      bashls = {},
       marksman = {},
       gopls = {
         analyses = {
@@ -124,10 +124,7 @@ return {
         completeUnimported = true, -- This enables auto-import
         gofumpt = true,
       },
-      pyright = {},
       vtsls = {},
-      -- html = {},
-      -- tailwindcss = {},
       taplo = {}, -- TOML LSP
       lua_ls = {
         -- Example settings for lua_ls, uncomment and customize as needed
@@ -140,6 +137,9 @@ return {
         --   },
         -- },
       },
+      -- pyright = {},
+      -- html = {},
+      -- tailwindcss = {},
     }
 
     -- Configure mason-lspconfig to handle LSP server installations and setup
@@ -173,15 +173,16 @@ return {
     -- These are tools that are not LSP servers or are handled separately.
     local other_tools_to_install = {
       'stylua', -- Lua formatter
+      'prettier', -- Prettier (for various filetypes)
       'prettierd', -- Prettier daemon (for various filetypes)
-      'ruff', -- Python linter & formatter
-      'pylint', -- Python linter
       'eslint_d', -- ESLint daemon (JavaScript/TypeScript linter)
       'yamllint', -- YAML linter
-      -- 'jsonlint', -- JSON linter (often provided by other tools like prettier)
-      'markdownlint', -- Markdown linter
+      'markdownlint-cli2', -- Markdown linter
       'golangci-lint', -- Go linter
       'sqlfluff', -- SQL linter & formatter
+      'jsonlint', -- JSON linter (often provided by other tools like prettier)
+      -- 'ruff', -- Python linter & formatter
+      -- 'pylint', -- Python linter
       -- 'taplo' is managed by mason-lspconfig as it's in the `servers` list.
       -- If you had a separate taplo CLI tool package from Mason, you could list it here.
       -- Usually, the 'taplo' package provides both.

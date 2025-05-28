@@ -5,7 +5,7 @@ return {
     local lint = require 'lint'
 
     lint.linters_by_ft = {
-      markdown = { 'markdownlint' },
+      markdown = { 'markdownlint-cli2' },
       -- go = { 'gofumpt', 'goimports' },
       javascript = { 'eslint_d' },
       typescript = { 'eslint_d' },
@@ -14,9 +14,9 @@ return {
       json = { 'jsonlint' },
       yaml = { 'yamllint' },
       dockerfile = { 'hadolint' },
-      python = { 'pylint' },
+      -- python = { 'pylint' },
       sql = { 'sqlfluff' },
-      toml = { 'taplo' },
+      -- toml = { 'taplo' },
     }
 
     -- Create autocommand to run linting on relevant events
