@@ -279,3 +279,9 @@ fi # End of OS-specific block
 if command -v p10k &>/dev/null; then
     p10k reload &>/dev/null # Reload p10k if it's already configured, handles changes
 fi
+
+# TypeSpec
+TYPESPEC_PATH="/Users/mattis/.tsp/bin"
+if [ -d "$TYPESPEC_PATH" ]; then
+  export PATH="/Users/mattis/.tsp/bin:$PATH"
+fi
