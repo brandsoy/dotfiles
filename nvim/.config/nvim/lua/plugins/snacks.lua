@@ -56,7 +56,7 @@ return {
       desc = 'Command History',
     },
     {
-      '<leader>n',
+      '<leader>nh',
       function()
         Snacks.picker.notifications()
       end,
@@ -433,6 +433,12 @@ return {
         Snacks.bufdelete()
       end,
       desc = 'Delete Buffer',
+    },{
+      '<leader>bo',
+      function()
+        Snacks.bufdelete.other()
+      end,
+      desc = 'Delete Other Buffers',
     },
     {
       '<leader>cR',
@@ -471,7 +477,7 @@ return {
       desc = 'Toggle Terminal',
     },
     {
-      '<c-_>',
+      '<c/_>',
       function()
         Snacks.terminal()
       end,
