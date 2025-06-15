@@ -1,62 +1,78 @@
 return { -- Autoformat
-  'stevearc/conform.nvim',
-  event = { 'BufWritePre', 'BufNewFile' },
-  cmd = { 'ConformInfo' },
+  "stevearc/conform.nvim",
+  event = { "BufWritePre", "BufNewFile" },
+  cmd = { "ConformInfo" },
   keys = {
     {
-      '<leader>cf',
+      "<leader>cf",
       function()
-        require('conform').format { async = true, lsp_fallback = true }
+        require("conform").format({ async = true, lsp_fallback = true })
       end,
-      mode = '',
-      desc = '[C]ode [F]ormat buffer',
+      mode = "",
+      desc = "[C]ode [F]ormat buffer",
     },
   },
   opts = {
     -- Define formatters for specific filetypes
     formatters_by_ft = {
       -- Use gofumpt for Go files
-      go = { 'gofumpt' },
-      lua = { 'stylua' },
+      go = { "gofumpt" },
+      lua = { "stylua" },
 
       formatters_by_ft = {
         javascript = function(bufnr)
-          local utils = require 'conform.util'
-          local root = utils.root_pattern('biome.json', 'biome.jsonc', '.eslintrc', '.eslintrc.js', '.prettierrc', '.prettierrc.js', '.prettierrc.json')(bufnr)
+          local utils = require("conform.util")
+          local root = utils.root_pattern(
+            "biome.json",
+            "biome.jsonc",
+            ".eslintrc",
+            ".eslintrc.js",
+            ".prettierrc",
+            ".prettierrc.js",
+            ".prettierrc.json"
+          )(bufnr)
           if root then
-            if utils.file_exists(root .. '/biome.json') or utils.file_exists(root .. '/biome.jsonc') then
-              return { 'biome' }
-            elseif utils.file_exists(root .. '/.eslintrc') or utils.file_exists(root .. '/.eslintrc.js') then
-              return { 'eslint' }
+            if utils.file_exists(root .. "/biome.json") or utils.file_exists(root .. "/biome.jsonc") then
+              return { "biome" }
+            elseif utils.file_exists(root .. "/.eslintrc") or utils.file_exists(root .. "/.eslintrc.js") then
+              return { "eslint" }
             elseif
-              utils.file_exists(root .. '/.prettierrc')
-              or utils.file_exists(root .. '/.prettierrc.js')
-              or utils.file_exists(root .. '/.prettierrc.json')
+              utils.file_exists(root .. "/.prettierrc")
+              or utils.file_exists(root .. "/.prettierrc.js")
+              or utils.file_exists(root .. "/.prettierrc.json")
             then
-              return { 'prettier' }
+              return { "prettier" }
             end
           end
           -- Fallback if nothing found
-          return { 'prettier' }
+          return { "prettier" }
         end,
         typescript = function(bufnr)
           -- Repeat the same logic for typescript
-          local utils = require 'conform.util'
-          local root = utils.root_pattern('biome.json', 'biome.jsonc', '.eslintrc', '.eslintrc.js', '.prettierrc', '.prettierrc.js', '.prettierrc.json')(bufnr)
+          local utils = require("conform.util")
+          local root = utils.root_pattern(
+            "biome.json",
+            "biome.jsonc",
+            ".eslintrc",
+            ".eslintrc.js",
+            ".prettierrc",
+            ".prettierrc.js",
+            ".prettierrc.json"
+          )(bufnr)
           if root then
-            if utils.file_exists(root .. '/biome.json') or utils.file_exists(root .. '/biome.jsonc') then
-              return { 'biome' }
-            elseif utils.file_exists(root .. '/.eslintrc') or utils.file_exists(root .. '/.eslintrc.js') then
-              return { 'eslint' }
+            if utils.file_exists(root .. "/biome.json") or utils.file_exists(root .. "/biome.jsonc") then
+              return { "biome" }
+            elseif utils.file_exists(root .. "/.eslintrc") or utils.file_exists(root .. "/.eslintrc.js") then
+              return { "eslint" }
             elseif
-              utils.file_exists(root .. '/.prettierrc')
-              or utils.file_exists(root .. '/.prettierrc.js')
-              or utils.file_exists(root .. '/.prettierrc.json')
+              utils.file_exists(root .. "/.prettierrc")
+              or utils.file_exists(root .. "/.prettierrc.js")
+              or utils.file_exists(root .. "/.prettierrc.json")
             then
-              return { 'prettier' }
+              return { "prettier" }
             end
           end
-          return { 'prettier' }
+          return { "prettier" }
         end,
         -- Repeat for other filetypes if needed
       },
@@ -66,26 +82,26 @@ return { -- Autoformat
       -- typescript = { 'prettierd', 'prettier' },
       -- javascriptreact = { 'prettierd', 'prettier' },
       -- typescriptreact = { 'prettierd', 'prettier' },
-      json = { 'prettierd' },
-      jsonc = { 'prettierd' },
-      html = { 'prettierd' },
-      css = { 'prettierd' },
-      scss = { 'prettierd' },
-      yaml = { 'prettierd' },
+      json = { "prettierd" },
+      jsonc = { "prettierd" },
+      html = { "prettierd" },
+      css = { "prettierd" },
+      scss = { "prettierd" },
+      yaml = { "prettierd" },
       -- Python
       -- python = { 'isort', 'black' },
       -- Others
-      markdown = { 'markdownlint-cli2' },
-      toml = { 'taplo' },
+      markdown = { "markdownlint-cli2" },
+      toml = { "taplo" },
       -- Add SQL formatter
-      sql = { 'pg_format' },
+      sql = { "pg_format" },
     },
 
     -- Add formatter configuration
     formatters = {
       pg_format = {
-        command = 'pg_format',
-        args = { '-' }, -- Reads input from stdin
+        command = "pg_format",
+        args = { "-" }, -- Reads input from stdin
         stdin = true,
       },
     },

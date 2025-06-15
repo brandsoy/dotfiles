@@ -191,7 +191,7 @@ return {
     opts = {},
     lazy = true,
   },
-
+  { "nvim-tree/nvim-web-devicons", opts = {} },
   {
     "fladson/vim-kitty",
     "MunifTanjim/nui.nvim",

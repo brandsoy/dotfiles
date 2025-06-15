@@ -285,3 +285,5 @@ TYPESPEC_PATH="/Users/mattis/.tsp/bin"
 if [ -d "$TYPESPEC_PATH" ]; then
   export PATH="/Users/mattis/.tsp/bin:$PATH"
 fi
+
+# HELIX_RUNTIME=~/src/helix/runtime

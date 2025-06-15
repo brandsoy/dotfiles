@@ -56,6 +56,8 @@ window-padding-x = 2
 window-padding-y = 1
 
 # Key bindings
+keybind = ctrl+`=toggle_quick_terminal
+
 # keybind = cmd+s>n=new_window
 
 # keybind = ctrl+h=goto_split:left
@@ -91,6 +93,7 @@ window-padding-y = 1
 # keybind = cmd+s>k=goto_split:top
 # keybind = cmd+s>h=goto_split:left
 # keybind = cmd+s>l=goto_split:right
+
 
 # other
 copy-on-select = clipboard

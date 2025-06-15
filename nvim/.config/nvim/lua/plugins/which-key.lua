@@ -5,6 +5,14 @@ return { -- Useful plugin to show you pending keybinds.
     -- delay between pressing a key and opening which-key (milliseconds)
     -- this setting is independent of vim.opt.timeoutlen
     delay = 0,
+
+    -- Disable warnings for overlapping keymaps
+    disable = {
+      buftypes = {},
+      filetypes = {},
+      check_overlapping_keymaps = true, -- Set to true to disable overlapping keymap warnings
+    },
+
     icons = {
       -- set icon mappings to true if you have a Nerd Font
       mappings = vim.g.have_nerd_font,
