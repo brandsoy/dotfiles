@@ -2,6 +2,8 @@ vim.lsp.enable({
   "lua-ls",
   "gopls",
   "ts-ls",
+  "bash-ls",
+  "c-sharp-ls",
 })
 
 vim.diagnostic.config({

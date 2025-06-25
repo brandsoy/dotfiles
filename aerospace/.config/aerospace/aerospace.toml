@@ -108,12 +108,10 @@ outer.left = 5
 # '''
 
 # App shortcuts
-alt-b = 'exec-and-forget open -a /Applications/Brave\ Browser.app'
-alt-c = 'exec-and-forget open -a /Applications/Cursor.app'
+alt-b = 'exec-and-forget open -a /Applications/Firefox.app'
+alt-c = 'exec-and-forget open -a /Applications/Visual Studio Code - Insiders.app'
 alt-i = 'exec-and-forget open -a /Applications/Ghostty.app'
-alt-o = 'exec-and-forget open -a /Applications/OBS.app/'
 alt-w = 'exec-and-forget open -a /Applications/Obsidian.app'
-alt-a = 'exec-and-forget open -a /Applications/ChatGPT.app'
 alt-shift-r = ['exec-and-forget /opt/homebrew/bin/sketchybar --reload']
 
 # See: https://nikitabobko.github.ioeAeroSpace/commands#layout
@@ -192,11 +190,7 @@ alt-shift-l = ['join-with right', 'mode main']
 
 # Default space
 [[on-window-detected]]
-if.app-id = 'com.brave.Browser'
-run = ['move-node-to-workspace 1']
-
-[[on-window-detected]]
-if.app-id = 'com.brave.Browser.app.adcclpceapdbhchilkbngkehpppaefko'
+if.app-id = 'com.firefox.Firefox'
 run = ['move-node-to-workspace 1']
 
 [[on-window-detected]]
@@ -204,28 +198,8 @@ if.app-id = 'com.mitchellh.ghostty'
 run = ['move-node-to-workspace 2']
 
 [[on-window-detected]]
-if.app-id = 'com.todesktop.230313mzl4w4u92'
-run = ['move-node-to-workspace 3']
-
-[[on-window-detected]]
-if.app-id = 'notion.id'
-run = ['move-node-to-workspace 4']
-
-[[on-window-detected]]
 if.app-id = 'md.obsidian'
 run = ['move-node-to-workspace 4']
-
-[[on-window-detected]]
-if.app-id = 'com.tinyspeck.slackmacgap'
-run = ['move-node-to-workspace 5']
-
-[[on-window-detected]]
-if.app-id = 'com.hnc.Discord'
-run = ['move-node-to-workspace 5']
-
-[[on-window-detected]]
-if.app-id = 'com.adobe.PremierePro.24'
-run = ['move-node-to-workspace 6']
 
 # Floating windows
 [[on-window-detected]]
