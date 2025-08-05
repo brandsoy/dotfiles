@@ -1,30 +1,30 @@
 return {
   {
-    "Shatur/neovim-ayu",
-    name = "ayu",
+    'Shatur/neovim-ayu',
+    name = 'ayu',
     config = function()
       -- vim.cmd("colorscheme ayu")
     end,
   },
   {
-    "rose-pine/neovim",
-    name = "rose-pine",
+    'rose-pine/neovim',
+    name = 'rose-pine',
     config = function()
       -- vim.cmd("colorscheme rose-pine")
     end,
   },
   {
-    "sainnhe/gruvbox-material",
+    'sainnhe/gruvbox-material',
     enabled = true,
     priority = 1000,
     config = function()
       vim.g.gruvbox_material_transparent_background = 0
-      vim.g.gruvbox_material_foreground = "mix"
-      vim.g.gruvbox_material_background = "hard"
-      vim.g.gruvbox_material_ui_contrast = "high"
-      vim.g.gruvbox_material_float_style = "bright"
-      vim.g.gruvbox_material_statusline_style = "material"
-      vim.g.gruvbox_material_cursor = "auto"
+      vim.g.gruvbox_material_foreground = 'mix'
+      vim.g.gruvbox_material_background = 'hard'
+      vim.g.gruvbox_material_ui_contrast = 'high'
+      vim.g.gruvbox_material_float_style = 'bright'
+      vim.g.gruvbox_material_statusline_style = 'material'
+      vim.g.gruvbox_material_cursor = 'auto'
 
       -- vim.g.gruvbox_material_colors_override = { bg0 = '#16181A' } -- #0e1010
       vim.g.gruvbox_material_better_performance = 1
@@ -33,17 +33,17 @@ return {
     end,
   },
   {
-    "projekt0n/github-nvim-theme",
-    name = "github-theme",
+    'projekt0n/github-nvim-theme',
+    name = 'github-theme',
     lazy = false, -- make sure we load this during startup if it is your main colorscheme
     priority = 1020, -- make sure to load this before all the other start plugins
     config = function()
       -- Default options
-      require("github-theme").setup({
+      require('github-theme').setup {
         options = {
           -- Compiled file's destination location
-          compile_path = vim.fn.stdpath("cache") .. "/github-theme",
-          compile_file_suffix = "_compiled", -- Compiled file suffix
+          compile_path = vim.fn.stdpath 'cache' .. '/github-theme',
+          compile_file_suffix = '_compiled', -- Compiled file suffix
           hide_end_of_buffer = true, -- Hide the '~' character at the end of the buffer for a cleaner look
           hide_nc_statusline = true, -- Override the underline style for non-active statuslines
           transparent = false, -- Disable setting bg (make neovim's background transparent)
@@ -51,16 +51,16 @@ return {
           dim_inactive = false, -- Non focused panes set to alternative background
           module_default = true, -- Default enable value for modules
           styles = { -- Style to be applied to different syntax groups
-            comments = "NONE", -- Value is any valid attr-list value `:help attr-list`
-            functions = "NONE",
-            keywords = "NONE",
-            variables = "NONE",
-            conditionals = "NONE",
-            constants = "NONE",
-            numbers = "NONE",
-            operators = "NONE",
-            strings = "NONE",
-            types = "NONE",
+            comments = 'NONE', -- Value is any valid attr-list value `:help attr-list`
+            functions = 'NONE',
+            keywords = 'NONE',
+            variables = 'NONE',
+            conditionals = 'NONE',
+            constants = 'NONE',
+            numbers = 'NONE',
+            operators = 'NONE',
+            strings = 'NONE',
+            types = 'NONE',
           },
           inverse = { -- Inverse highlight for different types
             match_paren = false,
@@ -81,14 +81,14 @@ return {
         palettes = {},
         specs = {},
         groups = {},
-      })
+      }
 
       -- setup must be called before loading
-      vim.cmd("colorscheme github_dark_tritanopia")
+      vim.cmd 'colorscheme github_dark_tritanopia'
     end,
   },
   {
-    "folke/tokyonight.nvim",
+    'folke/tokyonight.nvim',
     lazy = false,
     priority = 1000,
     opts = {
@@ -98,18 +98,18 @@ return {
         keywords = { italic = false },
         functions = {},
         variables = {},
-        sidebars = "dark",
-        floats = "dark",
+        sidebars = 'dark',
+        floats = 'dark',
       },
     },
     config = function(_, opts)
-      require("tokyonight").setup(opts)
+      require('tokyonight').setup(opts)
       -- vim.cmd.colorscheme("tokyonight-moon")
     end,
   },
   {
-    "scottmckendry/cyberdream.nvim",
-    name = "cyberdream",
+    'scottmckendry/cyberdream.nvim',
+    name = 'cyberdream',
     lazy = false,
     priority = 1000,
     config = function()

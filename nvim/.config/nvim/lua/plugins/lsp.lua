@@ -21,6 +21,8 @@ return {
         'golangci-lint',
         -- TS Tools
         'ts_ls',
+        -- C#
+        'csharp-language-server',
         -- Tools
         'prettierd',
         'eslint_d',
