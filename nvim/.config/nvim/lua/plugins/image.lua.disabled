@@ -1,0 +1,12 @@
+return {
+  '3rd/image.nvim',
+  dependencies = { 'nvim-lua/plenary.nvim', 'luarocks.nvim' },
+  opts = {
+    rocks = {
+      hererocks = true,
+    },
+  },
+  config = function()
+    require('image').setup()
+  end,
+}

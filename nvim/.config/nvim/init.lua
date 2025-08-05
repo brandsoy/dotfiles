@@ -6,11 +6,11 @@ vim.g.maplocalleader = ' '
 vim.g.have_nerd_font = true
 
 -- [[Load Stuff ]]
-require 'core.lsp'
 
 require 'config.autocmds'
 require 'config.keymaps'
 require 'config.options'
 
 require 'core.lazy' -- Lazyloads all plugins in plugin folder
+
 require 'health'
