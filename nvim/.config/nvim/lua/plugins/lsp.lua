@@ -11,6 +11,10 @@ return {
     require('mason-lspconfig').setup()
     require('mason-tool-installer').setup {
       ensure_installed = {
+        -- Shell
+        'bash-language-server',
+        'shfmt',
+        'shellcheck',
         -- Lua tools
         'lua_ls',
         'stylua',
@@ -18,14 +22,44 @@ return {
         'gopls',
         'gofumpt',
         'golines',
+        'staticcheck',
         'golangci-lint',
+        'golangci-lint-langserver',
         -- TS Tools
         'ts_ls',
+        'svelte-language-server',
+        'eslint-lsp',
+        -- Python Tools
+        'pyright', -- Modern Python LSP
+        'ruff', -- Fast Python formatter/linter
+        'black', -- Optional fallback formatter
         -- C#
-        'csharp-language-server',
+        -- 'csharp-language-server',
+        'omnisharp',
+        -- SQL
+        'sqls',
+        -- Markdown
+        'marksman',
+        'markdownlint-cli2',
+        -- YAML
+        'yaml-language-server',
+        'yamllint',
+        -- JSON
+        'json-lsp',
+        -- Docker
+        'dockerls',
+        'hadolint',
+        -- TOML
+        'taplo',
         -- Tools
         'prettierd',
         'eslint_d',
+        'editorconfig-checker',
+        'codespell',
+        -- SQL
+        'pgformatter',
+        'sql-formatter',
+        'sqlfluff',
       },
     }
 
@@ -50,7 +84,14 @@ return {
         },
       },
     }
-
-    -- You can configure more servers here as needed
+    lspconfig.sqls.setup {
+      cmd = { 'sqls' },
+      filetypes = { 'sql' },
+      settings = {
+        sqls = {
+          connections = {}, -- empty = offline mode
+        },
+      },
+    }
   end,
 }

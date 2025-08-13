@@ -1,91 +1,91 @@
 return {
   -- Autotags
   {
-    "windwp/nvim-ts-autotag",
+    'windwp/nvim-ts-autotag',
     opts = {},
   },
 
   -- comments
   {
-    "numToStr/Comment.nvim",
+    'numToStr/Comment.nvim',
     opts = {},
     lazy = false,
   },
   -- useful when there are embedded languages in certain types of files (e.g. Vue or React)
-  { "joosepalviste/nvim-ts-context-commentstring", lazy = true },
+  { 'joosepalviste/nvim-ts-context-commentstring', lazy = true },
 
   -- Neovim plugin to improve the default vim.ui interfaces
   {
-    "stevearc/dressing.nvim",
-    dependencies = { "MunifTanjim/nui.nvim" },
+    'stevearc/dressing.nvim',
+    dependencies = { 'MunifTanjim/nui.nvim' },
     opts = {},
     config = function()
-      require("dressing").setup()
+      require('dressing').setup()
     end,
   },
 
   -- Neovim notifications and LSP progress messages
   {
-    "j-hui/fidget.nvim",
+    'j-hui/fidget.nvim',
   },
 
   -- find and replace
   {
-    "windwp/nvim-spectre",
+    'windwp/nvim-spectre',
     enabled = true,
-    event = "BufRead",
+    event = 'BufRead',
     keys = {
       {
-        "<leader>Rr",
+        '<leader>Rr',
         function()
-          require("spectre").open()
+          require('spectre').open()
         end,
-        desc = "Replace",
+        desc = 'Replace',
       },
       {
-        "<leader>Rw",
+        '<leader>Rw',
         function()
-          require("spectre").open_visual({ select_word = true })
+          require('spectre').open_visual { select_word = true }
         end,
-        desc = "Replace Word",
+        desc = 'Replace Word',
       },
       {
-        "<leader>Rf",
+        '<leader>Rf',
         function()
-          require("spectre").open_file_search()
+          require('spectre').open_file_search()
         end,
-        desc = "Replace Buffer",
+        desc = 'Replace Buffer',
       },
     },
   },
 
   -- Heuristically set buffer options
   {
-    "tpope/vim-sleuth",
+    'tpope/vim-sleuth',
   },
 
   {
     {
-      "folke/lazydev.nvim",
-      ft = "lua", -- only load on lua files
+      'folke/lazydev.nvim',
+      ft = 'lua', -- only load on lua files
       opts = {
         library = {
           -- See the configuration section for more details
           -- Load luvit types when the `vim.uv` word is found
-          { path = "${3rd}/luv/library", words = { "vim%.uv" } },
+          { path = '${3rd}/luv/library', words = { 'vim%.uv' } },
         },
       },
     },
     {
-      "saghen/blink.cmp",
+      'saghen/blink.cmp',
       opts = {
         sources = {
           -- add lazydev to your completion providers
-          default = { "lazydev", "lsp", "path", "snippets", "buffer" },
+          default = { 'lazydev', 'lsp', 'path', 'snippets', 'buffer' },
           providers = {
             lazydev = {
-              name = "LazyDev",
-              module = "lazydev.integrations.blink",
+              name = 'LazyDev',
+              module = 'lazydev.integrations.blink',
               -- make lazydev completions top priority (see `:h blink.cmp`)
               score_offset = 100,
             },
@@ -97,12 +97,12 @@ return {
 
   -- editor config support
   {
-    "editorconfig/editorconfig-vim",
+    'editorconfig/editorconfig-vim',
   },
 
   {
-    "folke/flash.nvim",
-    event = "VeryLazy",
+    'folke/flash.nvim',
+    event = 'VeryLazy',
     ---@type Flash.Config
     opts = {},
     -- stylua: ignore
@@ -149,13 +149,13 @@ return {
   -- },
   -- persist sessions
   {
-    "folke/persistence.nvim",
-    event = "BufReadPre", -- this will only start session saving when an actual file was opened
+    'folke/persistence.nvim',
+    event = 'BufReadPre', -- this will only start session saving when an actual file was opened
     opts = {},
   },
 
   {
-    "echasnovski/mini.nvim",
+    'echasnovski/mini.nvim',
     config = function()
       -- Better Around/Inside textobjects
       --
@@ -163,16 +163,16 @@ return {
       --  - va)  - [V]isually select [A]round [)]paren
       --  - yinq - [Y]ank [I]nside [N]ext [']quote
       --  - ci'  - [C]hange [I]nside [']quote
-      require("mini.ai").setup({ n_lines = 500 })
+      require('mini.ai').setup { n_lines = 500 }
 
       -- Add/delete/replace surroundings (brackets, quotes, etc.)
       --
       -- - saiw) - [S]urround [A]dd [I]nner [W]ord [)]Paren
       -- - sd'   - [S]urround [D]elete [']quotes
       -- - sr)'  - [S]urround [R]eplace [)] [']
-      require("mini.surround").setup()
+      require('mini.surround').setup()
 
-      require("mini.pairs").setup()
+      require('mini.pairs').setup()
 
       -- local statusline = require("mini.statusline")
       -- statusline.setup({
@@ -186,34 +186,14 @@ return {
   },
 
   {
-    "echasnovski/mini.icons",
+    'echasnovski/mini.icons',
     enabled = true,
     opts = {},
     lazy = true,
   },
-  { "nvim-tree/nvim-web-devicons", opts = {} },
+  { 'nvim-tree/nvim-web-devicons', opts = {} },
   {
-    "fladson/vim-kitty",
-    "MunifTanjim/nui.nvim",
-  },
-  {
-    "nvchad/showkeys",
-    cmd = "ShowkeysToggle",
-    opts = {
-      timeout = 1,
-      maxkeys = 6,
-      -- bottom-left, bottom-right, bottom-center, top-left, top-right, top-center
-      position = "bottom-right",
-    },
-
-    keys = {
-      {
-        "<leader>ut",
-        function()
-          vim.cmd("ShowkeysToggle")
-        end,
-        desc = "Show key presses",
-      },
-    },
+    'fladson/vim-kitty',
+    'MunifTanjim/nui.nvim',
   },
 }
