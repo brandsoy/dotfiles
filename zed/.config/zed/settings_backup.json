@@ -7,16 +7,33 @@
 // custom settings, run the `open default settings` command
 // from the command palette or from `Zed` application menu.
 {
+  "outline_panel": {
+    "dock": "right"
+  },
+  "context_servers": {
+    "postgres-context-server": {
+      "settings": {
+        "database_url": "postgresql://postgres:postgres@localhost:5432/monolith"
+      }
+    }
+  },
   "icon_theme": "Zed (Default)",
-  "assistant": {
+  "agent": {
+    "always_allow_tool_actions": false,
+    "play_sound_when_agent_done": true,
+    "default_profile": "write",
+    "inline_assistant_model": {
+      "provider": "zed.dev",
+      "model": "claude-sonnet-4-latest"
+    },
     "default_model": {
       "provider": "zed.dev",
-      "model": "claude-3-7-sonnet-latest"
+      "model": "claude-sonnet-4"
     },
     "version": "2"
   },
   "project_panel": {
-    "dock": "right"
+    "dock": "left"
   },
   "base_keymap": "VSCode",
   // Vim mode settings
@@ -25,17 +42,17 @@
     "enable_vim_sneak": true
   },
   "relative_line_numbers": true,
-  "buffer_font_family": "MonaspiceNe Nerd Font",
-  "ui_font_family": "MonaspiceNe Nerd Font",
-  "ui_font_size": 16,
-  "buffer_font_size": 16.0,
+  "buffer_font_family": "JetBrainsMonoNL Nerd Font Mono",
+  "ui_font_family": "JetBrainsMonoNL Nerd Font Mono",
+  "ui_font_size": 14,
+  "buffer_font_size": 14,
   "features": {
     "edit_prediction_provider": "zed"
   },
   "terminal": {
-    "font_family": "BlexMono Nerd Font Mono"
+    "font_family": "JetBrainsMonoNL Nerd Font Mono"
   },
-  "theme": "GitHub Dark Default",
+  "theme": "Catppuccin Mocha",
   "telemetry": {
     "metrics": false,
     "diagnostics": false
@@ -51,8 +68,9 @@
     "JSON": ["json", "jsonc", "*.code-snippets"]
   },
   "scrollbar": {
-    "show": "never"
+    "show": "auto"
   },
+
   // File scan exclusions, hide on the file explorer and search
   "file_scan_exclusions": [
     "**/.git",

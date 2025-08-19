@@ -7,8 +7,12 @@
 // custom settings, run the `open default settings` command
 // from the command palette or from `Zed` application menu.
 {
+  "outline_panel": {
+    "dock": "right"
+  },
   "context_servers": {
     "postgres-context-server": {
+      "source": "extension",
       "settings": {
         "database_url": "postgresql://postgres:postgres@localhost:5432/monolith"
       }
@@ -27,7 +31,6 @@
       "provider": "zed.dev",
       "model": "claude-sonnet-4"
     },
-    "version": "2"
   },
   "project_panel": {
     "dock": "left"
@@ -49,7 +52,7 @@
   "terminal": {
     "font_family": "JetBrainsMonoNL Nerd Font Mono"
   },
-  "theme": "GitHub Dark Default",
+  "theme": "Catppuccin Mocha",
   "telemetry": {
     "metrics": false,
     "diagnostics": false

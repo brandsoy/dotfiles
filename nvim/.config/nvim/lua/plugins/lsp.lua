@@ -34,8 +34,8 @@ return {
         'ruff', -- Fast Python formatter/linter
         'black', -- Optional fallback formatter
         -- C#
-        -- 'csharp-language-server',
-        'omnisharp',
+        'csharp-language-server',
+        -- 'omnisharp',
         -- SQL
         'sqls',
         -- Markdown

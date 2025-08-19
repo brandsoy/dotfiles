@@ -20,7 +20,8 @@ macos-titlebar-proxy-icon = "hidden"
 # Font
 font-size = 14
 # font-family = "Iosevka Nerd Font Mono"
-font-family = "JetBrainsMonoNL Nerd Font Mono"
+# font-family = "JetBrainsMonoNL Nerd Font Mono"
+font-family = "FiraCode Nerd Font Mono"
 # font-family = "MesloLGS Nerd Font Mono"
 # font-family = "CaskaydiaCove Nerd Font Mono"
 # font-family = "IBM Plex Mono"

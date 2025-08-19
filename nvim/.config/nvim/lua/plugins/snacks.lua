@@ -18,7 +18,7 @@ return {
       layout = {
         cycle = true,
         preset = function()
-          return vim.o.columns >= 120 and 'ivy_split' or 'vertical'
+          return vim.o.columns >= 120 and 'default' or 'vertical'
         end,
       },
     },
