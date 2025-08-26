@@ -35,10 +35,10 @@ background = '#7aa2f7'
 TERM = "xterm-256color"
 
 [font]
-normal = { family = "CaskaydiaMono Nerd Font Mono" }
-bold = { family = "CaskaydiaMono Nerd Font Mono" }
-italic = { family = "CaskaydiaMono Nerd Font Mono" }
-size = 12
+normal = { family = "BitstromWera Nerd Font Mono" }
+bold = { family = "BitstromWera Nerd Font Mono" }
+italic = { family = "BitstromWera Nerd Font Mono" }
+size = 10
 
 [window]
 padding.x = 14
