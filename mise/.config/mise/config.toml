@@ -1,7 +1,11 @@
+[settings]
+idiomatic_version_file_enable_tools = ["ruby"]
+
+[settings.ruby]
+ruby_build_opts = "CC=gcc-14 CXX=g++-14"
+
 [tools]
-node = "22.15.0"
-deno = "latest"
-go = "1.24.3"
-bun = "latest"
+dotnet = ["9", "8"]
+go = "latest"
+node = "lts"
 python = "latest"
-dotnet = "latest"

@@ -1,4 +1,0 @@
-
-[sqlfluff]
-dialect = postgres
-rules = L003, L014  # Add or exclude rules as needed

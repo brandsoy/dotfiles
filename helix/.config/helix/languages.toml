@@ -1,8 +1,0 @@
-[[language]]
-name = "svelte"
-language-servers = [
-  "svelte-language-server",
-  "typescript-language-server",
-  "vscode-eslint-language-server",
-]
-formatter = { command = "prettier", args = ["--parser", "svelte"] }

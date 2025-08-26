@@ -1,66 +1,22 @@
+general.import = [ "~/.config/omarchy/current/theme/alacritty.toml" ]
 
 [env]
 TERM = "xterm-256color"
 
 [font]
-size = 16.0
-
-[font.bold]
-# family = "MesloLGS Nerd Font Mono"
-family = "JetBrainsMono Nerd Font Mono"
-style = "Bold"
-
-[font.bold_italic]
-family = "JetBrainsMono Nerd Font Mono"
-# family = "MesloLGS Nerd Font Mono"
-style = "Bold Italic"
-
-[font.italic]
-family = "JetBrainsMono Nerd Font Mono"
-# family = "MesloLGS Nerd Font Mono"
-style = "Italic"
-
-[font.normal]
-# family = "MesloLGS Nerd Font Mono"
-family = "JetBrainsMono Nerd Font Mono"
-style = "Regular"
-
-[font.offset]
-x = 0
-y = 0
-
-[mouse]
-hide_when_typing = true
-
-[[mouse.bindings]]
-action = "PasteSelection"
-mouse = "Middle"
-
-[selection]
-semantic_escape_chars = ",│`|:\"' ()[]{}<>"
-# Share buffer with primary clipboard
-save_to_clipboard = true
-
-[terminal.shell]
-program = "/bin/zsh"
+normal = { family = "CaskaydiaMono Nerd Font Mono" }
+bold = { family = "CaskaydiaMono Nerd Font Mono" }
+italic = { family = "CaskaydiaMono Nerd Font Mono" }
+size = 12
 
 [window]
-decorations = "none"
-dynamic_title = true
-# If set to "Both" it does not work
-option_as_alt = "OnlyLeft"
-#startup_mode = "Maximized"
+padding.x = 14
+padding.y = 14
+decorations = "None"
+opacity = 0.98
 
-[window.dimensions]
-columns = 160
-lines = 80
+[keyboard]
+bindings = [
+{ key = "F11", action = "ToggleFullscreen" }
+]
 
-[window.padding]
-x = 4
-y = 4
-
-[general]
-live_config_reload = true
-import = ["./themes/themes/catppuccin_mocha.toml"]
-
-[terminal]
