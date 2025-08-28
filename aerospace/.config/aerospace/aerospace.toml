@@ -109,7 +109,8 @@ outer.left = 5
 
 # App shortcuts
 alt-b = 'exec-and-forget open -a /Applications/Firefox.app'
-alt-c = 'exec-and-forget open -a /Applications/Visual Studio Code - Insiders.app'
+alt-z = 'exec-and-forget open -a /Applications/zed.app'
+# alt-c = 'exec-and-forget open -a /Applications/Visual Studio Code - Insiders.app'
 alt-i = 'exec-and-forget open -a /Applications/Ghostty.app'
 alt-w = 'exec-and-forget open -a /Applications/Obsidian.app'
 alt-shift-r = ['exec-and-forget /opt/homebrew/bin/sketchybar --reload']
