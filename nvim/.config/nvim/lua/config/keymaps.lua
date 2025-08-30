@@ -34,9 +34,36 @@ vim.keymap.set("v", ">", ">gv", { desc = "Indent right and reselect" })
 -- Better J behavior
 vim.keymap.set("n", "J", "mzJ`z", { desc = "Join lines and keep cursor position" })
 
+-- JK Escape
+vim.keymap.set("i", "jk", [[<C-\><C-n>]])
+
 -- Quick config editing
 vim.keymap.set("n", "<leader>rc", "<Cmd>e ~/.config/nvim/init.lua<CR>", { desc = "Edit config" })
 
 -- File Explorer
 vim.keymap.set("n", "<leader>m", "<Cmd>NvimTreeFocus<CR>", { desc = "Focus on File Explorer" })
 vim.keymap.set("n", "<leader>e", "<Cmd>NvimTreeToggle<CR>", { desc = "Toggle File Explorer" })
+
+-- Markdown
+-- Insert hyperlinks
+vim.keymap.set("n", "<leader>ln", "i[]()<Esc>F[a", { desc = "Insert markdown link" })
+vim.keymap.set("n", "<leader>ll", "i[]()<Esc>F(a<C-r>+<Esc>F[a", { desc = "Insert buffered markdown link" })
+vim.keymap.set("v", "<leader>l", function()
+	local s = vim.fn.getreg("v") -- selected text
+	vim.cmd([[normal! gv]]) -- reselect
+	vim.cmd([[normal! c[]()]]) -- replace with []
+	vim.api.nvim_put({ s }, "c", true, true) -- put selection inside []
+	vim.cmd([[normal! F[a]]) -- move cursor into ()
+end, { desc = "Wrap selection in markdown link" })
+-- Insert a markdown todo checkbox
+vim.keymap.set("n", "<leader>tt", "0i- [ ] <Esc>", { desc = "Insert markdown todo" })
+vim.keymap.set("v", "<leader>tt", ":s/^/- [ ] /<CR>:noh<CR>", { desc = "Make lines markdown todos" })
+vim.keymap.set("n", "<leader>tx", function()
+	local line = vim.api.nvim_get_current_line()
+	if line:match("%[ %]") then
+		line = line:gsub("%[ %]", "[x]", 1)
+	elseif line:match("%[x%]") then
+		line = line:gsub("%[x%]", "[ ]", 1)
+	end
+	vim.api.nvim_set_current_line(line)
+end, { desc = "Toggle markdown todo checkbox" })

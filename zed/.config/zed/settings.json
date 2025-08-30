@@ -43,7 +43,7 @@
   "relative_line_numbers": true,
 
   // THEMEING
-  "theme": "GitHub Dark Default",
+  "theme": "Tokyo Night",
   "icon_theme": "Catppuccin Macchiato",
   "buffer_font_family": "IBM Plex Mono",
   "buffer_font_size": 15,

@@ -26,6 +26,7 @@ return function(lspconfig, capabilities, on_attach)
 	local cpplint = require("efmls-configs.linters.cpplint") -- c/cpp linter
 	local clangformat = require("efmls-configs.formatters.clang_format") -- c/cpp formatter
 	local rustfmt = require("efmls-configs.formatters.rustfmt") -- rust formatter
+	local markdownlint = require("efmls-configs.linters.markdownlint")
 
 	lspconfig.efm.setup({
 		on_attach = on_attach,
@@ -72,7 +73,7 @@ return function(lspconfig, capabilities, on_attach)
 				json = { eslint_d, fixjson },
 				jsonc = { eslint_d, fixjson },
 				lua = { luacheck, stylua },
-				markdown = { prettier_d },
+				markdown = { markdownlint },
 				python = { flake8, black },
 				sh = { shellcheck, shfmt },
 				rust = { rustfmt },
