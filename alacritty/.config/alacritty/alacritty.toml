@@ -35,9 +35,9 @@ general.import = [ "~/.config/omarchy/current/theme/alacritty.toml" ]
 TERM = "xterm-256color"
 
 [font]
-normal = { family = "BitstromWera Nerd Font Mono" }
-bold = { family = "BitstromWera Nerd Font Mono" }
-italic = { family = "BitstromWera Nerd Font Mono" }
+normal = { family = "MesloLGS Nerd Font Mono" }
+bold = { family = "MesloLGS Nerd Font Mono" }
+italic = { family = "MesloLGS Nerd Font Mono" }
 size = 10
 
 [window]
