@@ -1,12 +1,21 @@
 local M = {}
 
 M.on_attach = function(client, bufnr)
-	local keymap = vim.keymap.set
-	local opts = {
-		noremap = true, -- prevent recursive mapping
-		silent = true, -- don't print the command to the cli
-		buffer = bufnr, -- restrict the keymap to the local buffer number
+	-- Prefer external formatters (Conform) for these servers
+	local disable_fmt = {
+		tsserver = true,
+		ts_ls = true,
+		lua_ls = true,
+		jsonls = true,
+		yamlls = true,
 	}
+	if disable_fmt[client.name] then
+		client.server_capabilities.documentFormattingProvider = false
+		client.server_capabilities.documentRangeFormattingProvider = false
+	end
+
+	local keymap = vim.keymap.set
+	local opts = { noremap = true, silent = true, buffer = bufnr }
 
 	-- native neovim keymaps
 	keymap("n", "<leader>gD", "<cmd>lua vim.lsp.buf.definition()<CR>", opts) -- goto definition
@@ -40,8 +49,13 @@ M.on_attach = function(client, bufnr)
 			})
 			-- format after changing import order
 			vim.defer_fn(function()
-				vim.lsp.buf.format({ bufnr = bufnr })
-			end, 50) -- slight delay to allow for the import order to go first
+				local ok, conform = pcall(require, "conform")
+				if ok then
+					conform.format({ bufnr = bufnr, lsp_fallback = true, timeout_ms = 1500 })
+				else
+					vim.lsp.buf.format({ bufnr = bufnr })
+				end
+			end, 50)
 		end, opts)
 	end
 end

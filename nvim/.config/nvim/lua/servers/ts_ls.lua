@@ -18,11 +18,5 @@ return function(lspconfig, capabilities, on_attach)
 			"typescriptreact",
 			"javascriptreact",
 		},
-		settings = {
-			typescript = {
-				indentStyle = "space",
-				indentSize = 2,
-			},
-		},
 	})
 end
