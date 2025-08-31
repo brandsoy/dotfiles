@@ -1,17 +1,40 @@
--- ================================================================================================
--- TITLE : gopls (Golang Language Server) LSP Setup
--- LINKS :
---   > github: https://github.com/golang/tools/tree/master/gopls
--- ================================================================================================
-
---- @param lspconfig table The lspconfig module from nvim-lspconfig plugin
---- @param capabilities table LSP client capabilities (typically from nvim-cmp or similar)
---- @param on_attach function Callback function executed when LSP attaches to a buffer
---- @return nil
-return function(lspconfig, capabilities, on_attach)
-	lspconfig.gopls.setup({
-		capabilities = capabilities,
-		on_attach = on_attach,
-		filetypes = { "go" },
-	})
-end
+return {
+	filetypes = { "go", "gomod", "gowork", "gotmpl" },
+	settings = {
+		gopls = {
+			analyses = {
+				unusedparams = true,
+				shadow = true,
+				useany = true,
+				unusedvariable = true,
+				fieldalignment = false,
+				nilness = true,
+				unusedwrite = true,
+				nonewvars = true,
+			},
+			staticcheck = true,
+			gofumpt = true,
+			usePlaceholders = true,
+			completeUnimported = true,
+			semanticTokens = true,
+			codelens = {
+				gc_details = false,
+				generate = true,
+				regenerate_cgo = true,
+				test = true,
+				tidy = true,
+				upgrade_dependency = true,
+				vendor = true,
+			},
+			hints = {
+				assignVariableTypes = true,
+				compositeLiteralFields = true,
+				compositeLiteralTypes = true,
+				constantValues = true,
+				functionTypeParameters = true,
+				parameterNames = true,
+				rangeVariableTypes = true,
+			},
+		},
+	},
+}

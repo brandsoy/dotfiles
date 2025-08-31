@@ -19,10 +19,21 @@ return {
 				},
 			},
 		},
+		"mason-org/mason-lspconfig.nvim",
     "saghen/blink.cmp"
 	},
 	config = function()
 		require("utils.diagnostics").setup()
 		require("servers")
+
+		-- Auto-install LSP servers via mason
+		local mason_lspconfig = require("mason-lspconfig")
+		mason_lspconfig.setup({
+			ensure_installed = {
+				"lua_ls", "pyright", "gopls", "jsonls", "ts_ls",
+				"bashls", "clangd", "dockerls", "emmet_ls", "yamlls", "tailwindcss", "sqls"
+			},
+			automatic_installation = true,
+		})
 	end,
 }

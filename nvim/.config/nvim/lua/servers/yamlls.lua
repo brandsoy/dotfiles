@@ -1,29 +1,45 @@
--- ================================================================================================
--- TITLE : yamlls (YAML Language Server) LSP Setup
--- LINKS :
---   > github: https://github.com/redhat-developer/yaml-language-server
--- ================================================================================================
-
---- @param lspconfig table The lspconfig module from nvim-lspconfig plugin
---- @param capabilities table LSP client capabilities (typically from nvim-cmp or similar)
---- @param on_attach function Callback function executed when LSP attaches to a buffer
---- @return nil
-return function(lspconfig, capabilities, on_attach)
-	lspconfig.yamlls.setup({
-		on_attach = on_attach,
-		capabilities = capabilities,
-		settings = {
-			yaml = {
-				schemas = {
-					["https://json.schemastore.org/composer.json"] = "composer.json",
-					["https://json.schemastore.org/docker-compose.json"] = "docker-compose*.yml",
-				},
-				validate = true,
-				format = {
-					enable = true,
-				},
+return {
+	settings = {
+		yaml = {
+			schemas = {
+				["https://json.schemastore.org/github-workflow.json"] = ".github/workflows/*.{yml,yaml}",
+				["https://json.schemastore.org/github-action.json"] = ".github/action.{yml,yaml}",
+				["https://json.schemastore.org/composer.json"] = "composer.json",
+				["https://json.schemastore.org/docker-compose.json"] = "docker-compose*.{yml,yaml}",
+				["https://json.schemastore.org/kubernetes.json"] = "/*.{yml,yaml}",
+				["https://json.schemastore.org/helmfile.json"] = "helmfile.{yml,yaml}",
+				["https://raw.githubusercontent.com/yannh/kubernetes-json-schema/master/v1.24.3-standalone-strict/all.json"] = "/*.{yml,yaml}",
+			},
+			validate = true,
+			format = {
+				enable = true,
+				singleQuote = false,
+				bracketSpacing = true,
+				proseWrap = "preserve",
+				printWidth = 100,
+			},
+			hover = true,
+			completion = true,
+			customTags = {
+				"!Base64 scalar",
+				"!Cidr scalar",
+				"!FindInMap sequence",
+				"!GetAtt scalar",
+				"!GetAZs mapping",
+				"!ImportValue scalar",
+				"!Join sequence",
+				"!Ref scalar",
+				"!Select sequence",
+				"!Split sequence",
+				"!Sub scalar",
+				"!Transform mapping",
+				"!And sequence",
+				"!Equals sequence",
+				"!If sequence",
+				"!Not sequence",
+				"!Or sequence",
 			},
 		},
-		filetypes = { "yaml" },
-	})
-end
+	},
+	filetypes = { "yaml", "yml" },
+}
