@@ -46,8 +46,7 @@ autoload -Uz compinit && compinit
 zinit cdreplay -q
 
 # To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
-[[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
-
+[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
 
 # ~/.zshrc history configuration
 # Keybindings
@@ -128,11 +127,6 @@ if command -v go &>/dev/null; then
   fi
 fi
 
-# Bun (Generic setup for $HOME/.bun)
-export BUN_INSTALL="$HOME/.bun"
-if [ -d "$BUN_INSTALL/bin" ]; then
-    export PATH="$BUN_INSTALL/bin:$PATH"
-fi
 
 # NVM (Node Version Manager)
 export NVM_DIR="$HOME/.nvm"
@@ -158,25 +152,6 @@ if [[ "$(uname)" == "Darwin" ]]; then
     eval "$(/opt/homebrew/bin/brew shellenv)"
   fi
 
-  # Conda/Micromamba for macOS (using user's specific path)
-  # Ensure this path is correct for your macOS setup.
-  _CONDA_EXE_MAC="/Users/mattis/micromamba/bin/conda"
-  _CONDA_PROFILE_MAC="/Users/mattis/micromamba/etc/profile.d/conda.sh"
-  _CONDA_BIN_DIR_MAC="/Users/mattis/micromamba/bin"
-
-  if [[ -x "$_CONDA_EXE_MAC" ]]; then
-    __conda_setup_mac="$("$_CONDA_EXE_MAC" 'shell.zsh' 'hook' 2> /dev/null)"
-    if [ $? -eq 0 ]; then
-        eval "$__conda_setup_mac"
-    elif [[ -f "$_CONDA_PROFILE_MAC" ]]; then
-        . "$_CONDA_PROFILE_MAC"
-    elif [[ -d "$_CONDA_BIN_DIR_MAC" ]]; then # Fallback: add bin to PATH if hook/profile fails
-        export PATH="$_CONDA_BIN_DIR_MAC:$PATH"
-    fi
-    unset __conda_setup_mac
-  fi
-  unset _CONDA_EXE_MAC _CONDA_PROFILE_MAC _CONDA_BIN_DIR_MAC
-
   # PNPM for macOS (using user's specific Library path)
   PNPM_HOME_MAC="/Users/mattis/Library/pnpm"
   if [ -d "$PNPM_HOME_MAC" ]; then
@@ -188,12 +163,6 @@ if [[ "$(uname)" == "Darwin" ]]; then
   fi
   unset PNPM_HOME_MAC
 
-  # Bun completions for macOS (using user's specific path)
-  BUN_COMPLETIONS_MAC="/Users/mattis/.bun/_bun"
-  if [ -s "$BUN_COMPLETIONS_MAC" ]; then
-    source "$BUN_COMPLETIONS_MAC"
-  fi
-  unset BUN_COMPLETIONS_MAC
 
   # PostgreSQL (from Homebrew on macOS)
   LIBPQ_BIN_MAC="/usr/local/opt/libpq/bin" # Common path, but can vary
@@ -218,23 +187,6 @@ elif [[ "$(uname)" == "Linux" ]]; then
     eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
   fi
 
-  # Conda/Micromamba for Linux
-  # It's highly recommended to run 'conda init zsh' or 'micromamba init zsh'
-  # on your Linux system and paste the generated block here.
-  # Example placeholder (adjust paths as needed or use init script output):
-  # _CONDA_EXE_LINUX="$HOME/micromamba/bin/conda" # Or /opt/conda/bin/conda etc.
-  # if [[ -x "$_CONDA_EXE_LINUX" ]]; then
-  #   __conda_setup_linux="$("$_CONDA_EXE_LINUX" 'shell.zsh' 'hook' 2> /dev/null)"
-  #   if [ $? -eq 0 ]; then
-  #       eval "$__conda_setup_linux"
-  #   # Add similar profile.d/ fallback if needed for your Linux conda setup
-  #   fi
-  #   unset __conda_setup_linux
-  # fi
-  # unset _CONDA_EXE_LINUX
-  echo "INFO: For Conda/Micromamba on Linux, ensure you've run 'conda init zsh' or 'micromamba init zsh' and configured it here if needed."
-
-
   # PNPM for Linux (uses XDG_DATA_HOME or default ~/.local/share/pnpm)
   PNPM_HOME_LINUX="${XDG_DATA_HOME:-$HOME/.local/share}/pnpm"
   if [ -d "$PNPM_HOME_LINUX" ]; then
@@ -245,19 +197,6 @@ elif [[ "$(uname)" == "Linux" ]]; then
     esac
   fi
   unset PNPM_HOME_LINUX
-
-  # Bun completions for Linux
-  # Bun typically installs completions to $HOME/.bun/_bun
-  # Or you can try `source <(bun completions zsh)` if `bun` is in PATH
-  BUN_COMPLETIONS_LINUX="$HOME/.bun/_bun"
-  if [ -s "$BUN_COMPLETIONS_LINUX" ]; then
-    source "$BUN_COMPLETIONS_LINUX"
-  elif command -v bun &>/dev/null; then
-    # As a fallback, try to source output of bun command (use with caution or test output first)
-    # eval "$(bun completions zsh)"
-    : # Placeholder - user might need to adjust based on `bun completions zsh` output
-  fi
-  unset BUN_COMPLETIONS_LINUX
 
   # PostgreSQL for Linux (path varies greatly depending on distribution and installation method)
   # Example: export PATH="/usr/lib/postgresql/XX/bin:$PATH"
@@ -286,5 +225,3 @@ TYPESPEC_PATH="/Users/mattis/.tsp/bin"
 if [ -d "$TYPESPEC_PATH" ]; then
   export PATH="/Users/mattis/.tsp/bin:$PATH"
 fi
-
-# HELIX_RUNTIME=~/src/helix/runtime
