@@ -1,16 +1,15 @@
--- ================================================================================================
--- TITLE : nvim-tree.lua
--- ABOUT : A file explorer tree for Neovim, written in Lua.
--- LINKS :
---   > github : https://github.com/nvim-tree/nvim-tree.lua
--- ================================================================================================
-
 return {
 	"nvim-tree/nvim-tree.lua",
+	keys = {
+		{ "<leader>e", "<cmd>NvimTreeToggle<cr>" },
+	},
 	lazy = false,
+	dependencies = {
+		"nvim-tree/nvim-web-devicons",
+	},
 	config = function()
 		-- Remove background color from the NvimTree window (ui fix)
-		vim.cmd([[hi NvimTreeNormal guibg=NONE ctermbg=NONE]])
+		-- vim.cmd([[hi NvimTreeNormal guibg=NONE ctermbg=NONE]])
 
 		require("nvim-tree").setup({
 			filters = {

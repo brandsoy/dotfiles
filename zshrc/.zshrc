@@ -46,7 +46,7 @@ autoload -Uz compinit && compinit
 zinit cdreplay -q
 
 # To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
-[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
+[ ! -f ~/.p10k.zsh ] || source ~/.p10k.zsh
 
 # ~/.zshrc history configuration
 # Keybindings
@@ -225,3 +225,9 @@ TYPESPEC_PATH="/Users/mattis/.tsp/bin"
 if [ -d "$TYPESPEC_PATH" ]; then
   export PATH="/Users/mattis/.tsp/bin:$PATH"
 fi
+
+eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
+export GEMINI_API_KEY="AIzaSyAK1EWAqybtchh-k5uNCmWvnSIRhUqJcgc"
+
+# opencode
+export PATH=/home/mattis/.opencode/bin:$PATH

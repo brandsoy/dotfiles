@@ -27,7 +27,6 @@ return {
 				"markdown",
 				"markdown_inline",
 				"python",
-				"rust",
 				"svelte",
 				"typescript",
 				"vue",

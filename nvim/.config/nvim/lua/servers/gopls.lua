@@ -17,7 +17,7 @@ return {
 			usePlaceholders = true,
 			completeUnimported = true,
 			semanticTokens = true,
-			codelens = {
+			codelenses = {
 				gc_details = false,
 				generate = true,
 				regenerate_cgo = true,

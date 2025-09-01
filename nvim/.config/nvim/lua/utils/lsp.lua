@@ -94,29 +94,30 @@ M.on_attach = function(client, bufnr)
 end
 
 M.enable = function(server)
-  local ok, config = pcall(require, "servers." .. server)
-  if ok then
-    config.on_attach = M.on_attach
-    config.capabilities = M.capabilities
-    -- Ensure root_dir is set for proper workspace detection
-    if not config.root_dir then
-      config.root_dir = vim.fs.root(0, { ".git", "package.json", "Cargo.toml", "go.mod", "pyproject.toml" })
-    end
+	local ok, config = pcall(require, "servers." .. server)
+	if ok then
+		config.on_attach = M.on_attach
+		config.capabilities = M.capabilities
+		-- Ensure root_dir is set for proper workspace detection
+		if not config.root_dir then
+			config.root_dir = vim.fs.root(0, { ".git", "package.json", "Cargo.toml", "go.mod", "pyproject.toml" })
+		end
 
-    -- Start the server via nvim-lspconfig
-    local lspconfig_ok, lspconfig = pcall(require, "lspconfig")
-    if not lspconfig_ok then
-      vim.notify("nvim-lspconfig not available", vim.log.levels.ERROR)
-      return
-    end
-    if not lspconfig[server] then
-      vim.notify("lspconfig has no server named: " .. server, vim.log.levels.WARN)
-      return
-    end
-    lspconfig[server].setup(config)
-  else
-    vim.notify("LSP config not found for " .. server, vim.log.levels.WARN)
-  end
+		-- Start the server via nvim-lspconfig
+		local lspconfig_ok, lspconfig = pcall(require, "lspconfig")
+		if not lspconfig_ok then
+			vim.notify("nvim-lspconfig not available", vim.log.levels.ERROR)
+			return
+		end
+		if not lspconfig[server] then
+			vim.notify("lspconfig has no server named: " .. server, vim.log.levels.WARN)
+			return
+		end
+		lspconfig[server].setup(config)
+	else
+		vim.notify("LSP config not found for " .. server, vim.log.levels.WARN)
+	end
 end
 
 return M
+

@@ -1,14 +1,3 @@
--- ================================================================================================
--- TITLE : lazy.nvim Bootstrap & Plugin Setup
--- ABOUT :
---   bootstraps the 'lazy.nvim' plugin manager by cloning it if not present, prepends it to the
---   runtime path, and then loads core configuration files (globals, options, keymaps, autocmds).
---   Last, initialises 'lazy.nvim' with plugins.
--- LINKS :
---   > lazy.nvim github  : https://github.com/folke/lazy.nvim
---   > lazy.nvim website : https://lazy.folke.io/installation
--- ================================================================================================
-
 local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
 ---@diagnostic disable-next-line: undefined-field (fs_stat)
 if not (vim.uv or vim.loop).fs_stat(lazypath) then
@@ -43,6 +32,6 @@ require("lazy").setup({
 			"netrwPlugin",
 		},
 	},
-	install = { colorscheme = { "melange" } },
+	install = { colorscheme = { "tokyonight" } },
 	checker = { enabled = true },
 })
