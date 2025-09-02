@@ -47,6 +47,7 @@ alias g='git'
 alias d='docker'
 alias r='rails'
 n() { if [ "$#" -eq 0 ]; then nvim .; else nvim "$@"; fi; }
+h() { if [ "$#" -eq 0 ]; then helix .; else helix "$@"; fi; }
 
 # Git
 alias gcm='git commit -m'
