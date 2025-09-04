@@ -1,0 +1,33 @@
+return function()
+  require("mason").setup()
+  require("mason-lspconfig").setup()
+  require("mason-tool-installer").setup({
+    ensure_installed = {
+      "lua_ls",
+      "bashls",
+      "pyright",
+      "ruff",
+      "dockerls",
+      "eslint",
+      "sqls",
+      "prettier",
+      "prettierd",
+      "tailwindcss",
+      "shfmt",
+      "stylua",
+      "gopls",
+      "golangci-lint",
+      "delve",
+      "gofumpt",
+      "golines",
+      "gomodifytags",
+      "gotests",
+      "iferr",
+      "ts_ls",
+      "jsonls",
+      "yamlls",
+      "biome",
+      "tsp_server",
+    },
+  })
+end
