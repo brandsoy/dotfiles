@@ -6,7 +6,8 @@ require("plugins")()
 
 -- Plugin configs
 require("plugins.which-key")()
-require("plugins.mini")()
+require("plugins.oil")()
+require("plugins.fzf-lua")()
 require("plugins.treesitter")()
 require("plugins.go")()
 require("plugins.dap")()

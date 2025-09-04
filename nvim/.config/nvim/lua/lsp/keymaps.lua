@@ -18,7 +18,6 @@ return function()
       local bufnr = ev.buf
       local opts = { buffer = bufnr, silent = true, noremap = true }
 
-      local pick = require("mini.extra").pickers.lsp
       local keymap = vim.keymap.set
 
       keymap("n", "gd", vim.lsp.buf.definition, vim.tbl_extend("force", opts, { desc = "Go to Definition" }))
@@ -54,19 +53,7 @@ return function()
       keymap("n", "<leader>le", vim.diagnostic.open_float, vim.tbl_extend("force", opts, { desc = "Show Diagnostics (Float)" }))
       keymap("n", "<leader>lq", vim.diagnostic.setloclist, vim.tbl_extend("force", opts, { desc = "Diagnostics to Location List" }))
 
-      -- Symbol pickers
-      keymap("n", "<leader>ss", function() pick({ scope = "document_symbol" }) end,
-        vim.tbl_extend("force", opts, { desc = "Document Symbols" }))
-      keymap("n", "<leader>sS", function() pick({ scope = "workspace_symbol" }) end,
-        vim.tbl_extend("force", opts, { desc = "Workspace Symbols" }))
-      keymap("n", "<leader>sr", function() pick({ scope = "references" }) end,
-        vim.tbl_extend("force", opts, { desc = "References" }))
-      keymap("n", "<leader>sd", function() pick({ scope = "definition" }) end,
-        vim.tbl_extend("force", opts, { desc = "Definitions" }))
-      keymap("n", "<leader>si", function() pick({ scope = "implementation" }) end,
-        vim.tbl_extend("force", opts, { desc = "Implementations" }))
-      keymap("n", "<leader>st", function() pick({ scope = "type_definition" }) end,
-        vim.tbl_extend("force", opts, { desc = "Type Definitions" }))
+      
     end,
   })
 end
