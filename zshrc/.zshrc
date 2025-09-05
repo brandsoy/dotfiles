@@ -1,5 +1,4 @@
 # ~/.zshrc
-# . "$HOME/.local.share/../bin/env"
 
 # Enable Powerlevel10k instant prompt. Should stay close to the top of ~/.zshrc.
 # Initialization code that may require console input (password prompts, [y/n]
@@ -92,7 +91,7 @@ alias vf='nvim $(fzf --preview="bat --color=always {}")'
 
 # FZF Snacks
 # Fuzzy file search (CTRL-T replacement)
-# alias ff="fd --type f --hidden --exclude .git | fzf --preview 'bat --color=always {}'" # fd needs to be installed
+alias ff="fd --type f --hidden --exclude .git | fzf --preview 'bat --color=always {}'" # fd needs to be installed
 
 # Directory navigation (ALT-C replacement)
 # Ensure 'find' and 'fzf' are available. 'tree' for preview.
@@ -197,16 +196,6 @@ elif [[ "$(uname)" == "Linux" ]]; then
     esac
   fi
   unset PNPM_HOME_LINUX
-
-  # PostgreSQL for Linux (path varies greatly depending on distribution and installation method)
-  # Example: export PATH="/usr/lib/postgresql/XX/bin:$PATH"
-  # You'll need to find the correct path for your Linux system if you need this.
-  # if command -v psql &>/dev/null; then : # psql is in PATH, likely no action needed
-  # elif [ -d "/usr/pgsql-13/bin" ]; then # Example for some RHEL-based systems
-  #   export PATH="/usr/pgsql-13/bin:$PATH"
-  # fi
-  : # Placeholder for Linux PostgreSQL path if needed
-
 fi # End of OS-specific block
 
 # Any other generic settings can go here
@@ -226,7 +215,6 @@ if [ -d "$TYPESPEC_PATH" ]; then
   export PATH="/Users/mattis/.tsp/bin:$PATH"
 fi
 
-eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
 export GEMINI_API_KEY="AIzaSyAK1EWAqybtchh-k5uNCmWvnSIRhUqJcgc"
 
 # opencode

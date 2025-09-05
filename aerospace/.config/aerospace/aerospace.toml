@@ -9,6 +9,7 @@ after-login-command = []
 # You can use it to add commands that run after AeroSpace startup.
 # 'after-startup-command' is run after 'after-login-command'
 # Available commands : https://nikitabobko.github.io/AeroSpace/commands
+# https://github.com/FelixKratz/JankyBorders
 after-startup-command = [
     'exec-and-forget borders active_color=0xffe1e3e4 inactive_color=0xff494d64 width=5.0',
 ]
@@ -108,13 +109,13 @@ outer.left = 5
 # '''
 
 # App shortcuts
-alt-b = 'exec-and-forget open -a /Applications/Firefox.app'
-alt-z = 'exec-and-forget open -a /Applications/zed.app'
+# alt-b = 'exec-and-forget open -a /Applications/Firefox.app'
+# alt-z = 'exec-and-forget open -a /Applications/zed.app'
 # alt-c = 'exec-and-forget open -a /Applications/Visual Studio Code - Insiders.app'
-alt-i = 'exec-and-forget open -a /Applications/Ghostty.app'
-alt-w = 'exec-and-forget open -a /Applications/Obsidian.app'
-alt-shift-r = ['exec-and-forget /opt/homebrew/bin/sketchybar --reload']
-
+# alt-i = 'exec-and-forget open -a /Applications/Ghostty.app'
+# alt-w = 'exec-and-forget open -a /Applications/Obsidian.app'
+# alt-shift-r = ['exec-and-forget /opt/homebrew/bin/sketchybar --reload']
+#
 # See: https://nikitabobko.github.ioeAeroSpace/commands#layout
 alt-e = 'layout tiles horizontal vertical'
 alt-comma = 'layout accordion horizontal vertical'

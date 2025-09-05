@@ -1,17 +1,17 @@
 # Theme
 
-# bold-is-bright = true
-background-opacity = 0.90
-background-blur-radius = 30
+bold-is-bright = true
+background-opacity = 1
+# background-blur-radius = 30
 mouse-hide-while-typing = true
 
 # theme = catppuccin-macchiato
 # theme = catppuccin-mocha
 # theme = xcodedark
-# theme = rose-pine
+theme = rose-pine
 # theme = dark:rose-pine,light:rose-pine-dawn
 # theme = ayu
-theme = GitHub-Dark-Default
+# theme = GitHub-Dark-Default
 
 # Titlebar
 macos-titlebar-style = "transparent"
@@ -53,7 +53,11 @@ maximize = true
 # Windows Padding
 window-padding-balance = true
 window-padding-x = 2
-window-padding-y = 1
+window-padding-y = 2 
+
+# Window hide top bar
+# window-decoration = "none"
+macos-titlebar-style = hidden
 
 # Key bindings
 keybind = ctrl+`=toggle_quick_terminal
