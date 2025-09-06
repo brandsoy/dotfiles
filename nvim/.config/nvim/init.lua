@@ -14,7 +14,7 @@ require("plugins.dap")()
 
 -- LSP setup
 require("lsp.mason")()
-require("lsp.servers")()
+-- require("lsp.servers")()
 require("lsp.keymaps")()
 
 -- Appearance

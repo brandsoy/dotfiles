@@ -1,6 +1,5 @@
-return function()
-  local ts = require("nvim-treesitter.configs")
-  ts.setup({
+return function() 
+   require("nvim-treesitter.configs").setup {
     ensure_installed = {
       "bash",
       "css",
@@ -41,5 +40,5 @@ return function()
         node_decremental = "<S-TAB>",
       },
     },
-  })
+  }
 end

@@ -28,3 +28,44 @@ vim.api.nvim_create_autocmd("TextYankPost", {
 		})
 	end,
 })
+
+-- Setup autocmds to manage LSP startup
+local M = {}
+
+function M.setup()
+    -- Configure LSP UI elements
+    vim.lsp.handlers["textDocument/hover"] = vim.lsp.with(
+        vim.lsp.handlers.hover, {
+            border = "rounded",
+        }
+    )
+    
+    vim.lsp.handlers["textDocument/signatureHelp"] = vim.lsp.with(
+        vim.lsp.handlers.signature_help, {
+            border = "rounded",
+        }
+    )
+    
+    -- Configure diagnostics
+    vim.diagnostic.config({
+        virtual_text = true,
+        signs = true,
+        update_in_insert = false,
+        underline = true,
+        severity_sort = true,
+        float = {
+            border = "rounded",
+            source = "always",
+        },
+    })
+    
+    -- Simple handler for LSP messages - only show errors
+    vim.lsp.handlers["window/showMessage"] = function(_, result, _)
+        if result.type == 1 then -- ERROR only
+            local msg = result.message or "LSP Error"
+            vim.notify(msg, vim.log.levels.ERROR)
+        end
+    end
+end
+
+return M

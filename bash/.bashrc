@@ -205,3 +205,4 @@ export GEMINI_API_KEY="AIzaSyAK1EWAqybtchh-k5uNCmWvnSIRhUqJcgc"
 
 # opencode
 export PATH=/home/mattis/.opencode/bin:$PATH
+. "$HOME/.cargo/env"

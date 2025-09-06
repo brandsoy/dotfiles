@@ -42,8 +42,8 @@ vim.keymap.set("n", "<leader>rc", "<Cmd>e ~/.config/nvim/init.lua<CR>", { desc =
 
 -- Markdown
 -- Insert hyperlinks
-vim.keymap.set("n", "<leader>ln", "i[]()<Esc>F[a", { desc = "Insert markdown link" })
-vim.keymap.set("n", "<leader>ll", "i[]()<Esc>F(a<C-r>+<Esc>F[a", { desc = "Insert buffered markdown link" })
+vim.keymap.set("n", "<leader>ml", "i[]()<Esc>F[a", { desc = "Insert markdown link" })
+vim.keymap.set("n", "<leader>mL", "i[]()<Esc>F(a<C-r>+<Esc>F[a", { desc = "Insert buffered markdown link" })
 
 --------------------------------------------------------------------------
 --- Visual Mode
@@ -63,10 +63,10 @@ vim.keymap.set("v", "<leader>l", function()
 	vim.cmd([[normal! F[a]]) -- move cursor into ()
 end, { desc = "Wrap selection in markdown link" })
 
--- Insert a markdown todo checkbox
-vim.keymap.set("n", "<leader>tt", "0i- [ ] <Esc>", { desc = "Insert markdown todo" })
-vim.keymap.set("v", "<leader>tt", ":s/^/- [ ] /<CR>:noh<CR>", { desc = "Make lines markdown todos" })
-vim.keymap.set("n", "<leader>tx", function()
+-- Insert a markdown to-do checkbox
+vim.keymap.set("n", "<leader>mt", "0i- [ ] <Esc>", { desc = "Insert markdown todo" })
+vim.keymap.set("v", "<leader>mt", ":s/^/- [ ] /<CR>:noh<CR>", { desc = "Make lines markdown todos" })
+vim.keymap.set("n", "<leader>mx", function()
 	local line = vim.api.nvim_get_current_line()
 	if line:match("%[ %]") then
 		line = line:gsub("%[ %]", "[x]", 1)
@@ -76,38 +76,6 @@ vim.keymap.set("n", "<leader>tx", function()
 	vim.api.nvim_set_current_line(line)
 end, { desc = "Toggle markdown todo checkbox" })
 
--- LSP Stuff
-vim.api.nvim_create_autocmd(
-	"LspAttach",
-	{ --  Use LspAttach autocommand to only map the following keys after the language server attaches to the current buffer
-		group = vim.api.nvim_create_augroup("UserLspConfig", {}),
-		callback = function(ev)
-			vim.bo[ev.buf].omnifunc = "v:lua.vim.lsp.omnifunc" -- Enable completion triggered by <c-x><c-o>
-
-			-- Buffer local mappings.
-			-- See `:help vim.lsp.*` for documentation on any of the below functions
-			local opts = { buffer = ev.buf }
-			vim.keymap.set("n", "gd", vim.lsp.buf.definition, opts)
-			vim.keymap.set("n", "<leader><space>", vim.lsp.buf.hover, opts)
-			vim.keymap.set("n", "gi", vim.lsp.buf.implementation, opts)
-			vim.keymap.set("n", "<leader>D", vim.lsp.buf.type_definition, opts)
-			vim.keymap.set("n", "<leader>rn", vim.lsp.buf.rename, opts)
-			vim.keymap.set({ "n", "v" }, "<leader>ca", vim.lsp.buf.code_action, opts)
-			vim.keymap.set("n", "gr", vim.lsp.buf.references, opts)
-
-			vim.keymap.set("n", "<leader>f", function()
-				vim.lsp.buf.format({ async = true })
-			end, opts)
-
-			-- Open the diagnostic under the cursor in a float window
-			vim.keymap.set("n", "<leader>d", function()
-				vim.diagnostic.open_float({
-					border = "rounded",
-				})
-			end, opts)
-		end,
-	}
-)
 
 --------------------------------------------------------------------------
 --- Interactive Mode
