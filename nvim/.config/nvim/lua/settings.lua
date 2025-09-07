@@ -154,11 +154,6 @@ vim.keymap.set("n", "J", "mzJ`z", { desc = "Join lines and keep cursor position"
 -- Quick config editing
 vim.keymap.set("n", "<leader>rc", "<Cmd>e ~/.config/nvim/init.lua<CR>", { desc = "Edit config" })
 
--- Markdown
--- Insert hyperlinks
-vim.keymap.set("n", "<leader>ml", "i[]()<Esc>F[a", { desc = "Insert markdown link" })
-vim.keymap.set("n", "<leader>mL", "i[]()<Esc>F(a<C-r>+<Esc>F[a", { desc = "Insert buffered markdown link" })
-
 --------------------------------------------------------------------------
 --- Visual Mode
 --------------------------------------------------------------------------
@@ -189,6 +184,9 @@ vim.keymap.set("n", "<leader>mx", function()
 	end
 	vim.api.nvim_set_current_line(line)
 end, { desc = "Toggle markdown todo checkbox" })
+-- Insert hyperlinks
+vim.keymap.set("n", "<leader>ml", "i[]()<Esc>F[a", { desc = "Insert markdown link" })
+vim.keymap.set("n", "<leader>mL", "i[]()<Esc>F(a<C-r>+<Esc>F[a", { desc = "Insert buffered markdown link" })
 
 --------------------------------------------------------------------------
 --- Interactive Mode

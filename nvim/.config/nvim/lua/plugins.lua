@@ -123,7 +123,7 @@ return function()
 	wk.add({
 		{ "<leader>m", group = "Markdown" },
 		{ "<leader>f", group = "FZF" },
-		-- { "<leader>l", group = "LSP" },
+		{ "<leader>l", group = "LSP" },
 		-- { "<leader>lq", desc = "Diagnostics to Location List" },
 		-- { "<leader>d", group = "Debug" },
 		-- { "<F5>", desc = "DAP: Continue" },

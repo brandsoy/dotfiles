@@ -1,71 +1,140 @@
 return function()
+	-- Install stuff
 	vim.pack.add({
 		{ src = "https://github.com/neovim/nvim-lspconfig" },
 		{ src = "https://github.com/mason-org/mason.nvim" },
 		{ src = "https://github.com/mason-org/mason-lspconfig.nvim" },
 		{ src = "https://github.com/WhoIsSethDaniel/mason-tool-installer.nvim" },
 		{ src = "https://github.com/saghen/blink.cmp" },
+		{ src = "https://github.com/L3MON4D3/LuaSnip" },
 		{ src = "https://github.com/rafamadriz/friendly-snippets" },
 		{ src = "https://github.com/stevearc/conform.nvim" },
 		{ src = "https://github.com/nvim-treesitter/nvim-treesitter" },
 		{ src = "https://github.com/ray-x/go.nvim" },
 		{ src = "https://github.com/ray-x/guihua.lua" },
 	})
-
-	require("mason").setup()
-	require("mason-lspconfig").setup()
-
-	require("mason-tool-installer").setup({
-		ensure_installed = {
-			"lua_ls",
-			"bashls",
-			"dockerls",
-			"sqls",
-			"tailwindcss",
-			"gopls",
-			"ts_ls",
-			"jsonls",
-			"yamlls",
-			"biome",
-			"tsp_server",
-			"eslint_d",
-			"prettier",
-			"prettierd",
-			"golines",
-			"stylua",
-			"shfmt",
-			"golangci-lint",
-			"gofumpt",
-			"gomodifytags",
-			"gotests",
-			"iferr",
-		},
-	})
-
+	-- LSP Stuff
 	local lspconfig = require("lspconfig")
 	local capabilities = require("blink.cmp").get_lsp_capabilities()
 
-	-- Setup servers (you can loop if you want to reduce repetition)
-	lspconfig.gopls.setup({
-		capabilities = capabilities,
-		settings = {
-			gopls = {
-				analyses = { unusedparams = true, unreachable = true },
-				staticcheck = true,
+	-- Default server configs
+	local servers = {
+		lua_ls = {
+			settings = {
+				Lua = {
+					diagnostics = { globals = { "vim" } },
+					workspace = { checkThirdParty = false },
+					telemetry = { enable = false },
+				},
 			},
 		},
-	})
-	lspconfig.ts_ls.setup({ capabilities = capabilities })
+		gopls = {
+			settings = {
+				gopls = {
+					analyses = { unusedparams = true, unreachable = true },
+					staticcheck = true,
+				},
+			},
+		},
+		ts_ls = true,
+		jsonls = true,
+		yamlls = true,
+		dockerls = true,
+		sqls = true,
+		tailwindcss = true,
+		bashls = true,
+		biome = true,
+		tsp_server = true,
+	}
 
-	-- Blink
-	require("blink.cmp").setup({
-		keymap = { preset = "default" },
-		appearance = { nerd_font_variant = "mono" },
-		completion = { documentation = { auto_show = true } },
-		sources = { default = { "lsp", "path", "snippets", "buffer" } },
-		opts_extend = { "sources.default" },
+	-- Tools (non-LSP)
+	local tools = {
+		"eslint_d",
+		"prettier",
+		"prettierd",
+		"golines",
+		"stylua",
+		"shfmt",
+		"golangci-lint",
+		"gofumpt",
+		"gomodifytags",
+		"gotests",
+		"iferr",
+	}
+
+	-- Mason installer: install servers + tools
+	require("mason").setup()
+	require("mason-tool-installer").setup({
+		ensure_installed = vim.tbl_keys(servers, true, {}),
+		vim.list_extend(vim.tbl_keys(servers), tools),
 	})
-	vim.opt.completeopt:append("noselect")
+
+	-- Loop through servers for lspconfig setup
+	for name, config in pairs(servers) do
+		if config == true then
+			config = {}
+		end
+		config.capabilities = capabilities
+		lspconfig[name].setup(config)
+	end
+
+	-- ================================================================================================
+	-- COMPLETION
+	-- ================================================================================================
+
+	-- Recommended completeopt for modern completion UIs
+	vim.opt.completeopt = { "menu", "menuone", "noselect" }
+
+	local luasnip = require("luasnip")
+	require("luasnip.loaders.from_vscode").lazy_load() -- now safe
+
+	-- Blink CMP setup
+	require("blink.cmp").setup({
+		keymap = {
+			preset = "default", -- <Tab> confirm, <C-n>/<C-p> navigate
+		},
+		appearance = {
+			nerd_font_variant = "mono",
+		},
+		fuzzy = {
+			implementation = "prefer_rust",
+			prebuilt_binaries = {
+				force_version = nil,
+			},
+		},
+		completion = {
+			documentation = { auto_show = true }, -- show docs automatically
+			ghost_text = { enabled = true }, -- inline ghost text
+		},
+		snippets = {
+			expand = function(body)
+				require("luasnip").lsp_expand(body)
+			end,
+		},
+		sources = {
+			default = { "lsp", "path", "snippets", "buffer" },
+		},
+	})
+
+	-- LSP completion + inlay hints when available
+	vim.api.nvim_create_autocmd("LspAttach", {
+		callback = function(ev)
+			local client = vim.lsp.get_client_by_id(ev.data.client_id)
+			if not client then
+				return
+			end
+
+			-- Enable completion (let blink handle popup UI)
+			if client:supports_method("textDocument/completion") then
+				vim.lsp.completion.enable(true, client.id, ev.buf, { autotrigger = true })
+			end
+
+			-- Enable inlay hints
+			if client.server_capabilities.inlayHintProvider then
+				pcall(vim.lsp.inlay_hint.enable, true, { bufnr = ev.buf })
+			end
+		end,
+	})
 
 	-- Conform
 	require("conform").setup({
