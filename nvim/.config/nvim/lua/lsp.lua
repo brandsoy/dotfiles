@@ -85,7 +85,6 @@ return function()
 	-- Recommended completeopt for modern completion UIs
 	vim.opt.completeopt = { "menu", "menuone", "noselect" }
 
-	local luasnip = require("luasnip")
 	require("luasnip.loaders.from_vscode").lazy_load() -- now safe
 
 	-- Blink CMP setup

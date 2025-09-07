@@ -1,4 +1,3 @@
--- Central plugin spec using vim.pack.add (modern simple syntax)
 return function()
 	vim.pack.add({
 		{ src = "https://github.com/stevearc/oil.nvim" },
@@ -124,8 +123,8 @@ return function()
 		{ "<leader>m", group = "Markdown" },
 		{ "<leader>f", group = "FZF" },
 		{ "<leader>l", group = "LSP" },
-		-- { "<leader>lq", desc = "Diagnostics to Location List" },
-		-- { "<leader>d", group = "Debug" },
+		{ "<leader>lq", desc = "Diagnostics to Location List" },
+		{ "<leader>d", group = "Debug" },
 		-- { "<F5>", desc = "DAP: Continue" },
 		-- { "<F9>", desc = "DAP: Toggle Breakpoint" },
 		-- { "<F10>", desc = "DAP: Step Over" },
