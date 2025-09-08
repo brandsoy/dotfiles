@@ -22,18 +22,47 @@ return function()
 		lua_ls = {
 			settings = {
 				Lua = {
+					runtime = { version = "LuaJIT" },
 					diagnostics = { globals = { "vim" } },
-					workspace = { checkThirdParty = false },
+					-- workspace = { checkThirdParty = false },
+					workspace = { library = vim.api.nvim_get_runtime_file("", true) },
 					telemetry = { enable = false },
 				},
 			},
 		},
 		gopls = {
 			settings = {
-				gopls = {
-					analyses = { unusedparams = true, unreachable = true },
-					staticcheck = true,
+				analyses = {
+					unusedparams = true,
+					nilness = true,
+					unusedwrite = true,
+					useany = true,
+					shadow = true,
 				},
+				codelenses = {
+					generate = true,
+					gc_details = true,
+					test = true,
+					tidy = true,
+					vendor = true,
+					regenerate_cgo = true,
+					upgrade_dependency = true,
+				},
+				hints = {
+					assignVariableTypes = true,
+					compositeLiteralFields = true,
+					compositeLiteralTypes = true,
+					constantValues = true,
+					functionTypeParameters = true,
+					parameterNames = true,
+					rangeVariableTypes = true,
+				},
+				usePlaceholders = true,
+				completeUnimported = true,
+				staticcheck = true,
+				matcher = "Fuzzy",
+				directoryFilters = { "-node_modules" },
+				gofumpt = true,
 			},
 		},
 		ts_ls = true,
@@ -60,13 +89,19 @@ return function()
 		"gomodifytags",
 		"gotests",
 		"iferr",
+		"roslyn",
 	}
 
 	-- Mason installer: install servers + tools
-	require("mason").setup()
+	require("mason").setup({
+		registries = {
+			"github:mason-org/mason-registry",
+			"github:Crashdummyy/mason-registry",
+		},
+	})
+
 	require("mason-tool-installer").setup({
-		ensure_installed = vim.tbl_keys(servers, true, {}),
-		vim.list_extend(vim.tbl_keys(servers), tools),
+		ensure_installed = vim.list_extend(vim.tbl_keys(servers), tools),
 	})
 
 	-- Loop through servers for lspconfig setup
@@ -77,6 +112,23 @@ return function()
 		config.capabilities = capabilities
 		lspconfig[name].setup(config)
 	end
+
+	-- Manual Rosly LSP setup
+	vim.lsp.enable("roslyn")
+	-- Optionally for custom executable:
+	vim.lsp.config("roslyn", {
+		cmd = {
+			"dotnet",
+			vim.fn.expand(
+				"~/.local/share/nvim/mason/packages/roslyn/libexec/Microsoft.CodeAnalysis.LanguageServer.dll"
+			),
+			"--logLevel=Information",
+			"--extensionLogDirectory=" .. vim.fs.dirname(vim.lsp.log.get_filename()),
+		},
+		filetypes = { "cs", "vb" },
+		root_dir = vim.fs.dirname(vim.fs.find({ ".sln", ".csproj", ".git" }, { upward = true })[10]),
+		-- root_dir = lspconfig.util.root_pattern("*.sln", "*.csproj", ".git"),
+	})
 
 	-- ================================================================================================
 	-- COMPLETION

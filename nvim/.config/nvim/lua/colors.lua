@@ -6,7 +6,7 @@ return function()
 		{ src = "https://github.com/projekt0n/github-nvim-theme" },
 	})
 
-	vim.cmd("colorscheme github_dark_default")
+	vim.cmd("colorscheme github_dark_tritanopia")
 
 	-- -- Adawita specific
 	-- vim.g.adwaita_darker = true -- for darker version
