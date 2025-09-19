@@ -3,7 +3,6 @@ return function()
 	vim.pack.add({
 		{ src = "https://github.com/stevearc/oil.nvim" },
 		{ src = "https://github.com/folke/which-key.nvim" },
-		{ src = "https://github.com/nvim-tree/nvim-web-devicons" },
 	})
 
 	-- Oil file manager
@@ -21,3 +20,4 @@ return function()
 		{ "<leader>d", group = "Debug" },
 	})
 end
+

@@ -219,3 +219,9 @@ export GEMINI_API_KEY="AIzaSyAK1EWAqybtchh-k5uNCmWvnSIRhUqJcgc"
 
 # opencode
 export PATH=/home/mattis/.opencode/bin:$PATH
+
+# TypeSpec
+TYPESPEC_PATH="/Users/mattis/.tsp/bin"
+if [ -d "$TYPESPEC_PATH" ]; then
+  export PATH="/Users/mattis/.tsp/bin:$PATH"
+fi

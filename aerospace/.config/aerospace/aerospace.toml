@@ -71,12 +71,12 @@ preset = 'qwerty'
 #                 Monitor pattern is the same as for 'workspace-to-monitor-force-assignment'.
 #                 See: https://nikitabobko.github.io/AeroSpace/guide#assign-workspaces-to-monitors
 [gaps]
-inner.horizontal = 5
-inner.vertical = 5
-outer.bottom = 5
-outer.top = [{ monitor.main = 5 }, 5]
-outer.right = 5
-outer.left = 5
+inner.horizontal = 10
+inner.vertical = 10
+outer.bottom = 10
+outer.top = [{ monitor.main = 10 }, 10]
+outer.right = 10
+outer.left = 10
 
 # 'main' binding mode declaration
 # See: https://nikitabobko.github.io/AeroSpace/guide#binding-modes
@@ -109,6 +109,7 @@ outer.left = 5
 # '''
 
 # App shortcuts
+alt-enter = 'exec-and-forget open -a /Applications/kitty.app'
 # alt-b = 'exec-and-forget open -a /Applications/Firefox.app'
 # alt-z = 'exec-and-forget open -a /Applications/zed.app'
 # alt-c = 'exec-and-forget open -a /Applications/Visual Studio Code - Insiders.app'
@@ -116,24 +117,31 @@ outer.left = 5
 # alt-w = 'exec-and-forget open -a /Applications/Obsidian.app'
 # alt-shift-r = ['exec-and-forget /opt/homebrew/bin/sketchybar --reload']
 #
-# See: https://nikitabobko.github.ioeAeroSpace/commands#layout
-alt-e = 'layout tiles horizontal vertical'
-alt-comma = 'layout accordion horizontal vertical'
-alt-f = 'fullscreen'
-alt-y = ['focus right', 'join-with down', 'layout tiles horizontal']
 # See: https://nikitabobko.github.io/AeroSpace/commands#focus
 alt-h = 'focus left'
 alt-j = 'focus down'
 alt-k = 'focus up'
 alt-l = 'focus right'
 
-# app shortcut
+alt-left = 'focus left'
+alt-down = 'focus down'
+alt-up = 'focus up'
+alt-right = 'focus right'
 
 # See: https://nikitabobko.github.io/AeroSpace/commands#move
 alt-shift-h = 'move left'
 alt-shift-j = 'move down'
 alt-shift-k = 'move up'
 alt-shift-l = 'move right'
+
+# See: https://nikitabobko.github.ioeAeroSpace/commands#layout
+alt-e = 'layout tiles horizontal vertical'
+alt-comma = 'layout accordion horizontal vertical'
+alt-f = 'fullscreen'
+alt-y = ['focus right', 'join-with down', 'layout tiles horizontal']
+alt-b = 'balance-sizes'
+alt-r = 'flatten-workspace-tree'
+
 
 # Stack windows
 alt-shift-left = 'join-with left'
@@ -210,8 +218,20 @@ if.app-id = 'com.mitchellh.ghostty'
 run = ['move-node-to-workspace 2']
 
 [[on-window-detected]]
+if.app-id = 'net.kovidgoyal.kitty'
+run = ['move-node-to-workspace 2']
+
+[[on-window-detected]]
 if.app-id = 'md.obsidian'
-run = ['move-node-to-workspace 4']
+run = ['move-node-to-workspace 3']
+
+[[on-window-detected]]
+if.app-id = 'com.microsoft.Outlook'
+run = ['move-node-to-workspace 0']
+
+[[on-window-detected]]
+if.app-id = 'com.microsoft.teams2'
+run = ['move-node-to-workspace 0']
 
 # Floating windows
 [[on-window-detected]]

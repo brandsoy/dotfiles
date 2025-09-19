@@ -10,14 +10,6 @@
   "outline_panel": {
     "dock": "right"
   },
-  "context_servers": {
-    "postgres-context-server": {
-      "source": "extension",
-      "settings": {
-        "database_url": "postgresql://postgres:postgres@localhost:5432/monolith"
-      }
-    }
-  },
   "agent": {
     "always_allow_tool_actions": false,
     "play_sound_when_agent_done": true,
@@ -27,7 +19,7 @@
       "model": "claude-sonnet-4-latest"
     },
     "default_model": {
-      "provider": "zed.dev",
+      "provider": "copilot_chat",
       "model": "claude-sonnet-4"
     }
   },
@@ -43,9 +35,9 @@
   "relative_line_numbers": true,
 
   // THEMEING
-  "theme": "Kanagawa Wave",
+  "theme": "Gruvbox Dark Hard",
   "icon_theme": "Catppuccin Macchiato",
-  "buffer_font_family": "IBM Plex Mono",
+  "buffer_font_family": "JetBrainsMono Nerd Font Mono",
   "buffer_font_size": 15,
   "ui_font_family": ".ZedMono",
   "ui_font_size": 15,
@@ -74,6 +66,8 @@
     "show": "auto"
   },
 
+  "format_on_save": "prettier",
+  "formatter": "prettier",
   // File scan exclusions, hide on the file explorer and search
   "file_scan_exclusions": [
     "**/.git",
@@ -97,5 +91,15 @@
     "**/.nyc_output",
     "**/report",
     "**/node_modules"
-  ]
+  ],
+  "languages": {
+    "SQL": {
+      "formatter": {
+        "external": {
+          "command": "sql-formatter",
+          "arguments": ["--language", "postgresql"]
+        }
+      }
+    }
+  }
 }
