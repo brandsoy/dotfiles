@@ -60,7 +60,7 @@ return function()
 		grep = {
 			prompt = "Grep❯ ",
 			input_prompt = "Grep For❯ ",
-			cmd = "rg --vimgrep --hidden --smart-case --glob '!.git' --glob '!node_modules' --glob '!.venv'",
+			cmd = "rg --column --vimgrep --hidden --smart-case --glob '!.git' --glob '!node_modules' --glob '!.venv'",
 			actions = {
 				["ctrl-q"] = actions.file_sel_to_qf,
 				["ctrl-s"] = actions.file_split,
