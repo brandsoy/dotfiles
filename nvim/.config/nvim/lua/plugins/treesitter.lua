@@ -39,11 +39,12 @@ return function()
 		incremental_selection = {
 			enable = true,
 			keymaps = {
-				init_selection = "<CR>",
-				node_incremental = "<CR>",
-				scope_incremental = "<TAB>",
-				node_decremental = "<S-TAB>",
+				init_selection = "<C-space>",
+				node_incremental = "<C-space>",
+				scope_incremental = "<C-s>",
+				node_decremental = "<BS>",
 			},
 		},
 	})
 end
+

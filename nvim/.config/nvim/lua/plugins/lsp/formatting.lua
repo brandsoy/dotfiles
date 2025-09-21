@@ -4,18 +4,47 @@ vim.pack.add({
 	{ src = "https://github.com/mfussenegger/nvim-lint" },
 })
 
--- Conform for formatting
-require("conform").setup({
+local conform = require("conform")
+local util = require("conform.util")
+
+conform.setup({
 	format_on_save = { lsp_fallback = true, timeout_ms = 2000 },
+	formatters = {
+		biome = {
+			condition = function(ctx)
+				return util.root_has_file(ctx.filename, {
+					"biome.json",
+					"biome.jsonc",
+					"biome.config.json",
+					"biome.config.jsonc",
+				})
+			end,
+		},
+		prettier = {
+			condition = function(ctx)
+				return util.root_has_file(ctx.filename, {
+					".prettierrc",
+					".prettierrc.json",
+					".prettierrc.js",
+					".prettierrc.yaml",
+					".prettierrc.yml",
+					"prettier.config.js",
+					"prettier.config.cjs",
+					"prettier.config.mjs",
+					"package.json",
+				})
+			end,
+		},
+	},
 	formatters_by_ft = {
 		lua = { "stylua" },
-		javascript = { "prettierd" },
-		typescript = { "prettierd" },
-		typescriptreact = { "prettierd" },
-		javascriptreact = { "prettierd" },
-		json = { "prettierd" },
-		yaml = { "prettierd" },
-		markdown = { "prettierd" },
+		javascript = { "biome", "prettierd", "prettier" },
+		javascriptreact = { "biome", "prettierd", "prettier" },
+		typescript = { "biome", "prettierd", "prettier" },
+		typescriptreact = { "biome", "prettierd", "prettier" },
+		json = { "biome", "prettierd", "prettier" },
+		yaml = { "biome", "prettierd", "prettier" },
+		markdown = { "prettierd", "prettier" },
 		go = { "golines", "gofumpt" },
 	},
 })

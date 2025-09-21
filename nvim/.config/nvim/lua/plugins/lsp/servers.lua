@@ -5,19 +5,38 @@ vim.pack.add({
 	{ src = "https://github.com/mason-org/mason-lspconfig.nvim" },
 	{ src = "https://github.com/WhoIsSethDaniel/mason-tool-installer.nvim" },
 	{ src = "https://github.com/saghen/blink.cmp" },
+	{ src = "https://github.com/folke/neodev.nvim" },
+	{ src = "https://github.com/b0o/SchemaStore.nvim" },
 })
 
 local lspconfig = require("lspconfig")
 local capabilities = require("blink.cmp").get_lsp_capabilities()
+local util = require("lspconfig.util")
 
--- Default server configs
+local schemastore_ok, schemastore = pcall(require, "schemastore")
+
+local neodev_ok, neodev = pcall(require, "neodev")
+if neodev_ok then
+	neodev.setup({
+		library = { plugins = false },
+	})
+end
+
+vim.diagnostic.config({
+	virtual_text = { prefix = "●" },
+	severity_sort = true,
+	float = { border = "rounded", source = "if_many" },
+})
+
 local servers = {
 	lua_ls = {
 		settings = {
 			Lua = {
-				runtime = { version = "LuaJIT" },
+				completion = { callSnippet = "Replace" },
 				diagnostics = { globals = { "vim" } },
-				workspace = { library = vim.api.nvim_get_runtime_file("", true) },
+				hint = { enable = true },
+				runtime = { version = "LuaJIT" },
+				workspace = { checkThirdParty = false, library = vim.api.nvim_get_runtime_file("", true) },
 				telemetry = { enable = false },
 			},
 		},
@@ -25,11 +44,11 @@ local servers = {
 	gopls = {
 		settings = {
 			analyses = {
-				unusedparams = true,
 				nilness = true,
+				shadow = true,
+				unusedparams = true,
 				unusedwrite = true,
 				useany = true,
-				shadow = true,
 			},
 			codelenses = {
 				generate = true,
@@ -57,22 +76,79 @@ local servers = {
 			gofumpt = true,
 		},
 	},
-	ts_ls = true,
-	jsonls = true,
-	yamlls = true,
-	dockerls = true,
-	sqls = true,
-	tailwindcss = true,
-	bashls = true,
-	biome = true,
-	tsp_server = true,
+	vtsls = {
+		settings = {
+			vtsls = {
+				autoUseWorkspaceTsdk = true,
+				experimental = {
+					maxInlayHintLength = 25,
+				},
+			},
+			typescript = {
+				inlayHints = {
+					includeInlayEnumMemberValueHints = true,
+					includeInlayFunctionLikeReturnTypeHints = true,
+					includeInlayFunctionParameterTypeHints = true,
+					includeInlayParameterNameHints = "all",
+					includeInlayParameterNameHintsWhenArgumentMatchesName = false,
+					includeInlayPropertyDeclarationTypeHints = true,
+					includeInlayVariableTypeHints = true,
+				},
+			},
+			javascript = {
+				inlayHints = {
+					includeInlayEnumMemberValueHints = true,
+					includeInlayFunctionLikeReturnTypeHints = true,
+					includeInlayFunctionParameterTypeHints = true,
+					includeInlayParameterNameHints = "all",
+					includeInlayPropertyDeclarationTypeHints = true,
+					includeInlayVariableTypeHints = true,
+				},
+			},
+		},
+		filetypes = {
+			"javascript",
+			"javascriptreact",
+			"javascript.jsx",
+			"typescript",
+			"typescriptreact",
+			"typescript.tsx",
+			"vue",
+			"svelte",
+		},
+	},
+	jsonls = schemastore_ok and {
+		settings = {
+			json = {
+				schemas = schemastore.json.schemas(),
+				validate = { enable = true },
+			},
+		},
+	} or {},
+	yamlls = schemastore_ok and {
+		settings = {
+			yaml = {
+				keyOrdering = false,
+				schemaStore = { enable = false, url = "" },
+				schemas = schemastore.yaml.schemas(),
+			},
+		},
+	} or {},
+	dockerls = {},
+	sqls = {},
+	tailwindcss = {
+		filetypes = { "html", "javascriptreact", "typescriptreact", "vue", "svelte", "astro" },
+		root_dir = util.root_pattern("tailwind.config.js", "tailwind.config.ts", "postcss.config.js", "package.json", "node_modules"),
+	},
+	bashls = {},
+	biome = {},
 }
 
--- Tools (non-LSP)
 local tools = {
 	"eslint_d",
 	"prettier",
 	"prettierd",
+	"biome",
 	"golines",
 	"stylua",
 	"shfmt",
@@ -83,23 +159,40 @@ local tools = {
 	"iferr",
 }
 
--- Mason installer: install servers + tools
-require("mason").setup({
+local server_names = vim.tbl_keys(servers)
+
+local mason = require("mason")
+local mason_lspconfig = require("mason-lspconfig")
+local mason_tool_installer = require("mason-tool-installer")
+
+mason.setup({
 	registries = {
 		"github:mason-org/mason-registry",
 		"github:Crashdummyy/mason-registry",
 	},
 })
 
-require("mason-tool-installer").setup({
-	ensure_installed = vim.list_extend(vim.tbl_keys(servers), tools),
+mason_lspconfig.setup({
+	ensure_installed = server_names,
 })
 
--- Loop through servers for lspconfig setup
-for name, config in pairs(servers) do
-	if config == true then
-		config = {}
+mason_tool_installer.setup({
+	ensure_installed = vim.list_extend(vim.list_extend({}, server_names), tools),
+})
+
+local function setup_server(name)
+	local server = vim.tbl_deep_extend("force", {}, servers[name] or {}, { capabilities = capabilities })
+	lspconfig[name].setup(server)
+end
+
+if mason_lspconfig.setup_handlers then
+	mason_lspconfig.setup_handlers({
+		function(server_name)
+			setup_server(server_name)
+		end,
+	})
+else
+	for _, server_name in ipairs(server_names) do
+		setup_server(server_name)
 	end
-	config.capabilities = capabilities
-	lspconfig[name].setup(config)
 end
