@@ -3,8 +3,6 @@ source = ~/.config/omarchy/current/theme/hyprlock.conf
 background {
     monitor =
     color = $color
-    path = ~/.config/omarchy/current/background
-    blur_passes = 3
 }
 
 animations {
@@ -35,5 +33,5 @@ input-field {
 }
 
 auth {
-    fingerprint:enabled = true
+    fingerprint:enabled = false
 }
