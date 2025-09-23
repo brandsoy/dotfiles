@@ -2790,12 +2790,6 @@ hide_window_decorations titlebar-only
 # background_opacity 0.9
 # background_blur 20
 
-# BEGIN_KITTY_THEME
-# GitHub Dark
-# include current-theme.conf
-include catppuccin-mocha.conf
-# END_KITTY_THEME
-
 # BEGIN_KITTY_FONTS
 font_size 14.0
 font_family      family="JetBrainsMono Nerd Font Mono"
@@ -2803,3 +2797,9 @@ bold_font        auto
 italic_font      auto
 bold_italic_font auto
 # END_KITTY_FONTS
+
+
+# BEGIN_KITTY_THEME
+# VSCode_Dark
+include current-theme.conf
+# END_KITTY_THEME
