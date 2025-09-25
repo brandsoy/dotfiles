@@ -8,6 +8,7 @@ return function()
 		{ src = "https://github.com/rcarriga/nvim-notify" },
 		{ src = "https://github.com/nvim-mini/mini.ai" },
 		{ src = "https://github.com/nvim-mini/mini.move" },
+		{ src = "https://github.com/nvim-mini/mini.notify" },
 	})
 
 	-- Oil file manager
@@ -32,6 +33,8 @@ return function()
 	require("mini.pairs").setup({
 		modes = { insert = true, command = false, terminal = false },
 	})
+
+	require("mini.notify").setup({})
 
 	-- Which-key for keymap help
 	require("which-key").setup()

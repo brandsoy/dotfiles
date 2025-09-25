@@ -10,8 +10,10 @@ vim.pack.add({
 })
 
 local lspconfig = require("lspconfig")
-local capabilities = require("blink.cmp").get_lsp_capabilities()
 local util = require("lspconfig.util")
+
+-- Get capabilities from blink.cmp
+local capabilities = require("blink.cmp").get_lsp_capabilities()
 
 local schemastore_ok, schemastore = pcall(require, "schemastore")
 
@@ -27,6 +29,9 @@ vim.diagnostic.config({
 	severity_sort = true,
 	float = { border = "rounded", source = "if_many" },
 })
+
+-- Bundle path for powershell
+local bundle_path = vim.fn.stdpath("data") .. "/mason/packages/powershell-editor-services/PowerShellEditorServices"
 
 local servers = {
 	lua_ls = {
@@ -148,6 +153,31 @@ local servers = {
 	},
 	bashls = {},
 	biome = {},
+	tsp_server = {},
+	powershell_es = {
+		cmd = {
+			"pwsh",
+			"-NoLogo",
+			"-NoProfile",
+			"-Command",
+			bundle_path .. "/Start-EditorServices.ps1",
+			"-HostName",
+			"nvim",
+			"-HostProfileId",
+			"0",
+			"-HostVersion",
+			"1.0.0",
+			"-LogPath",
+			vim.fn.stdpath("cache") .. "/powershell_es.log",
+			"-LogLevel",
+			"Normal",
+			"-SessionDetailsPath",
+			vim.fn.stdpath("cache") .. "/powershell_es.session.json",
+			"-FeatureFlags",
+			"@()",
+		},
+		filetypes = { "ps1" },
+	},
 }
 
 local tools = {
