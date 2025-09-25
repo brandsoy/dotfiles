@@ -138,7 +138,13 @@ local servers = {
 	sqls = {},
 	tailwindcss = {
 		filetypes = { "html", "javascriptreact", "typescriptreact", "vue", "svelte", "astro" },
-		root_dir = util.root_pattern("tailwind.config.js", "tailwind.config.ts", "postcss.config.js", "package.json", "node_modules"),
+		root_dir = util.root_pattern(
+			"tailwind.config.js",
+			"tailwind.config.ts",
+			"postcss.config.js",
+			"package.json",
+			"node_modules"
+		),
 	},
 	bashls = {},
 	biome = {},
@@ -174,6 +180,7 @@ mason.setup({
 
 mason_lspconfig.setup({
 	ensure_installed = server_names,
+	automatic_enable = false,
 })
 
 mason_tool_installer.setup({
