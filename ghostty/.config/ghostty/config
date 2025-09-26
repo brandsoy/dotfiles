@@ -31,7 +31,7 @@ font-feature = liga
 font-feature = dlig
 font-synthetic-style = true
 
-adjust-cell-height = 20%
+adjust-cell-height = 10%
 
 # Misc
 shell-integration-features = "sudo,title"
@@ -52,8 +52,8 @@ maximize = true
 
 # Windows Padding
 window-padding-balance = true
-window-padding-x = 2
-window-padding-y = 2 
+window-padding-x = 5 
+window-padding-y = 5 
 
 # Window hide top bar
 # window-decoration = "none"

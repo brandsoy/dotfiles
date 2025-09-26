@@ -4,5 +4,6 @@ return function()
 	require("plugins.finder")()
 	require("plugins.treesitter")()
 	require("plugins.roslyn")()
+	require("plugins.ai")()
 	require("plugins.lsp")
 end

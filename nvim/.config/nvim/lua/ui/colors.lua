@@ -8,18 +8,16 @@ return function()
 
 	require("mini.icons").setup()
 
-	require("catppuccin").setup({
-		flavour = "mocha", -- latte, frappe, macchiato, mocha
-		integrations = {
-			lualine = true,
-		},
-	})
-
 	require("lualine").setup({
 		options = {
-			theme = "catppuccin",
+			theme = "ayu_mirage",
+			section_separators = { left = "", right = "" },
+			component_separators = { left = "", right = "" },
 		},
 	})
 
+	require("catppuccin").setup({
+		flavour = "mocha", -- latte, frappe, macchiato, mocha
+	})
 	vim.cmd("colorscheme catppuccin-mocha")
 end

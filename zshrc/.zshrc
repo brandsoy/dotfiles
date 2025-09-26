@@ -82,7 +82,7 @@ zstyle ':fzf-tab:complete:__zoxide_z:*' fzf-preview 'ls --color $realpath'
 # Prefer 'ls -G' on macOS if 'ls --color' is not available or for BSD ls
 # However, GNU coreutils (often installed via Homebrew) provides 'ls --color'
 alias ls='ls --color=auto' # --color=auto is generally safer
-alias l='ls -la --color=auto'
+alias l='ls -lah --color=auto'
 alias c='clear'
 alias ld='lazydocker'
 alias lg='lazygit'

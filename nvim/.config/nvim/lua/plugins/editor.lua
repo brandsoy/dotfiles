@@ -43,7 +43,7 @@ return function()
 		{ "<leader>b", group = "Buffers" },
 		{ "<leader>d", group = "Debug" },
 		{ "<leader>f", group = "Find" },
-		{ "<leader>l", group = "LSP" },
+		{ "<lsudo luarocks install --lua-version 5.1 tiktoken_coreeader>l", group = "LSP" },
 		{ "<leader>lq", desc = "Diagnostics to Location List" },
 		{ "<leader>m", group = "Markdown" },
 		{ "<leader>q", group = "Quit" },
@@ -52,13 +52,13 @@ return function()
 		{ "<leader>w", group = "Write" },
 	})
 
-	-- Notifications
-	local notify = require("notify")
-	notify.setup({
-		background_colour = "#1f1f28",
-		stages = "fade_in_slide_out",
-		timeout = 2000,
-		render = "compact",
-	})
-	vim.notify = notify
+	-- -- Notifications
+	-- local notify = require("notify")
+	-- notify.setup({
+	-- 	background_colour = "#1f1f28",
+	-- 	stages = "fade_in_slide_out",
+	-- 	timeout = 2000,
+	-- 	render = "compact",
+	-- })
+	-- vim.notify = notify
 end

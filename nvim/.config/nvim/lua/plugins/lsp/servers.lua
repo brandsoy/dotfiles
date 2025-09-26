@@ -154,6 +154,8 @@ local servers = {
 	bashls = {},
 	biome = {},
 	tsp_server = {},
+	svelte = {},
+	vue_ls = {},
 	powershell_es = {
 		cmd = {
 			"pwsh",
