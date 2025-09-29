@@ -155,7 +155,17 @@ local servers = {
 	biome = {},
 	tsp_server = {},
 	svelte = {},
-	vue_ls = {},
+	vuels = {
+		filetypes = { "vue", "typescript", "javascript" },
+		init_options = {
+			vue = {
+				hybridMode = false,
+			},
+			typescript = {
+				tsdk = vim.fn.getcwd() .. "/node_modules/typescript/lib",
+			},
+		},
+	},
 	powershell_es = {
 		cmd = {
 			"pwsh",

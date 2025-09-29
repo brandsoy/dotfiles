@@ -5,14 +5,18 @@ vim.pack.add({
 })
 
 local conform = require("conform")
-local util = require("conform.util")
+
+local function root_has_file(filename, patterns)
+	local root = vim.fs.dirname(filename)
+	return vim.fs.find(patterns, { path = root, upward = true })[1] ~= nil
+end
 
 conform.setup({
 	format_on_save = { lsp_fallback = true, timeout_ms = 2000 },
 	formatters = {
 		biome = {
 			condition = function(ctx)
-				return util.root_has_file(ctx.filename, {
+				return root_has_file(ctx.filename, {
 					"biome.json",
 					"biome.jsonc",
 					"biome.config.json",
@@ -22,7 +26,7 @@ conform.setup({
 		},
 		prettier = {
 			condition = function(ctx)
-				return util.root_has_file(ctx.filename, {
+				return root_has_file(ctx.filename, {
 					".prettierrc",
 					".prettierrc.json",
 					".prettierrc.js",
