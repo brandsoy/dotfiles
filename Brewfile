@@ -1,0 +1,270 @@
+tap "benjiwolff/neovim-nightly"
+tap "felixkratz/formulae"
+tap "jannis-baum/tap"
+tap "jstkdng/programs"
+tap "mat2cc/tap"
+tap "nikitabobko/tap"
+tap "philocalyst/tap"
+tap "powershell/tap"
+tap "sst/tap"
+tap "teamookla/speedtest"
+# Code searching, linting, rewriting
+brew "ast-grep"
+# Automatic configure script builder
+brew "autoconf"
+# Interpreted, interactive, object-oriented programming language
+brew "python@3.13"
+# Microsoft Azure CLI 2.0
+brew "azure-cli"
+# Bourne-Again SHell, a UNIX command interpreter
+brew "bash"
+# Clone of cat(1) with syntax highlighting and Git integration
+brew "bat"
+# Toolchain of the web
+brew "biome"
+# Yet another cross-platform graphical process/system monitor
+brew "bottom"
+# Resource monitor. C++ version and continuation of bashtop and bpytop
+brew "btop"
+# Versatile and fast Unicode/ASCII/ANSI graphics renderer
+brew "chafa"
+# Hacker News in your terminal
+brew "circumflex"
+# Anti-virus software
+brew "clamav"
+# Cross-platform make
+brew "cmake"
+# Search tool like grep and The Silver Searcher
+brew "ripgrep"
+# OpenAI's coding agent that runs in your terminal
+brew "codex"
+# Platform built on V8 to build network applications
+brew "node"
+# AST-based pattern checker for JavaScript
+brew "eslint"
+# Modern, maintained replacement for ls
+brew "eza"
+# Simple, fast and user-friendly alternative to find
+brew "fd"
+# Play, record, convert, and stream audio and video
+brew "ffmpeg"
+# Command-line fuzzy finder written in Go
+brew "fzf"
+# Interact with Google Gemini AI models from the command-line
+brew "gemini-cli"
+# GitHub command-line tool
+brew "gh"
+# Interpreter for PostScript and PDF
+brew "ghostscript"
+# Distributed revision control system
+brew "git"
+# GNU Pretty Good Privacy (PGP) package
+brew "gnupg"
+# Go Language's command-line interface for database migrations
+brew "goose"
+# Improved top (interactive process viewer)
+brew "htop"
+# Lightweight and flexible command-line JSON processor
+brew "jq"
+# Lazier way to manage everything docker
+brew "lazydocker"
+# Simple terminal UI for git commands
+brew "lazygit"
+# Postgres C API library
+brew "libpq"
+# Package manager for the Lua programming language
+brew "luarocks"
+# Mac App Store command-line interface
+brew "mas"
+# Scalable distributed version control system
+brew "mercurial"
+# Port scanning utility for large networks
+brew "nmap"
+# Development kit for the Java programming language
+brew "openjdk"
+# Generate clients, server & docs from an OpenAPI spec (v2, v3)
+brew "openapi-generator"
+# Terminal User Interface (TUI) to view & control docker containers
+brew "oxker"
+# CLI for Postgres with auto-completion and syntax highlighting
+brew "pgcli"
+# PostgreSQL syntax beautifier
+brew "pgformatter"
+# Package compiler and linker metadata toolkit
+brew "pkgconf"
+# Paste PNG into files
+brew "pngpaste"
+# Fast, disk space efficient package manager
+brew "pnpm"
+# Database management TUI for PostgreSQL/MySQL/SQLite
+brew "rainfrog"
+# Perl-powered file rename script with many helpful built-ins
+brew "rename"
+# Extract attachments out of MIME encoded email packages
+brew "ripmime"
+# Blazing-fast modern Lua linter
+brew "selene"
+# 7-Zip is a file archiver with a high compression ratio
+brew "sevenzip"
+# Static analysis and lint tool, for (ba)sh scripts
+brew "shellcheck"
+# Generate type safe Go from SQL
+brew "sqlc"
+# Microsoft SQL Server command-line interface
+brew "sqlcmd"
+# SQL linter and auto-formatter for Humans
+brew "sqlfluff"
+# Cross-shell prompt for astronauts
+brew "starship"
+# Organize software neatly under a single directory tree (e.g. /usr/local)
+brew "stow"
+# Opinionated Lua code formatter
+brew "stylua"
+# Modern and pretty fancy file manager for the terminal
+brew "superfile"
+# TUI to view and query tabular files (CSV,TSV, Parquet, etc.)
+brew "tabiew"
+# TOML toolkit written in Rust
+brew "taplo"
+# Modernized, complete, self-contained TeX/LaTeX engine
+brew "tectonic"
+# Official tldr client written in Rust
+brew "tlrc"
+# Terminal multiplexer
+brew "tmux"
+# Display directories as trees (with optional color/HTML output)
+brew "tree"
+# Simple terminal image viewer written in Rust
+brew "viu"
+# Internet file retriever
+brew "wget"
+# Linter for YAML files
+brew "yamllint"
+# Blazing fast terminal file manager written in Rust, based on async I/O
+brew "yazi"
+# Process YAML, JSON, XML, CSV and properties documents from the CLI
+brew "yq"
+# Shell extension to navigate your filesystem faster
+brew "zoxide"
+# A window border system for macOS
+brew "felixkratz/formulae/borders"
+# Custom macOS statusbar with shell plugin, interaction and graph support
+brew "felixkratz/formulae/sketchybar"
+# User-friendly, lightweight TUI for disk imaging
+brew "philocalyst/tap/caligula"
+# Formula to install PowerShell
+brew "powershell/tap/powershell"
+# Formula to install PowerShell Long Term Stable Channel
+brew "powershell/tap/powershell-lts"
+# The AI coding agent built for the terminal.
+brew "sst/tap/opencode"
+# Ookla Speedtest
+brew "teamookla/speedtest/speedtest"
+# AeroSpace is an i3-like tiling window manager for macOS
+cask "aerospace"
+# Application uninstaller
+cask "appcleaner"
+# Desktop password and login vault
+cask "bitwarden"
+# Virtual monitor for screen sharing
+cask "deskpad"
+# Web browser
+cask "font-blex-mono-nerd-font"
+cask "font-cascadia-code-nf"
+cask "font-caskaydia-cove-nerd-font"
+cask "font-caskaydia-mono-nerd-font"
+cask "font-fira-code-nerd-font"
+cask "font-hack-nerd-font"
+cask "font-ibm-plex-mono"
+cask "font-iosevka-nerd-font"
+cask "font-jetbrains-mono-nerd-font"
+cask "font-meslo-lg-nerd-font"
+cask "font-monaspice-nerd-font"
+# Terminal emulator that uses platform-native UI and GPU acceleration
+cask "ghostty"
+# Web browser
+cask "google-chrome"
+# Keyboard customiser
+cask "karabiner-elements"
+# GPU-based terminal emulator
+cask "kitty"
+# Software for Logitech devices
+cask "logitech-options"
+# Provides updates to various Microsoft products
+cask "microsoft-auto-update"
+# Email client
+cask "microsoft-outlook"
+# Meet, chat, call, and collaborate in just one place
+cask "microsoft-teams"
+# Vim-fork focused on extensibility and usability
+cask "neovim-nightly"
+# Knowledge base that works on top of a local folder of plain text Markdown files
+cask "obsidian"
+# Cloud storage client
+cask "onedrive"
+# Verify system files structure, run miscellaneous maintenance and more
+cask "onyx"
+# Replacement for Docker Desktop
+cask "orbstack"
+# GUI client for PostgreSQL databases
+cask "postico"
+# Collaboration platform for API development
+cask "postman"
+# Command-line shell and scripting language
+cask "powershell"
+# Control your tools with a few keystrokes
+cask "raycast"
+# .NET IDE
+cask "rider"
+# Tool that provides consistent, highly configurable symbols for apps
+cask "sf-symbols"
+# Instant messaging application focusing on security
+cask "signal"
+# Remote access and connectivity software focused on security
+cask "teamviewer"
+# Open-source code editor
+cask "visual-studio-code"
+# Multiplayer code editor
+cask "zed"
+vscode "biomejs.biome"
+vscode "bradlc.vscode-tailwindcss"
+vscode "cardinal90.multi-cursor-case-preserve"
+vscode "catppuccin.catppuccin-vsc"
+vscode "davidanson.vscode-markdownlint"
+vscode "dbaeumer.vscode-eslint"
+vscode "denoland.vscode-deno"
+vscode "docker.docker"
+vscode "editorconfig.editorconfig"
+vscode "enkia.tokyo-night"
+vscode "esbenp.prettier-vscode"
+vscode "github.copilot"
+vscode "github.copilot-chat"
+vscode "golang.go"
+vscode "mechatroner.rainbow-csv"
+vscode "mikestead.dotenv"
+vscode "ms-azuretools.vscode-azure-github-copilot"
+vscode "ms-azuretools.vscode-azure-mcp-server"
+vscode "ms-azuretools.vscode-azureappservice"
+vscode "ms-azuretools.vscode-azureresourcegroups"
+vscode "ms-azuretools.vscode-azurevirtualmachines"
+vscode "ms-azuretools.vscode-containers"
+vscode "ms-azuretools.vscode-cosmosdb"
+vscode "ms-azuretools.vscode-docker"
+vscode "ms-dotnettools.csdevkit"
+vscode "ms-dotnettools.csharp"
+vscode "ms-dotnettools.vscode-dotnet-runtime"
+vscode "ms-dotnettools.vscodeintellicode-csharp"
+vscode "ms-vscode-remote.remote-containers"
+vscode "ms-vscode-remote.remote-ssh"
+vscode "ms-vscode-remote.remote-ssh-edit"
+vscode "ms-vscode-remote.vscode-remote-extensionpack"
+vscode "ms-vscode.makefile-tools"
+vscode "ms-vscode.powershell"
+vscode "ms-vscode.remote-explorer"
+vscode "ms-vscode.remote-repositories"
+vscode "ms-vscode.remote-server"
+vscode "ms-vscode.vscode-typescript-next"
+vscode "openai.chatgpt"
+vscode "redhat.vscode-yaml"
+vscode "vscodevim.vim"
+vscode "yoavbls.pretty-ts-errors"
