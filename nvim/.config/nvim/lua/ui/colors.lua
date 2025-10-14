@@ -1,8 +1,9 @@
 return function()
 	-- Add Themes
 	vim.pack.add({
-		{ src = "https://github.com/nvim-lualine/lualine.nvim" },
 		{ src = "https://github.com/catppuccin/nvim" },
+		{ src = "https://github.com/Shatur/neovim-ayu" },
+		{ src = "https://github.com/nvim-lualine/lualine.nvim" },
 		{ src = "https://github.com/nvim-mini/mini.icons" },
 	})
 
@@ -16,8 +17,13 @@ return function()
 		},
 	})
 
-	require("catppuccin").setup({
-		flavour = "mocha", -- latte, frappe, macchiato, mocha
+	-- require("catppuccin").setup({
+	-- 	flavour = "mocha", -- latte, frappe, macchiato, mocha
+	-- })
+	require("ayu").setup({
+		mirage = true,
+		terminal = true,
+		overrides = {},
 	})
-	vim.cmd("colorscheme catppuccin-mocha")
+	vim.cmd("colorscheme ayu")
 end

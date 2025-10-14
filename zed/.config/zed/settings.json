@@ -35,7 +35,7 @@
   "relative_line_numbers": true,
 
   // THEMEING
-  "theme": "Rosé Pine",
+  "theme": "Catppuccin Espresso (Blur) [Heavy]",
   "icon_theme": "Catppuccin Macchiato",
   "buffer_font_family": "JetBrainsMono Nerd Font Mono",
   "buffer_font_size": 15,
@@ -96,10 +96,11 @@
     "SQL": {
       "formatter": {
         "external": {
-          "command": "sql-formatter",
+          "command": "/Users/mattis/Library/pnpm/sql-formatter",
           "arguments": ["--language", "postgresql"]
         }
-      }
+      },
+      "format_on_save":"on"
     },
     "JavaScript": {
       "code_actions_on_format": {

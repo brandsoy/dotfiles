@@ -19,7 +19,7 @@ vim.opt.scrolloff = 10 -- Keep 10 lines above/below cursor
 vim.opt.sidescrolloff = 8 -- Keep 8 columns left/right of cursor
 vim.opt.wrap = false -- Don't wrap lines
 vim.opt.cmdheight = 0 -- Command line height
-vim.opt.spelllang = { "en", "de" } -- Set language for spellchecking
+vim.opt.spelllang = { "en", "no" } -- Set language for spellchecking
 vim.opt.winborder = "rounded"
 
 -- Tabbing / Indentation
@@ -111,3 +111,4 @@ vim.opt.foldlevel = 99 -- Keep all folds open by default
 -- Split Behavior
 vim.opt.splitbelow = true -- Horizontal splits open below
 vim.opt.splitright = true -- Vertical splits open to the right
+

@@ -5,8 +5,9 @@ background-opacity = 1
 # background-blur-radius = 30
 mouse-hide-while-typing = true
 
+theme = Ayu Mirage
 # theme = catppuccin-macchiato
-theme = Catppuccin Mocha
+# theme = Catppuccin Mocha
 # theme = xcodedark
 # theme = rose-pine
 # theme = dark:rose-pine,light:rose-pine-dawn
@@ -19,8 +20,8 @@ macos-titlebar-proxy-icon = "hidden"
 
 # Font
 font-size = 14
-# font-family = "Iosevka Nerd Font Mono"
 font-family = "JetBrainsMono Nerd Font Mono"
+# font-family = "Iosevka Nerd Font Mono"
 # font-family = "FiraCode Nerd Font Mono"
 # font-family = "MesloLGS Nerd Font Mono"
 # font-family = "CaskaydiaCove Nerd Font Mono"

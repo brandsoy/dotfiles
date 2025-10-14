@@ -12,7 +12,7 @@ local function root_has_file(filename, patterns)
 end
 
 conform.setup({
-	format_on_save = { lsp_fallback = true, timeout_ms = 2000 },
+	format_on_save = { lsp_fallback = true, timeout_ms = 1000 },
 	formatters = {
 		biome = {
 			condition = function(ctx)
@@ -50,6 +50,7 @@ conform.setup({
 		yaml = { "biome", "prettierd", "prettier" },
 		markdown = { "prettierd", "prettier" },
 		go = { "golines", "gofumpt" },
+		sql = { "pg_format" },
 	},
 })
 

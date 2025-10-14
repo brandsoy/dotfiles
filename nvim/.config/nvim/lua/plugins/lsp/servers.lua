@@ -140,7 +140,14 @@ local servers = {
 		},
 	} or {},
 	dockerls = {},
-	sqls = {},
+	-- sqls = {
+	-- 	connections = {
+	-- 		{
+	-- 			driver = "postgresql",
+	-- 			dataSourceName = "host=127.0.0.1 port=5432 user=postgres password=postgres dbname=postgres sslmode=disable",
+	-- 		},
+	-- 	},
+	-- },
 	tailwindcss = {
 		filetypes = { "html", "javascriptreact", "typescriptreact", "vue", "svelte", "astro" },
 		root_dir = util.root_pattern(
@@ -190,6 +197,7 @@ local servers = {
 		},
 		filetypes = { "ps1" },
 	},
+	copilot = {},
 }
 
 local tools = {
@@ -204,6 +212,7 @@ local tools = {
 	"gofumpt",
 	"gomodifytags",
 	"gotests",
+	"pgformatter",
 	"iferr",
 }
 

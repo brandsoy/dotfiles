@@ -26,6 +26,7 @@ return function()
 			"yaml",
 			"vim",
 			"vimdoc",
+			"sql",
 		},
 		sync_install = true,
 		auto_install = true,
