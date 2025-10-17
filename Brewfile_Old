@@ -1,12 +1,9 @@
 tap "benjiwolff/neovim-nightly"
-tap "d12frosted/emacs-plus"
-tap "dagger/tap"
 tap "felixkratz/formulae"
 tap "jannis-baum/tap"
 tap "jstkdng/programs"
 tap "mat2cc/tap"
 tap "nikitabobko/tap"
-tap "oven-sh/bun"
 tap "philocalyst/tap"
 tap "powershell/tap"
 tap "sst/tap"
@@ -41,8 +38,6 @@ brew "cmake"
 brew "ripgrep"
 # OpenAI's coding agent that runs in your terminal
 brew "codex"
-# General purpose Language Server
-brew "efm-langserver"
 # Platform built on V8 to build network applications
 brew "node"
 # AST-based pattern checker for JavaScript
@@ -67,14 +62,8 @@ brew "git"
 brew "gnupg"
 # Go Language's command-line interface for database migrations
 brew "goose"
-# Post-modern modal text editor
-brew "helix"
 # Improved top (interactive process viewer)
 brew "htop"
-# Spell checker and morphological analyzer
-brew "hunspell"
-# Tools and libraries to manipulate images in many formats
-brew "imagemagick"
 # Lightweight and flexible command-line JSON processor
 brew "jq"
 # Lazier way to manage everything docker
@@ -85,14 +74,10 @@ brew "lazygit"
 brew "libpq"
 # Package manager for the Lua programming language
 brew "luarocks"
-# Text-based web browser
-brew "lynx"
 # Mac App Store command-line interface
 brew "mas"
 # Scalable distributed version control system
 brew "mercurial"
-# Polyglot runtime manager (asdf rust clone)
-brew "mise"
 # Port scanning utility for large networks
 brew "nmap"
 # Development kit for the Java programming language
@@ -101,8 +86,6 @@ brew "openjdk"
 brew "openapi-generator"
 # Terminal User Interface (TUI) to view & control docker containers
 brew "oxker"
-# Apache Parquet command-line tools and utilities
-brew "parquet-cli"
 # CLI for Postgres with auto-completion and syntax highlighting
 brew "pgcli"
 # PostgreSQL syntax beautifier
@@ -163,14 +146,10 @@ brew "yazi"
 brew "yq"
 # Shell extension to navigate your filesystem faster
 brew "zoxide"
-# Dagger is an integrated platform to orchestrate the delivery of applications
-brew "dagger/tap/dagger"
 # A window border system for macOS
 brew "felixkratz/formulae/borders"
 # Custom macOS statusbar with shell plugin, interaction and graph support
 brew "felixkratz/formulae/sketchybar"
-# Incredibly fast JavaScript runtime, bundler, transpiler and package manager - all in one.
-brew "oven-sh/bun/bun"
 # User-friendly, lightweight TUI for disk imaging
 brew "philocalyst/tap/caligula"
 # Formula to install PowerShell
@@ -183,20 +162,13 @@ brew "sst/tap/opencode"
 brew "teamookla/speedtest/speedtest"
 # AeroSpace is an i3-like tiling window manager for macOS
 cask "aerospace"
-# GPU-accelerated terminal emulator
-cask "alacritty"
-# Redis desktop manager
-cask "another-redis-desktop-manager"
 # Application uninstaller
 cask "appcleaner"
 # Desktop password and login vault
 cask "bitwarden"
 # Virtual monitor for screen sharing
 cask "deskpad"
-# Developer platform
-cask "dotnet-sdk"
 # Web browser
-cask "firefox"
 cask "font-blex-mono-nerd-font"
 cask "font-cascadia-code-nf"
 cask "font-caskaydia-cove-nerd-font"
@@ -210,12 +182,8 @@ cask "font-meslo-lg-nerd-font"
 cask "font-monaspice-nerd-font"
 # Terminal emulator that uses platform-native UI and GPU acceleration
 cask "ghostty"
-# Go (golang) IDE
-cask "goland"
 # Web browser
 cask "google-chrome"
-# System monitoring app
-cask "istat-menus"
 # Keyboard customiser
 cask "karabiner-elements"
 # GPU-based terminal emulator
@@ -254,8 +222,6 @@ cask "sf-symbols"
 cask "signal"
 # Remote access and connectivity software focused on security
 cask "teamviewer"
-# Virtualiser for x86 hardware
-cask "virtualbox"
 # Open-source code editor
 cask "visual-studio-code"
 # Multiplayer code editor
@@ -302,12 +268,3 @@ vscode "openai.chatgpt"
 vscode "redhat.vscode-yaml"
 vscode "vscodevim.vim"
 vscode "yoavbls.pretty-ts-errors"
-go "github.com/air-verse/air"
-go "cmd/go"
-go "cmd/gofmt"
-go "github.com/golangci/golangci-lint/cmd/golangci-lint"
-go "github.com/pressly/goose/v3/cmd/goose"
-go "golang.org/x/tools/gopls"
-go "github.com/oapi-codegen/oapi-codegen/v2/cmd/oapi-codegen"
-go "github.com/sqlc-dev/sqlc/cmd/sqlc"
-go "honnef.co/go/tools/cmd/staticcheck"
