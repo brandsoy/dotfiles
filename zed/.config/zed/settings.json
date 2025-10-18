@@ -7,6 +7,7 @@
 // custom settings, run the `open default settings` command
 // from the command palette or from `Zed` application menu.
 {
+  "theme": "One Dark",
   "git_panel": {
     "sort_by_path": true
   },
@@ -35,8 +36,6 @@
   "relative_line_numbers": true,
 
   // THEMEING
-  "theme": "Catppuccin Espresso (Blur) [Heavy]",
-  "icon_theme": "Catppuccin Macchiato",
   "buffer_font_family": "JetBrainsMono Nerd Font Mono",
   "buffer_font_size": 15,
   "ui_font_family": ".ZedMono",
@@ -66,8 +65,6 @@
     "show": "auto"
   },
 
-  "format_on_save": "prettier",
-  "formatter": "prettier",
   // File scan exclusions, hide on the file explorer and search
   "file_scan_exclusions": [
     "**/.git",
@@ -100,7 +97,7 @@
           "arguments": ["--language", "postgresql"]
         }
       },
-      "format_on_save":"on"
+      "format_on_save": "on"
     },
     "JavaScript": {
       "code_actions_on_format": {

@@ -129,12 +129,13 @@ fi
 
 # NVM (Node Version Manager)
 export NVM_DIR="$HOME/.nvm"
-if [ -s "$NVM_DIR/nvm.sh" ]; then
-  \. "$NVM_DIR/nvm.sh"  # This loads nvm
-  if [ -s "$NVM_DIR/bash_completion" ]; then # NVM also provides bash completion which zsh can use
-    \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
-  fi
-fi
+source "$(brew --prefix nvm)/nvm.sh"
+# if [ -s "$NVM_DIR/nvm.sh" ]; then
+#   \. "$NVM_DIR/nvm.sh"  # This loads nvm
+#   if [ -s "$NVM_DIR/bash_completion" ]; then # NVM also provides bash completion which zsh can use
+#     \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
+#   fi
+# fi
 
 # mise (formerly rtx)
 if command -v mise &>/dev/null; then
@@ -225,3 +226,6 @@ TYPESPEC_PATH="/Users/mattis/.tsp/bin"
 if [ -d "$TYPESPEC_PATH" ]; then
   export PATH="/Users/mattis/.tsp/bin:$PATH"
 fi
+
+export PATH="$HOME/.cargo/bin:$PATH"
+

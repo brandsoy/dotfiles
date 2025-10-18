@@ -4,16 +4,26 @@ vim.pack.add({
 	{ src = "https://github.com/mason-org/mason.nvim" },
 	{ src = "https://github.com/mason-org/mason-lspconfig.nvim" },
 	{ src = "https://github.com/WhoIsSethDaniel/mason-tool-installer.nvim" },
-	{ src = "https://github.com/saghen/blink.cmp" },
 	{ src = "https://github.com/folke/neodev.nvim" },
 	{ src = "https://github.com/b0o/SchemaStore.nvim" },
 })
 
-local lspconfig = require("lspconfig")
-local util = require("lspconfig.util")
+pcall(vim.cmd, "packadd nvim-lspconfig")
+
+local util_ok, util = pcall(require, "lspconfig.util")
+if not util_ok then
+	vim.notify("nvim-lspconfig util module missing; skipping LSP setup", vim.log.levels.ERROR)
+	return
+end
+
+if not (vim.lsp and vim.lsp.config) then
+	vim.notify("vim.lsp.config API unavailable; update Neovim to 0.11+", vim.log.levels.ERROR)
+	return
+end
 
 -- Get capabilities from blink.cmp
-local capabilities = require("blink.cmp").get_lsp_capabilities()
+local blink_ok, blink = pcall(require, "blink.cmp")
+local capabilities = blink_ok and blink.get_lsp_capabilities() or vim.lsp.protocol.make_client_capabilities()
 
 local schemastore_ok, schemastore = pcall(require, "schemastore")
 
@@ -240,17 +250,18 @@ mason_tool_installer.setup({
 
 local function setup_server(name)
 	local server = vim.tbl_deep_extend("force", {}, servers[name] or {}, { capabilities = capabilities })
-	lspconfig[name].setup(server)
+	local ok, err = pcall(vim.lsp.config, name, server)
+	if not ok then
+		vim.notify(string.format("Failed to configure %s: %s", name, err), vim.log.levels.ERROR)
+		return
+	end
+
+	local enable_ok, enable_err = pcall(vim.lsp.enable, name)
+	if not enable_ok then
+		vim.notify(string.format("Failed to enable %s: %s", name, enable_err), vim.log.levels.ERROR)
+	end
 end
 
-if mason_lspconfig.setup_handlers then
-	mason_lspconfig.setup_handlers({
-		function(server_name)
-			setup_server(server_name)
-		end,
-	})
-else
-	for _, server_name in ipairs(server_names) do
-		setup_server(server_name)
-	end
+for _, server_name in ipairs(server_names) do
+	setup_server(server_name)
 end

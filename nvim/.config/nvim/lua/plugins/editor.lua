@@ -5,7 +5,6 @@ return function()
 		{ src = "https://github.com/folke/which-key.nvim" },
 		{ src = "https://github.com/nvim-mini/mini.bufremove" },
 		{ src = "https://github.com/nvim-mini/mini.pairs" },
-		{ src = "https://github.com/rcarriga/nvim-notify" },
 		{ src = "https://github.com/nvim-mini/mini.ai" },
 		{ src = "https://github.com/nvim-mini/mini.move" },
 		{ src = "https://github.com/nvim-mini/mini.notify" },
@@ -46,19 +45,11 @@ return function()
 		{ "<lsudo luarocks install --lua-version 5.1 tiktoken_coreeader>l", group = "LSP" },
 		{ "<leader>lq", desc = "Diagnostics to Location List" },
 		{ "<leader>m", group = "Markdown" },
+		{ "<leader>uh", desc = "Notification history" },
 		{ "<leader>q", group = "Quit" },
 		{ "<leader>s", group = "Splits" },
 		{ "<leader>u", group = "Toggles" },
 		{ "<leader>w", group = "Write" },
 	})
 
-	-- -- Notifications
-	-- local notify = require("notify")
-	-- notify.setup({
-	-- 	background_colour = "#1f1f28",
-	-- 	stages = "fade_in_slide_out",
-	-- 	timeout = 2000,
-	-- 	render = "compact",
-	-- })
-	-- vim.notify = notify
 end

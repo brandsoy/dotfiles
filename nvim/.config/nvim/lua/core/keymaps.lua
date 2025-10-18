@@ -124,6 +124,10 @@ map("n", "<leader>us", function()
 	notify_option("Spell check", vim.wo.spell)
 end, "Toggle spell checking")
 
+map("n", "<leader>uh", function()
+	require("mini.notify").show_history()
+end, "Show notification history")
+
 --------------------------------------------------------------------------
 --- Visual Mode
 --------------------------------------------------------------------------
