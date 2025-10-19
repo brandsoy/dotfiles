@@ -1,55 +1,80 @@
-return function()
-	-- Install editor enhancement plugins
-	vim.pack.add({
-		{ src = "https://github.com/stevearc/oil.nvim" },
-		{ src = "https://github.com/folke/which-key.nvim" },
-		{ src = "https://github.com/nvim-mini/mini.bufremove" },
-		{ src = "https://github.com/nvim-mini/mini.pairs" },
-		{ src = "https://github.com/nvim-mini/mini.ai" },
-		{ src = "https://github.com/nvim-mini/mini.move" },
-		{ src = "https://github.com/nvim-mini/mini.notify" },
-	})
-
-	-- Oil file manager
-	require("oil").setup()
-	vim.keymap.set("n", "-", "<CMD>Oil<CR>", { desc = "Open parent directory" })
-
-	-- Buffer remove helper
-	require("mini.bufremove").setup()
-
-	require("mini.ai").setup()
-
-	require("mini.move").setup({
-		mappings = {
-			down = "<A-j>",
-			up = "<A-k>",
-			line_down = "<A-j>",
-			line_up = "<A-k>",
+return {
+	{
+		"stevearc/oil.nvim",
+		cmd = "Oil",
+		keys = {
+			{ "-", "<CMD>Oil<CR>", desc = "Open parent directory" },
 		},
-	})
-
-	-- Autopairs
-	require("mini.pairs").setup({
-		modes = { insert = true, command = false, terminal = false },
-	})
-
-	require("mini.notify").setup({})
-
-	-- Which-key for keymap help
-	require("which-key").setup()
-	local wk = require("which-key")
-	wk.add({
-		{ "<leader>b", group = "Buffers" },
-		{ "<leader>d", group = "Debug" },
-		{ "<leader>f", group = "Find" },
-		{ "<lsudo luarocks install --lua-version 5.1 tiktoken_coreeader>l", group = "LSP" },
-		{ "<leader>lq", desc = "Diagnostics to Location List" },
-		{ "<leader>m", group = "Markdown" },
-		{ "<leader>uh", desc = "Notification history" },
-		{ "<leader>q", group = "Quit" },
-		{ "<leader>s", group = "Splits" },
-		{ "<leader>u", group = "Toggles" },
-		{ "<leader>w", group = "Write" },
-	})
-
-end
+		opts = {},
+		config = function(_, opts)
+			require("oil").setup(opts)
+		end,
+	},
+	{
+		"nvim-mini/mini.bufremove",
+		lazy = false,
+		config = function()
+			require("mini.bufremove").setup()
+		end,
+	},
+	{
+		"nvim-mini/mini.ai",
+		event = "VeryLazy",
+		config = function()
+			require("mini.ai").setup()
+		end,
+	},
+	{
+		"nvim-mini/mini.move",
+		event = "VeryLazy",
+		opts = {
+			mappings = {
+				down = "<A-j>",
+				up = "<A-k>",
+				line_down = "<A-j>",
+				line_up = "<A-k>",
+			},
+		},
+		config = function(_, opts)
+			require("mini.move").setup(opts)
+		end,
+	},
+	{
+		"nvim-mini/mini.pairs",
+		event = "InsertEnter",
+		opts = {
+			modes = { insert = true, command = false, terminal = false },
+		},
+		config = function(_, opts)
+			require("mini.pairs").setup(opts)
+		end,
+	},
+	{
+		"nvim-mini/mini.notify",
+		lazy = false,
+		config = function()
+			require("mini.notify").setup({})
+		end,
+	},
+	{
+		"folke/which-key.nvim",
+		event = "VeryLazy",
+		config = function()
+			require("which-key").setup()
+			local wk = require("which-key")
+			wk.add({
+				{ "<leader>b", group = "Buffers" },
+				{ "<leader>d", group = "Debug" },
+				{ "<leader>f", group = "Find" },
+				{ "<leader>l", group = "LSP" },
+				{ "<leader>lq", desc = "Diagnostics to Location List" },
+				{ "<leader>m", group = "Markdown" },
+				{ "<leader>uh", desc = "Notification history" },
+				{ "<leader>q", group = "Quit" },
+				{ "<leader>s", group = "Splits" },
+				{ "<leader>u", group = "Toggles" },
+				{ "<leader>w", group = "Write" },
+			})
+		end,
+	},
+}

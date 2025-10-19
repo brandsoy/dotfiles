@@ -5,7 +5,9 @@ background-opacity = 1
 # background-blur-radius = 30
 mouse-hide-while-typing = true
 
-theme = Ayu Mirage
+theme = Zenwritten Dark
+# theme = Vesper
+# theme = Ayu Mirage
 # theme = catppuccin-macchiato
 # theme = Catppuccin Mocha
 # theme = xcodedark
