@@ -28,3 +28,31 @@ vim.api.nvim_create_autocmd("TextYankPost", {
 		})
 	end,
 })
+
+-- Large file optimizations
+local large_file_group = vim.api.nvim_create_augroup("LargeFile", {})
+vim.api.nvim_create_autocmd("BufReadPre", {
+	group = large_file_group,
+	callback = function(args)
+		local file = vim.api.nvim_buf_get_name(args.buf)
+		local ok, stat = pcall(vim.uv.fs_stat, file)
+		if not ok or not stat then return end
+		if stat.size > 500 * 1024 then
+			vim.b.large_file = true
+			vim.cmd([[syntax off]])
+			pcall(vim.treesitter.stop, args.buf)
+			pcall(vim.diagnostic.disable, args.buf)
+		end
+	end,
+})
+
+-- Cursorline only in active window
+local cursorline_group = vim.api.nvim_create_augroup("ActiveCursorline", {})
+vim.api.nvim_create_autocmd({ "WinEnter", "BufEnter" }, {
+	group = cursorline_group,
+	callback = function() vim.wo.cursorline = true end,
+})
+vim.api.nvim_create_autocmd({ "WinLeave" }, {
+	group = cursorline_group,
+	callback = function() vim.wo.cursorline = false end,
+})

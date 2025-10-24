@@ -45,6 +45,20 @@ function M.setup()
 			map("n", "]d", vim.diagnostic.goto_next, "Next Diagnostic")
 			map("n", "<leader>le", vim.diagnostic.open_float, "Show Diagnostics (Float)")
 			map("n", "<leader>lq", vim.diagnostic.setloclist, "Diagnostics to Location List")
+
+			-- Toggle diagnostics virtual text
+			map("n", "<leader>lt", function()
+				local cfg = vim.diagnostic.config()
+				local vt = cfg.virtual_text
+				local enabled = (type(vt) == "table") or vt
+				vim.diagnostic.config({ virtual_text = not enabled })
+				vim.notify("Virtual text " .. (enabled and "disabled" or "enabled"))
+			end, "Toggle Diagnostics Virtual Text")
+
+			-- Force enable all servers
+			map("n", "<leader>ll", function()
+				vim.cmd("LspEnableAll")
+			end, "Enable All LSP Servers")
 		end,
 	})
 end

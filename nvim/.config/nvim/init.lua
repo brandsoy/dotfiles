@@ -1,3 +1,4 @@
+if vim.loader then vim.loader.enable() end
 require("core")
 
 local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
@@ -17,6 +18,6 @@ require("lazy").setup({
 	spec = {
 		{ import = "plugins" },
 	},
-	defaults = { lazy = false },
+	defaults = { lazy = true },
 	checker = { enabled = false },
 })

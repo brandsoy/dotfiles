@@ -179,4 +179,4 @@ path_prepend "/home/mattis/.opencode/bin"
 path_append "$HOME/.cargo/bin"
 
 # --- API keys -------------------------------------------------------------
-export GEMINI_API_KEY="${GEMINI_API_KEY:-AIzaSyAK1EWAqybtchh-k5uNCmWvnSIRhUqJcgc}"
+# export GEMINI_API_KEY="${GEMINI_API_KEY:-AIzaSyAK1EWAqybtchh-k5uNCmWvnSIRhUqJcgc}"

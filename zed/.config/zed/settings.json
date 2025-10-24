@@ -7,7 +7,10 @@
 // custom settings, run the `open default settings` command
 // from the command palette or from `Zed` application menu.
 {
-  "theme": "One Dark",
+  "icon_theme": "Colored Zed Icons Theme Dark",
+  "vim_mode": true,
+  "context_servers": {},
+  "theme": "Ayu Dark",
   "git_panel": {
     "sort_by_path": true
   },
@@ -15,16 +18,16 @@
     "dock": "right"
   },
   "agent": {
+    "default_model": {
+      "provider": "copilot_chat",
+      "model": "gpt-5"
+    },
     "always_allow_tool_actions": false,
     "play_sound_when_agent_done": true,
     "default_profile": "write",
     "inline_assistant_model": {
-      "provider": "zed.dev",
-      "model": "claude-sonnet-4-latest"
-    },
-    "default_model": {
       "provider": "copilot_chat",
-      "model": "claude-sonnet-4"
+      "model": "claude-sonnet-4-latest"
     }
   },
   "project_panel": {
@@ -32,7 +35,6 @@
   },
   "base_keymap": "VSCode",
   // Vim mode settings
-  "vim_mode": true,
   "relative_line_numbers": true,
 
   // THEMEING
@@ -41,7 +43,7 @@
   "ui_font_family": ".ZedMono",
   "ui_font_size": 15,
   "terminal": {
-    "font_family": "JetBrainsMonoNL Nerd Font Mono"
+    "font_family": "JetBrainsMono Nerd Font Mono"
   },
 
   "features": {
@@ -89,134 +91,87 @@
     "**/report",
     "**/node_modules"
   ],
-  "languages": {
-    "SQL": {
-      "formatter": {
-        "external": {
-          "command": "/Users/mattis/Library/pnpm/sql-formatter",
-          "arguments": ["--language", "postgresql"]
-        }
-      },
-      "format_on_save": "on"
-    },
-    "JavaScript": {
-      "code_actions_on_format": {
-        "source.fixAll.eslint": true
-      },
-      "indent_size": 2,
-      "formatter": {
-        "external": {
-          "command": "prettier",
-          "arguments": ["--stdin-filepath", "{buffer_path}"]
-        }
-      }
-    },
-    "TypeScript": {
-      "code_actions_on_format": {
-        "source.fixAll.eslint": true
-      },
-      "indent_size": 2,
-      "formatter": {
-        "external": {
-          "command": "prettier",
-          "arguments": ["--stdin-filepath", "{buffer_path}"]
-        }
-      }
-    },
-    "TSX": {
-      "code_actions_on_format": {
-        "source.fixAll.eslint": true
-      },
-      "indent_size": 2,
-      "formatter": {
-        "external": {
-          "command": "prettier",
-          "arguments": ["--stdin-filepath", "{buffer_path}"]
-        }
-      }
-    },
-    "JSON": {
-      "indent_size": 2,
-      "code_actions_on_format": {
-        "source.fixAll.eslint": true
-      },
-      "formatter": {
-        "external": {
-          "command": "prettier",
-          "arguments": ["--stdin-filepath", "{buffer_path}"]
-        }
-      }
-    },
-    "JSONC": {
-      "indent_size": 2,
-      "code_actions_on_format": {
-        "source.fixAll.eslint": true
-      },
-      "formatter": {
-        "external": {
-          "command": "prettier",
-          "arguments": ["--stdin-filepath", "{buffer_path}"]
-        }
-      }
-    },
-    "Markdown": {
-      "format_on_save": "on",
-      "use_on_type_format": false,
-      "preferred_line_length": 80,
-      "soft_wrap": "preferred_line_length",
-      "prettier": {
-        "allowed": true
-      }
-    },
-    "Python": {
-      "indent_size": 2,
-      "language_servers": ["ruff"],
-      "format_on_save": "on",
-      "formatter": [
-        {
-          "language_server": {
-            "name": "ruff"
-          }
-        }
-      ],
-      "code_actions_on_format": {
-        "source.organizeImports": true,
-        "source.fixAll.ruff": true
-      }
-    },
-    "SCSS": {
-      "indent_size": 2,
-      "code_actions_on_format": {
-        "source.fixAll.stylelint": true
-      },
-      "prettier": {
-        "allowed": true
-      }
-    },
-    "CSS": {
-      "indent_size": 2,
-      "code_actions_on_format": {
-        "source.fixAll.stylelint": true
-      },
-      "prettier": {
-        "allowed": true
-      }
-    },
-    "Diff": {
-      "remove_trailing_whitespace_on_save": false,
-      "ensure_final_newline_on_save": false
-    },
-    "HTML": {
-      "prettier": {
-        "allowed": true
-      }
-    },
-    "YAML": {
-      "prettier": {
-        "allowed": true
-      }
-    }
-  },
+  // "languages": {
+  // "SQL": {
+  // "formatter": {
+  // "external": {
+  // "command": "/Users/mattis/Library/pnpm/sql-formatter",
+  // "arguments": ["--language", "postgresql"]
+  // }
+  // },
+  // "format_on_save": "on"
+  // },
+  // "JavaScript": {
+  //   "code_actions_on_format": {
+  //     "source.fixAll.eslint": true
+  //   },
+  //   "formatter": {
+  //     "external": {
+  //       "command": "prettier",
+  //       "arguments": ["--stdin-filepath", "{buffer_path}"]
+  //     }
+  //   }
+  // },
+  // "TypeScript": {
+  //   "code_actions_on_format": {
+  //     "source.fixAll.eslint": true
+  //   },
+  //   "formatter": {
+  //     "external": {
+  //       "command": "prettier",
+  //       "arguments": ["--stdin-filepath", "{buffer_path}"]
+  //     }
+  //   }
+  // },
+  // "TSX": {
+  //   "code_actions_on_format": {
+  //     "source.fixAll.eslint": true
+  //   },
+  //   "formatter": {
+  //     "external": {
+  //       "command": "prettier",
+  //       "arguments": ["--stdin-filepath", "{buffer_path}"]
+  //     }
+  //   }
+  // },
+  // "Python": {
+  //   "language_servers": ["ruff"],
+  //   "format_on_save": "on",
+  //   "formatter": [
+  //     {
+  //       "language_server": {
+  //         "name": "ruff"
+  //       }
+  //     }
+  //   ],
+  //   "code_actions_on_format": {
+  //     "source.organizeImports": true,
+  //     "source.fixAll.ruff": true
+  //   }
+  // },
+  // "CSS": {
+  //   "code_actions_on_format": {
+  //     "source.fixAll.stylelint": true
+  //   },
+  //   "prettier": {
+  //     "allowed": true
+  //   }
+  // },
+  // "Diff": {
+  //   "remove_trailing_whitespace_on_save": false,
+  //   "ensure_final_newline_on_save": false
+  // },
+  // "HTML": {
+  //   "prettier": {
+  //     "allowed": true
+  //   }
+  // },
+  // "YAML": {
+  //   "prettier": {
+  //     "allowed": true
+  //   }
+  // }
+  // },
   "lsp_highlight_debounce": 100,
   "tabs": {
     "git_status": true,

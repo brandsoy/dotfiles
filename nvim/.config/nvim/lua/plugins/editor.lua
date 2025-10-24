@@ -56,6 +56,14 @@ return {
 			require("mini.notify").setup({})
 		end,
 	},
+
+	{
+		"nvim-mini/mini.diff",
+		version = false,
+		config = function()
+			require("mini.notify").setup({})
+		end,
+	},
 	{
 		"folke/which-key.nvim",
 		event = "VeryLazy",

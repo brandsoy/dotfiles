@@ -1,0 +1,4 @@
+WRN 2025-10-22T01:02:43.041 ?.73820    server_start:197: Failed to start server: operation not permitted: /var/folders/nn/7l2hz2490bs4sqf99l8p2j7h0000gn/T/nvim.mattis/1dTUmA/nvim.73820.0
+WRN 2025-10-22T09:50:45.986 ?.26463    server_start:193: Failed to start server: operation not permitted: /var/folders/nn/7l2hz2490bs4sqf99l8p2j7h0000gn/T/nvim.mattis/HNFh0P/nvim.26463.0
+WRN 2025-10-22T09:54:23.132 ?.29207    server_start:193: Failed to start server: operation not permitted: /var/folders/nn/7l2hz2490bs4sqf99l8p2j7h0000gn/T/nvim.mattis/yaN7i3/nvim.29207.0
+WRN 2025-10-22T09:54:31.845 ?.29299    server_start:193: Failed to start server: operation not permitted: /var/folders/nn/7l2hz2490bs4sqf99l8p2j7h0000gn/T/nvim.mattis/rJunlN/nvim.29299.0

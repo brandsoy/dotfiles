@@ -12,6 +12,7 @@ return {
 	},
 	{
 		"neovim/nvim-lspconfig",
+		event = { "BufReadPre", "BufNewFile" },
 		dependencies = {
 			"mason-org/mason.nvim",
 			"mason-org/mason-lspconfig.nvim",
@@ -26,7 +27,7 @@ return {
 	},
 	{
 		"stevearc/conform.nvim",
-		event = { "BufWritePre", "BufWritePost" },
+		event = { "BufWritePre" },
 		config = function()
 			require("config.lsp.formatting").setup_conform()
 		end,

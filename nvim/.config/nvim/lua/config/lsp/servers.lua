@@ -7,10 +7,13 @@ local function configure_servers()
 		return
 	end
 
-	if not (vim.lsp and vim.lsp.config) then
-		vim.notify("vim.lsp.config API unavailable; update Neovim to 0.11+", vim.log.levels.ERROR)
+	local lspconfig_ok, lspconfig = pcall(require, "lspconfig")
+	if not lspconfig_ok then
+		vim.notify("nvim-lspconfig module missing; skipping LSP setup", vim.log.levels.ERROR)
 		return
 	end
+
+	local supports_new_api = vim.lsp and vim.lsp.config and vim.lsp.enable
 
 	local blink_ok, blink = pcall(require, "blink.cmp")
 	local capabilities = blink_ok and blink.get_lsp_capabilities() or vim.lsp.protocol.make_client_capabilities()
@@ -210,9 +213,23 @@ local function configure_servers()
 
 	local server_names = vim.tbl_keys(servers)
 
-	local mason = require("mason")
-	local mason_lspconfig = require("mason-lspconfig")
-	local mason_tool_installer = require("mason-tool-installer")
+	local mason_ok, mason = pcall(require, "mason")
+	if not mason_ok then
+		vim.notify("mason.nvim not available; skip tooling setup", vim.log.levels.ERROR)
+		return
+	end
+
+	local mason_lspconfig_ok, mason_lspconfig = pcall(require, "mason-lspconfig")
+	if not mason_lspconfig_ok then
+		vim.notify("mason-lspconfig not available; skip LSP installer setup", vim.log.levels.ERROR)
+		return
+	end
+
+	local mason_tool_installer_ok, mason_tool_installer = pcall(require, "mason-tool-installer")
+	if not mason_tool_installer_ok then
+		vim.notify("mason-tool-installer not available; skip tool installer setup", vim.log.levels.ERROR)
+		return
+	end
 
 	mason.setup({
 		registries = {
@@ -228,25 +245,87 @@ local function configure_servers()
 
 	mason_tool_installer.setup({
 		ensure_installed = vim.list_extend(vim.list_extend({}, server_names), tools),
+		run_on_start = true,
+		start_delay = 2000,
+		debounce_hours = 12,
 	})
 
-	local function setup_server(name)
-		local server = vim.tbl_deep_extend("force", {}, servers[name] or {}, { capabilities = capabilities })
-		local ok, err = pcall(vim.lsp.config, name, server)
-		if not ok then
-			vim.notify(string.format("Failed to configure %s: %s", name, err), vim.log.levels.ERROR)
+	local function enable_server_for_buf(name, bufnr)
+		if supports_new_api then
+			if not vim.lsp.get_clients({ name = name, bufnr = bufnr })[1] then
+				pcall(vim.lsp.enable, name, { bufnr = bufnr })
+			end
 			return
 		end
 
-		local enable_ok, enable_err = pcall(vim.lsp.enable, name)
-		if not enable_ok then
-			vim.notify(string.format("Failed to enable %s: %s", name, enable_err), vim.log.levels.ERROR)
+		local server_mod = lspconfig[name]
+		if server_mod and server_mod.manager then
+			server_mod.manager.try_add(bufnr)
+		end
+	end
+
+	local function setup_server(name)
+		local server = vim.tbl_deep_extend("force", {}, servers[name] or {}, { capabilities = capabilities })
+		if supports_new_api then
+			local ok, err = pcall(vim.lsp.config, name, server)
+			if not ok then
+				vim.notify(string.format("Failed to configure %s: %s", name, err), vim.log.levels.ERROR)
+			end
+			return
+		end
+
+		local server_mod = lspconfig[name]
+		if not server_mod then
+			vim.notify(string.format("lspconfig has no server named %s", name), vim.log.levels.WARN)
+			return
+		end
+
+		local ok, err = pcall(server_mod.setup, server)
+		if not ok then
+			vim.notify(string.format("Failed to configure %s: %s", name, err), vim.log.levels.ERROR)
 		end
 	end
 
 	for _, server_name in ipairs(server_names) do
 		setup_server(server_name)
 	end
+
+	-- Defer enabling until matching FileType to reduce startup cost; skip large files
+		if supports_new_api then
+			local get_configs = type(vim.lsp.get_configs) == "function" and vim.lsp.get_configs or nil
+			vim.api.nvim_create_autocmd("FileType", {
+				callback = function(ev)
+					if vim.b.large_file then return end
+					local ft = ev.match
+					local configs = get_configs and get_configs() or nil
+					for name, cfg in pairs(servers) do
+						if vim.lsp.get_clients({ name = name, bufnr = ev.buf })[1] then
+							goto continue
+						end
+
+						local registered = configs and configs[name] or nil
+						local fts = (registered and registered.filetypes) or cfg.filetypes
+
+						if not fts or vim.tbl_contains(fts, ft) then
+							pcall(vim.lsp.enable, name, { bufnr = ev.buf })
+						end
+
+						::continue::
+					end
+				end,
+			})
+
+	end
+
+	-- User command to force enable all configured servers for current buffer
+	vim.api.nvim_create_user_command("LspEnableAll", function()
+		local bufnr = vim.api.nvim_get_current_buf()
+		for name, _ in pairs(servers) do
+			if not vim.lsp.get_clients({ name = name, bufnr = bufnr })[1] then
+				enable_server_for_buf(name, bufnr)
+			end
+		end
+	end, { desc = "Force enable all configured LSP servers for current buffer" })
 end
 
 function M.setup()
