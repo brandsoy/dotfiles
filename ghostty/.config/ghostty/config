@@ -1,8 +1,8 @@
 # Theme
 
 bold-is-bright = true
-background-opacity = 1
-# background-blur-radius = 30
+background-opacity = 0.95
+background-blur-radius = 30
 mouse-hide-while-typing = true
 
 theme = Zenwritten Dark
