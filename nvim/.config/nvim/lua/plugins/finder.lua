@@ -18,6 +18,7 @@ return {
 			{ "<leader>f/", function() require("fzf-lua").command_history() end, desc = "Command history" },
 			{ "<leader>f?", function() require("fzf-lua").keymaps() end, desc = "Search keymaps" },
 			{ "<leader>f.", function() require("fzf-lua").resume() end, desc = "Resume last picker" },
+			{ "<leader>uh", function() require("fzf-lua").mini_notify_history() end, desc = "Notification history" },
 		},
 		config = function()
 			local fzf = require("fzf-lua")
@@ -78,6 +79,83 @@ return {
 					},
 				},
 			})
+
+			fzf.mini_notify_history = function(opts)
+				opts = opts or {}
+
+				local ok_notify, mini_notify = pcall(require, "mini.notify")
+				if not ok_notify then
+					vim.notify("mini.notify not available; cannot show history", vim.log.levels.ERROR, { title = "Notifications" })
+					return
+				end
+
+				local history = mini_notify.get_all()
+				if type(history) ~= "table" or #history == 0 then
+					vim.notify("Notification history is empty", vim.log.levels.INFO, { title = "Notifications" })
+					return
+				end
+
+				local entries = {}
+				local lookup = {}
+
+				for index = #history, 1, -1 do
+					local notif = history[index]
+					local id = string.format("%05d", index)
+					local level = string.upper(notif.level or "INFO")
+					local timestamp = notif.ts_add and os.date("%H:%M:%S", math.floor(notif.ts_add)) or "--:--:--"
+					local message = (notif.msg or ""):gsub("\n", " ")
+					message = message:gsub("%s+", " ")
+					message = message:match("^%s*(.-)%s*$") or ""
+					local display = string.format("%s | %-5s | %s", timestamp, level, message)
+					table.insert(entries, string.format("%s %s", id, display))
+					lookup[id] = notif
+				end
+
+				local function extract_notification(selection)
+					if not selection or not selection[1] then
+						return nil
+					end
+					local id = selection[1]:match("^(%d+)")
+					if not id then
+						return nil
+					end
+					return lookup[id]
+				end
+
+				local fzf_opts = vim.tbl_deep_extend("force", {
+					prompt = "Notify❯ ",
+					winopts = {
+						title = "Notification History",
+						title_pos = "center",
+					},
+					fzf_opts = {
+						["--no-sort"] = "",
+						["--delimiter"] = " ",
+						["--with-nth"] = "2..",
+					},
+					actions = {
+						["default"] = function(selection)
+							local notif = extract_notification(selection)
+							if not notif then
+								return
+							end
+							local level = vim.log.levels[notif.level or "INFO"] or vim.log.levels.INFO
+							vim.notify(notif.msg, level)
+						end,
+						["ctrl-y"] = function(selection)
+							local notif = extract_notification(selection)
+							if not notif then
+								return
+							end
+							vim.fn.setreg("+", notif.msg)
+							vim.notify("Notification copied to clipboard", vim.log.levels.INFO, { title = "Notifications" })
+						end,
+					},
+					previewer = false,
+				}, opts or {})
+
+				fzf.fzf_exec(entries, fzf_opts)
+			end
 		end,
 	},
 }

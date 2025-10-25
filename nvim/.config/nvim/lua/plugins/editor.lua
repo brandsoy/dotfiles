@@ -53,7 +53,61 @@ return {
 		"nvim-mini/mini.notify",
 		lazy = false,
 		config = function()
-			require("mini.notify").setup({})
+			local mini_notify = require("mini.notify")
+
+			local function format_message(notification)
+				local labels = {
+					ERROR = "[error]",
+					WARN = "[warn] ",
+					INFO = "[info] ",
+					DEBUG = "[debug]",
+					TRACE = "[trace]",
+				}
+				local level = notification.level or notification.level_name or "INFO"
+				level = string.upper(level)
+				local prefix = labels[level] or labels.INFO
+				return string.format("%s %s", prefix, notification.msg)
+			end
+
+			local function floating_window_config()
+				local tabline_is_visible = vim.o.showtabline ~= 0
+				return {
+					anchor = "NE",
+					col = vim.o.columns,
+					row = tabline_is_visible and 1 or 0,
+					border = "rounded",
+				}
+			end
+
+			mini_notify.setup({
+				content = {
+					format = format_message,
+				},
+				window = {
+					winblend = 10,
+					max_width_share = 0.45,
+					config = floating_window_config,
+				},
+			})
+
+			vim.notify = mini_notify.make_notify({
+				ERROR = { duration = 7000 },
+				WARN = { duration = 5000 },
+				INFO = { duration = 3000 },
+			})
+
+			local function set_notify_highlights()
+				local background = "#1b1d2b"
+				vim.api.nvim_set_hl(0, "MiniNotifyNormal", { bg = background, fg = "#d0d5f6" })
+				vim.api.nvim_set_hl(0, "MiniNotifyBorder", { bg = background, fg = "#8087ad" })
+				vim.api.nvim_set_hl(0, "MiniNotifyTitle", { fg = "#a5b3ff", bold = true })
+			end
+
+			set_notify_highlights()
+			vim.api.nvim_create_autocmd("ColorScheme", {
+				callback = set_notify_highlights,
+				desc = "Reapply MiniNotify highlight overrides",
+			})
 		end,
 	},
 

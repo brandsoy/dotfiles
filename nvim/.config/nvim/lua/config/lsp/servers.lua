@@ -43,7 +43,11 @@ local function configure_servers()
 					diagnostics = { globals = { "vim" } },
 					hint = { enable = true },
 					runtime = { version = "LuaJIT" },
-					workspace = { checkThirdParty = false, library = vim.api.nvim_get_runtime_file("", true) },
+					workspace = {
+						checkThirdParty = false,
+						-- rely on neodev.nvim to inject the Neovim runtime instead of eagerly
+						-- adding every runtime path (which triggers repeated workspace loading)
+					},
 					telemetry = { enable = false },
 				},
 			},
