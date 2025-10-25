@@ -12,7 +12,8 @@ config.initial_rows = 28
 
 -- or, changing the font size and color scheme.
 config.font_size = 15
-config.color_scheme = "zenbones_dark"
+-- config.color_scheme = "zenbones_dark"
+config.color_scheme = "Base2Tone Drawbridge"
 config.font = wezterm.font("JetBrainsMono Nerd Font", { weight = "Bold", italic = false })
 
 config.hide_tab_bar_if_only_one_tab = true
