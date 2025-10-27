@@ -3,22 +3,118 @@ return {
 		"ibhagwan/fzf-lua",
 		cmd = "FzfLua",
 		keys = {
-			{ "<leader>ff", function() require("fzf-lua").files() end, desc = "Find files (project aware)" },
-			{ "<leader>fF", function() require("fzf-lua").git_files() end, desc = "Find tracked files" },
-			{ "<leader>fr", function() require("fzf-lua").oldfiles() end, desc = "Open recent files" },
-			{ "<leader>fb", function() require("fzf-lua").buffers() end, desc = "Switch buffer" },
-			{ "<leader>fs", function() require("fzf-lua").lsp_document_symbols() end, desc = "Search document symbols" },
-			{ "<leader>fS", function() require("fzf-lua").lsp_workspace_symbols() end, desc = "Search workspace symbols" },
-			{ "<leader>fd", function() require("fzf-lua").diagnostics_document() end, desc = "List document diagnostics" },
-			{ "<leader>fD", function() require("fzf-lua").diagnostics_workspace() end, desc = "List workspace diagnostics" },
-			{ "<leader>fg", function() require("fzf-lua").live_grep() end, desc = "Live grep project" },
-			{ "<leader>fw", function() require("fzf-lua").grep_cword() end, desc = "Grep word under cursor" },
-			{ "<leader>fW", function() require("fzf-lua").grep_cWORD() end, desc = "Grep WORD under cursor" },
-			{ "<leader>fh", function() require("fzf-lua").help_tags() end, desc = "Search help tags" },
-			{ "<leader>f/", function() require("fzf-lua").command_history() end, desc = "Command history" },
-			{ "<leader>f?", function() require("fzf-lua").keymaps() end, desc = "Search keymaps" },
-			{ "<leader>f.", function() require("fzf-lua").resume() end, desc = "Resume last picker" },
-			{ "<leader>uh", function() require("fzf-lua").mini_notify_history() end, desc = "Notification history" },
+			{
+				"<leader>ff",
+				function()
+					require("fzf-lua").files()
+				end,
+				desc = "Find files (project aware)",
+			},
+			{
+				"<leader>fF",
+				function()
+					require("fzf-lua").git_files()
+				end,
+				desc = "Find tracked files",
+			},
+			{
+				"<leader>fr",
+				function()
+					require("fzf-lua").oldfiles()
+				end,
+				desc = "Open recent files",
+			},
+			{
+				"<leader>fb",
+				function()
+					require("fzf-lua").buffers()
+				end,
+				desc = "Switch buffer",
+			},
+			{
+				"<leader>fs",
+				function()
+					require("fzf-lua").lsp_document_symbols()
+				end,
+				desc = "Search document symbols",
+			},
+			{
+				"<leader>fS",
+				function()
+					require("fzf-lua").lsp_workspace_symbols()
+				end,
+				desc = "Search workspace symbols",
+			},
+			{
+				"<leader>fd",
+				function()
+					require("fzf-lua").diagnostics_document()
+				end,
+				desc = "List document diagnostics",
+			},
+			{
+				"<leader>fD",
+				function()
+					require("fzf-lua").diagnostics_workspace()
+				end,
+				desc = "List workspace diagnostics",
+			},
+			{
+				"<leader>fg",
+				function()
+					require("fzf-lua").live_grep()
+				end,
+				desc = "Live grep project",
+			},
+			{
+				"<leader>fw",
+				function()
+					require("fzf-lua").grep_cword()
+				end,
+				desc = "Grep word under cursor",
+			},
+			{
+				"<leader>fW",
+				function()
+					require("fzf-lua").grep_cWORD()
+				end,
+				desc = "Grep WORD under cursor",
+			},
+			{
+				"<leader>fh",
+				function()
+					require("fzf-lua").help_tags()
+				end,
+				desc = "Search help tags",
+			},
+			{
+				"<leader>f/",
+				function()
+					require("fzf-lua").command_history()
+				end,
+				desc = "Command history",
+			},
+			{
+				"<leader>f?",
+				function()
+					require("fzf-lua").keymaps()
+				end,
+				desc = "Search keymaps",
+			},
+			{
+				"<leader>f.",
+				function()
+					require("fzf-lua").resume()
+				end,
+				desc = "Resume last picker",
+			},
+			{
+				"<leader>uh",
+				function()
+					require("fzf-lua").mini_notify_history()
+				end,
+				desc = "Notification history",
+			},
 		},
 		config = function()
 			local fzf = require("fzf-lua")
@@ -85,7 +181,11 @@ return {
 
 				local ok_notify, mini_notify = pcall(require, "mini.notify")
 				if not ok_notify then
-					vim.notify("mini.notify not available; cannot show history", vim.log.levels.ERROR, { title = "Notifications" })
+					vim.notify(
+						"mini.notify not available; cannot show history",
+						vim.log.levels.ERROR,
+						{ title = "Notifications" }
+					)
 					return
 				end
 
@@ -148,7 +248,11 @@ return {
 								return
 							end
 							vim.fn.setreg("+", notif.msg)
-							vim.notify("Notification copied to clipboard", vim.log.levels.INFO, { title = "Notifications" })
+							vim.notify(
+								"Notification copied to clipboard",
+								vim.log.levels.INFO,
+								{ title = "Notifications" }
+							)
 						end,
 					},
 					previewer = false,
