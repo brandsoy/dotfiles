@@ -5,12 +5,12 @@ background-opacity = 0.95
 background-blur-radius = 30
 mouse-hide-while-typing = true
 
-theme = Zenwritten Dark
+# theme = Zenwritten Dark
 # theme = Vesper
 # theme = Ayu Mirage
-# theme = catppuccin-macchiato
-# theme = Catppuccin Mocha
-# theme = xcodedark
+# theme = Rose Pine
+# theme = dark:Nord Wave,light:Nord Light
+theme = dark:Catppuccin Mocha, light:Catppuccin Latte
 # theme = rose-pine
 # theme = dark:rose-pine,light:rose-pine-dawn
 # theme = ayu
@@ -22,17 +22,17 @@ macos-titlebar-proxy-icon = "hidden"
 
 # Font
 font-size = 14
-font-family = "JetBrainsMono Nerd Font Mono"
-# font-family = "Iosevka Nerd Font Mono"
 # font-family = "FiraCode Nerd Font Mono"
-# font-family = "MesloLGS Nerd Font Mono"
+# font-family = "JetBrainsMono Nerd Font Mono"
+# font-family = "Iosevka Nerd Font Mono"
+font-family = "MesloLGS Nerd Font Mono"
 # font-family = "CaskaydiaCove Nerd Font Mono"
 # font-family = "IBM Plex Mono"
 # font-family = "BlexMono Nerd Font Mono"
-font-feature = calt
-font-feature = liga
-font-feature = dlig
-font-synthetic-style = true
+# font-feature = calt
+# font-feature = liga
+# font-feature = dig
+# font-synthetic-style = true
 
 adjust-cell-height = 10%
 
