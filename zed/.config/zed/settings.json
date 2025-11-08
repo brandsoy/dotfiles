@@ -9,8 +9,16 @@
 {
   "icon_theme": "Colored Zed Icons Theme Dark",
   "vim_mode": true,
-  "context_servers": {},
-  "theme": "Ayu Dark",
+  "context_servers": {
+    "mcp-server-context7": {
+      "source": "extension",
+      "enabled": false,
+      "settings": {
+        "context7_api_key": "ctx7sk-9d1e26ad-f0bf-48c6-af6c-23170252f577"
+      }
+    }
+  },
+  "theme": "Catppuccin Mocha",
   "git_panel": {
     "sort_by_path": true
   },
@@ -47,7 +55,7 @@
   },
 
   "features": {
-    "edit_prediction_provider": "zed"
+    "edit_prediction_provider": "copilot"
   },
   "telemetry": {
     "metrics": false,
