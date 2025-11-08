@@ -46,4 +46,6 @@ padding.y = 5
 decorations = "buttonless"
 
 [keyboard]
-bindings = [{ key = "F11", action = "ToggleFullscreen" }]
+bindings = [{ key = "F11", action = "ToggleFullscreen" },
+{ key = "Insert", mods = "Shift", action = "Paste" },
+{ key = "Insert", mods = "Control", action = "Copy" }]
