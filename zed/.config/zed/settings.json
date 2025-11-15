@@ -7,7 +7,7 @@
 // custom settings, run the `open default settings` command
 // from the command palette or from `Zed` application menu.
 {
-  "icon_theme": "Colored Zed Icons Theme Dark",
+  "icon_theme": "Zed (Default)",
   "vim_mode": true,
   "context_servers": {
     "mcp-server-context7": {
@@ -18,7 +18,7 @@
       }
     }
   },
-  "theme": "Catppuccin Mocha",
+  "theme": "Ayu Dark",
   "git_panel": {
     "sort_by_path": true
   },
@@ -28,9 +28,9 @@
   "agent": {
     "default_model": {
       "provider": "copilot_chat",
-      "model": "gpt-5"
+      "model": "gpt-5-codex"
     },
-    "always_allow_tool_actions": false,
+    "always_allow_tool_actions": true,
     "play_sound_when_agent_done": true,
     "default_profile": "write",
     "inline_assistant_model": {
@@ -43,7 +43,7 @@
   },
   "base_keymap": "VSCode",
   // Vim mode settings
-  "relative_line_numbers": true,
+  "relative_line_numbers": "enabled",
 
   // THEMEING
   "buffer_font_family": "JetBrainsMono Nerd Font Mono",

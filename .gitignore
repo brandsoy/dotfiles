@@ -7,3 +7,4 @@ github-copilot/.config/github-copilot/hosts.json
 github-copilot/.config/github-copilot/apps.json
 zed/.config/zed/prompts/prompts-library-db.0.mdb/lock.mdb
 .DS_Store
+scripts/.DS_Store

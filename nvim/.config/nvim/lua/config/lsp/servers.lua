@@ -161,6 +161,7 @@ local function configure_servers()
 		biome = {},
 		tsp_server = {},
 		svelte = {},
+		prismals = {},
 		vuels = {
 			filetypes = { "vue", "typescript", "javascript" },
 			init_options = {
@@ -295,30 +296,31 @@ local function configure_servers()
 	end
 
 	-- Defer enabling until matching FileType to reduce startup cost; skip large files
-		if supports_new_api then
-			local get_configs = type(vim.lsp.get_configs) == "function" and vim.lsp.get_configs or nil
-			vim.api.nvim_create_autocmd("FileType", {
-				callback = function(ev)
-					if vim.b.large_file then return end
-					local ft = ev.match
-					local configs = get_configs and get_configs() or nil
-					for name, cfg in pairs(servers) do
-						if vim.lsp.get_clients({ name = name, bufnr = ev.buf })[1] then
-							goto continue
-						end
-
-						local registered = configs and configs[name] or nil
-						local fts = (registered and registered.filetypes) or cfg.filetypes
-
-						if not fts or vim.tbl_contains(fts, ft) then
-							pcall(vim.lsp.enable, name, { bufnr = ev.buf })
-						end
-
-						::continue::
+	if supports_new_api then
+		local get_configs = type(vim.lsp.get_configs) == "function" and vim.lsp.get_configs or nil
+		vim.api.nvim_create_autocmd("FileType", {
+			callback = function(ev)
+				if vim.b.large_file then
+					return
+				end
+				local ft = ev.match
+				local configs = get_configs and get_configs() or nil
+				for name, cfg in pairs(servers) do
+					if vim.lsp.get_clients({ name = name, bufnr = ev.buf })[1] then
+						goto continue
 					end
-				end,
-			})
 
+					local registered = configs and configs[name] or nil
+					local fts = (registered and registered.filetypes) or cfg.filetypes
+
+					if not fts or vim.tbl_contains(fts, ft) then
+						pcall(vim.lsp.enable, name, { bufnr = ev.buf })
+					end
+
+					::continue::
+				end
+			end,
+		})
 	end
 
 	-- User command to force enable all configured servers for current buffer
