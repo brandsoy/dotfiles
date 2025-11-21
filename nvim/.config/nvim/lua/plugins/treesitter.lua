@@ -24,6 +24,9 @@ return {
 			auto_install = false,
 			highlight = {
 				enable = true,
+				disable = function(lang, buf)
+					return vim.b[buf].large_file
+				end,
 				additional_vim_regex_highlighting = false,
 			},
 			indent = { enable = true },

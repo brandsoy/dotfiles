@@ -8,9 +8,9 @@ mouse-hide-while-typing = true
 # theme = Ayu Mirage
 # theme = Rose Pine
 # theme = dark:Nord Wave,light:Nord Light
-# theme = dark:Catppuccin Mocha, light:Catppuccin Latte
+theme = dark:Catppuccin Mocha, light:Catppuccin Latte
 # theme = rose-pine
-theme = dark:Rose Pine,light:Rose Pine Dawn
+# theme = dark:Rose Pine,light:Rose Pine Dawn
 # theme = ayu
 # theme = GitHub-Dark-Default
 

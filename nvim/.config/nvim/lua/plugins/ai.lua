@@ -15,8 +15,6 @@ return {
 				},
 			})
 
-			pcall(vim.lsp.enable, "copilot")
-
 			local wk = require("which-key")
 			wk.add({
 				{
@@ -97,13 +95,13 @@ return {
 					end,
 					desc = "Sidekick Toggle Copilot",
 				},
-				{
-					"<leader>aG",
-					function()
-						require("sidekick.cli").toggle({ name = "gemini", focus = true })
-					end,
-					desc = "Sidekick Toggle Gemini",
-				},
+				-- {
+				-- 	"<leader>aG",
+				-- 	function()
+				-- 		require("sidekick.cli").toggle({ name = "gemini", focus = true })
+				-- 	end,
+				-- 	desc = "Sidekick Toggle Gemini",
+				-- },
 				{
 					"<leader>ao",
 					function()

@@ -70,17 +70,32 @@ return {
 				color_overrides = {},
 				custom_highlights = {},
 				default_integrations = true,
-				auto_integrations = false,
 				integrations = {
-					cmp = true,
-					gitsigns = true,
-					nvimtree = true,
-					notify = false,
+					blink_cmp = true,
+					fzf = true,
+					mason = true,
+					markdown = true,
 					mini = {
 						enabled = true,
 						indentscope_color = "",
 					},
-					-- For more plugins integrations please scroll down (https://github.com/catppuccin/nvim#integrations)
+					native_lsp = {
+						enabled = true,
+						virtual_text = {
+							errors = { "italic" },
+							hints = { "italic" },
+							warnings = { "italic" },
+							information = { "italic" },
+						},
+						underlines = {
+							errors = { "underline" },
+							hints = { "underline" },
+							warnings = { "underline" },
+							information = { "underline" },
+						},
+					},
+					treesitter = true,
+					which_key = true,
 				},
 			})
 

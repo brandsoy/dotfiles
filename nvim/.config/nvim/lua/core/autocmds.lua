@@ -42,6 +42,9 @@ vim.api.nvim_create_autocmd("BufReadPre", {
 			vim.cmd([[syntax off]])
 			pcall(vim.treesitter.stop, args.buf)
 			pcall(vim.diagnostic.disable, args.buf)
+			vim.opt_local.swapfile = false
+			vim.opt_local.foldmethod = "manual"
+			vim.opt_local.undolevels = -1
 		end
 	end,
 })

@@ -12,7 +12,10 @@ return {
 	},
 	{
 		"nvim-mini/mini.bufremove",
-		lazy = false,
+		keys = {
+			{ "<leader>bd", function() require("mini.bufremove").delete() end, desc = "Delete buffer" },
+			{ "<leader>bD", function() require("mini.bufremove").delete(0, true) end, desc = "Delete buffer (force)" },
+		},
 		config = function()
 			require("mini.bufremove").setup()
 		end,
@@ -115,7 +118,7 @@ return {
 		"nvim-mini/mini.diff",
 		version = false,
 		config = function()
-			require("mini.notify").setup({})
+			require("mini.diff").setup({})
 		end,
 	},
 	{

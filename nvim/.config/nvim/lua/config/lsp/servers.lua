@@ -250,8 +250,7 @@ local function configure_servers()
 
 	mason_tool_installer.setup({
 		ensure_installed = vim.list_extend(vim.list_extend({}, server_names), tools),
-		run_on_start = true,
-		start_delay = 2000,
+		run_on_start = false,
 		debounce_hours = 12,
 	})
 
@@ -298,26 +297,45 @@ local function configure_servers()
 	-- Defer enabling until matching FileType to reduce startup cost; skip large files
 	if supports_new_api then
 		local get_configs = type(vim.lsp.get_configs) == "function" and vim.lsp.get_configs or nil
+		
+		-- Build filetype to servers lookup table once for performance
+		local ft_to_servers = {}
+		local configs = get_configs and get_configs() or nil
+		for name, cfg in pairs(servers) do
+			local registered = configs and configs[name] or nil
+			local fts = (registered and registered.filetypes) or cfg.filetypes
+			
+			if fts then
+				for _, ft in ipairs(fts) do
+					ft_to_servers[ft] = ft_to_servers[ft] or {}
+					table.insert(ft_to_servers[ft], name)
+				end
+			else
+				-- Servers with no explicit filetypes apply to all
+				ft_to_servers["*"] = ft_to_servers["*"] or {}
+				table.insert(ft_to_servers["*"], name)
+			end
+		end
+		
 		vim.api.nvim_create_autocmd("FileType", {
 			callback = function(ev)
 				if vim.b.large_file then
 					return
 				end
 				local ft = ev.match
-				local configs = get_configs and get_configs() or nil
-				for name, cfg in pairs(servers) do
-					if vim.lsp.get_clients({ name = name, bufnr = ev.buf })[1] then
-						goto continue
-					end
-
-					local registered = configs and configs[name] or nil
-					local fts = (registered and registered.filetypes) or cfg.filetypes
-
-					if not fts or vim.tbl_contains(fts, ft) then
+				local server_list = ft_to_servers[ft] or {}
+				local fallback_list = ft_to_servers["*"] or {}
+				
+				for _, name in ipairs(server_list) do
+					if not vim.lsp.get_clients({ name = name, bufnr = ev.buf })[1] then
 						pcall(vim.lsp.enable, name, { bufnr = ev.buf })
 					end
-
-					::continue::
+				end
+				
+				for _, name in ipairs(fallback_list) do
+					if not vim.lsp.get_clients({ name = name, bufnr = ev.buf })[1] then
+						pcall(vim.lsp.enable, name, { bufnr = ev.buf })
+					end
 				end
 			end,
 		})
