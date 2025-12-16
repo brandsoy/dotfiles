@@ -7,18 +7,21 @@
 // custom settings, run the `open default settings` command
 // from the command palette or from `Zed` application menu.
 {
-  "icon_theme": "Zed (Default)",
+  "icon_theme": "Symbols Icon Theme",
   "vim_mode": true,
   "context_servers": {
+    "svelte-mcp": {
+      "enabled": true,
+      "settings": {}
+    },
     "mcp-server-context7": {
-      "source": "extension",
       "enabled": false,
       "settings": {
         "context7_api_key": "ctx7sk-9d1e26ad-f0bf-48c6-af6c-23170252f577"
       }
     }
   },
-  "theme": "Ayu Dark",
+  "theme": "Catppuccin Mocha",
   "git_panel": {
     "sort_by_path": true
   },
@@ -28,7 +31,7 @@
   "agent": {
     "default_model": {
       "provider": "copilot_chat",
-      "model": "gpt-5-codex"
+      "model": "claude-sonnet-4.5"
     },
     "always_allow_tool_actions": true,
     "play_sound_when_agent_done": true,
@@ -46,16 +49,16 @@
   "relative_line_numbers": "enabled",
 
   // THEMEING
-  "buffer_font_family": "JetBrainsMono Nerd Font Mono",
+  "buffer_font_family": "Monaspace Neon NF",
   "buffer_font_size": 15,
   "ui_font_family": ".ZedMono",
   "ui_font_size": 15,
   "terminal": {
-    "font_family": "JetBrainsMono Nerd Font Mono"
+    "font_family": "Monaspace Neon NF"
   },
 
   "features": {
-    "edit_prediction_provider": "copilot"
+    "edit_prediction_provider": "zed"
   },
   "telemetry": {
     "metrics": false,
@@ -99,97 +102,24 @@
     "**/report",
     "**/node_modules"
   ],
-  // "languages": {
-  // "SQL": {
-  // "formatter": {
-  // "external": {
-  // "command": "/Users/mattis/Library/pnpm/sql-formatter",
-  // "arguments": ["--language", "postgresql"]
-  // }
-  // },
-  // "format_on_save": "on"
-  // },
-  // "JavaScript": {
-  //   "code_actions_on_format": {
-  //     "source.fixAll.eslint": true
-  //   },
-  //   "formatter": {
-  //     "external": {
-  //       "command": "prettier",
-  //       "arguments": ["--stdin-filepath", "{buffer_path}"]
-  //     }
-  //   }
-  // },
-  // "TypeScript": {
-  //   "code_actions_on_format": {
-  //     "source.fixAll.eslint": true
-  //   },
-  //   "formatter": {
-  //     "external": {
-  //       "command": "prettier",
-  //       "arguments": ["--stdin-filepath", "{buffer_path}"]
-  //     }
-  //   }
-  // },
-  // "TSX": {
-  //   "code_actions_on_format": {
-  //     "source.fixAll.eslint": true
-  //   },
-  //   "formatter": {
-  //     "external": {
-  //       "command": "prettier",
-  //       "arguments": ["--stdin-filepath", "{buffer_path}"]
-  //     }
-  //   }
-  // },
-  // "Python": {
-  //   "language_servers": ["ruff"],
-  //   "format_on_save": "on",
-  //   "formatter": [
-  //     {
-  //       "language_server": {
-  //         "name": "ruff"
-  //       }
-  //     }
-  //   ],
-  //   "code_actions_on_format": {
-  //     "source.organizeImports": true,
-  //     "source.fixAll.ruff": true
-  //   }
-  // },
-  // "CSS": {
-  //   "code_actions_on_format": {
-  //     "source.fixAll.stylelint": true
-  //   },
-  //   "prettier": {
-  //     "allowed": true
-  //   }
-  // },
-  // "Diff": {
-  //   "remove_trailing_whitespace_on_save": false,
-  //   "ensure_final_newline_on_save": false
-  // },
-  // "HTML": {
-  //   "prettier": {
-  //     "allowed": true
-  //   }
-  // },
-  // "YAML": {
-  //   "prettier": {
-  //     "allowed": true
-  //   }
-  // }
-  // },
   "lsp_highlight_debounce": 100,
   "tabs": {
     "git_status": true,
     "file_icons": true
   },
+  "formatter": "auto",
   "lsp": {
     "eslint": {
       "settings": {
         "codeActionOnSave": {
           "rules": ["import/order"]
+        }
+      }
+    },
+    "svelte": {
+      "initialization_options": {
+        "format": {
+          "singleQuote": true
         }
       }
     }

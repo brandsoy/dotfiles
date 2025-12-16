@@ -180,3 +180,6 @@ path_append "$HOME/.cargo/bin"
 
 # --- API keys -------------------------------------------------------------
 # export GEMINI_API_KEY="${GEMINI_API_KEY:-AIzaSyAK1EWAqybtchh-k5uNCmWvnSIRhUqJcgc}"
+
+# bun completions
+[ -s "/Users/mattis/.bun/_bun" ] && source "/Users/mattis/.bun/_bun"

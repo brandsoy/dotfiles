@@ -17,7 +17,7 @@ return {
 			"mason-org/mason.nvim",
 			"mason-org/mason-lspconfig.nvim",
 			"WhoIsSethDaniel/mason-tool-installer.nvim",
-			"folke/neodev.nvim",
+			{ "folke/lazydev.nvim", ft = "lua", opts = {} },
 			"b0o/SchemaStore.nvim",
 		},
 		config = function()

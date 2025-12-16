@@ -19,6 +19,7 @@ return {
 				"yaml",
 				"vim",
 				"vimdoc",
+				"bicep",
 			},
 			sync_install = false,
 			auto_install = false,

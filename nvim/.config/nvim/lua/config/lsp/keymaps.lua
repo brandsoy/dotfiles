@@ -10,12 +10,8 @@ function M.setup()
 				return
 			end
 
-			vim.notify("LSP attached: " .. client.name)
-
-			if client:supports_method("textDocument/completion") then
-				vim.lsp.completion.enable(true, client.id, bufnr, { autotrigger = true })
-			end
-
+	
+	
 			if client.server_capabilities.inlayHintProvider then
 				pcall(vim.lsp.inlay_hint.enable, true, { bufnr = bufnr })
 			end
@@ -38,7 +34,7 @@ function M.setup()
 			map("n", "<leader>la", vim.lsp.buf.code_action, "Code Action")
 			map("n", "<leader>lk", vim.lsp.buf.signature_help, "Signature Help")
 			map("n", "<leader>lf", function()
-				vim.lsp.buf.format({ async = true })
+				require("conform").format({ async = true, lsp_fallback = true })
 			end, "Format Buffer")
 
 			map("n", "[d", vim.diagnostic.goto_prev, "Previous Diagnostic")

@@ -18,15 +18,6 @@ local function notify_option(label, enabled)
 	vim.notify(string.format("%s %s", label, enabled and "enabled" or "disabled"), vim.log.levels.INFO, { title = "Neovim" })
 end
 
-local function bufremove_delete(buf, force)
-	local ok, plugin = pcall(require, "mini.bufremove")
-	if not ok then
-		return false
-	end
-	plugin.delete(buf, force)
-	return true
-end
-
 ------------------------------------------------------------------------------
 --- Normal Mode
 ------------------------------------------------------------------------------
@@ -49,22 +40,6 @@ map("n", "<leader>h", "<Cmd>nohlsearch<CR>", "Clear search highlight")
 -- Buffer navigation
 map("n", "<leader>bn", "<Cmd>bnext<CR>", "Next buffer")
 map("n", "<leader>bp", "<Cmd>bprevious<CR>", "Previous buffer")
-map("n", "<leader>bd", function()
-	if not bufremove_delete(0, false) then
-		vim.cmd.bdelete()
-	end
-end, "Close current buffer")
-
-map("n", "<leader>bo", function()
-	local current = vim.api.nvim_get_current_buf()
-	for _, buf in ipairs(vim.api.nvim_list_bufs()) do
-		if buf ~= current and vim.api.nvim_buf_is_loaded(buf) and vim.bo[buf].buflisted then
-			if not bufremove_delete(buf, false) then
-				pcall(vim.api.nvim_buf_delete, buf, {})
-			end
-		end
-	end
-end, "Close other buffers")
 map("n", "<leader>br", "<Cmd>edit!<CR>", "Revert buffer from disk")
 
 -- Better window navigation

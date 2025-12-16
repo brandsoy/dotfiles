@@ -1,5 +1,22 @@
 return {
 	{
+		"nvim-neo-tree/neo-tree.nvim",
+		branch = "v3.x",
+		dependencies = {
+			"nvim-lua/plenary.nvim",
+			"MunifTanjim/nui.nvim",
+			"nvim-tree/nvim-web-devicons", -- optional, but recommended
+		},
+		lazy = false, -- neo-tree will lazily load itself
+		keys = {
+			{ "<leader>e", "<cmd>Neotree toggle<cr>", desc = "Explorer" },
+			{ "<leader>fe", "<cmd>Neotree focus<cr>", desc = "Explorer focus" },
+			{ "<leader>be", "<cmd>Neotree buffers<cr>", desc = "Buffer explorer" },
+			{ "<leader>ge", "<cmd>Neotree git_status<cr>", desc = "Git explorer" },
+		},
+	},
+
+	{
 		"stevearc/oil.nvim",
 		cmd = "Oil",
 		keys = {
@@ -13,8 +30,33 @@ return {
 	{
 		"nvim-mini/mini.bufremove",
 		keys = {
-			{ "<leader>bd", function() require("mini.bufremove").delete() end, desc = "Delete buffer" },
-			{ "<leader>bD", function() require("mini.bufremove").delete(0, true) end, desc = "Delete buffer (force)" },
+			{
+				"<leader>bd",
+				function()
+					require("mini.bufremove").delete()
+				end,
+				desc = "Delete buffer",
+			},
+			{
+				"<leader>bD",
+				function()
+					require("mini.bufremove").delete(0, true)
+				end,
+				desc = "Delete buffer (force)",
+			},
+			{
+				"<leader>bo",
+				function()
+					local current = vim.api.nvim_get_current_buf()
+					local bufremove = require("mini.bufremove")
+					for _, buf in ipairs(vim.api.nvim_list_bufs()) do
+						if buf ~= current and vim.api.nvim_buf_is_loaded(buf) and vim.bo[buf].buflisted then
+							bufremove.delete(buf, false)
+						end
+					end
+				end,
+				desc = "Delete other buffers",
+			},
 		},
 		config = function()
 			require("mini.bufremove").setup()
@@ -22,14 +64,20 @@ return {
 	},
 	{
 		"nvim-mini/mini.ai",
-		event = "VeryLazy",
+		keys = {
+			{ "a", mode = { "x", "o" } },
+			{ "i", mode = { "x", "o" } },
+		},
 		config = function()
 			require("mini.ai").setup()
 		end,
 	},
 	{
 		"nvim-mini/mini.move",
-		event = "VeryLazy",
+		keys = {
+			{ "<A-j>", mode = { "n", "v" } },
+			{ "<A-k>", mode = { "n", "v" } },
+		},
 		opts = {
 			mappings = {
 				down = "<A-j>",
@@ -54,7 +102,7 @@ return {
 	},
 	{
 		"nvim-mini/mini.notify",
-		lazy = false,
+		event = "VeryLazy",
 		config = function()
 			local mini_notify = require("mini.notify")
 
@@ -117,8 +165,11 @@ return {
 	{
 		"nvim-mini/mini.diff",
 		version = false,
+		event = { "BufReadPost", "BufNewFile" },
 		config = function()
-			require("mini.diff").setup({})
+			if vim.fn.isdirectory(".git") == 1 or vim.fn.finddir(".git", ".;") ~= "" then
+				require("mini.diff").setup({})
+			end
 		end,
 	},
 	{
@@ -130,7 +181,9 @@ return {
 			wk.add({
 				{ "<leader>b", group = "Buffers" },
 				{ "<leader>d", group = "Debug" },
+				{ "<leader>e", desc = "Explorer" },
 				{ "<leader>f", group = "Find" },
+				{ "<leader>g", group = "Git" },
 				{ "<leader>l", group = "LSP" },
 				{ "<leader>lq", desc = "Diagnostics to Location List" },
 				{ "<leader>m", group = "Markdown" },

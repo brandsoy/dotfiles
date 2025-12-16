@@ -1,7 +1,11 @@
 return {
 	{
 		"folke/sidekick.nvim",
-		event = "VeryLazy",
+		cmd = { "Sidekick" },
+		keys = {
+			{ "<C-.>", mode = { "n", "t", "i", "x" } },
+			{ "<leader>a", mode = { "n", "x" } },
+		},
 		dependencies = {
 			"folke/which-key.nvim",
 		},

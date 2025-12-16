@@ -7,19 +7,9 @@
 // custom settings, run the `open default settings` command
 // from the command palette or from `Zed` application menu.
 {
-  "icon_theme": "Zed (Default)",
+  "icon_theme": "Symbols Icon Theme",
   "vim_mode": true,
   "context_servers": {
-    "postgres-context-server": {
-      "source": "extension",
-      "enabled": false,
-      "settings": {}
-    },
-    "svelte-mcp": {
-      "source": "extension",
-      "enabled": false,
-      "settings": {}
-    },
     "mcp-server-context7": {
       "source": "extension",
       "enabled": false,
@@ -28,7 +18,7 @@
       }
     }
   },
-  "theme": "Ayu Dark",
+  "theme": "One Dark",
   "git_panel": {
     "sort_by_path": true
   },
@@ -38,7 +28,7 @@
   "agent": {
     "default_model": {
       "provider": "copilot_chat",
-      "model": "gpt-5-codex"
+      "model": "claude-sonnet-4.5"
     },
     "always_allow_tool_actions": true,
     "play_sound_when_agent_done": true,
@@ -53,15 +43,15 @@
   },
   "base_keymap": "VSCode",
   // Vim mode settings
-  "relative_line_numbers": true,
+  "relative_line_numbers": "enabled",
 
   // THEMEING
-  "buffer_font_family": "JetBrainsMono Nerd Font Mono",
+  "buffer_font_family": "Monaspace Neon NF",
   "buffer_font_size": 15,
   "ui_font_family": ".ZedMono",
   "ui_font_size": 15,
   "terminal": {
-    "font_family": "JetBrainsMono Nerd Font Mono"
+    "font_family": "Monaspace Neon NF"
   },
 
   "features": {

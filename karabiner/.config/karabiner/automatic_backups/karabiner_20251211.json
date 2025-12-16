@@ -32,22 +32,6 @@
                         "vendor_id": 1133
                     },
                     "ignore": false
-                },
-                {
-                    "identifiers": {
-                        "is_pointing_device": true,
-                        "product_id": 50475,
-                        "vendor_id": 1133
-                    },
-                    "ignore": false
-                },
-                {
-                    "identifiers": {
-                        "is_pointing_device": true,
-                        "product_id": 50504,
-                        "vendor_id": 1133
-                    },
-                    "ignore": false
                 }
             ],
             "name": "Default profile",

@@ -52,10 +52,7 @@ return {
 				callback = function(args)
 					local client = vim.lsp.get_client_by_id(args.data.client_id)
 					if client and client.name == "roslyn" then
-						if client.server_capabilities.inlayHintProvider then
-							vim.lsp.inlay_hint.enable(true, { bufnr = args.buf })
-						end
-
+	
 						if client.server_capabilities.codeLensProvider then
 							vim.lsp.codelens.refresh()
 							vim.api.nvim_create_autocmd({ "BufWritePost", "CursorHold" }, {
@@ -73,7 +70,7 @@ return {
 				pattern = { "cs", "csharp" },
 				callback = function(args)
 					local opts = { buffer = args.buf, silent = true, noremap = true }
-					vim.keymap.set("n", "<leader>lr", "<cmd>Roslyn restart<cr>", vim.tbl_extend("force", opts, { desc = "Roslyn: Restart" }))
+					vim.keymap.set("n", "<leader>lR", "<cmd>Roslyn restart<cr>", vim.tbl_extend("force", opts, { desc = "Roslyn: Restart" }))
 					vim.keymap.set("n", "<leader>lt", "<cmd>Roslyn target<cr>", vim.tbl_extend("force", opts, { desc = "Roslyn: Choose Target" }))
 					vim.keymap.set("n", "<leader>lcl", vim.lsp.codelens.refresh, vim.tbl_extend("force", opts, { desc = "Refresh Code Lens" }))
 					vim.keymap.set("n", "<leader>lch", function()

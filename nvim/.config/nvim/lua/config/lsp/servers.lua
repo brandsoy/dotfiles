@@ -20,20 +20,11 @@ local function configure_servers()
 
 	local schemastore_ok, schemastore = pcall(require, "schemastore")
 
-	local neodev_ok, neodev = pcall(require, "neodev")
-	if neodev_ok then
-		neodev.setup({
-			library = { plugins = false },
-		})
-	end
-
 	vim.diagnostic.config({
 		virtual_text = { prefix = "●" },
 		severity_sort = true,
 		float = { border = "rounded", source = "if_many" },
 	})
-
-	local bundle_path = vim.fn.stdpath("data") .. "/mason/packages/powershell-editor-services/PowerShellEditorServices"
 
 	local servers = {
 		lua_ls = {
@@ -87,48 +78,49 @@ local function configure_servers()
 				gofumpt = true,
 			},
 		},
-		vtsls = {
-			settings = {
-				vtsls = {
-					autoUseWorkspaceTsdk = true,
-					experimental = {
-						maxInlayHintLength = 25,
-					},
-				},
-				typescript = {
-					inlayHints = {
-						includeInlayEnumMemberValueHints = true,
-						includeInlayFunctionLikeReturnTypeHints = true,
-						includeInlayFunctionParameterTypeHints = true,
-						includeInlayParameterNameHints = "all",
-						includeInlayParameterNameHintsWhenArgumentMatchesName = false,
-						includeInlayPropertyDeclarationTypeHints = true,
-						includeInlayVariableTypeHints = true,
-					},
-				},
-				javascript = {
-					inlayHints = {
-						includeInlayEnumMemberValueHints = true,
-						includeInlayFunctionLikeReturnTypeHints = true,
-						includeInlayFunctionParameterTypeHints = true,
-						includeInlayParameterNameHints = "all",
-						includeInlayParameterNameHintsWhenArgumentMatchesName = false,
-						includeInlayPropertyDeclarationTypeHints = true,
-						includeInlayVariableTypeHints = true,
-					},
-				},
-			},
-			filetypes = {
-				"javascript",
-				"javascriptreact",
-				"javascript.jsx",
-				"typescript",
-				"typescriptreact",
-				"typescript.tsx",
-				"vue",
-				"svelte",
-			},
-		},
+		tsgo = {},
+		-- vtsls = {
+		-- 	settings = {
+		-- 		vtsls = {
+		-- 			autoUseWorkspaceTsdk = true,
+		-- 			experimental = {
+		-- 				maxInlayHintLength = 25,
+		-- 			},
+		-- 		},
+		-- 		typescript = {
+		-- 			inlayHints = {
+		-- 				includeInlayEnumMemberValueHints = true,
+		-- 				includeInlayFunctionLikeReturnTypeHints = true,
+		-- 				includeInlayFunctionParameterTypeHints = true,
+		-- 				includeInlayParameterNameHints = "all",
+		-- 				includeInlayParameterNameHintsWhenArgumentMatchesName = false,
+		-- 				includeInlayPropertyDeclarationTypeHints = true,
+		-- 				includeInlayVariableTypeHints = true,
+		-- 			},
+		-- 		},
+		-- 		javascript = {
+		-- 			inlayHints = {
+		-- 				includeInlayEnumMemberValueHints = true,
+		-- 				includeInlayFunctionLikeReturnTypeHints = true,
+		-- 				includeInlayFunctionParameterTypeHints = true,
+		-- 				includeInlayParameterNameHints = "all",
+		-- 				includeInlayParameterNameHintsWhenArgumentMatchesName = false,
+		-- 				includeInlayPropertyDeclarationTypeHints = true,
+		-- 				includeInlayVariableTypeHints = true,
+		-- 			},
+		-- 		},
+		-- 	},
+		-- 	filetypes = {
+		-- 		"javascript",
+		-- 		"javascriptreact",
+		-- 		"javascript.jsx",
+		-- 		"typescript",
+		-- 		"typescriptreact",
+		-- 		"typescript.tsx",
+		-- 		"vue",
+		-- 		"svelte",
+		-- 	},
+		-- },
 		jsonls = schemastore_ok and {
 			settings = {
 				json = {
@@ -158,53 +150,24 @@ local function configure_servers()
 			),
 		},
 		bashls = {},
-		biome = {},
-		tsp_server = {},
+		bicep = {},
 		svelte = {},
-		prismals = {},
-		vuels = {
-			filetypes = { "vue", "typescript", "javascript" },
-			init_options = {
-				vue = {
-					hybridMode = false,
-				},
-				typescript = {
-					tsdk = vim.fn.getcwd() .. "/node_modules/typescript/lib",
-				},
-			},
-		},
-		powershell_es = {
-			cmd = {
-				"pwsh",
-				"-NoLogo",
-				"-NoProfile",
-				"-Command",
-				bundle_path .. "/Start-EditorServices.ps1",
-				"-HostName",
-				"nvim",
-				"-HostProfileId",
-				"0",
-				"-HostVersion",
-				"1.0.0",
-				"-LogPath",
-				vim.fn.stdpath("cache") .. "/powershell_es.log",
-				"-LogLevel",
-				"Normal",
-				"-SessionDetailsPath",
-				vim.fn.stdpath("cache") .. "/powershell_es.session.json",
-				"-FeatureFlags",
-				"@()",
-			},
-			filetypes = { "ps1" },
-		},
-		copilot = {},
+		-- vuels = {
+		-- 	filetypes = { "vue", "typescript", "javascript" },
+		-- 	init_options = {
+		-- 		vue = {
+		-- 			hybridMode = false,
+		-- 		},
+		-- 		typescript = {
+		-- 			tsdk = vim.fn.getcwd() .. "/node_modules/typescript/lib",
+		-- 		},
+		-- 	},
+		-- },
 	}
 
 	local tools = {
 		"eslint_d",
-		"prettier",
 		"prettierd",
-		"biome",
 		"golines",
 		"stylua",
 		"shfmt",
@@ -297,14 +260,14 @@ local function configure_servers()
 	-- Defer enabling until matching FileType to reduce startup cost; skip large files
 	if supports_new_api then
 		local get_configs = type(vim.lsp.get_configs) == "function" and vim.lsp.get_configs or nil
-		
+
 		-- Build filetype to servers lookup table once for performance
 		local ft_to_servers = {}
 		local configs = get_configs and get_configs() or nil
 		for name, cfg in pairs(servers) do
 			local registered = configs and configs[name] or nil
 			local fts = (registered and registered.filetypes) or cfg.filetypes
-			
+
 			if fts then
 				for _, ft in ipairs(fts) do
 					ft_to_servers[ft] = ft_to_servers[ft] or {}
@@ -316,7 +279,7 @@ local function configure_servers()
 				table.insert(ft_to_servers["*"], name)
 			end
 		end
-		
+
 		vim.api.nvim_create_autocmd("FileType", {
 			callback = function(ev)
 				if vim.b.large_file then
@@ -325,13 +288,13 @@ local function configure_servers()
 				local ft = ev.match
 				local server_list = ft_to_servers[ft] or {}
 				local fallback_list = ft_to_servers["*"] or {}
-				
+
 				for _, name in ipairs(server_list) do
 					if not vim.lsp.get_clients({ name = name, bufnr = ev.buf })[1] then
 						pcall(vim.lsp.enable, name, { bufnr = ev.buf })
 					end
 				end
-				
+
 				for _, name in ipairs(fallback_list) do
 					if not vim.lsp.get_clients({ name = name, bufnr = ev.buf })[1] then
 						pcall(vim.lsp.enable, name, { bufnr = ev.buf })
