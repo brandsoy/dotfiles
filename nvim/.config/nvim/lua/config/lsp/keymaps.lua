@@ -2,7 +2,7 @@ local M = {}
 
 function M.setup()
 	vim.api.nvim_create_autocmd("LspAttach", {
-		group = vim.api.nvim_create_augroup("UserLspConfig", {}),
+		group = vim.api.nvim_create_augroup("UserLspConfig", { clear = true }),
 		callback = function(ev)
 			local bufnr = ev.buf
 			local client = vim.lsp.get_client_by_id(ev.data.client_id)
@@ -10,10 +10,8 @@ function M.setup()
 				return
 			end
 
-	
-	
 			if client.server_capabilities.inlayHintProvider then
-				pcall(vim.lsp.inlay_hint.enable, true, { bufnr = bufnr })
+				pcall(vim.lsp.inlay_hint.enable, false, { bufnr = bufnr })
 			end
 
 			vim.bo[bufnr].omnifunc = "v:lua.vim.lsp.omnifunc"
@@ -34,7 +32,12 @@ function M.setup()
 			map("n", "<leader>la", vim.lsp.buf.code_action, "Code Action")
 			map("n", "<leader>lk", vim.lsp.buf.signature_help, "Signature Help")
 			map("n", "<leader>lf", function()
-				require("conform").format({ async = true, lsp_fallback = true })
+				local ok_conform, conform = pcall(require, "conform")
+				if not ok_conform then
+					vim.notify("conform not available", vim.log.levels.WARN)
+					return
+				end
+				conform.format({ async = true, lsp_fallback = true })
 			end, "Format Buffer")
 
 			map("n", "[d", vim.diagnostic.goto_prev, "Previous Diagnostic")

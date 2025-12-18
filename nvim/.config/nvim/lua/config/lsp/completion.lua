@@ -9,8 +9,6 @@ function M.setup()
 
 	vim.opt.completeopt = { "menu", "menuone", "noselect" }
 
-	require("luasnip.loaders.from_vscode").lazy_load()
-
 	blink.setup({
 		keymap = {
 			preset = "default", -- <Tab> confirm, <C-n>/<C-p> navigate
@@ -25,16 +23,11 @@ function M.setup()
 			},
 		},
 		completion = {
-			documentation = { auto_show = true }, -- show docs automatically
-			ghost_text = { enabled = true }, -- inline ghost text
-		},
-		snippets = {
-			expand = function(body)
-				require("luasnip").lsp_expand(body)
-			end,
+			documentation = { auto_show = false }, -- avoid extra UI work
+			ghost_text = { enabled = false }, -- reduce inline rendering
 		},
 		sources = {
-			default = { "lsp", "path", "snippets", "buffer" },
+			default = { "lsp", "path" },
 		},
 	})
 end

@@ -90,6 +90,7 @@ alias l='ls -lah --color=auto'
 alias c='clear'
 alias ld='lazydocker'
 alias lg='lazygit'
+alias v='nvim'
 alias vim='nvim'
 alias ff="fd --type f --hidden --exclude .git | fzf --preview 'bat --color=always {}'"
 

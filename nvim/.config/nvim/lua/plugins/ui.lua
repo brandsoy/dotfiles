@@ -1,13 +1,5 @@
 return {
 	{
-		"nvim-mini/mini.icons",
-		lazy = true,
-		config = function()
-			require("mini.icons").setup()
-			require("mini.icons").mock_nvim_web_devicons()
-		end,
-	},
-	{
 		"catppuccin/nvim",
 		name = "catppuccin",
 		lazy = false,
@@ -36,18 +28,22 @@ return {
 		end,
 	},
 	{
-		"nvim-lualine/lualine.nvim",
+		"nvim-mini/mini.statusline",
 		event = "VeryLazy",
-		dependencies = { "nvim-mini/mini.icons" },
-		opts = {
-			options = {
-				theme = "catppuccin",
-				section_separators = { left = "", right = "" },
-				component_separators = { left = "", right = "" },
-			},
-		},
-		config = function(_, opts)
-			require("lualine").setup(opts)
+		config = function()
+			local palette = require("catppuccin.palettes").get_palette()
+			local set_hl = vim.api.nvim_set_hl
+			set_hl(0, "MiniStatuslineModeNormal", { fg = palette.base, bg = palette.blue, bold = true })
+			set_hl(0, "MiniStatuslineModeInsert", { fg = palette.base, bg = palette.green, bold = true })
+			set_hl(0, "MiniStatuslineModeVisual", { fg = palette.base, bg = palette.mauve, bold = true })
+			set_hl(0, "MiniStatuslineModeReplace", { fg = palette.base, bg = palette.red, bold = true })
+			set_hl(0, "MiniStatuslineModeCommand", { fg = palette.base, bg = palette.peach, bold = true })
+			set_hl(0, "MiniStatuslineModeOther", { fg = palette.base, bg = palette.teal, bold = true })
+			set_hl(0, "MiniStatuslineDevinfo", { fg = palette.subtext0, bg = palette.surface0 })
+			set_hl(0, "MiniStatuslineFileinfo", { fg = palette.subtext0, bg = palette.surface0 })
+			set_hl(0, "MiniStatuslineFilename", { fg = palette.text, bg = palette.surface0 })
+			set_hl(0, "MiniStatuslineInactive", { fg = palette.surface2, bg = palette.base })
+			require("mini.statusline").setup()
 		end,
 	},
 }

@@ -5,7 +5,6 @@ return {
 		dependencies = {
 			"nvim-lua/plenary.nvim",
 			"MunifTanjim/nui.nvim",
-			"nvim-tree/nvim-web-devicons", -- optional, but recommended
 		},
 		lazy = false, -- neo-tree will lazily load itself
 		keys = {
@@ -14,19 +13,30 @@ return {
 			{ "<leader>be", "<cmd>Neotree buffers<cr>", desc = "Buffer explorer" },
 			{ "<leader>ge", "<cmd>Neotree git_status<cr>", desc = "Git explorer" },
 		},
+		opts = {
+			default_component_configs = {
+				indent = {
+					indent_size = 2,
+					padding = 1,
+					with_markers = true,
+					indent_marker = "│",
+					last_indent_marker = "└",
+				},
+				icon = {
+					folder_closed = "",
+					folder_open = "",
+					folder_empty = "",
+					default = "",
+				},
+			},
+			filesystem = {
+				follow_current_file = {
+					enabled = true,
+				},
+			},
+		},
 	},
 
-	{
-		"stevearc/oil.nvim",
-		cmd = "Oil",
-		keys = {
-			{ "-", "<CMD>Oil<CR>", desc = "Open parent directory" },
-		},
-		opts = {},
-		config = function(_, opts)
-			require("oil").setup(opts)
-		end,
-	},
 	{
 		"nvim-mini/mini.bufremove",
 		keys = {
@@ -173,25 +183,48 @@ return {
 		end,
 	},
 	{
-		"folke/which-key.nvim",
+		"nvim-mini/mini.clue",
 		event = "VeryLazy",
 		config = function()
-			require("which-key").setup()
-			local wk = require("which-key")
-			wk.add({
-				{ "<leader>b", group = "Buffers" },
-				{ "<leader>d", group = "Debug" },
-				{ "<leader>e", desc = "Explorer" },
-				{ "<leader>f", group = "Find" },
-				{ "<leader>g", group = "Git" },
-				{ "<leader>l", group = "LSP" },
-				{ "<leader>lq", desc = "Diagnostics to Location List" },
-				{ "<leader>m", group = "Markdown" },
-				{ "<leader>uh", desc = "Notification history" },
-				{ "<leader>q", group = "Quit" },
-				{ "<leader>s", group = "Splits" },
-				{ "<leader>u", group = "Toggles" },
-				{ "<leader>w", group = "Write" },
+			local clue = require("mini.clue")
+			clue.setup({
+				triggers = {
+					{ mode = "n", keys = "<leader>" },
+					{ mode = "x", keys = "<leader>" },
+					{ mode = "n", keys = "g" },
+					{ mode = "n", keys = "[" },
+					{ mode = "n", keys = "]" },
+					{ mode = "n", keys = "'" },
+					{ mode = "n", keys = "`" },
+					{ mode = "n", keys = "\"" },
+					{ mode = "n", keys = "<C-w>" },
+					{ mode = "n", keys = "z" },
+				},
+				clues = {
+					{ mode = "n", keys = "<leader>a", desc = "Sidekick" },
+					{ mode = "n", keys = "<leader>b", desc = "Buffers" },
+					{ mode = "n", keys = "<leader>d", desc = "Debug" },
+					{ mode = "n", keys = "<leader>e", desc = "Explorer" },
+					{ mode = "n", keys = "<leader>f", desc = "Find" },
+					{ mode = "n", keys = "<leader>g", desc = "Git" },
+					{ mode = "n", keys = "<leader>l", desc = "LSP" },
+					{ mode = "n", keys = "<leader>lq", desc = "Diagnostics to Location List" },
+					{ mode = "n", keys = "<leader>m", desc = "Markdown" },
+					{ mode = "n", keys = "<leader>uh", desc = "Notification history" },
+					{ mode = "n", keys = "<leader>q", desc = "Quit" },
+					{ mode = "n", keys = "<leader>s", desc = "Splits" },
+					{ mode = "n", keys = "<leader>u", desc = "Toggles" },
+					{ mode = "n", keys = "<leader>w", desc = "Write" },
+					clue.gen_clues.builtin_completion(),
+					clue.gen_clues.g(),
+					clue.gen_clues.marks(),
+					clue.gen_clues.registers(),
+					clue.gen_clues.windows(),
+					clue.gen_clues.z(),
+				},
+				window = {
+					delay = 300,
+				},
 			})
 		end,
 	},

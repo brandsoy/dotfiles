@@ -120,6 +120,7 @@ return {
 			local fzf = require("fzf-lua")
 			local actions = require("fzf-lua.actions")
 			fzf.setup({
+				"max-perf",
 				winopts = {
 					height = 0.88,
 					width = 0.86,

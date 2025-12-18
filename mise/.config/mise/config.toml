@@ -5,7 +5,7 @@ idiomatic_version_file_enable_tools = ["ruby"]
 
 [tools]
 bun = "latest"
-dotnet = "latest"
+dotnet = "8"
 go = "latest"
 node = "lts"
 python = "latest"

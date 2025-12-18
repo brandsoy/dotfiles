@@ -61,8 +61,6 @@ map("n", "<C-Right>", "<Cmd>vertical resize +2<CR>", "Increase window width")
 -- Better J behavior
 map("n", "J", "mzJ`z", "Join lines and keep cursor position")
 
-
-
 -- Quick config editing
 map("n", "<leader>rc", "<Cmd>e ~/.config/nvim/init.lua<CR>", "Edit Neovim config")
 
@@ -109,8 +107,6 @@ map("v", "<leader>", "<nop>", "Disable bare leader key")
 map("v", "<", "<gv", "Indent left and reselect")
 map("v", ">", ">gv", "Indent right and reselect")
 
-
-
 map("v", "<leader>mw", function()
 	local s = vim.fn.getreg("v") -- selected text
 	vim.cmd([[normal! gv]]) -- reselect
@@ -141,8 +137,6 @@ map("n", "<leader>mL", "i[]()<Esc>F(a<C-r>+<Esc>F[a", "Insert buffered markdown 
 
 -- JK Escape
 map("i", "jk", [[<C-\><C-n>]], "Exit insert mode")
-
-
 
 ------------------------------------------------------------------------------
 --- Terminal Mode

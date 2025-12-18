@@ -2,10 +2,6 @@ return {
 	{
 		"saghen/blink.cmp",
 		event = { "InsertEnter", "CmdlineEnter" },
-		dependencies = {
-			"L3MON4D3/LuaSnip",
-			"rafamadriz/friendly-snippets",
-		},
 		config = function()
 			require("config.lsp.completion").setup()
 		end,

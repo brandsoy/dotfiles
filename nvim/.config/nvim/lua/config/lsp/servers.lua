@@ -53,13 +53,13 @@ local function configure_servers()
 					useany = true,
 				},
 				codelenses = {
-					generate = true,
-					gc_details = true,
-					test = true,
-					tidy = true,
-					vendor = true,
-					regenerate_cgo = true,
-					upgrade_dependency = true,
+					generate = false,
+					gc_details = false,
+					test = false,
+					tidy = false,
+					vendor = false,
+					regenerate_cgo = false,
+					upgrade_dependency = false,
 				},
 				hints = {
 					assignVariableTypes = true,
@@ -212,7 +212,7 @@ local function configure_servers()
 	})
 
 	mason_tool_installer.setup({
-		ensure_installed = vim.list_extend(vim.list_extend({}, server_names), tools),
+		ensure_installed = tools,
 		run_on_start = false,
 		debounce_hours = 12,
 	})
@@ -259,14 +259,10 @@ local function configure_servers()
 
 	-- Defer enabling until matching FileType to reduce startup cost; skip large files
 	if supports_new_api then
-		local get_configs = type(vim.lsp.get_configs) == "function" and vim.lsp.get_configs or nil
-
 		-- Build filetype to servers lookup table once for performance
 		local ft_to_servers = {}
-		local configs = get_configs and get_configs() or nil
 		for name, cfg in pairs(servers) do
-			local registered = configs and configs[name] or nil
-			local fts = (registered and registered.filetypes) or cfg.filetypes
+			local fts = cfg.filetypes
 
 			if fts then
 				for _, ft in ipairs(fts) do
@@ -280,7 +276,9 @@ local function configure_servers()
 			end
 		end
 
+		local ft_group = vim.api.nvim_create_augroup("LspFileTypeEnable", { clear = true })
 		vim.api.nvim_create_autocmd("FileType", {
+			group = ft_group,
 			callback = function(ev)
 				if vim.b.large_file then
 					return
