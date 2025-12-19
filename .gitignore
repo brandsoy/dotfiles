@@ -8,3 +8,6 @@ github-copilot/.config/github-copilot/apps.json
 zed/.config/zed/prompts/prompts-library-db.0.mdb/lock.mdb
 .DS_Store
 scripts/.DS_Store
+nvim/.config/nvim/.cache/nvim/luac
+nvim/.config/nvim/.nvimlog
+nvim/.config/nvim/.state/nvim
