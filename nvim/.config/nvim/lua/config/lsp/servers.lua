@@ -151,6 +151,13 @@ local function configure_servers()
 		},
 		bashls = {},
 		bicep = {},
+		postgres_lsp = {
+			filetypes = { "sql" },
+			root_dir = util.root_pattern(".git", "postgresql.conf", "docker-compose.yml"),
+			single_file_support = true,
+			-- Prefer postgres-language-server when installed; fall back to lspconfig default.
+			cmd = vim.fn.executable("postgres-language-server") == 1 and { "postgres-language-server" } or nil,
+		},
 		svelte = {},
 		-- vuels = {
 		-- 	filetypes = { "vue", "typescript", "javascript" },

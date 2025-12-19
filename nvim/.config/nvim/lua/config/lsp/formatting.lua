@@ -6,12 +6,24 @@ local config_cache = {
 }
 
 local function root_has_file(filename, patterns)
+	if not filename or filename == "" then
+		return false
+	end
 	local root = vim.fs.dirname(filename)
+	if not root then
+		return false
+	end
 	return vim.fs.find(patterns, { path = root, upward = true })[1] ~= nil
 end
 
 local function root_has_prettier_config(filename)
+	if not filename or filename == "" then
+		return false
+	end
 	local root = vim.fs.dirname(filename)
+	if not root then
+		return false
+	end
 	if config_cache.prettier[root] ~= nil then
 		return config_cache.prettier[root]
 	end
@@ -53,8 +65,21 @@ local function root_has_prettier_config(filename)
 	return enabled
 end
 
+local function is_package_json(filename)
+	if not filename or filename == "" then
+		return false
+	end
+	return filename:match("[/\\]package%.json$") ~= nil
+end
+
 local function root_has_eslint_config(filename)
+	if not filename or filename == "" then
+		return false
+	end
 	local root = vim.fs.dirname(filename)
+	if not root then
+		return false
+	end
 	if config_cache.eslint[root] ~= nil then
 		return config_cache.eslint[root]
 	end
@@ -100,7 +125,13 @@ end
 function M.setup_conform()
 	local conform = require("conform")
 	conform.setup({
-		format_on_save = { lsp_fallback = true, timeout_ms = 1000 },
+		format_on_save = function(bufnr)
+			local ft = vim.bo[bufnr].filetype
+			if ft == "svelte" then
+				return { lsp_format = "prefer", timeout_ms = 1000 }
+			end
+			return { lsp_fallback = true, timeout_ms = 1000 }
+		end,
 		formatters = {
 			biome = {
 				condition = function(ctx)
@@ -114,12 +145,12 @@ function M.setup_conform()
 			},
 			prettierd = {
 				condition = function(ctx)
-					return root_has_prettier_config(ctx.filename)
+					return is_package_json(ctx.filename) or root_has_prettier_config(ctx.filename)
 				end,
 			},
 			prettier = {
 				condition = function(ctx)
-					return root_has_prettier_config(ctx.filename)
+					return is_package_json(ctx.filename) or root_has_prettier_config(ctx.filename)
 				end,
 			},
 		},
@@ -129,7 +160,7 @@ function M.setup_conform()
 			javascriptreact = { "prettierd", "prettier", "biome" },
 			typescript = { "prettierd", "prettier", "biome" },
 			typescriptreact = { "prettierd", "prettier", "biome" },
-			svelte = { "prettierd", "prettier", "biome" },
+			svelte = {},
 			json = { "prettierd", "prettier", "biome" },
 			yaml = { "prettierd", "prettier", "biome" },
 			markdown = { "prettierd", "prettier", "biome" },
