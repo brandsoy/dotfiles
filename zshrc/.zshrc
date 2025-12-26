@@ -1,5 +1,9 @@
 # ~/.zshrc
 
+# --- NVIM Snacks ----------------
+export SNACKS_GHOSTTY=true
+
+
 # --- Path helpers ---------------------------------------------------------
 function path_prepend {
   local dir="$1"

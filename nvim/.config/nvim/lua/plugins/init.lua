@@ -5,6 +5,6 @@ return {
 	{ import = "plugins.treesitter" },
 	{ import = "plugins.roslyn" },
 	{ import = "plugins.ai" },
-	{ import = "plugins.markdown" },
 	{ import = "plugins.lsp" },
+	{ import = "plugins.obsidian" },
 }
