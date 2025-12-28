@@ -6,5 +6,5 @@ return {
 	{ import = "plugins.roslyn" },
 	{ import = "plugins.ai" },
 	{ import = "plugins.lsp" },
-	{ import = "plugins.obsidian" },
+	{ import = "plugins.markdown" },
 }
