@@ -1,16 +1,11 @@
 # ~/.bashrc
 
-# If not running interactively, don't do anything (leave this at the top of this file)
-[[ $- != *i* ]] && return
-
-# All the default Omarchy aliases and functions
-# (don't mess with these directly, just overwrite them here!)
-source ~/.local/share/omarchy/default/bash/rc
-
-# Add your own exports, aliases, and functions here.
+# Comments
 #
-# Make an alias for invoking commands you use constantly
-# alias p='python'
+# install bash completions brew install bash-completion@2
+# 
+# Add ~/.bash_profile
+# [[ -f ~/.bashrc ]] && source ~/.bashrc
 
 # --- Path helpers ---------------------------------------------------------
 path_prepend() {
@@ -31,40 +26,56 @@ path_append() {
   esac
 }
 
-append_prompt_command() {
-  local cmd="$1"
-  if [[ -z "$PROMPT_COMMAND" ]]; then
-    PROMPT_COMMAND="$cmd"
-  else
-    PROMPT_COMMAND="$cmd;${PROMPT_COMMAND}"
-  fi
-}
-
 # --- Shell behaviour ------------------------------------------------------
+# Bash-specific options
+shopt -s histappend
+shopt -s checkwinsize
+shopt -s globstar 2>/dev/null
+shopt -s cmdhist
+
+# Emacs keybindings
+set -o emacs
+bind '"\C-p": history-search-backward'
+bind '"\C-n": history-search-forward'
+bind '"\ew": kill-region'
+
 HISTSIZE=10000
 HISTFILESIZE=20000
 HISTFILE="${HISTFILE:-$HOME/.bash_history}"
-HISTCONTROL=ignoreboth:erasedups
-
-shopt -s histappend cmdhist lithist checkwinsize
-shopt -s extglob progcomp
-shopt -s histverify 2>/dev/null
-append_prompt_command 'history -a; history -n'
-
-# Readline bindings mirroring the zsh keybinds
-bind -m emacs-standard '"\C-p": history-search-backward'
-bind -m emacs-standard '"\C-n": history-search-forward'
-bind -m emacs-standard '"\ee\C-w": kill-region'
+HISTCONTROL=ignoredups:ignorespace
+HISTTIMEFORMAT="%F %T "
 
 # --- Prompt ---------------------------------------------------------------
 if command -v starship &>/dev/null; then
   eval "$(starship init bash)"
 fi
 
-# --- fzf completion & key-bindings ----------------------------------------
-if command -v fzf &>/dev/null; then
-  eval "$(fzf --bash)"
+# --- Completion setup -----------------------------------------------------
+if ! shopt -oq posix; then
+  if [[ -f /usr/share/bash-completion/bash_completion ]]; then
+    . /usr/share/bash-completion/bash_completion
+  elif [[ -f /etc/bash_completion ]]; then
+    . /etc/bash_completion
+  fi
+  
+  # Homebrew bash-completion (macOS)
+  if command -v brew &>/dev/null; then
+    BASH_COMPLETION_PREFIX="$(brew --prefix)/etc/bash_completion.d"
+    if [[ -r "${BASH_COMPLETION_PREFIX}/bash_completion" ]]; then
+      . "${BASH_COMPLETION_PREFIX}/bash_completion"
+    fi
+    unset BASH_COMPLETION_PREFIX
+  fi
 fi
+
+# Case-insensitive completion
+bind 'set completion-ignore-case on'
+bind 'set show-all-if-ambiguous on'
+bind 'set colored-stats on'
+bind 'set visible-stats on'
+bind 'set mark-symlinked-directories on'
+bind 'set colored-completion-prefix on'
+bind 'set menu-complete-display-prefix on'
 
 # --- Aliases & helpers ----------------------------------------------------
 alias ls='ls --color=auto'
@@ -72,6 +83,7 @@ alias l='ls -lah --color=auto'
 alias c='clear'
 alias ld='lazydocker'
 alias lg='lazygit'
+alias v='nvim'
 alias vim='nvim'
 alias ff="fd --type f --hidden --exclude .git | fzf --preview 'bat --color=always {}'"
 
@@ -86,11 +98,11 @@ fdnav() {
   local dir
   dir=$(find . -maxdepth 1 -mindepth 1 -type d 2>/dev/null | sed 's|^\./||' | fzf --height 40% --reverse --preview 'tree -C {}' 2>/dev/null) || return
   [[ -n "$dir" ]] || return
-  cd "$dir"
+  builtin cd "$dir" || return
 }
 
 fh() {
-  history | fzf --tac --no-sort --prompt='  ' --header='Command History'
+  history | fzf --tac --no-sort --prompt='  ' --header='Command History'
 }
 
 fgl() {
@@ -112,6 +124,10 @@ fkill() {
 }
 
 # --- Tool integrations ----------------------------------------------------
+if command -v fzf &>/dev/null; then
+  eval "$(fzf --bash)"
+fi
+
 if command -v zoxide &>/dev/null; then
   eval "$(zoxide init --cmd cd bash)"
 fi
@@ -124,8 +140,10 @@ fi
 export NVM_DIR="${NVM_DIR:-$HOME/.nvm}"
 if command -v brew &>/dev/null; then
   NVM_SH="$(brew --prefix nvm 2>/dev/null)/nvm.sh"
+  NVM_COMPLETION="$(brew --prefix nvm 2>/dev/null)/etc/bash_completion.d/nvm"
   [[ -s "$NVM_SH" ]] && source "$NVM_SH"
-  unset NVM_SH
+  [[ -s "$NVM_COMPLETION" ]] && source "$NVM_COMPLETION"
+  unset NVM_SH NVM_COMPLETION
 fi
 
 if command -v mise &>/dev/null; then
@@ -155,3 +173,6 @@ esac
 path_prepend "/Users/mattis/.tsp/bin"
 path_prepend "/home/mattis/.opencode/bin"
 path_append "$HOME/.cargo/bin"
+
+# --- API keys -------------------------------------------------------------
+# export GEMINI_API_KEY="${GEMINI_API_KEY:-AIzaSyAK1EWAqybtchh-k5uNCmWvnSIRhUqJcgc}"

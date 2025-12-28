@@ -30,7 +30,8 @@ font-family = "Monaspace Neon NF"
 adjust-cell-height = 10%
 
 # Misc
-shell-integration-features = "sudo,title"
+shell-integration = bash
+shell-integration-features = cursor,sudo,title
 quit-after-last-window-closed = "true"
 cursor-style = bar
 cursor-style-blink = true
