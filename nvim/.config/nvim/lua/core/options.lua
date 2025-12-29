@@ -43,14 +43,14 @@ vim.opt.conceallevel = 1 -- Don't hide markup
 vim.opt.concealcursor = "" -- Show markup even on cursor line
 vim.opt.redrawtime = 10000 -- Timeout for syntax highlighting redraw
 vim.opt.maxmempattern = 20000 -- Max memory for pattern matching
-vim.opt.synmaxcol = 300 -- Syntax highlighting column limit
+vim.opt.synmaxcol = 200 -- Syntax highlighting column limit
 
 -- File Handling
 vim.opt.backup = false -- Don't create backup files
 vim.opt.writebackup = false -- Don't backup before overwriting
 vim.opt.swapfile = false -- Don't create swap files
 vim.opt.undofile = true -- Persistent undo
-vim.opt.updatetime = 300 -- Time in ms to trigger CursorHold
+vim.opt.updatetime = 500 -- Time in ms to trigger CursorHold
 vim.opt.timeoutlen = 500 -- Time in ms to wait for mapped sequence
 vim.opt.ttimeoutlen = 0 -- No wait for key code sequences
 vim.opt.autoread = true -- Auto-reload file if changed outside

@@ -5,7 +5,7 @@ return {
 		config = function()
 			require("roslyn").setup({
 				filewatching = "roslyn",
-				broad_search = true,
+				broad_search = false,
 				lock_target = false,
 				silent = false,
 			})
@@ -27,12 +27,12 @@ return {
 						dotnet_suppress_inlay_hints_for_parameters_that_match_method_intent = true,
 					},
 					["csharp|code_lens"] = {
-						dotnet_enable_references_code_lens = true,
-						dotnet_enable_tests_code_lens = true,
+						dotnet_enable_references_code_lens = false,
+						dotnet_enable_tests_code_lens = false,
 					},
 					["csharp|background_analysis"] = {
-						background_analysis_dotnet_analyzer_diagnostics_scope = "fullSolution",
-						background_analysis_dotnet_compiler_diagnostics_scope = "fullSolution",
+						background_analysis_dotnet_analyzer_diagnostics_scope = "openFiles",
+						background_analysis_dotnet_compiler_diagnostics_scope = "openFiles",
 					},
 					["csharp|completion"] = {
 						dotnet_provide_regex_completions = true,
@@ -55,7 +55,7 @@ return {
 	
 						if client.server_capabilities.codeLensProvider then
 							vim.lsp.codelens.refresh()
-							vim.api.nvim_create_autocmd({ "BufWritePost", "CursorHold" }, {
+							vim.api.nvim_create_autocmd("BufWritePost", {
 								buffer = args.buf,
 								callback = function()
 									vim.lsp.codelens.refresh({ bufnr = args.buf })

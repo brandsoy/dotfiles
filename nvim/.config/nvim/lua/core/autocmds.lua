@@ -37,7 +37,7 @@ vim.api.nvim_create_autocmd("BufReadPre", {
 		local file = vim.api.nvim_buf_get_name(args.buf)
 		local ok, stat = pcall(vim.uv.fs_stat, file)
 		if not ok or not stat then return end
-		if stat.size > 500 * 1024 then
+		if stat.size > 300 * 1024 then
 			vim.b.large_file = true
 			vim.cmd([[syntax off]])
 			pcall(vim.treesitter.stop, args.buf)
