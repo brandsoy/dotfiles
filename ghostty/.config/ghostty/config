@@ -30,7 +30,7 @@ font-family = "Monaspace Neon NF"
 adjust-cell-height = 10%
 
 # Misc
-shell-integration = bash
+shell-integration = zsh
 shell-integration-features = cursor,sudo,title
 quit-after-last-window-closed = "true"
 cursor-style = bar

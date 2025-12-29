@@ -1,4 +1,6 @@
 -- Load core configuration modules
+require("core.globals")
+
 -- Local shim to silence deprecation notice for vim.tbl_flatten (Neovim 0.11+) used by some plugins.
 -- Re-implements flattening in Lua so the deprecated builtin isn't invoked.
 if vim.tbl_flatten then

@@ -20,4 +20,10 @@ require("lazy").setup({
 	},
 	defaults = { lazy = true },
 	checker = { enabled = false },
+	change_detection = { notify = false },
+	performance = {
+		rtp = {
+			reset = true, -- reset the runtime path to $VIMRUNTIME and your config directory
+		},
+	},
 })

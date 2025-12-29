@@ -21,6 +21,34 @@ function path_append {
 
 typeset -U PATH path
 
+# --- OS specific (Early Init) ---------------------------------------------
+# Move this early so PATH is correct for tool checks
+case "$(uname -s)" in
+  Darwin)
+    # Try Apple Silicon path first, then Intel
+    if [[ -x "/opt/homebrew/bin/brew" ]]; then
+        eval "$(/opt/homebrew/bin/brew shellenv)"
+    elif [[ -x "/usr/local/bin/brew" ]]; then
+        eval "$(/usr/local/bin/brew shellenv)"
+    fi
+    
+    path_prepend "/Users/mattis/Library/pnpm"
+    
+    # LibPQ check after brew might be in path
+    if command -v brew &>/dev/null; then
+      LIBPQ_BIN="$(brew --prefix libpq 2>/dev/null)/bin"
+      [[ -d "$LIBPQ_BIN" ]] && path_prepend "$LIBPQ_BIN"
+      unset LIBPQ_BIN
+    else
+      path_prepend "/usr/local/opt/libpq/bin"
+    fi
+    ;;
+  Linux)
+    [[ -x "/home/linuxbrew/.linuxbrew/bin/brew" ]] && eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
+    path_prepend "${XDG_DATA_HOME:-$HOME/.local/share}/pnpm"
+    ;;
+esac
+
 # --- Zinit bootstrap ------------------------------------------------------
 ZINIT_HOME="${XDG_DATA_HOME:-${HOME}/.local/share}/zinit/zinit.git"
 if [[ ! -d "$ZINIT_HOME" ]]; then
@@ -39,22 +67,63 @@ else
   return 1
 fi
 
-# Plugins & snippets
-zinit light zsh-users/zsh-syntax-highlighting
+# --- Plugins (Turbo Mode) -------------------------------------------------
+# Load completions and snippets asynchronously for faster startup
+zinit ice wait lucid
 zinit light zsh-users/zsh-completions
+
+zinit ice wait lucid
 zinit light zsh-users/zsh-autosuggestions
+
+zinit ice wait lucid
 zinit light Aloxaf/fzf-tab
+
+zinit ice wait lucid
 zinit snippet OMZL::git.zsh
+
+zinit ice wait lucid
 zinit snippet OMZP::git
+
+zinit ice wait lucid
 zinit snippet OMZP::sudo
+
+zinit ice wait lucid
 zinit snippet OMZP::command-not-found
 
-autoload -Uz compinit && compinit
-zinit cdreplay -q
+# Syntax highlighting should load last, but in turbo mode, we ensure it wraps up nicely
+zinit ice wait lucid atinit"zpcompinit; zicdreplay"
+zinit light zsh-users/zsh-syntax-highlighting
 
-# Prompt
+# --- Completion System (Optimized) ----------------------------------------
+autoload -Uz compinit
+# Only regenerate compdump once a day
+if [[ -n ${ZDOTDIR:-$HOME}/.zcompdump(#qN.mh+24) ]]; then
+  compinit
+else
+  compinit -C
+fi
+
+# --- Prompt ---------------------------------------------------------------
 if command -v starship &>/dev/null; then
   eval "$(starship init zsh)"
+fi
+
+# --- Tool integrations ----------------------------------------------------
+if command -v fzf &>/dev/null; then
+  eval "$(fzf --zsh)"
+fi
+
+if command -v zoxide &>/dev/null; then
+  eval "$(zoxide init --cmd cd zsh)"
+fi
+
+if command -v go &>/dev/null; then
+  export GOPATH="$(go env GOPATH 2>/dev/null || printf '%s/go' "$HOME")"
+  path_append "$GOPATH/bin"
+fi
+
+if command -v mise &>/dev/null; then
+  eval "$(mise activate zsh)"
 fi
 
 # --- Shell behaviour ------------------------------------------------------
@@ -81,18 +150,44 @@ setopt hist_find_no_dups
 zstyle ':completion:*' matcher-list 'm:{a-z}={A-Za-z}'
 zstyle ':completion:*' list-colors "${(s.:.)LS_COLORS}"
 zstyle ':completion:*' menu no
-zstyle ':fzf-tab:complete:cd:*' fzf-preview 'ls --color $realpath'
-zstyle ':fzf-tab:complete:__zoxide_z:*' fzf-preview 'ls --color $realpath'
 
 # --- Aliases & helpers ----------------------------------------------------
-alias ls='ls --color=auto'
-alias l='ls -lah --color=auto'
+# Cross-platform ls color support & fzf-preview
+if ls --color > /dev/null 2>&1; then
+  alias ls='ls --color=auto'
+  zstyle ':fzf-tab:complete:cd:*' fzf-preview 'ls --color $realpath'
+  zstyle ':fzf-tab:complete:__zoxide_z:*' fzf-preview 'ls --color $realpath'
+else
+  alias ls='ls -G'
+  zstyle ':fzf-tab:complete:cd:*' fzf-preview 'ls -G $realpath'
+  zstyle ':fzf-tab:complete:__zoxide_z:*' fzf-preview 'ls -G $realpath'
+fi
+
+alias l='ls -lah'
 alias c='clear'
 alias ld='lazydocker'
 alias lg='lazygit'
 alias v='nvim'
 alias vim='nvim'
 alias ff="fd --type f --hidden --exclude .git | fzf --preview 'bat --color=always {}'"
+
+# Cross-platform clipboard & open
+case "$(uname -s)" in
+  Darwin)
+    alias copy='pbcopy'
+    alias paste='pbpaste'
+    ;;
+  Linux)
+    alias open='xdg-open'
+    if command -v wl-copy &>/dev/null; then
+      alias copy='wl-copy'
+      alias paste='wl-paste'
+    elif command -v xclip &>/dev/null; then
+      alias copy='xclip -selection clipboard'
+      alias paste='xclip -selection clipboard -o'
+    fi
+    ;;
+esac
 
 function vf {
   local file
@@ -130,57 +225,13 @@ function fkill {
   kill "$pid"
 }
 
-# --- Tool integrations ----------------------------------------------------
-if command -v fzf &>/dev/null; then
-  eval "$(fzf --zsh)"
-fi
-
-if command -v zoxide &>/dev/null; then
-  eval "$(zoxide init --cmd cd zsh)"
-fi
-
-if command -v go &>/dev/null; then
-  export GOPATH="$(go env GOPATH 2>/dev/null || printf '%s/go' "$HOME")"
-  path_append "$GOPATH/bin"
-fi
-
-export NVM_DIR="${NVM_DIR:-$HOME/.nvm}"
-if command -v brew &>/dev/null; then
-  NVM_SH="$(brew --prefix nvm 2>/dev/null)/nvm.sh"
-  [[ -s "$NVM_SH" ]] && source "$NVM_SH"
-  unset NVM_SH
-fi
-
-if command -v mise &>/dev/null; then
-  eval "$(mise activate zsh)"
-fi
-
-# --- OS specific ----------------------------------------------------------
-case "$(uname -s)" in
-  Darwin)
-    [[ -x "/opt/homebrew/bin/brew" ]] && eval "$(/opt/homebrew/bin/brew shellenv)"
-    path_prepend "/Users/mattis/Library/pnpm"
-    if command -v brew &>/dev/null; then
-      LIBPQ_BIN="$(brew --prefix libpq 2>/dev/null)/bin"
-      path_prepend "$LIBPQ_BIN"
-      unset LIBPQ_BIN
-    else
-      path_prepend "/usr/local/opt/libpq/bin"
-    fi
-    ;;
-  Linux)
-    [[ -x "/home/linuxbrew/.linuxbrew/bin/brew" ]] && eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
-    path_prepend "${XDG_DATA_HOME:-$HOME/.local/share}/pnpm"
-    ;;
-esac
-
 # --- Local tool paths -----------------------------------------------------
-path_prepend "/Users/mattis/.tsp/bin"
-path_prepend "/home/mattis/.opencode/bin"
+path_prepend "$HOME/.tsp/bin"
+path_prepend "$HOME/.opencode/bin"
 path_append "$HOME/.cargo/bin"
 
 # --- API keys -------------------------------------------------------------
 # export GEMINI_API_KEY="${GEMINI_API_KEY:-AIzaSyAK1EWAqybtchh-k5uNCmWvnSIRhUqJcgc}"
 
 # bun completions
-[ -s "/Users/mattis/.bun/_bun" ] && source "/Users/mattis/.bun/_bun"
+[ -s "$HOME/.bun/_bun" ] && source "$HOME/.bun/_bun"
