@@ -1,16 +1,23 @@
 return {
+	-- Colorschemes: Uncomment the vim.cmd.colorscheme line in ONE theme to activate it
+	{
+		"folke/tokyonight.nvim",
+		lazy = false,
+		priority = 1000,
+		config = function()
+			vim.cmd.colorscheme("tokyonight-night")
+			-- Other variants: tokyonight-storm, tokyonight-moon, tokyonight-day
+		end,
+	},
 	{
 		"catppuccin/nvim",
 		name = "catppuccin",
-		lazy = false,
+		lazy = true,
 		priority = 1000,
 		config = function()
 			require("catppuccin").setup({
 				flavour = "auto",
-				background = {
-					light = "latte",
-					dark = "mocha",
-				},
+				background = { light = "latte", dark = "mocha" },
 				transparent_background = true,
 				integrations = {
 					blink_cmp = true,
@@ -23,26 +30,34 @@ return {
 					which_key = true,
 				},
 			})
-
-			vim.cmd.colorscheme("catppuccin")
+			-- vim.cmd.colorscheme("catppuccin")
+		end,
+	},
+	{
+		"projekt0n/github-nvim-theme",
+		name = "github-theme",
+		lazy = true,
+		priority = 1000,
+		config = function()
+			require("github-theme").setup({})
+			-- vim.cmd.colorscheme("github_dark_default")
+			-- Other variants: github_dark_tritanopia, github_light, github_dark_high_contrast
+		end,
+	},
+	{
+		"rose-pine/neovim",
+		name = "rose-pine",
+		lazy = true,
+		priority = 1000,
+		config = function()
+			-- vim.cmd.colorscheme("rose-pine")
+			-- Other variants: rose-pine-main, rose-pine-moon, rose-pine-dawn
 		end,
 	},
 	{
 		"nvim-mini/mini.statusline",
 		event = "VeryLazy",
 		config = function()
-			local palette = require("catppuccin.palettes").get_palette()
-			local set_hl = vim.api.nvim_set_hl
-			set_hl(0, "MiniStatuslineModeNormal", { fg = palette.base, bg = palette.blue, bold = true })
-			set_hl(0, "MiniStatuslineModeInsert", { fg = palette.base, bg = palette.green, bold = true })
-			set_hl(0, "MiniStatuslineModeVisual", { fg = palette.base, bg = palette.mauve, bold = true })
-			set_hl(0, "MiniStatuslineModeReplace", { fg = palette.base, bg = palette.red, bold = true })
-			set_hl(0, "MiniStatuslineModeCommand", { fg = palette.base, bg = palette.peach, bold = true })
-			set_hl(0, "MiniStatuslineModeOther", { fg = palette.base, bg = palette.teal, bold = true })
-			set_hl(0, "MiniStatuslineDevinfo", { fg = palette.subtext0, bg = palette.surface0 })
-			set_hl(0, "MiniStatuslineFileinfo", { fg = palette.subtext0, bg = palette.surface0 })
-			set_hl(0, "MiniStatuslineFilename", { fg = palette.text, bg = palette.surface0 })
-			set_hl(0, "MiniStatuslineInactive", { fg = palette.surface2, bg = palette.base })
 			require("mini.statusline").setup()
 		end,
 	},

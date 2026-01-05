@@ -1,51 +1,85 @@
-general.import = ["~/.config/omarchy/current/theme/alacritty.toml"]
+[general]
+import = [
+    "./themes/tokyo_night.toml"
+]
 
-# [colors]
-# [colors.primary]
-# background = '#1a1b26'
-# foreground = '#a9b1d6'
-#
-# # Normal colors
-# [colors.normal]
-# black = '#32344a'
-# red = '#f7768e'
-# green = '#9ece6a'
-# yellow = '#e0af68'
-# blue = '#7aa2f7'
-# magenta = '#ad8ee6'
-# cyan = '#449dab'
-# white = '#787c99'
-#
-# # Bright colors
-# [colors.bright]
-# black = '#444b6a'
-# red = '#ff7a93'
-# green = '#b9f27c'
-# yellow = '#ff9e64'
-# blue = '#7da6ff'
-# magenta = '#bb9af7'
-# cyan = '#0db9d7'
-# white = '#acb0d0'
-#
-# [colors.selection]
-# background = '#7aa2f7'
-#
+live_config_reload = true
 
 [env]
 TERM = "xterm-256color"
 
-[font]
-normal = { family = "CaskaydiaMono Nerd Font Mono" }
-bold = { family = "CaskaydiaMono Nerd Font Mono" }
-italic = { family = "CaskaydiaMono Nerd Font Mono" }
-size = 10
+[bell]
+animation = "EaseOutExpo"
+duration = 0
 
-[window]
-padding.x = 5
-padding.y = 5
-decorations = "buttonless"
+[colors]
+draw_bold_text_with_bright_colors = true
+
+
+[font]
+size = 14
+
+[font.normal]
+family = "Monaspace Neon NF"
+# family = "JetBrainsMono Nerd Font"
+# style = "Regular"
+
+[font.bold]
+family = "Monaspace Neon NF"
+# family = "JetBrainsMono Nerd Font"
+style = "Bold"
+
+[font.glyph_offset]
+x = 0
+y = 0
+
+[font.italic]
+family = "Monaspace Neon NF"
+# family = "JetBrainsMono Nerd Font"
+
+
+[font.offset]
+x = 0
+y = 0
+
 
 [keyboard]
 bindings = [{ key = "F11", action = "ToggleFullscreen" },
 { key = "Insert", mods = "Shift", action = "Paste" },
 { key = "Insert", mods = "Control", action = "Copy" }]
+
+[cursor]
+blink_interval = 500
+blink_timeout = 5
+unfocused_hollow = false
+
+[cursor.style]
+blinking = "Off"
+shape = "Block"
+
+[mouse]
+hide_when_typing = true
+
+[[mouse.bindings]]
+action = "PasteSelection"
+mouse = "Middle"
+
+[selection]
+semantic_escape_chars = ",│`|:\"' ()[]{}<>"
+
+[terminal.shell]
+program = "/bin/zsh"
+
+[window]
+decorations = "buttonless"
+dynamic_title = true
+option_as_alt = "Both"
+#startup_mode = "Maximized"
+
+[window.dimensions]
+columns = 160
+lines = 80
+
+[window.padding]
+x = 4
+y = 4

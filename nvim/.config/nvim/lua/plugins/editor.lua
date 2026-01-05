@@ -196,12 +196,11 @@ return {
 					{ mode = "n", keys = "]" },
 					{ mode = "n", keys = "'" },
 					{ mode = "n", keys = "`" },
-					{ mode = "n", keys = "\"" },
+					{ mode = "n", keys = '"' },
 					{ mode = "n", keys = "<C-w>" },
 					{ mode = "n", keys = "z" },
 				},
 				clues = {
-					{ mode = "n", keys = "<leader>a", desc = "Sidekick" },
 					{ mode = "n", keys = "<leader>b", desc = "Buffers" },
 					{ mode = "n", keys = "<leader>d", desc = "Debug" },
 					{ mode = "n", keys = "<leader>e", desc = "Explorer" },

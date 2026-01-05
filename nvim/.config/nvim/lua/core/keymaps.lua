@@ -15,7 +15,11 @@ local function notify_option(label, enabled)
 	if not ok then
 		return
 	end
-	vim.notify(string.format("%s %s", label, enabled and "enabled" or "disabled"), vim.log.levels.INFO, { title = "Neovim" })
+	vim.notify(
+		string.format("%s %s", label, enabled and "enabled" or "disabled"),
+		vim.log.levels.INFO,
+		{ title = "Neovim" }
+	)
 end
 
 ------------------------------------------------------------------------------
@@ -96,6 +100,44 @@ map("n", "<leader>us", function()
 	vim.wo.spell = not vim.wo.spell
 	notify_option("Spell check", vim.wo.spell)
 end, "Toggle spell checking")
+
+-- Ensure splits open where you like (optional)
+vim.opt.splitright = true -- vertical splits open to the right
+vim.opt.splitbelow = true -- horizontal splits open below
+
+-- LSP: go to definition in a vertical split (keep normal `gd` unchanged)
+map({ "n" }, "<leader>gd", function()
+	vim.cmd("vsplit")
+	vim.lsp.buf.definition()
+end, "LSP: go to definition in vertical split")
+
+-- LSP: go to definition in a horizontal split (optional)
+map({ "n" }, "<leader>gdh", function()
+	vim.cmd("split")
+	vim.lsp.buf.definition()
+end, "LSP: go to definition in horizontal split")
+
+-- Native motion: run exact `gd` in a new split (if you prefer Vim’s native behavior)
+map({ "n" }, "<leader>gD", function()
+	vim.cmd("vsplit")
+	vim.cmd("normal! gd")
+end, "Native gd in vertical split")
+
+map({ "n" }, "<leader>gDh", function()
+	vim.cmd("split")
+	vim.cmd("normal! gd")
+end, "Native gd in horizontal split")
+
+-- File under cursor (`gf`) in a vertical split
+map({ "n" }, "<leader>gf", function()
+	vim.cmd("vertical wincmd f")
+end, "Open file under cursor in vertical split")
+
+-- File:line (`gF`, e.g., path/to/file:123) in a vertical split
+map({ "n" }, "<leader>gF", function()
+	vim.cmd("vsplit")
+	vim.cmd("normal! gF")
+end, "Open file:line under cursor in vertical split")
 
 --------------------------------------------------------------------------
 --- Visual Mode

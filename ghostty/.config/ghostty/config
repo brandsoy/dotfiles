@@ -3,7 +3,8 @@ background-opacity = 0.98
 background-blur-radius = 30
 mouse-hide-while-typing = true
 
-theme = poimandres
+# theme = Vercel
+# theme = poimandres
 # theme = Vesper
 # theme = Ayu Mirage
 # theme = Rose Pine
@@ -12,7 +13,7 @@ theme = poimandres
 # theme = rose-pine
 # theme = dark:Rose Pine,light:Rose Pine Dawn
 # theme = ayu
-# theme = GitHub-Dark-Default
+theme = dark:GitHub Dark,light:Github
 
 # Titlebar
 macos-titlebar-style = "transparent"

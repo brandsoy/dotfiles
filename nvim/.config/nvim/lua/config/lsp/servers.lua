@@ -139,24 +139,23 @@ local function configure_servers()
 			},
 		} or {},
 		dockerls = {},
-		tailwindcss = {
-			filetypes = { "html", "javascriptreact", "typescriptreact", "vue", "svelte", "astro" },
-			root_dir = util.root_pattern(
-				"tailwind.config.js",
-				"tailwind.config.ts",
-				"postcss.config.js",
-				"package.json",
-				"node_modules"
-			),
-		},
+		-- tailwindcss = {
+		-- 	filetypes = { "html", "javascriptreact", "typescriptreact", "vue", "svelte", "astro" },
+		-- 	root_dir = util.root_pattern(
+		-- 		"tailwind.config.js",
+		-- 		"tailwind.config.ts",
+		-- 		"postcss.config.js",
+		-- 		"package.json",
+		-- 		"node_modules"
+		-- 	),
+		-- },
 		bashls = {},
 		bicep = {},
+		tsp_server = {},
 		postgres_lsp = {
 			filetypes = { "sql" },
-			root_dir = util.root_pattern(".git", "postgresql.conf", "docker-compose.yml"),
-			single_file_support = true,
-			-- Prefer postgres-language-server when installed; fall back to lspconfig default.
-			cmd = vim.fn.executable("postgres-language-server") == 1 and { "postgres-language-server" } or nil,
+			workspace_required = false,
+			cmd = { vim.fn.stdpath("data") .. "/mason/bin/postgres-language-server", "lsp-proxy" },
 		},
 		svelte = {},
 		-- vuels = {
