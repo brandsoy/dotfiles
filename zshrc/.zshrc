@@ -235,3 +235,26 @@ path_append "$HOME/.cargo/bin"
 
 # bun completions
 [ -s "$HOME/.bun/_bun" ] && source "$HOME/.bun/_bun"
+
+# --- Print ip information ---------------------------------------------------
+ip() {
+    # 1. Get WAN IP
+    local wan_ip=$(curl -s --max-time 2 ifconfig.co || echo "Offline")
+
+    # 2. Get Local IP (Cross-platform logic)
+    local lan_ip=""
+    if [[ "$OSTYPE" == "darwin"* ]]; then
+        # macOS: Get the interface for the default route and then its IP
+        local iface=$(route -n get default 2>/dev/null | awk '/interface: / {print $2}')
+        [[ -n "$iface" ]] && lan_ip=$(ipconfig getifaddr "$iface")
+    else
+        # Linux: Get the IP from the interface handling the default route
+        lan_ip=$(hostname -I | awk '{print $1}')
+    fi
+
+    # 3. Output
+    echo "----------------------------"
+    echo "  WAN:  ${wan_ip}"
+    echo "  LAN:  ${lan_ip:-'Not connected'}"
+    echo "----------------------------"
+}
