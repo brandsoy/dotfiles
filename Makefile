@@ -1,4 +1,4 @@
-.PHONY: help install uninstall install-brew check clean
+.PHONY: help install uninstall install-brew sync-brew check clean
 
 # Default target
 help:
@@ -7,6 +7,7 @@ help:
 	@echo "Usage:"
 	@echo "  make install          Install all configurations"
 	@echo "  make install-brew     Install Homebrew packages from Brewfile"
+	@echo "  make sync-brew        Update Brewfile with current brew packages"
 	@echo "  make uninstall        Remove all symlinks"
 	@echo "  make check            Show what would be installed"
 	@echo "  make clean            Remove caches and temporary files"
@@ -16,7 +17,7 @@ help:
 
 # Install all configurations
 install:
-	@./install.sh
+	@./scripts/install.sh
 
 # Install Homebrew packages
 install-brew:
@@ -26,6 +27,10 @@ install-brew:
 	else \
 		echo "Homebrew not installed. Install from https://brew.sh"; \
 	fi
+
+# Sync Brewfile with current brew packages
+sync-brew:
+	@./scripts/sync-brewfile.sh
 
 # Uninstall all configurations
 uninstall:

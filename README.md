@@ -81,6 +81,28 @@ stow -v -t ~ alacritty kitty ghostty wezterm
 ### Package Management
 - **Brewfile** - Homebrew packages list
 
+## Brewfile Management
+
+Keep your Brewfile in sync with installed packages:
+
+```bash
+# Update Brewfile with currently installed packages
+make sync-brew
+# or
+./scripts/sync-brewfile.sh
+
+# Install packages from Brewfile
+make install-brew
+# or
+brew bundle
+```
+
+The sync script will:
+- Create a backup of your current Brewfile
+- Generate a new Brewfile from installed packages
+- Show a diff of changes
+- Preserve descriptions for packages
+
 ## Uninstalling
 
 Remove symlinks for specific configs:
