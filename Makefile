@@ -13,36 +13,30 @@ help:
 	@echo "  make clean            Remove caches and temporary files"
 	@echo ""
 	@echo "Selective installation:"
-	@echo "  ./install.sh nvim tmux  Install only specific configs"
+	@echo "  ./install.sh config bin  Install only specific packages"
 
 # Install all configurations
 install:
-	@./scripts/install.sh
+	@./install.sh
 
 # Install Homebrew packages
 brew-install:
-	@./scripts/install-brew.sh
+	@./brew/install-brew.sh
 
 # Sync Brewfile with current brew packages
 brew-sync:
-	@./scripts/sync-brewfile.sh
+	@./brew/sync-brewfile.sh
 
 # Uninstall all configurations
 uninstall:
 	@echo "Removing all symlinks..."
-	@stow -D -v -t ~ */
+	@cd home && stow -D -v -t ~ bashrc bin config tmux zshrc
 
 # Check what would be installed (dry run)
 check:
 	@echo "Checking what would be installed..."
-	@OUTPUT=$$(stow -n -vv -t ~ */ 2>&1); \
-	if echo "$$OUTPUT" | grep -q "LINK:"; then \
-		echo "$$OUTPUT" | grep "LINK:"; \
-	elif echo "$$OUTPUT" | grep -q "Skipping"; then \
-		echo "✓ All configurations are already installed"; \
-	else \
-		echo "$$OUTPUT"; \
-	fi
+	@echo "\n--- All home directory configs ---"
+	@cd home && stow -n -vv -t ~ bashrc bin config tmux zshrc 2>&1 | grep "LINK:" || echo "✓ All configs already installed"
 
 # Clean temporary and cache files
 clean:

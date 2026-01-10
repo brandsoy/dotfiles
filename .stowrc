@@ -3,12 +3,10 @@
 --ignore=\.git
 --ignore=\.gitignore
 --ignore=README\.md
---ignore=Brewfile
---ignore=Brewfile\.backup
---ignore=install\.sh
---ignore=sync-brewfile\.sh
---ignore=install-brew\.sh
 --ignore=Makefile
 --ignore=LICENSE
 --ignore=.*\.log
 --ignore=.*\.cache
+--ignore=brew
+--ignore=install\.sh
+--no-folding

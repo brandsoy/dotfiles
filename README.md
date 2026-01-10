@@ -2,6 +2,24 @@
 
 Personal configuration files for macOS/Linux development environment.
 
+## Structure
+
+```
+dotfiles/
+├── brew/          # Homebrew package management
+│   ├── Brewfile   # Package list
+│   ├── install-brew.sh
+│   └── sync-brewfile.sh
+├── home/          # User home directory configs
+│   ├── bashrc/    # Bash shell configuration
+│   ├── bin/       # Personal scripts
+│   ├── config/    # XDG config directory (~/.config/)
+│   ├── tmux/      # Terminal multiplexer config
+│   └── zshrc/     # Zsh shell configuration
+├── install.sh     # Main installation script
+└── Makefile       # Convenience commands
+```
+
 ## Prerequisites
 
 The install script will automatically install missing prerequisites, but you can also install manually:
@@ -25,9 +43,9 @@ pacman -S stow
 
 Clone and install all configs (auto-installs prerequisites):
 ```bash
-git clone <your-repo-url> ~/.dotfiles
-cd ~/.dotfiles
-./scripts/install.sh
+git clone <your-repo-url> ~/dotfiles
+cd ~/dotfiles
+./install.sh
 ```
 
 The install script will automatically:
@@ -38,23 +56,20 @@ The install script will automatically:
 
 Or use the Makefile:
 ```bash
-make install
-```
-
-Or manually with stow:
-```bash
-stow -v -t ~ */
+make install       # Install all configurations
+make check         # Preview what would be installed
+make uninstall     # Remove all symlinks
 ```
 
 ## Selective Installation
 
 Install specific configs only:
 ```bash
-# Install just neovim and tmux
-./scripts/install.sh nvim tmux
+# Install just specific packages
+./install.sh config bin
 
-# Install terminal configs
-./scripts/install.sh alacritty kitty ghostty wezterm
+# Install shell configs
+./install.sh bashrc zshrc
 ```
 
 ## Configurations Included
@@ -94,8 +109,8 @@ Install specific configs only:
 - **mise** - Runtime version manager
 - **pgcli** - PostgreSQL CLI
 
-### Package Management
-- **Brewfile** - Homebrew packages list
+### Personal Scripts
+- **update-blocklist.sh** - Update hosts file with ad/tracker blocklist
 
 ## Brewfile Management
 
@@ -103,27 +118,39 @@ Keep your Brewfile in sync with installed packages:
 
 ```bash
 # Preview and install packages from Brewfile (with confirmation)
-make install-brew
+make brew-install
 # or
-./scripts/install-brew.sh
+./brew/install-brew.sh
 
 # Update Brewfile with currently installed packages (with confirmation)
-make sync-brew
+make brew-sync
 # or
-./scripts/sync-brewfile.sh
+./brew/sync-brewfile.sh
 ```
 
-**install-brew** script will:
+**brew-install** script will:
 - Show what packages would be installed/upgraded
 - List changes by category (taps, formulae, casks, etc.)
 - Prompt for confirmation before installing
 
-**sync-brew** script will:
+**brew-sync** script will:
 - Create a backup of your current Brewfile
 - Generate a new Brewfile from installed packages
 - Show a diff of changes
 - Prompt for confirmation before updating
 - Preserve descriptions for packages
+
+## Management Commands
+
+```bash
+make help          # Show all available commands
+make install       # Install all configurations
+make check         # Preview what would be installed
+make uninstall     # Remove all symlinks
+make brew-install  # Install Homebrew packages
+make brew-sync     # Update Brewfile with current packages
+make clean         # Remove temporary files and caches
+```
 
 ## Uninstalling
 
@@ -134,16 +161,20 @@ make uninstall
 
 Or manually remove specific configs:
 ```bash
-stow -D -v -t ~ nvim tmux
+cd ~/dotfiles/home
+stow -D -v -t ~ config bin bashrc
 ```
 
 ## Clean Reinstall
 
-Remove existing Neovim data before installing:
+Remove existing data before installing:
 ```bash
-rm -rf ~/.config/nvim
-rm -rf ~/.local/state/nvim
-rm -rf ~/.local/share/nvim
+# Neovim
+rm -rf ~/.config/nvim ~/.local/state/nvim ~/.local/share/nvim
+
+# All configs
+make uninstall
+make install
 ```
 
 ## Notes
@@ -153,3 +184,4 @@ rm -rf ~/.local/share/nvim
 - Some configs are Linux-specific (hypr, waybar)
 - Install script supports Debian/Ubuntu, Arch Linux, and macOS
 - Works with or without sudo on Arch systems
+- All user scripts in `home/bin/` are symlinked to `~/bin/`
