@@ -1,2 +1,11 @@
---ignore=.stowrc
---ignore=DS_Store
+--ignore=\.stowrc
+--ignore=\.DS_Store
+--ignore=\.git
+--ignore=\.gitignore
+--ignore=README\.md
+--ignore=Brewfile
+--ignore=install\.sh
+--ignore=Makefile
+--ignore=LICENSE
+--ignore=.*\.log
+--ignore=.*\.cache
