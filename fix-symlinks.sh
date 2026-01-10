@@ -28,6 +28,24 @@ stow -D -t "$TARGET" bashrc bin config git ssh tmux zshrc 2>/dev/null || true
 echo "Stowing packages to $TARGET..."
 stow -t "$TARGET" bashrc bin config git ssh tmux zshrc
 
+# Handle VS Code
+if [[ "$OSTYPE" == "darwin"* ]]; then
+    VSCODE_TARGET="$HOME/Library/Application Support/Code/User"
+elif [[ "$OSTYPE" == "linux-gnu"* ]]; then
+    VSCODE_TARGET="$HOME/.config/Code/User"
+else
+    VSCODE_TARGET=""
+fi
+
+if [[ -n "$VSCODE_TARGET" ]]; then
+    echo "Fixing VS Code symlinks in $VSCODE_TARGET..."
+    mkdir -p "$VSCODE_TARGET"
+    # Unstow old if exists
+    stow -D -t "$VSCODE_TARGET" vscode 2>/dev/null || true
+    # Stow new
+    stow -t "$VSCODE_TARGET" vscode
+fi
+
 echo "✓ Symlinks updated!"
 echo ""
 echo "Testing symlinks:"

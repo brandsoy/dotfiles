@@ -86,7 +86,7 @@ fi
 cd "$DOTFILES_DIR" || exit 1
 
 # Define packages to install
-HOME_PACKAGES=("bashrc" "bin" "config" "git" "ssh" "tmux" "zshrc")
+HOME_PACKAGES=("bashrc" "bin" "config" "git" "ssh" "tmux" "vscode" "zshrc")
 
 # Function to install a package
 install_package() {
@@ -105,6 +105,21 @@ install_package() {
         
         # Stow the package
         if stow -v -t "$STOW_TARGET" "$package" 2>&1 | grep -q "LINK"; then
+            echo -e "${GREEN}✓ ${package} installed${NC}"
+        else
+            echo -e "${RED}✗ ${package} failed or already linked${NC}"
+        fi
+    elif [ "$package" = "vscode" ]; then
+        if [[ "$OS" == "macos" ]]; then
+            VSCODE_TARGET="$HOME/Library/Application Support/Code/User"
+        else
+            VSCODE_TARGET="$HOME/.config/Code/User"
+        fi
+        echo -e "${YELLOW}Installing ${package} → ${VSCODE_TARGET}...${NC}"
+        
+        mkdir -p "$VSCODE_TARGET"
+        
+        if stow -v -t "$VSCODE_TARGET" "$package" 2>&1 | grep -q "LINK"; then
             echo -e "${GREEN}✓ ${package} installed${NC}"
         else
             echo -e "${RED}✗ ${package} failed or already linked${NC}"

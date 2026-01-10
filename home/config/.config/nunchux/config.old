@@ -1,0 +1,26 @@
+[settings]
+icon_running = ●
+icon_stopped = ○
+menu_width = 60%
+menu_height = 50%
+popup_width = 90%
+popup_height = 90%
+just_enabled = true
+npm_enabled = true
+
+[btop]
+cmd = btop
+status = load=$(cut -d' ' -f1 /proc/loadavg); echo "load: $load"
+
+[git]
+cmd = lazygit
+status = n=$(git status -s 2>/dev/null | wc -l); [[ $n -gt 0 ]] && echo "($n changed)"
+
+[docker]
+cmd = lazydocker
+status = n=$(docker ps -q 2>/dev/null | wc -l); [[ $n -gt 0 ]] && echo "($n running)"
+
+[notes]
+cmd = nvim ~/notes
+width = 80
+height = 60
