@@ -45,38 +45,43 @@ if brew bundle dump --describe --force --file="$TEMP_BREWFILE"; then
     
     # Show differences
     echo -e "${BLUE}Changes that will be made:${NC}"
-    if diff -u "$BREWFILE" "$TEMP_BREWFILE" | tail -n +3; then
+    
+    # Check if there are differences
+    if diff -u "$BREWFILE" "$TEMP_BREWFILE" > /dev/null 2>&1; then
         echo -e "\n${GREEN}No changes detected${NC}"
         rm "$BREWFILE_BACKUP" "$TEMP_BREWFILE"
         exit 0
-    else
-        echo -e "\n${YELLOW}Summary:${NC}"
-        
-        # Count changes
-        ADDED=$(diff "$BREWFILE" "$TEMP_BREWFILE" | grep "^>" | wc -l | tr -d ' ')
-        REMOVED=$(diff "$BREWFILE" "$TEMP_BREWFILE" | grep "^<" | wc -l | tr -d ' ')
-        
-        echo -e "${GREEN}  + $ADDED new entries${NC}"
-        echo -e "${RED}  - $REMOVED removed entries${NC}"
-        
-        # Prompt user
-        echo -e "\n${YELLOW}Apply these changes to Brewfile?${NC}"
-        read -p "Continue? [y/N] " -n 1 -r
-        echo
-        
-        if [[ ! $REPLY =~ ^[Yy]$ ]]; then
-            echo -e "${YELLOW}Cancelled. Brewfile not updated.${NC}"
-            rm "$BREWFILE_BACKUP" "$TEMP_BREWFILE"
-            exit 0
-        fi
-        
-        # Apply changes
-        mv "$TEMP_BREWFILE" "$BREWFILE"
-        echo -e "${GREEN}✓ Brewfile updated successfully${NC}"
-        
-        echo -e "\n${YELLOW}Backup kept at: Brewfile.backup${NC}"
-        echo -e "To restore: ${BLUE}mv Brewfile.backup Brewfile${NC}"
     fi
+    
+    # Show the diff
+    diff -u "$BREWFILE" "$TEMP_BREWFILE" | tail -n +3
+    
+    echo -e "\n${YELLOW}Summary:${NC}"
+    
+    # Count changes
+    ADDED=$(diff "$BREWFILE" "$TEMP_BREWFILE" | grep "^>" | wc -l | tr -d ' ')
+    REMOVED=$(diff "$BREWFILE" "$TEMP_BREWFILE" | grep "^<" | wc -l | tr -d ' ')
+    
+    echo -e "${GREEN}  + $ADDED new entries${NC}"
+    echo -e "${RED}  - $REMOVED removed entries${NC}"
+    
+    # Prompt user
+    echo -e "\n${YELLOW}Apply these changes to Brewfile?${NC}"
+    read -p "Continue? [y/N] " -n 1 -r
+    echo
+    
+    if [[ ! $REPLY =~ ^[Yy]$ ]]; then
+        echo -e "${YELLOW}Cancelled. Brewfile not updated.${NC}"
+        rm "$BREWFILE_BACKUP" "$TEMP_BREWFILE"
+        exit 0
+    fi
+    
+    # Apply changes
+    mv "$TEMP_BREWFILE" "$BREWFILE"
+    echo -e "${GREEN}✓ Brewfile updated successfully${NC}"
+    
+    echo -e "\n${YELLOW}Backup kept at: Brewfile.backup${NC}"
+    echo -e "To restore: ${BLUE}mv Brewfile.backup Brewfile${NC}"
     
     # Suggest git commit
     if git -C "$DOTFILES_DIR" rev-parse --git-dir > /dev/null 2>&1; then
