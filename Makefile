@@ -6,8 +6,8 @@ help:
 	@echo ""
 	@echo "Usage:"
 	@echo "  make install          Install all configurations"
-	@echo "  make install-brew     Install Homebrew packages from Brewfile"
-	@echo "  make sync-brew        Update Brewfile with current brew packages"
+	@echo "  make brew-install     Install Homebrew packages from Brewfile"
+	@echo "  make brew-sync        Update Brewfile with current brew packages"
 	@echo "  make uninstall        Remove all symlinks"
 	@echo "  make check            Show what would be installed"
 	@echo "  make clean            Remove caches and temporary files"
@@ -20,16 +20,11 @@ install:
 	@./scripts/install.sh
 
 # Install Homebrew packages
-install-brew:
-	@if command -v brew >/dev/null 2>&1; then \
-		echo "Installing Homebrew packages..."; \
-		brew bundle; \
-	else \
-		echo "Homebrew not installed. Install from https://brew.sh"; \
-	fi
+brew-install:
+	@./scripts/install-brew.sh
 
 # Sync Brewfile with current brew packages
-sync-brew:
+brew-sync:
 	@./scripts/sync-brewfile.sh
 
 # Uninstall all configurations

@@ -4,26 +4,37 @@ Personal configuration files for macOS/Linux development environment.
 
 ## Prerequisites
 
-- [GNU Stow](https://www.gnu.org/software/stow/) - Symlink manager
-- [Homebrew](https://brew.sh/) (macOS) - Package manager
+The install script will automatically install missing prerequisites, but you can also install manually:
 
-Install prerequisites:
+- [GNU Stow](https://www.gnu.org/software/stow/) - Symlink manager
+- [Homebrew](https://brew.sh/) (macOS only) - Package manager
+
+Manual installation:
 ```bash
 # macOS
 brew install stow
 
-# Linux (Debian/Ubuntu)
+# Debian/Ubuntu
 sudo apt install stow
+
+# Arch Linux (as root or with sudo)
+pacman -S stow
 ```
 
 ## Quick Start
 
-Clone and install all configs:
+Clone and install all configs (auto-installs prerequisites):
 ```bash
 git clone <your-repo-url> ~/.dotfiles
 cd ~/.dotfiles
 ./scripts/install.sh
 ```
+
+The install script will automatically:
+- Detect your OS (macOS, Debian, Arch, etc.)
+- Install Homebrew if needed (macOS only)
+- Install GNU Stow if needed
+- Symlink all configurations
 
 Or use the Makefile:
 ```bash
@@ -91,21 +102,27 @@ Install specific configs only:
 Keep your Brewfile in sync with installed packages:
 
 ```bash
-# Update Brewfile with currently installed packages
+# Preview and install packages from Brewfile (with confirmation)
+make install-brew
+# or
+./scripts/install-brew.sh
+
+# Update Brewfile with currently installed packages (with confirmation)
 make sync-brew
 # or
 ./scripts/sync-brewfile.sh
-
-# Install packages from Brewfile
-make install-brew
-# or
-brew bundle
 ```
 
-The sync script will:
+**install-brew** script will:
+- Show what packages would be installed/upgraded
+- List changes by category (taps, formulae, casks, etc.)
+- Prompt for confirmation before installing
+
+**sync-brew** script will:
 - Create a backup of your current Brewfile
 - Generate a new Brewfile from installed packages
 - Show a diff of changes
+- Prompt for confirmation before updating
 - Preserve descriptions for packages
 
 ## Uninstalling
@@ -134,3 +151,5 @@ rm -rf ~/.local/share/nvim
 - Sensitive files (tokens, logs, caches) are excluded via `.gitignore`
 - Some configs are macOS-specific (aerospace, raycast, karabiner)
 - Some configs are Linux-specific (hypr, waybar)
+- Install script supports Debian/Ubuntu, Arch Linux, and macOS
+- Works with or without sudo on Arch systems
