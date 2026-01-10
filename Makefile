@@ -1,4 +1,4 @@
-.PHONY: help install uninstall install-brew sync-brew check clean
+.PHONY: help install uninstall install-brew sync-brew check clean clean-local
 
 # Default target
 help:
@@ -11,6 +11,7 @@ help:
 	@echo "  make uninstall        Remove all symlinks"
 	@echo "  make check            Show what would be installed"
 	@echo "  make clean            Remove caches and temporary files"
+	@echo "  make clean-local      Remove local configs to prepare for stow"
 	@echo ""
 	@echo "Selective installation:"
 	@echo "  ./install.sh config bin  Install only specific packages"
@@ -46,3 +47,15 @@ clean:
 	@find . -type d -name ".cache" -exec rm -rf {} + 2>/dev/null || true
 	@find . -type d -name ".state" -exec rm -rf {} + 2>/dev/null || true
 	@echo "Clean complete"
+
+# Remove local config files that exist in dotfiles repo (prep for stow)
+clean-local:
+	@./clean-before-stow.sh --dry-run
+	@echo ""
+	@read -p "Do you want to proceed with removing these files? (y/N) " -n 1 -r; \
+	echo ""; \
+	if [[ $$REPLY =~ ^[Yy]$$ ]]; then \
+		./clean-before-stow.sh; \
+	else \
+		echo "Cancelled."; \
+	fi
