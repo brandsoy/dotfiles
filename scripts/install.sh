@@ -13,13 +13,73 @@ NC='\033[0m' # No Color
 
 echo -e "${GREEN}=== Dotfiles Installation ===${NC}\n"
 
-# Check if stow is installed
+# Detect OS
+if [[ "$OSTYPE" == "darwin"* ]]; then
+    OS="macos"
+elif [[ "$OSTYPE" == "linux-gnu"* ]]; then
+    OS="linux"
+else
+    OS="unknown"
+fi
+
+# Check and install Homebrew (macOS only)
+if [[ "$OS" == "macos" ]]; then
+    if ! command -v brew &> /dev/null; then
+        echo -e "${YELLOW}Homebrew not found. Installing Homebrew...${NC}"
+        /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+        
+        # Check if installation succeeded
+        if ! command -v brew &> /dev/null; then
+            echo -e "${RED}Error: Homebrew installation failed${NC}"
+            exit 1
+        fi
+        echo -e "${GREEN}✓ Homebrew installed${NC}\n"
+    else
+        echo -e "${GREEN}✓ Homebrew found${NC}"
+    fi
+fi
+
+# Check and install stow
 if ! command -v stow &> /dev/null; then
-    echo -e "${RED}Error: GNU Stow is not installed${NC}"
-    echo "Install it first:"
-    echo "  macOS: brew install stow"
-    echo "  Linux: sudo apt install stow"
-    exit 1
+    echo -e "${YELLOW}GNU Stow not found. Installing...${NC}"
+    
+    # Detect if running as root or if sudo is available
+    if [[ $EUID -eq 0 ]]; then
+        SUDO=""
+    elif command -v sudo &> /dev/null; then
+        SUDO="sudo"
+    else
+        SUDO=""
+        echo -e "${YELLOW}Note: Running without sudo (may require root)${NC}"
+    fi
+    
+    if [[ "$OS" == "macos" ]]; then
+        brew install stow
+    elif [[ "$OS" == "linux" ]]; then
+        if command -v apt &> /dev/null; then
+            $SUDO apt update && $SUDO apt install -y stow
+        elif command -v dnf &> /dev/null; then
+            $SUDO dnf install -y stow
+        elif command -v pacman &> /dev/null; then
+            $SUDO pacman -S --noconfirm stow
+        else
+            echo -e "${RED}Error: Cannot detect package manager${NC}"
+            echo "Please install stow manually"
+            exit 1
+        fi
+    else
+        echo -e "${RED}Error: Unsupported OS${NC}"
+        exit 1
+    fi
+    
+    # Verify installation
+    if ! command -v stow &> /dev/null; then
+        echo -e "${RED}Error: Stow installation failed${NC}"
+        exit 1
+    fi
+    echo -e "${GREEN}✓ GNU Stow installed${NC}\n"
+else
+    echo -e "${GREEN}✓ GNU Stow found${NC}\n"
 fi
 
 # Change to dotfiles directory
