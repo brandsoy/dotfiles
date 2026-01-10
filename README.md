@@ -22,7 +22,12 @@ Clone and install all configs:
 ```bash
 git clone <your-repo-url> ~/.dotfiles
 cd ~/.dotfiles
-./install.sh
+./scripts/install.sh
+```
+
+Or use the Makefile:
+```bash
+make install
 ```
 
 Or manually with stow:
@@ -35,10 +40,10 @@ stow -v -t ~ */
 Install specific configs only:
 ```bash
 # Install just neovim and tmux
-stow -v -t ~ nvim tmux
+./scripts/install.sh nvim tmux
 
 # Install terminal configs
-stow -v -t ~ alacritty kitty ghostty wezterm
+./scripts/install.sh alacritty kitty ghostty wezterm
 ```
 
 ## Configurations Included
@@ -105,14 +110,14 @@ The sync script will:
 
 ## Uninstalling
 
-Remove symlinks for specific configs:
-```bash
-stow -D -v -t ~ nvim tmux
-```
-
 Remove all symlinks:
 ```bash
-stow -D -v -t ~ */
+make uninstall
+```
+
+Or manually remove specific configs:
+```bash
+stow -D -v -t ~ nvim tmux
 ```
 
 ## Clean Reinstall
