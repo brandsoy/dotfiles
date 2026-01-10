@@ -86,7 +86,7 @@ fi
 cd "$DOTFILES_DIR" || exit 1
 
 # Define packages to install
-HOME_PACKAGES=("bashrc" "bin" "config" "tmux" "zshrc")
+HOME_PACKAGES=("bashrc" "bin" "config" "git" "ssh" "tmux" "zshrc")
 
 # Function to install a package
 install_package() {

@@ -1,0 +1,5 @@
+[user]
+	name = Mattis Brandsøy
+	email = mattis.brandsoy@icloud.com
+[fetch]
+	prune = true

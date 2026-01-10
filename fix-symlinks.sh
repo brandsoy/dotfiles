@@ -22,11 +22,11 @@ echo "Broken symlinks removed."
 cd "$HOME/dotfiles/home"
 
 # Remove any remaining stale links from stow's perspective (if any valid ones match the current structure)
-stow -D -t "$TARGET" bashrc bin config tmux zshrc 2>/dev/null || true
+stow -D -t "$TARGET" bashrc bin config git ssh tmux zshrc 2>/dev/null || true
 
 # Recreate symlinks with new path
 echo "Stowing packages to $TARGET..."
-stow -t "$TARGET" bashrc bin config tmux zshrc
+stow -t "$TARGET" bashrc bin config git ssh tmux zshrc
 
 echo "✓ Symlinks updated!"
 echo ""
