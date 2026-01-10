@@ -35,7 +35,14 @@ uninstall:
 # Check what would be installed (dry run)
 check:
 	@echo "Checking what would be installed..."
-	@stow -n -v -t ~ */
+	@OUTPUT=$$(stow -n -vv -t ~ */ 2>&1); \
+	if echo "$$OUTPUT" | grep -q "LINK:"; then \
+		echo "$$OUTPUT" | grep "LINK:"; \
+	elif echo "$$OUTPUT" | grep -q "Skipping"; then \
+		echo "✓ All configurations are already installed"; \
+	else \
+		echo "$$OUTPUT"; \
+	fi
 
 # Clean temporary and cache files
 clean:
