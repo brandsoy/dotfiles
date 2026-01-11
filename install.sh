@@ -91,6 +91,8 @@ HOME_PACKAGES=("bashrc" "bin" "config" "git" "ssh" "tmux" "vscode" "zshrc")
 # Function to install a package
 install_package() {
     local package=$1
+    local output
+    local exit_code
     
     if [ "$package" = "config" ]; then
         echo -e "${YELLOW}Installing ${package}/ → ~/.config/...${NC}"
@@ -107,20 +109,19 @@ install_package() {
             mkdir -p "$config_target"
         fi
         
-        # List what's inside config before stowing
-        if [ -d "$package/.config" ]; then
-            echo -e "  Contents:"
-            ls "$package/.config" | while read -r item; do
-                echo -e "    ${BLUE}•${NC} ${item}"
-            done
-        fi
-        
         # Stow the package
-        if stow -v -t "$STOW_TARGET" "$package" 2>&1 | grep -q "LINK"; then
-            echo -e "${GREEN}✓ ${package} installed${NC}"
+        if output=$(stow -v -t "$STOW_TARGET" "$package" 2>&1); then
+            if [[ "$output" == *"LINK:"* ]]; then
+                 echo -e "${GREEN}✓ ${package} installed${NC}"
+                 # Optional: show details if verbose?
+            else
+                 echo -e "${GREEN}✓ ${package} (already linked)${NC}"
+            fi
         else
-            echo -e "${RED}✗ ${package} failed or already linked${NC}"
+            echo -e "${RED}✗ ${package} failed:${NC}"
+            echo "$output"
         fi
+
     elif [ "$package" = "vscode" ]; then
         if [[ "$OS" == "macos" ]]; then
             VSCODE_TARGET="$HOME/Library/Application Support/Code/User"
@@ -131,37 +132,41 @@ install_package() {
         
         mkdir -p "$VSCODE_TARGET"
         
-        if stow -v -t "$VSCODE_TARGET" "$package" 2>&1 | grep -q "LINK"; then
-            echo -e "${GREEN}✓ ${package} installed${NC}"
+        if output=$(stow -v -t "$VSCODE_TARGET" "$package" 2>&1); then
+            if [[ "$output" == *"LINK:"* ]]; then
+                 echo -e "${GREEN}✓ ${package} installed${NC}"
+            else
+                 echo -e "${GREEN}✓ ${package} (already linked)${NC}"
+            fi
         else
-            echo -e "${RED}✗ ${package} failed or already linked${NC}"
+            echo -e "${RED}✗ ${package} failed:${NC}"
+            echo "$output"
         fi
     elif [ "$package" = "bin" ]; then
         echo -e "${YELLOW}Installing ${package}/ → ~/bin/...${NC}"
         
-        # List scripts in bin
-        if [ -d "$package" ]; then
-            local count=$(ls -1 "$package" 2>/dev/null | wc -l | tr -d ' ')
-            if [ "$count" -gt 0 ]; then
-                echo -e "  Scripts: ${count}"
-                ls "$package" | while read -r item; do
-                    echo -e "    ${BLUE}•${NC} ${item}"
-                done
-            fi
-        fi
-        
         # Stow the package
-        if stow -v -t "$STOW_TARGET" "$package" 2>&1 | grep -q "LINK"; then
-            echo -e "${GREEN}✓ ${package} installed${NC}"
+        if output=$(stow -v -t "$STOW_TARGET" "$package" 2>&1); then
+            if [[ "$output" == *"LINK:"* ]]; then
+                 echo -e "${GREEN}✓ ${package} installed${NC}"
+            else
+                 echo -e "${GREEN}✓ ${package} (already linked)${NC}"
+            fi
         else
-            echo -e "${RED}✗ ${package} failed or already linked${NC}"
+            echo -e "${RED}✗ ${package} failed:${NC}"
+            echo "$output"
         fi
     else
         echo -e "${YELLOW}Installing ${package}...${NC}"
-        if stow -v -t "$STOW_TARGET" "$package" 2>&1 | grep -q "LINK"; then
-            echo -e "${GREEN}✓ ${package} installed${NC}"
+        if output=$(stow -v -t "$STOW_TARGET" "$package" 2>&1); then
+             if [[ "$output" == *"LINK:"* ]]; then
+                 echo -e "${GREEN}✓ ${package} installed${NC}"
+            else
+                 echo -e "${GREEN}✓ ${package} (already linked)${NC}"
+            fi
         else
-            echo -e "${RED}✗ ${package} failed or already linked${NC}"
+            echo -e "${RED}✗ ${package} failed:${NC}"
+            echo "$output"
         fi
     fi
 }
