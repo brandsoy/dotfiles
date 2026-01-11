@@ -94,6 +94,18 @@ install_package() {
     
     if [ "$package" = "config" ]; then
         echo -e "${YELLOW}Installing ${package}/ → ~/.config/...${NC}"
+
+        # Ensure ~/.config is a directory, not a symlink, so stow can link into it
+        local config_target="$STOW_TARGET/.config"
+        if [ -L "$config_target" ]; then
+            echo -e "${YELLOW}Unlinking symlinked directory: $config_target${NC}"
+            rm "$config_target"
+        fi
+        
+        if [ ! -d "$config_target" ]; then
+            echo -e "${YELLOW}Creating directory: $config_target${NC}"
+            mkdir -p "$config_target"
+        fi
         
         # List what's inside config before stowing
         if [ -d "$package/.config" ]; then

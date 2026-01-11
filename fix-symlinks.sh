@@ -26,6 +26,14 @@ stow -D -t "$TARGET" bashrc bin config git ssh tmux zshrc 2>/dev/null || true
 
 # Recreate symlinks with new path
 echo "Stowing packages to $TARGET..."
+
+# Ensure .config is a directory (not a symlink) so stow links into it
+if [ -L "$TARGET/.config" ]; then
+    echo "Converting ~/.config from symlink to directory..."
+    rm "$TARGET/.config"
+fi
+mkdir -p "$TARGET/.config"
+
 stow -t "$TARGET" bashrc bin config git ssh tmux zshrc
 
 # Handle VS Code

@@ -93,6 +93,13 @@ for package in */; do
             skipped_count=$((skipped_count + 1))
             continue
         fi
+
+        # Protect ~/.config from being removed if it's a directory
+        # This allows it to serve as a local container for stowed subdirectories
+        if [[ "$relative_path" == ".config" && -d "$target_path" ]]; then
+            log_info "Preserving local directory: $target_path"
+            continue
+        fi
         
         # Remove the file/directory
         if [[ "$DRY_RUN" == true ]]; then
