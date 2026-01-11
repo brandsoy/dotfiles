@@ -17,3 +17,8 @@ home/config/.config/raycast/extensions/
 
 # Editor-specific
 home/config/.config/nvim/lazy-lock.json
+
+# keys
+**/id_*
+**/*.pub
+**/known_hosts*
