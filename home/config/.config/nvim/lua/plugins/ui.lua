@@ -1,11 +1,20 @@
 return {
 	-- Colorschemes: Uncomment the vim.cmd.colorscheme line in ONE theme to activate it
 	{
+		"oskarnurm/koda.nvim",
+		lazy = true, -- make sure we load this during startup if it is your main colorscheme
+		priority = 1000, -- make sure to load this before all the other start plugins
+		config = function()
+			-- require("koda").setup({ transparent = true })
+			-- vim.cmd("colorscheme koda")
+		end,
+	},
+	{
 		"folke/tokyonight.nvim",
-		lazy = false,
+		lazy = true,
 		priority = 1000,
 		config = function()
-			vim.cmd.colorscheme("tokyonight-night")
+			-- vim.cmd.colorscheme("tokyonight-night")
 			-- Other variants: tokyonight-storm, tokyonight-moon, tokyonight-day
 		end,
 	},
@@ -36,12 +45,12 @@ return {
 	{
 		"projekt0n/github-nvim-theme",
 		name = "github-theme",
-		lazy = true,
+		lazy = false,
 		priority = 1000,
 		config = function()
 			require("github-theme").setup({})
-			-- vim.cmd.colorscheme("github_dark_default")
-			-- Other variants: github_dark_tritanopia, github_light, github_dark_high_contrast
+			vim.cmd.colorscheme("github_dark_tritanopia")
+			-- Other variants: github_dark_default,github_dark_tritanopia, github_light, github_dark_high_contrast
 		end,
 	},
 	{

@@ -1,6 +1,6 @@
 [general]
 import = [
-    "./themes/tokyo_night.toml"
+    "./themes/github_dark_tritanopia.toml"
 ]
 
 live_config_reload = true
