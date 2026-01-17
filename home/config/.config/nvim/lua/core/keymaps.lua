@@ -129,15 +129,50 @@ map({ "n" }, "<leader>gDh", function()
 end, "Native gd in horizontal split")
 
 -- File under cursor (`gf`) in a vertical split
-map({ "n" }, "<leader>gf", function()
-	vim.cmd("vertical wincmd f")
-end, "Open file under cursor in vertical split")
+map("n", "gx", function()
+	-- 1. Grab the full WORD (includes !, [, and ])
+	local file = vim.fn.expand("<cWORD>")
 
--- File:line (`gF`, e.g., path/to/file:123) in a vertical split
-map({ "n" }, "<leader>gF", function()
-	vim.cmd("vsplit")
-	vim.cmd("normal! gF")
-end, "Open file:line under cursor in vertical split")
+	-- 2. Clean the string: Remove ![[ from start and ]] from end
+	-- The % is an escape character for special symbols in Lua patterns
+	file = file:gsub("^%!%[%[", ""):gsub("^%[%[", ""):gsub("%]%]$", "")
+
+	-- Strip common Markdown link characters if present
+	file = file:gsub("^%(", ""):gsub("%)$", "")
+
+	-- 3. Define potential locations
+	local current_dir = vim.fn.expand("%:p:h")
+	local locations = {
+		vim.fn.fnamemodify(file, ":p"), -- Absolute path
+		current_dir .. "/" .. file, -- Same folder as note
+		current_dir .. "/attachments/" .. file, -- 'attachments' subfolder
+		current_dir .. "/assets/" .. file, -- 'assets' subfolder
+	}
+
+	-- 4. Try to find the file
+	local found_path = nil
+	for _, path in ipairs(locations) do
+		if vim.fn.filereadable(path) == 1 then
+			found_path = path
+			break
+		end
+	end
+
+	-- 5. Execute Open
+	if found_path then
+		if found_path:match("%.pdf$") then
+			-- Force Preview for PDFs
+			vim.fn.jobstart({ "open", "-a", "Preview", found_path }, { detach = true })
+		else
+			-- System default for everything else
+			vim.ui.open(found_path)
+		end
+	elseif file:match("^https?://") then
+		vim.ui.open(file)
+	else
+		print("File not found in current dir or attachments: " .. file)
+	end
+end, "Open embedded PDF or Wiki-link")
 
 --------------------------------------------------------------------------
 --- Visual Mode

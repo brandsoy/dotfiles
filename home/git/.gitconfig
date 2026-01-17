@@ -3,3 +3,5 @@
 	email = mattis.brandsoy@pm.me
 [fetch]
 	prune = true
+[init]
+	defaultBranch = main

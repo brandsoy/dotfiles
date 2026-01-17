@@ -28,16 +28,18 @@ local function root_has_prettier_config(filename)
 		return config_cache.prettier[root]
 	end
 
-	if root_has_file(filename, {
-		".prettierrc",
-		".prettierrc.json",
-		".prettierrc.js",
-		".prettierrc.yaml",
-		".prettierrc.yml",
-		"prettier.config.js",
-		"prettier.config.cjs",
-		"prettier.config.mjs",
-	}) then
+	if
+		root_has_file(filename, {
+			".prettierrc",
+			".prettierrc.json",
+			".prettierrc.js",
+			".prettierrc.yaml",
+			".prettierrc.yml",
+			"prettier.config.js",
+			"prettier.config.cjs",
+			"prettier.config.mjs",
+		})
+	then
 		config_cache.prettier[root] = true
 		return true
 	end
@@ -84,17 +86,19 @@ local function root_has_eslint_config(filename)
 		return config_cache.eslint[root]
 	end
 
-	if root_has_file(filename, {
-		".eslintrc",
-		".eslintrc.json",
-		".eslintrc.js",
-		".eslintrc.cjs",
-		".eslintrc.yaml",
-		".eslintrc.yml",
-		"eslint.config.js",
-		"eslint.config.cjs",
-		"eslint.config.mjs",
-	}) then
+	if
+		root_has_file(filename, {
+			".eslintrc",
+			".eslintrc.json",
+			".eslintrc.js",
+			".eslintrc.cjs",
+			".eslintrc.yaml",
+			".eslintrc.yml",
+			"eslint.config.js",
+			"eslint.config.cjs",
+			"eslint.config.mjs",
+		})
+	then
 		config_cache.eslint[root] = true
 		return true
 	end
@@ -166,6 +170,7 @@ function M.setup_conform()
 			markdown = { "prettierd", "prettier", "biome" },
 			go = { "golines", "gofumpt" },
 			sql = { "pg_format" },
+			python = { "ruff_format", "ruff_organize_imports" },
 		},
 	})
 end

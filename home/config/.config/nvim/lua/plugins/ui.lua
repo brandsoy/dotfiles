@@ -45,21 +45,21 @@ return {
 	{
 		"projekt0n/github-nvim-theme",
 		name = "github-theme",
-		lazy = false,
+		lazy = true,
 		priority = 1000,
 		config = function()
 			require("github-theme").setup({})
-			vim.cmd.colorscheme("github_dark_tritanopia")
+			-- vim.cmd.colorscheme("github_dark_tritanopia")
 			-- Other variants: github_dark_default,github_dark_tritanopia, github_light, github_dark_high_contrast
 		end,
 	},
 	{
 		"rose-pine/neovim",
 		name = "rose-pine",
-		lazy = true,
+		lazy = false,
 		priority = 1000,
 		config = function()
-			-- vim.cmd.colorscheme("rose-pine")
+			vim.cmd.colorscheme("rose-pine")
 			-- Other variants: rose-pine-main, rose-pine-moon, rose-pine-dawn
 		end,
 	},
