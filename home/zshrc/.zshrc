@@ -21,33 +21,24 @@ function path_append {
 
 typeset -U PATH path
 
-# --- OS specific (Early Init) ---------------------------------------------
-# Move this early so PATH is correct for tool checks
-case "$(uname -s)" in
-  Darwin)
-    # Try Apple Silicon path first, then Intel
-    if [[ -x "/opt/homebrew/bin/brew" ]]; then
-        eval "$(/opt/homebrew/bin/brew shellenv)"
-    elif [[ -x "/usr/local/bin/brew" ]]; then
-        eval "$(/usr/local/bin/brew shellenv)"
-    fi
-    
-    path_prepend "/Users/mattis/Library/pnpm"
-    
-    # LibPQ check after brew might be in path
-    if command -v brew &>/dev/null; then
-      LIBPQ_BIN="$(brew --prefix libpq 2>/dev/null)/bin"
-      [[ -d "$LIBPQ_BIN" ]] && path_prepend "$LIBPQ_BIN"
-      unset LIBPQ_BIN
-    else
-      path_prepend "/usr/local/opt/libpq/bin"
-    fi
-    ;;
-  Linux)
-    [[ -x "/home/linuxbrew/.linuxbrew/bin/brew" ]] && eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
-    path_prepend "${XDG_DATA_HOME:-$HOME/.local/share}/pnpm"
-    ;;
-esac
+# --- Homebrew & Paths -----------------------------------------------------
+# Try Apple Silicon path first, then Intel
+if [[ -x "/opt/homebrew/bin/brew" ]]; then
+    eval "$(/opt/homebrew/bin/brew shellenv)"
+elif [[ -x "/usr/local/bin/brew" ]]; then
+    eval "$(/usr/local/bin/brew shellenv)"
+fi
+
+path_prepend "$HOME/Library/pnpm"
+
+# LibPQ check after brew might be in path
+if command -v brew &>/dev/null; then
+  LIBPQ_BIN="$(brew --prefix libpq 2>/dev/null)/bin"
+  [[ -d "$LIBPQ_BIN" ]] && path_prepend "$LIBPQ_BIN"
+  unset LIBPQ_BIN
+else
+  path_prepend "/usr/local/opt/libpq/bin"
+fi
 
 # --- Zinit bootstrap ------------------------------------------------------
 ZINIT_HOME="${XDG_DATA_HOME:-${HOME}/.local/share}/zinit/zinit.git"
@@ -171,23 +162,9 @@ alias v='nvim'
 alias vim='nvim'
 alias ff="fd --type f --hidden --exclude .git | fzf --preview 'bat --color=always {}'"
 
-# Cross-platform clipboard & open
-case "$(uname -s)" in
-  Darwin)
-    alias copy='pbcopy'
-    alias paste='pbpaste'
-    ;;
-  Linux)
-    alias open='xdg-open'
-    if command -v wl-copy &>/dev/null; then
-      alias copy='wl-copy'
-      alias paste='wl-paste'
-    elif command -v xclip &>/dev/null; then
-      alias copy='xclip -selection clipboard'
-      alias paste='xclip -selection clipboard -o'
-    fi
-    ;;
-esac
+# Clipboard aliases
+alias copy='pbcopy'
+alias paste='pbpaste'
 
 function vf {
   local file
@@ -241,16 +218,10 @@ ip() {
     # 1. Get WAN IP
     local wan_ip=$(curl -s --max-time 2 ifconfig.co || echo "Offline")
 
-    # 2. Get Local IP (Cross-platform logic)
+    # 2. Get Local IP
+    local iface=$(route -n get default 2>/dev/null | awk '/interface: / {print $2}')
     local lan_ip=""
-    if [[ "$OSTYPE" == "darwin"* ]]; then
-        # macOS: Get the interface for the default route and then its IP
-        local iface=$(route -n get default 2>/dev/null | awk '/interface: / {print $2}')
-        [[ -n "$iface" ]] && lan_ip=$(ipconfig getifaddr "$iface")
-    else
-        # Linux: Get the IP from the interface handling the default route
-        lan_ip=$(hostname -I | awk '{print $1}')
-    fi
+    [[ -n "$iface" ]] && lan_ip=$(ipconfig getifaddr "$iface")
 
     # 3. Output
     echo "----------------------------"

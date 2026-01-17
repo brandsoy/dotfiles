@@ -1,6 +1,6 @@
 # Dotfiles
 
-Personal configuration files for macOS and Arch Linux.
+Personal configuration files for macOS.
 
 ## Structure
 
@@ -30,11 +30,10 @@ dotfiles/
     ```
 
 This script will:
--   Detect your OS (macOS or Arch Linux).
--   Install dependencies (`stow`, `git`, `brew` on macOS).
+-   Install dependencies (Homebrew, `stow`).
 -   Symlink configuration files using GNU Stow.
 -   Configure VSCode settings.
--   Install Homebrew packages (on macOS).
+-   Install Homebrew packages from the Brewfile.
 
 ## Uninstalling
 

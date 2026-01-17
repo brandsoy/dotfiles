@@ -7,38 +7,26 @@ STOW_DIR="$DOTFILES_DIR/home"
 TARGET_DIR="$HOME"
 
 # OS Detection
-OS="unknown"
-if [[ "$OSTYPE" == "darwin"* ]]; then
-    OS="macos"
-elif [ -f /etc/arch-release ]; then
-    OS="arch"
+if [[ "$OSTYPE" != "darwin"* ]]; then
+    echo "This dotfiles repo is for macOS only."
+    exit 1
 fi
 
-echo "Detected OS: $OS"
+echo "Detected OS: macOS"
 
 # Helper: Check command existence
 has_cmd() { command -v "$1" >/dev/null 2>&1; }
 
-# 1. Install Dependencies (Stow, Brew/Pacman)
+# 1. Install Dependencies
 install_dependencies() {
     echo "Checking dependencies..."
-    if [[ "$OS" == "macos" ]]; then
-        if ! has_cmd brew; then
-            echo "Installing Homebrew..."
-            /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
-        fi
-        if ! has_cmd stow; then
-            echo "Installing stow..."
-            brew install stow
-        fi
-    elif [[ "$OS" == "arch" ]]; then
-        if ! has_cmd stow; then
-            echo "Installing stow..."
-            sudo pacman -S --noconfirm stow
-        fi
-        if ! has_cmd git; then
-            sudo pacman -S --noconfirm git
-        fi
+    if ! has_cmd brew; then
+        echo "Installing Homebrew..."
+        /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+    fi
+    if ! has_cmd stow; then
+        echo "Installing stow..."
+        brew install stow
     fi
 }
 
@@ -59,26 +47,20 @@ stow_dotfiles() {
 setup_vscode() {
     echo "Configuring VSCode..."
     local vscode_src="$STOW_DIR/vscode/settings.json"
-    local vscode_dest=""
+    local vscode_dest="$HOME/Library/Application Support/Code/User/settings.json"
 
-    if [[ "$OS" == "macos" ]]; then
-        vscode_dest="$HOME/Library/Application Support/Code/User/settings.json"
-    elif [[ "$OS" == "arch" ]]; then
-        vscode_dest="$HOME/.config/Code/User/settings.json"
-    fi
-
-    if [[ -n "$vscode_dest" && -f "$vscode_src" ]]; then
+    if [[ -f "$vscode_src" ]]; then
         mkdir -p "$(dirname "$vscode_dest")"
         ln -sf "$vscode_src" "$vscode_dest"
         echo "  - VSCode settings linked."
     else
-        echo "  - VSCode setup skipped (not found or unknown OS)."
+        echo "  - VSCode setup skipped (settings.json not found)."
     fi
 }
 
-# 4. Install Packages (Brewfile for Mac)
+# 4. Install Packages
 install_packages() {
-    if [[ "$OS" == "macos" && -f "$DOTFILES_DIR/Brewfile" ]]; then
+    if [[ -f "$DOTFILES_DIR/Brewfile" ]]; then
         echo "Installing Homebrew bundle..."
         brew bundle --file="$DOTFILES_DIR/Brewfile"
     fi

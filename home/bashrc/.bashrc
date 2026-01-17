@@ -150,28 +150,20 @@ if command -v mise &>/dev/null; then
   eval "$(mise activate bash)"
 fi
 
-# --- OS specific ----------------------------------------------------------
-case "$(uname -s)" in
-  Darwin)
-    [[ -x "/opt/homebrew/bin/brew" ]] && eval "$(/opt/homebrew/bin/brew shellenv)"
-    path_prepend "/Users/mattis/Library/pnpm"
-    if command -v brew &>/dev/null; then
-      LIBPQ_BIN="$(brew --prefix libpq 2>/dev/null)/bin"
-      path_prepend "$LIBPQ_BIN"
-      unset LIBPQ_BIN
-    else
-      path_prepend "/usr/local/opt/libpq/bin"
-    fi
-    ;;
-  Linux)
-    [[ -x "/home/linuxbrew/.linuxbrew/bin/brew" ]] && eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
-    path_prepend "${XDG_DATA_HOME:-$HOME/.local/share}/pnpm"
-    ;;
-esac
+# --- Homebrew & Paths -----------------------------------------------------
+[[ -x "/opt/homebrew/bin/brew" ]] && eval "$(/opt/homebrew/bin/brew shellenv)"
+path_prepend "$HOME/Library/pnpm"
+if command -v brew &>/dev/null; then
+  LIBPQ_BIN="$(brew --prefix libpq 2>/dev/null)/bin"
+  path_prepend "$LIBPQ_BIN"
+  unset LIBPQ_BIN
+else
+  path_prepend "/usr/local/opt/libpq/bin"
+fi
 
 # --- Local tool paths -----------------------------------------------------
-path_prepend "/Users/mattis/.tsp/bin"
-path_prepend "/home/mattis/.opencode/bin"
+path_prepend "$HOME/.tsp/bin"
+path_prepend "$HOME/.opencode/bin"
 path_append "$HOME/.cargo/bin"
 
 # --- API keys -------------------------------------------------------------

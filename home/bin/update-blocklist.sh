@@ -38,47 +38,10 @@ append_local_overrides() {
   fi
 }
 
-flush_macos_dns() {
+flush_dns() {
   sudo dscacheutil -flushcache || true
   sudo killall -HUP mDNSResponder || true
-  log "macOS DNS cache flushed"
-}
-
-flush_linux_dns() {
-  if command -v resolvectl >/dev/null 2>&1 && systemctl is-active --quiet systemd-resolved; then
-    sudo resolvectl flush-caches || true
-    log "Flushed systemd-resolved"
-  elif command -v systemd-resolve >/dev/null 2>&1; then
-    sudo systemd-resolve --flush-caches || true
-    log "Flushed systemd-resolve"
-  fi
-
-  if systemctl is-active --quiet NetworkManager; then
-    sudo systemctl reload NetworkManager || sudo systemctl restart NetworkManager || true
-    log "Reloaded NetworkManager"
-  fi
-
-  if systemctl is-active --quiet dnsmasq; then
-    sudo systemctl restart dnsmasq || true
-    log "Restarted dnsmasq"
-  fi
-
-  if systemctl is-active --quiet nscd; then
-    sudo nscd -i hosts || sudo systemctl restart nscd || true
-    log "Invalidated nscd hosts cache"
-  fi
-
-  if systemctl is-active --quiet unbound; then
-    sudo systemctl restart unbound || true
-    log "Restarted unbound"
-  fi
-
-  if systemctl is-active --quiet sssd; then
-    if command -v sss_cache >/dev/null 2>&1; then
-      sudo sss_cache -E || true
-      log "Cleared SSSD cache"
-    fi
-  fi
+  log "DNS cache flushed"
 }
 
 cleanup() {
@@ -103,20 +66,7 @@ main() {
   log "Updating /etc/hosts"
   sudo cp "$TMP_FILE" /etc/hosts
 
-  case "$(uname -s)" in
-    Darwin)
-      log "macOS detected"
-      flush_macos_dns
-      ;;
-    Linux)
-      log "Linux detected"
-      flush_linux_dns
-      ;;
-    *)
-      err "Unsupported OS: $(uname -s)"
-      exit 1
-      ;;
-  esac
+  flush_dns
 
   log "Done"
 }
