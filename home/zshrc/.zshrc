@@ -22,11 +22,13 @@ function path_append {
 typeset -U PATH path
 
 # --- Homebrew & Paths -----------------------------------------------------
-# Try Apple Silicon path first, then Intel
+# Try Apple Silicon path first, then Intel, then Linux
 if [[ -x "/opt/homebrew/bin/brew" ]]; then
     eval "$(/opt/homebrew/bin/brew shellenv)"
 elif [[ -x "/usr/local/bin/brew" ]]; then
     eval "$(/usr/local/bin/brew shellenv)"
+elif [[ -x "/home/linuxbrew/.linuxbrew/bin/brew" ]]; then
+    eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
 fi
 
 path_prepend "$HOME/Library/pnpm"
