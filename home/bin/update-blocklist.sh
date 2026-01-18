@@ -32,16 +32,27 @@ append_local_overrides() {
     {
       printf '\n# >>> Local hosts overrides (%s) >>>\n' "$LOCAL_OVERRIDES"
       cat "$LOCAL_OVERRIDES"
-      printf '\n# <<< Local hosts overrides <<<\n'
+      printf '\n# <<< Local hosts overrides <<<
+'
     } >>"$target"
     log "Appended local overrides"
   fi
 }
 
 flush_dns() {
-  sudo dscacheutil -flushcache || true
-  sudo killall -HUP mDNSResponder || true
-  log "DNS cache flushed"
+  if [[ "$OSTYPE" == "darwin"* ]]; then
+    sudo dscacheutil -flushcache || true
+    sudo killall -HUP mDNSResponder || true
+    log "DNS cache flushed (macOS)"
+  elif command -v systemd-resolve >/dev/null 2>&1; then
+    sudo systemd-resolve --flush-caches
+    log "DNS cache flushed (systemd-resolve)"
+  elif command -v resolvectl >/dev/null 2>&1; then
+    sudo resolvectl flush-caches
+    log "DNS cache flushed (resolvectl)"
+  else
+    log "Warning: Unable to detect DNS flush command."
+  fi
 }
 
 cleanup() {

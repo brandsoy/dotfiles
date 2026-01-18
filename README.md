@@ -1,6 +1,6 @@
 # Dotfiles
 
-Personal configuration files for macOS.
+Personal configuration files for macOS and Linux (Debian).
 
 ## Structure
 
@@ -30,10 +30,15 @@ dotfiles/
     ```
 
 This script will:
--   Install dependencies (Homebrew, `stow`).
--   Symlink configuration files using GNU Stow.
--   Configure VSCode settings.
--   Install Homebrew packages from the Brewfile.
+-   **Detect OS** (macOS or Debian).
+-   **Install dependencies**:
+    -   macOS: Homebrew, `stow`.
+    -   Debian: `stow`, `git`, `curl`, `zsh`, `build-essential`.
+-   **Symlink configuration files** using GNU Stow.
+-   **Configure VSCode settings**.
+-   **Install Packages**:
+    -   macOS: Installs from `Brewfile`.
+    -   Debian: Installs common tools (`neovim`, `tmux`, `ripgrep`, `fzf`, etc.) and `starship`/`zoxide`.
 
 ## Uninstalling
 

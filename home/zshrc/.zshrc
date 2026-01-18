@@ -5,7 +5,7 @@ function path_prepend {
   local dir="$1"
   [[ -n "$dir" && -d "$dir" ]] || return
   case ":$PATH:" in
-    *":$dir:"*) ;;
+    *":$dir:"*) ;; # Skip if already in PATH
     *) PATH="$dir:$PATH" ;;
   esac
 }
@@ -14,7 +14,7 @@ function path_append {
   local dir="$1"
   [[ -n "$dir" && -d "$dir" ]] || return
   case ":$PATH:" in
-    *":$dir:"*) ;;
+    *":$dir:"*) ;; # Skip if already in PATH
     *) PATH="$PATH:$dir" ;;
   esac
 }
@@ -36,7 +36,7 @@ if command -v brew &>/dev/null; then
   LIBPQ_BIN="$(brew --prefix libpq 2>/dev/null)/bin"
   [[ -d "$LIBPQ_BIN" ]] && path_prepend "$LIBPQ_BIN"
   unset LIBPQ_BIN
-else
+elif [[ -d "/usr/local/opt/libpq/bin" ]]; then
   path_prepend "/usr/local/opt/libpq/bin"
 fi
 
@@ -54,7 +54,8 @@ fi
 if [[ -f "${ZINIT_HOME}/zinit.zsh" ]]; then
   source "${ZINIT_HOME}/zinit.zsh"
 else
-  printf 'zinit: unable to source %s/zinit.zsh\n' "$ZINIT_HOME" >&2
+  # Fail silently or log if non-interactive?
+  # printf 'zinit: unable to source %s/zinit.zsh\n' "$ZINIT_HOME" >&2
   return 1
 fi
 
@@ -163,8 +164,16 @@ alias vim='nvim'
 alias ff="fd --type f --hidden --exclude .git | fzf --preview 'bat --color=always {}'"
 
 # Clipboard aliases
-alias copy='pbcopy'
-alias paste='pbpaste'
+if [[ "$OSTYPE" == "darwin"* ]]; then
+  alias copy='pbcopy'
+  alias paste='pbpaste'
+elif command -v xclip &>/dev/null; then
+  alias copy='xclip -selection clipboard'
+  alias paste='xclip -selection clipboard -o'
+elif command -v wl-copy &>/dev/null; then
+  alias copy='wl-copy'
+  alias paste='wl-paste'
+fi
 
 function vf {
   local file
@@ -214,18 +223,25 @@ path_append "$HOME/.cargo/bin"
 [ -s "$HOME/.bun/_bun" ] && source "$HOME/.bun/_bun"
 
 # --- Print ip information ---------------------------------------------------
-ip() {
-    # 1. Get WAN IP
-    local wan_ip=$(curl -s --max-time 2 ifconfig.co || echo "Offline")
-
-    # 2. Get Local IP
-    local iface=$(route -n get default 2>/dev/null | awk '/interface: / {print $2}')
-    local lan_ip=""
-    [[ -n "$iface" ]] && lan_ip=$(ipconfig getifaddr "$iface")
-
-    # 3. Output
+myip() {
     echo "----------------------------"
+    local wan_ip=$(curl -s --max-time 2 ifconfig.co || echo "Offline")
+    local lan_ip=""
+    
+    if [[ "$OSTYPE" == "darwin"* ]]; then
+        local iface=$(route -n get default 2>/dev/null | awk '/interface: / {print $2}')
+        [[ -n "$iface" ]] && lan_ip=$(ipconfig getifaddr "$iface")
+    else
+        # Linux / generic
+        lan_ip=$(hostname -I 2>/dev/null | awk '{print $1}')
+    fi
+
     echo "  WAN:  ${wan_ip}"
     echo "  LAN:  ${lan_ip:-'Not connected'}"
     echo "----------------------------"
 }
+
+# Only alias 'ip' to 'myip' on macOS where 'ip' command is typically missing
+if [[ "$OSTYPE" == "darwin"* ]]; then
+    alias ip='myip'
+fi
