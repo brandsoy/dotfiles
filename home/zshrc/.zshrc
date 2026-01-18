@@ -243,7 +243,7 @@ myip() {
     echo "----------------------------"
 }
 
-# Only alias 'ip' to 'myip' on macOS where 'ip' command is typically missing
+# Only alias 'ip' to 'myip' on MacOS where 'ip' command is typically missing
 if [[ "$OSTYPE" == "darwin"* ]]; then
     alias ip='myip'
 fi
