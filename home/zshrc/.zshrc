@@ -120,7 +120,10 @@ if command -v mise &>/dev/null; then
   eval "$(mise activate zsh)"
 fi
 
-# --- Shell behaviour ------------------------------------------------------
+export EDITOR=nvim
+export VISUAL=nvim
+
+ #--- Shell behaviour ------------------------------------------------------
 bindkey -e
 bindkey '^p' history-beginning-search-backward
 bindkey '^n' history-beginning-search-forward
