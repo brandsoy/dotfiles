@@ -221,7 +221,6 @@ function fkill {
 # --- Local tool paths -----------------------------------------------------
 path_prepend "$HOME/.tsp/bin"
 path_prepend "$HOME/.opencode/bin"
-path_append "$HOME/.cargo/bin"
 
 # --- API keys -------------------------------------------------------------
 # export GEMINI_API_KEY="${GEMINI_API_KEY:-AIzaSyAK1EWAqybtchh-k5uNCmWvnSIRhUqJcgc}"
@@ -252,3 +251,4 @@ myip() {
 if [[ "$OSTYPE" == "darwin"* ]]; then
     alias ip='myip'
 fi
+export PATH="/home/mattis/.local/bin:$PATH"
