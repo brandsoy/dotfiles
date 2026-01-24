@@ -22,15 +22,14 @@ function path_append {
 typeset -U PATH path
 
 # --- Homebrew & Paths -----------------------------------------------------
-# Try Apple Silicon path first, then Intel, then Linux
+# Try Apple Silicon path first, then Intel
 if [[ -x "/opt/homebrew/bin/brew" ]]; then
     eval "$(/opt/homebrew/bin/brew shellenv)"
 elif [[ -x "/usr/local/bin/brew" ]]; then
     eval "$(/usr/local/bin/brew shellenv)"
-elif [[ -x "/home/linuxbrew/.linuxbrew/bin/brew" ]]; then
-    eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
 fi
 
+path_prepend "$HOME/.local/share/pnpm"
 path_prepend "$HOME/Library/pnpm"
 
 # LibPQ check after brew might be in path
@@ -80,6 +79,9 @@ zinit snippet OMZP::git
 
 zinit ice wait lucid
 zinit snippet OMZP::sudo
+
+zinit ice wait lucid if'[[ -f /etc/arch-release ]]'
+zinit snippet OMZP::archlinux
 
 zinit ice wait lucid
 zinit snippet OMZP::command-not-found
