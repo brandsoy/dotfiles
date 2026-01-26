@@ -63,7 +63,7 @@ stow_package() {
         echo "  - Stowing $pkg"
         # We need to run stow from the stow directory or use -d
         pushd "$STOW_DIR" >/dev/null
-        stow -R --no-folding -t "$TARGET_DIR" "$pkg"
+        stow -R -t "$TARGET_DIR" "$pkg"
         popd >/dev/null
     else
         echo "Warning: Package '$pkg' not found in $STOW_DIR"

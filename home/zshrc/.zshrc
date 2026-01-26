@@ -252,3 +252,4 @@ if [[ "$OSTYPE" == "darwin"* ]]; then
     alias ip='myip'
 fi
 export PATH="/home/mattis/.local/bin:$PATH"
+
