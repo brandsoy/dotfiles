@@ -1,118 +1,19 @@
 // -*- mode: jsonc -*-
 {
-  "position": "top", // Waybar position (top|bottom|left|right)
-  // "height": 30, // Waybar height (to be removed for auto height)
-  "spacing": 4, // Gaps between modules (4px)
+  "position": "top",
+  "spacing": 4,
+  "include": [
+    "~/.config/waybar/modules.jsonc"
+  ],
   "modules-left": [
-    "clock",
     "hyprland/workspaces"
   ],
-  "modules-center": [
-    "tray"
-  ],
+  "modules-center": [],
   "modules-right": [
-    "pulseaudio",
-    "backlight",
-    "network",
+    "group/connectivity",
+    "group/multimedia",
     "battery",
+    "clock",
     "custom/notification"
-  ],
-  // Module config
-  "clock": {
-    "interval": 60,
-    "format": "{:%H:%M}",
-    "max-length": 25
-  },
-  "hyprland/workspaces": {
-    "format": "{name}",
-    "format-icons": {
-      "1": "",
-      "2": "",
-      "3": "",
-      "4": "",
-      "5": "",
-      "active": "",
-      "default": ""
-    },
-    "persistent-workspaces": {
-      "*": 5, // 5 workspaces by default on every monitor
-      "HDMI-A-1": 3 // but only three on HDMI-A-1
-    }
-  },
-  "tray": {
-    "icon-size": 21,
-    "spacing": 10
-  },
-  "pulseaudio": {
-    "format": "{icon} {volume}%",
-    "format-bluetooth": "{icon} {volume}% ",
-    "format-muted": "",
-    "format-icons": {
-      "headphone": "",
-      "hands-free": "",
-      "headset": "",
-      "phone": "",
-      "portable": "",
-      "car": "",
-      "default": ["", ""]
-    },
-    "scroll-step": 5,
-    "on-click": "pactl set-sink-mute @DEFAULT_SINK@ toggle",
-    "on-click-right": "pavucontrol"
-  },
-  "backlight": {
-    "device": "intel_backlight",
-    "format": "{percent}% {icon}",
-    "format-icons": ["", ""]
-  },
-  "network": {
-    // "interface": "wlp0s20f3", // removed to allow auto-detection
-    "format": "{ifname}",
-    "format-wifi": "{essid} ",
-    // "format-wifi": "{essid} ({signalStrength}%) ",
-    "format-ethernet": "{ipaddr}/{cidr} 󰊗",
-    "format-disconnected": "", //An empty format will hide the module.
-    "tooltip-format": "{ifname} via {gwaddr} 󰊗",
-    "tooltip-format-wifi": "{essid} ({signalStrength}%) ",
-    "tooltip-format-ethernet": "{ifname} ",
-    "tooltip-format-disconnected": "Disconnected",
-    "max-length": 50
-  },
-  "battery": {
-    "bat": "BAT0",
-    "interval": 60,
-    "states": {
-      "warning": 30,
-      "critical": 15
-    },
-    "format": "{capacity}% {icon}",
-    "format-icons": [
-      "",
-      "",
-      "",
-      "",
-      ""
-    ],
-    "max-length": 25
-  },
-  "custom/notification": {
-    "tooltip": true,
-    "format": "<span size='16pt'>{icon}</span>",
-    "format-icons": {
-      "notification": "󱅫",
-      "none": "󰂜",
-      "dnd-notification": "󰂠",
-      "dnd-none": "󰪓",
-      "inhibited-notification": "󰂛",
-      "inhibited-none": "󰪑",
-      "dnd-inhibited-notification": "󰂛",
-      "dnd-inhibited-none": "󰪑"
-    },
-    "return-type": "json",
-    "exec-if": "which swaync-client",
-    "exec": "swaync-client -swb",
-    "on-click": "swaync-client -t -sw",
-    "on-click-right": "swaync-client -d -sw",
-    "escape": true
-  }
+  ]
 }
