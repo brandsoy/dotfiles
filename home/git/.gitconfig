@@ -5,7 +5,3 @@
 	prune = true
 [init]
 	defaultBranch = main
-[credential]
-	helper = cache
-[url "git@github.com:"]
-	insteadOf = https://github.com/
