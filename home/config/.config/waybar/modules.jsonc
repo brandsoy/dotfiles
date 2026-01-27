@@ -4,7 +4,7 @@
   // -------------------------------------------------------------------------
   "clock": {
     "interval": 60,
-    "format": "{:%H:%M    %a, %d %b }",
+    "format": "{:%H:%M    %d.%m.%Y }",
     "tooltip-format": "<big>{:%Y %B}</big>\n<tt><small>{calendar}</small></tt>"
   },
   "battery": {
@@ -14,7 +14,8 @@
       "warning": 30,
       "critical": 15
     },
-    "format": "{capacity}% {icon}",
+    "format": "{icon}",
+    // "format": "{capacity}% {icon}",
     "format-icons": [
       "",
       "",
@@ -50,8 +51,10 @@
   // Audio
   // -------------------------------------------------------------------------
   "pulseaudio": {
-    "format": "{icon} {volume}%",
-    "format-bluetooth": "{icon} {volume}% ",
+    "format": "{icon}",
+    // "format": "{icon} {volume}%",
+    "format-bluetooth": "{icon} ",
+    // "format-bluetooth": "{icon} {volume}% ",
     "format-muted": "",
     "format-icons": {
       "headphone": "",
@@ -79,15 +82,15 @@
   // -------------------------------------------------------------------------
   "hyprland/workspaces": {
     "format": "{name}",
-    // "format-icons": {
-    //   "1": "",
-    //   "2": "",
-    //   "3": "",
-    //   "4": "",
-    //   "5": "",
-    //   "active": "",
-    //   "default": ""
-    // },
+    "format-icons": {
+      //   "1": "",
+      //   "2": "",
+      //   "3": "",
+      //   "4": "",
+      //   "5": "",
+      "active": "",
+      "default": ""
+    },
     "persistent-workspaces": {
       "*": 10
     }
