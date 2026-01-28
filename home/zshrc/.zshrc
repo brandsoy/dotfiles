@@ -253,3 +253,5 @@ if [[ "$OSTYPE" == "darwin"* ]]; then
 fi
 export PATH="/home/mattis/.local/bin:$PATH"
 
+# Make NMTUI greate again
+alias nmtui='NEWT_COLORS="root=lavender,crust border=sapphire,base window=overlay0,base title=rosewater,crust button=surface2,lavender button_active=crust,maroon" nmtui'   

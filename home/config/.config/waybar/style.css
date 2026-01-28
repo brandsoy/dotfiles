@@ -73,7 +73,8 @@ tooltip label {
 }
 
 #custom-notification,
-#clock{
+#clock,
+#language{
   /* background-color:@bg0; */
   padding: 0 15px 0 15px;
   margin: 0 0 0 5px;
@@ -134,6 +135,10 @@ tooltip label {
 
 #battery {
   color: @green;
+}
+
+#language {
+  color: @fg;
 }
 
 #clock {
