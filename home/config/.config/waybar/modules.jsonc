@@ -1,0 +1,147 @@
+{
+  // -------------------------------------------------------------------------
+  // Hardware & System
+  // -------------------------------------------------------------------------
+  "clock": {
+    "interval": 60,
+    "format": "{:%H:%M    %d.%m.%Y }",
+    "tooltip-format": "<big>{:%Y %B}</big>\n<tt><small>{calendar}</small></tt>"
+  },
+  "battery": {
+    "bat": "BAT0",
+    "interval": 60,
+    "states": {
+      "warning": 30,
+      "critical": 15
+    },
+    "format": "{icon}",
+    // "format": "{capacity}% {icon}",
+    "format-icons": [
+      "",
+      "",
+      "",
+      "",
+      ""
+    ],
+    "max-length": 25
+  },
+  // -------------------------------------------------------------------------
+  // Connectivity
+  // -------------------------------------------------------------------------
+  "network": {
+    "format": "{ifname}",
+    "format-wifi": "{essid} ",
+    "format-ethernet": "{ipaddr}/{cidr} 󰊗",
+    "format-disconnected": "",
+    "tooltip-format": "{ifname} via {gwaddr} 󰊗",
+    "tooltip-format-wifi": "{essid} ({signalStrength}%) ",
+    "tooltip-format-ethernet": "{ifname} ",
+    "tooltip-format-disconnected": "Disconnected",
+    "on-click": "nm-connection-editor",
+    "max-length": 50
+  },
+  "bluetooth": {
+    "format": "",
+    "format-connected": " {num_connections}",
+    "format-disabled": "󰂲",
+    "on-click": "blueman-manager",
+    "tooltip-format": "{controller_alias}\t{controller_address}"
+  },
+  // -------------------------------------------------------------------------
+  // Audio
+  // -------------------------------------------------------------------------
+  "pulseaudio": {
+    "format": "{icon}",
+    // "format": "{icon} {volume}%",
+    "format-bluetooth": "{icon} ",
+    // "format-bluetooth": "{icon} {volume}% ",
+    "format-muted": "",
+    "format-icons": {
+      "headphone": "",
+      "hands-free": "",
+      "headset": "",
+      "phone": "",
+      "portable": "",
+      "car": "",
+      "default": [
+        "",
+        ""
+      ]
+    },
+    "scroll-step": 5,
+    "on-click": "pactl set-sink-mute @DEFAULT_SINK@ toggle",
+    "on-click-right": "pavucontrol"
+  },
+  // "pulseaudio/slider": {
+  //   "min": 0,
+  //   "max": 100,
+  //   "orientation": "horizontal"
+  // },
+  // -------------------------------------------------------------------------
+  // Workspaces
+  // -------------------------------------------------------------------------
+  "hyprland/workspaces": {
+    "format": "{name}",
+    "format-icons": {
+      //   "1": "",
+      //   "2": "",
+      //   "3": "",
+      //   "4": "",
+      //   "5": "",
+      "active": "",
+      "default": ""
+    },
+    "persistent-workspaces": {
+      "*": 10
+    }
+  },
+  // -------------------------------------------------------------------------
+  // Groups
+  // -------------------------------------------------------------------------
+  "group/multimedia": {
+    "orientation": "horizontal",
+    "modules": [
+      "pulseaudio",
+      "pulseaudio/slider"
+    ]
+  },
+  "group/connectivity": {
+    "orientation": "horizontal",
+    "modules": [
+      "network",
+      "bluetooth"
+    ]
+  },
+  // -------------------------------------------------------------------------
+  // Custom
+  // -------------------------------------------------------------------------
+  "custom/notification": {
+    "tooltip": true,
+    "format": "<span size='16pt'>{icon}</span>",
+    "format-icons": {
+      "notification": "󱅫",
+      "none": "󰂜",
+      "dnd-notification": "󰂠",
+      "dnd-none": "󰪓",
+      "inhibited-notification": "󰂛",
+      "inhibited-none": "󰪑",
+      "dnd-inhibited-notification": "󰂛",
+      "dnd-inhibited-none": "󰪑"
+    },
+    "return-type": "json",
+    "exec-if": "which swaync-client",
+    "exec": "swaync-client -swb",
+    "on-click": "swaync-client -t -sw",
+    "on-click-right": "swaync-client -d -sw",
+    "escape": true
+  },
+  "tray": {
+    "icon-size": 21,
+    "spacing": 10
+  },
+  "language": {
+    "format": "{short}",
+    "format-en": "US",
+    "format-no": "NO"
+  }
+}

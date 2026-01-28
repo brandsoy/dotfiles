@@ -22,3 +22,4 @@ home/config/.config/nvim/lazy-lock.json
 **/id_*
 **/*.pub
 **/known_hosts*
+home/config/.config/gh

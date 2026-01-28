@@ -209,6 +209,24 @@ return {
 		end,
 	},
 	{
+		"echasnovski/mini.surround",
+		version = "*",
+		config = function()
+			require("mini.surround").setup({
+				-- Custom mappings if you don't like 'sa'
+				mappings = {
+					add = "sa", -- Add surrounding in Normal and Visual modes
+					delete = "sd", -- Delete surrounding
+					find = "sf", -- Find surrounding (to the right)
+					find_left = "sF", -- Find surrounding (to the left)
+					highlight = "sh", -- Highlight surrounding
+					replace = "sr", -- Replace surrounding
+					update_n_lines = "sn", -- Update `n_lines`
+				},
+			})
+		end,
+	},
+	{
 		"nvim-mini/mini.clue",
 		event = "VeryLazy",
 		config = function()

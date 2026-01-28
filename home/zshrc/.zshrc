@@ -22,15 +22,14 @@ function path_append {
 typeset -U PATH path
 
 # --- Homebrew & Paths -----------------------------------------------------
-# Try Apple Silicon path first, then Intel, then Linux
+# Try Apple Silicon path first, then Intel
 if [[ -x "/opt/homebrew/bin/brew" ]]; then
     eval "$(/opt/homebrew/bin/brew shellenv)"
 elif [[ -x "/usr/local/bin/brew" ]]; then
     eval "$(/usr/local/bin/brew shellenv)"
-elif [[ -x "/home/linuxbrew/.linuxbrew/bin/brew" ]]; then
-    eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
 fi
 
+path_prepend "$HOME/.local/share/pnpm"
 path_prepend "$HOME/Library/pnpm"
 
 # LibPQ check after brew might be in path
@@ -81,6 +80,9 @@ zinit snippet OMZP::git
 zinit ice wait lucid
 zinit snippet OMZP::sudo
 
+zinit ice wait lucid if'[[ -f /etc/arch-release ]]'
+zinit snippet OMZP::archlinux
+
 zinit ice wait lucid
 zinit snippet OMZP::command-not-found
 
@@ -120,7 +122,10 @@ if command -v mise &>/dev/null; then
   eval "$(mise activate zsh)"
 fi
 
-# --- Shell behaviour ------------------------------------------------------
+export EDITOR=nvim
+export VISUAL=nvim
+
+ #--- Shell behaviour ------------------------------------------------------
 bindkey -e
 bindkey '^p' history-beginning-search-backward
 bindkey '^n' history-beginning-search-forward
@@ -216,7 +221,6 @@ function fkill {
 # --- Local tool paths -----------------------------------------------------
 path_prepend "$HOME/.tsp/bin"
 path_prepend "$HOME/.opencode/bin"
-path_append "$HOME/.cargo/bin"
 
 # --- API keys -------------------------------------------------------------
 # export GEMINI_API_KEY="${GEMINI_API_KEY:-AIzaSyAK1EWAqybtchh-k5uNCmWvnSIRhUqJcgc}"
@@ -247,3 +251,7 @@ myip() {
 if [[ "$OSTYPE" == "darwin"* ]]; then
     alias ip='myip'
 fi
+export PATH="/home/mattis/.local/bin:$PATH"
+
+# Make NMTUI greate again
+alias nmtui='NEWT_COLORS="root=lavender,crust border=sapphire,base window=overlay0,base title=rosewater,crust button=surface2,lavender button_active=crust,maroon" nmtui'   

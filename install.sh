@@ -11,6 +11,8 @@ OS=""
 detect_os() {
     if [[ "$OSTYPE" == "darwin"* ]]; then
         OS="macos"
+    elif [[ -f /etc/arch-release ]]; then
+        OS="arch"
     elif [[ -f /etc/debian_version ]]; then
         OS="debian"
     elif [[ -f /etc/redhat-release ]]; then
@@ -37,6 +39,12 @@ install_dependencies() {
             echo "Installing stow..."
             brew install stow
         fi
+    elif [[ "$OS" == "arch" ]]; then
+        echo "Updating pacman..."
+        sudo pacman -Syu --noconfirm
+        echo "Installing core dependencies..."
+        # git and base-devel are usually present if running this, but good to ensure
+        sudo pacman -S --needed --noconfirm stow git curl base-devel zsh
     elif [[ "$OS" == "debian" ]]; then
         echo "Updating apt..."
         sudo apt-get update -y
@@ -55,7 +63,7 @@ stow_package() {
         echo "  - Stowing $pkg"
         # We need to run stow from the stow directory or use -d
         pushd "$STOW_DIR" >/dev/null
-        stow -R --no-folding -t "$TARGET_DIR" "$pkg"
+        stow -R -t "$TARGET_DIR" "$pkg"
         popd >/dev/null
     else
         echo "Warning: Package '$pkg' not found in $STOW_DIR"
@@ -91,6 +99,21 @@ install_packages() {
             echo "Installing Homebrew bundle..."
             brew bundle --file="$DOTFILES_DIR/Brewfile"
         fi
+        # Configure git credential helper for macOS
+        git config --global credential.helper osxkeychain
+    elif [[ "$OS" == "arch" ]]; then
+        echo "Installing Arch packages..."
+        local packages=(
+            tmux neovim ripgrep fzf bat jq unzip tree
+            htop btop fd starship zoxide
+        )
+        sudo pacman -S --needed --noconfirm "${packages[@]}"
+        
+        # Configure git credential helper (store is simple, libsecret is better but requires more setup)
+        # Using cache as a safe default for now
+        git config --global credential.helper cache
+        
+        echo "Arch package installation complete."
     elif [[ "$OS" == "debian" ]]; then
         echo "Installing recommended Debian packages..."
         # List of common tools from Brewfile that are in apt
@@ -120,6 +143,7 @@ install_packages() {
              echo "Aliased batcat to bat in ~/.local/bin/bat"
         fi
         
+        git config --global credential.helper cache
         echo "Debian package installation complete."
     fi
 }
