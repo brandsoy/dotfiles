@@ -70,29 +70,7 @@ stow_package() {
     fi
 }
 
-# 2. Handle VSCode (Special Case)
-setup_vscode() {
-    echo "Configuring VSCode..."
-    local vscode_src="$STOW_DIR/vscode/settings.json"
-    local vscode_dest=""
-
-    if [[ "$OS" == "macos" ]]; then
-        vscode_dest="$HOME/Library/Application Support/Code/User/settings.json"
-    else
-        # Standard Linux path
-        vscode_dest="$HOME/.config/Code/User/settings.json"
-    fi
-
-    if [[ -f "$vscode_src" ]]; then
-        mkdir -p "$(dirname "$vscode_dest")"
-        ln -sf "$vscode_src" "$vscode_dest"
-        echo "  - VSCode settings linked."
-    else
-        echo "  - VSCode setup skipped (settings.json not found)."
-    fi
-}
-
-# 3. Install Packages
+# 2. Install Packages
 install_packages() {
     if [[ "$OS" == "macos" ]]; then
         if [[ -f "$DOTFILES_DIR/Brewfile" ]]; then
@@ -169,19 +147,14 @@ if [[ $# -eq 0 ]]; then
             esac
         fi
         
-        if [[ -d "$package_path" && "$package_name" != "vscode" ]]; then
-            stow_package "$package_name"
-        fi
+        stow_package "$package_name"
     done
 
-    setup_vscode
     install_packages
 else
     # Arguments provided: Install specific packages
     for target in "$@"; do
-        if [[ "$target" == "vscode" ]]; then
-            setup_vscode
-        elif [[ "$target" == "packages" || "$target" == "brew" ]]; then
+        if [[ "$target" == "packages" || "$target" == "brew" ]]; then
             install_packages
         else
             stow_package "$target"

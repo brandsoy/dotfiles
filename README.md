@@ -35,7 +35,6 @@ This script will:
     -   macOS: Homebrew, `stow`.
     -   Debian: `stow`, `git`, `curl`, `zsh`, `build-essential`.
 -   **Symlink configuration files** using GNU Stow.
--   **Configure VSCode settings**.
 -   **Install Packages**:
     -   macOS: Installs from `Brewfile`.
     -   Debian: Installs common tools (`neovim`, `tmux`, `ripgrep`, `fzf`, etc.) and `starship`/`zoxide`.
