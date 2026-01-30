@@ -205,7 +205,7 @@ Leader key is `<Space>`.
 - `<leader>m` - Markdown operations (todo, checkbox, link, wrap)
 - `<leader>q` - Quit commands
 - `<leader>s` - Split/window management
-- `<leader>u` - Toggle UI elements (relative numbers, cursorline, wrap, spell)
+- `<leader>t` - Toggle UI elements (relative numbers, cursorline, wrap, spell)
 - `<leader>w` - Write/save commands
 - `<leader>a` - AI/Sidekick commands
 

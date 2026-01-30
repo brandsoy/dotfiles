@@ -44,6 +44,22 @@ function M.setup()
 			map("n", "]d", vim.diagnostic.goto_next, "Next Diagnostic")
 			map("n", "<leader>le", vim.diagnostic.open_float, "Show Diagnostics (Float)")
 			map("n", "<leader>lq", vim.diagnostic.setloclist, "Diagnostics to Location List")
+			map("n", "<leader>lQ", vim.diagnostic.setqflist, "Diagnostics to Quickfix List")
+			
+			-- Copy diagnostic message under cursor
+			map("n", "<leader>ly", function()
+				local diagnostics = vim.diagnostic.get(0, { lnum = vim.fn.line(".") - 1 })
+				if #diagnostics == 0 then
+					vim.notify("No diagnostics on current line", vim.log.levels.INFO)
+					return
+				end
+				
+				-- Get the first diagnostic on the line
+				local message = diagnostics[1].message
+				vim.fn.setreg("+", message)
+				vim.fn.setreg('"', message)
+				vim.notify("Copied diagnostic: " .. message, vim.log.levels.INFO)
+			end, "Copy Diagnostic Message")
 
 			-- Toggle diagnostics virtual text
 			map("n", "<leader>lt", function()

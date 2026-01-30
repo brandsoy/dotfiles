@@ -3,23 +3,23 @@
 -- ================================================================================================
 
 local function map(mode, lhs, rhs, desc, opts)
-	local options = { silent = true, desc = desc }
-	if opts then
-		options = vim.tbl_extend("force", options, opts)
-	end
-	vim.keymap.set(mode, lhs, rhs, options)
+  local options = { silent = true, desc = desc }
+  if opts then
+    options = vim.tbl_extend("force", options, opts)
+  end
+  vim.keymap.set(mode, lhs, rhs, options)
 end
 
 local function notify_option(label, enabled)
-	local ok = vim.notify ~= nil
-	if not ok then
-		return
-	end
-	vim.notify(
-		string.format("%s %s", label, enabled and "enabled" or "disabled"),
-		vim.log.levels.INFO,
-		{ title = "Neovim" }
-	)
+  local ok = vim.notify ~= nil
+  if not ok then
+    return
+  end
+  vim.notify(
+    string.format("%s %s", label, enabled and "enabled" or "disabled"),
+    vim.log.levels.INFO,
+    { title = "Neovim" }
+  )
 end
 
 ------------------------------------------------------------------------------
@@ -45,6 +45,14 @@ map("n", "<leader>h", "<Cmd>nohlsearch<CR>", "Clear search highlight")
 map("n", "<leader>bn", "<Cmd>bnext<CR>", "Next buffer")
 map("n", "<leader>bp", "<Cmd>bprevious<CR>", "Previous buffer")
 map("n", "<leader>br", "<Cmd>edit!<CR>", "Revert buffer from disk")
+
+-- Quickfix list navigation
+map("n", "<leader>qn", "<Cmd>cnext<CR>", "Next quickfix item")
+map("n", "<leader>qp", "<Cmd>cprevious<CR>", "Previous quickfix item")
+map("n", "<leader>qo", "<Cmd>copen<CR>", "Open quickfix list")
+map("n", "<leader>qc", "<Cmd>cclose<CR>", "Close quickfix list")
+map("n", "]q", "<Cmd>cnext<CR>", "Next quickfix item")
+map("n", "[q", "<Cmd>cprevious<CR>", "Previous quickfix item")
 
 -- Better window navigation
 map("n", "<C-h>", "<C-w>h", "Move to left window")
@@ -82,23 +90,23 @@ map({ "n", "v" }, "<leader>p", '"+p', "Paste from system clipboard")
 
 -- Option toggles
 map("n", "<leader>un", function()
-	vim.wo.relativenumber = not vim.wo.relativenumber
-	notify_option("Relative number", vim.wo.relativenumber)
+  vim.wo.relativenumber = not vim.wo.relativenumber
+  notify_option("Relative number", vim.wo.relativenumber)
 end, "Toggle relative line numbers")
 
 map("n", "<leader>uc", function()
-	vim.wo.cursorline = not vim.wo.cursorline
-	notify_option("Cursor line", vim.wo.cursorline)
+  vim.wo.cursorline = not vim.wo.cursorline
+  notify_option("Cursor line", vim.wo.cursorline)
 end, "Toggle cursor line")
 
 map("n", "<leader>uw", function()
-	vim.wo.wrap = not vim.wo.wrap
-	notify_option("Line wrap", vim.wo.wrap)
+  vim.wo.wrap = not vim.wo.wrap
+  notify_option("Line wrap", vim.wo.wrap)
 end, "Toggle soft wrap")
 
 map("n", "<leader>us", function()
-	vim.wo.spell = not vim.wo.spell
-	notify_option("Spell check", vim.wo.spell)
+  vim.wo.spell = not vim.wo.spell
+  notify_option("Spell check", vim.wo.spell)
 end, "Toggle spell checking")
 
 -- Ensure splits open where you like (optional)
@@ -106,72 +114,72 @@ vim.opt.splitright = true -- vertical splits open to the right
 vim.opt.splitbelow = true -- horizontal splits open below
 
 -- LSP: go to definition in a vertical split (keep normal `gd` unchanged)
-map({ "n" }, "<leader>gd", function()
-	vim.cmd("vsplit")
-	vim.lsp.buf.definition()
+map({ "n" }, "<leader>ldv", function()
+  vim.cmd("vsplit")
+  vim.lsp.buf.definition()
 end, "LSP: go to definition in vertical split")
 
 -- LSP: go to definition in a horizontal split (optional)
-map({ "n" }, "<leader>gdh", function()
-	vim.cmd("split")
-	vim.lsp.buf.definition()
+map({ "n" }, "<leader>ldh", function()
+  vim.cmd("split")
+  vim.lsp.buf.definition()
 end, "LSP: go to definition in horizontal split")
 
--- Native motion: run exact `gd` in a new split (if you prefer Vim’s native behavior)
-map({ "n" }, "<leader>gD", function()
-	vim.cmd("vsplit")
-	vim.cmd("normal! gd")
+-- Native motion: run exact `gd` in a new split (if you prefer Vim's native behavior)
+map({ "n" }, "<leader>lDv", function()
+  vim.cmd("vsplit")
+  vim.cmd("normal! gd")
 end, "Native gd in vertical split")
 
-map({ "n" }, "<leader>gDh", function()
-	vim.cmd("split")
-	vim.cmd("normal! gd")
+map({ "n" }, "<leader>lDh", function()
+  vim.cmd("split")
+  vim.cmd("normal! gd")
 end, "Native gd in horizontal split")
 
 -- File under cursor (`gf`) in a vertical split
 map("n", "gx", function()
-	-- 1. Grab the full WORD (includes !, [, and ])
-	local file = vim.fn.expand("<cWORD>")
+  -- 1. Grab the full WORD (includes !, [, and ])
+  local file = vim.fn.expand("<cWORD>")
 
-	-- 2. Clean the string: Remove ![[ from start and ]] from end
-	-- The % is an escape character for special symbols in Lua patterns
-	file = file:gsub("^%!%[%[", ""):gsub("^%[%[", ""):gsub("%]%]$", "")
+  -- 2. Clean the string: Remove ![[ from start and ]] from end
+  -- The % is an escape character for special symbols in Lua patterns
+  file = file:gsub("^%!%[%[", ""):gsub("^%[%[", ""):gsub("%]%]$", "")
 
-	-- Strip common Markdown link characters if present
-	file = file:gsub("^%(", ""):gsub("%)$", "")
+  -- Strip common Markdown link characters if present
+  file = file:gsub("^%(", ""):gsub("%)$", "")
 
-	-- 3. Define potential locations
-	local current_dir = vim.fn.expand("%:p:h")
-	local locations = {
-		vim.fn.fnamemodify(file, ":p"), -- Absolute path
-		current_dir .. "/" .. file, -- Same folder as note
-		current_dir .. "/attachments/" .. file, -- 'attachments' subfolder
-		current_dir .. "/assets/" .. file, -- 'assets' subfolder
-	}
+  -- 3. Define potential locations
+  local current_dir = vim.fn.expand("%:p:h")
+  local locations = {
+    vim.fn.fnamemodify(file, ":p"),         -- Absolute path
+    current_dir .. "/" .. file,             -- Same folder as note
+    current_dir .. "/attachments/" .. file, -- 'attachments' subfolder
+    current_dir .. "/assets/" .. file,      -- 'assets' subfolder
+  }
 
-	-- 4. Try to find the file
-	local found_path = nil
-	for _, path in ipairs(locations) do
-		if vim.fn.filereadable(path) == 1 then
-			found_path = path
-			break
-		end
-	end
+  -- 4. Try to find the file
+  local found_path = nil
+  for _, path in ipairs(locations) do
+    if vim.fn.filereadable(path) == 1 then
+      found_path = path
+      break
+    end
+  end
 
-	-- 5. Execute Open
-	if found_path then
-		if found_path:match("%.pdf$") then
-			-- Force Preview for PDFs
-			vim.fn.jobstart({ "open", "-a", "Preview", found_path }, { detach = true })
-		else
-			-- System default for everything else
-			vim.ui.open(found_path)
-		end
-	elseif file:match("^https?://") then
-		vim.ui.open(file)
-	else
-		print("File not found in current dir or attachments: " .. file)
-	end
+  -- 5. Execute Open
+  if found_path then
+    if found_path:match("%.pdf$") then
+      -- Force Preview for PDFs
+      vim.fn.jobstart({ "open", "-a", "Preview", found_path }, { detach = true })
+    else
+      -- System default for everything else
+      vim.ui.open(found_path)
+    end
+  elseif file:match("^https?://") then
+    vim.ui.open(file)
+  else
+    print("File not found in current dir or attachments: " .. file)
+  end
 end, "Open embedded PDF or Wiki-link")
 
 --------------------------------------------------------------------------
@@ -185,24 +193,24 @@ map("v", "<", "<gv", "Indent left and reselect")
 map("v", ">", ">gv", "Indent right and reselect")
 
 map("v", "<leader>mw", function()
-	local s = vim.fn.getreg("v") -- selected text
-	vim.cmd([[normal! gv]]) -- reselect
-	vim.cmd([[normal! c[]()]]) -- replace with []
-	vim.api.nvim_put({ s }, "c", true, true) -- put selection inside []
-	vim.cmd([[normal! F[a]]) -- move cursor into ()
+  local s = vim.fn.getreg("v")             -- selected text
+  vim.cmd([[normal! gv]])                  -- reselect
+  vim.cmd([[normal! c[]()]])               -- replace with []
+  vim.api.nvim_put({ s }, "c", true, true) -- put selection inside []
+  vim.cmd([[normal! F[a]])                 -- move cursor into ()
 end, "Wrap selection in markdown link")
 
 -- Insert a markdown todo checkbox
 map("n", "<leader>mt", "0i- [ ] <Esc>", "Insert markdown todo")
 map("v", "<leader>mt", ":s/^/- [ ] /<CR>:noh<CR>", "Make lines markdown todos")
 map("n", "<leader>mx", function()
-	local line = vim.api.nvim_get_current_line()
-	if line:match("%[ %]") then
-		line = line:gsub("%[ %]", "[x]", 1)
-	elseif line:match("%[x%]") then
-		line = line:gsub("%[x%]", "[ ]", 1)
-	end
-	vim.api.nvim_set_current_line(line)
+  local line = vim.api.nvim_get_current_line()
+  if line:match("%[ %]") then
+    line = line:gsub("%[ %]", "[x]", 1)
+  elseif line:match("%[x%]") then
+    line = line:gsub("%[x%]", "[ ]", 1)
+  end
+  vim.api.nvim_set_current_line(line)
 end, "Toggle markdown todo checkbox")
 -- Insert hyperlinks
 map("n", "<leader>ml", "i[]()<Esc>F[a", "Insert markdown link")
