@@ -80,15 +80,34 @@ install_packages() {
         # Configure git credential helper for macOS
         git config --global credential.helper osxkeychain
     elif [[ "$OS" == "arch" ]]; then
-        echo "Installing Arch packages..."
-        local packages=(
-            tmux neovim ripgrep fzf bat jq unzip tree
-            htop btop fd starship zoxide
-        )
-        sudo pacman -S --needed --noconfirm "${packages[@]}"
+        echo "Installing Arch packages from Archfile..."
         
-        # Configure git credential helper (store is simple, libsecret is better but requires more setup)
-        # Using cache as a safe default for now
+        if [[ -f "$DOTFILES_DIR/Archfile" ]]; then
+            # Install pacman packages (exclude comments and AUR lines)
+            local packages=($(grep -v '^#' "$DOTFILES_DIR/Archfile" | grep -v '^AUR:' | grep -v '^$' | xargs))
+            if [ ${#packages[@]} -gt 0 ]; then
+                sudo pacman -S --needed --noconfirm "${packages[@]}"
+            fi
+            
+            # Check for AUR helper and install AUR packages
+            if has_cmd paru; then
+                local aur_packages=($(grep '^AUR:' "$DOTFILES_DIR/Archfile" | sed 's/^AUR: //' | xargs))
+                if [ ${#aur_packages[@]} -gt 0 ]; then
+                    echo "Installing AUR packages..."
+                    paru -S --needed --noconfirm "${aur_packages[@]}"
+                fi
+            elif has_cmd yay; then
+                local aur_packages=($(grep '^AUR:' "$DOTFILES_DIR/Archfile" | sed 's/^AUR: //' | xargs))
+                if [ ${#aur_packages[@]} -gt 0 ]; then
+                    echo "Installing AUR packages..."
+                    yay -S --needed --noconfirm "${aur_packages[@]}"
+                fi
+            else
+                echo "Warning: No AUR helper (paru/yay) found. Install one to get AUR packages."
+            fi
+        fi
+        
+        # Configure git credential helper
         git config --global credential.helper cache
         
         echo "Arch package installation complete."
@@ -160,6 +179,22 @@ else
             stow_package "$target"
         fi
     done
+fi
+
+# Install TPM (Tmux Plugin Manager)
+if [[ ! -d "$HOME/.tmux/plugins/tpm" ]]; then
+    echo "Installing Tmux Plugin Manager..."
+    git clone https://github.com/tmux-plugins/tpm "$HOME/.tmux/plugins/tpm"
+    echo "TPM installed. Start tmux and press Ctrl+s I (capital i) to install plugins."
+else
+    echo "TPM already installed."
+fi
+
+# Set zsh as default shell if not already set
+if [[ "$SHELL" != *"zsh"* ]] && has_cmd zsh; then
+    echo "Setting zsh as default shell..."
+    chsh -s "$(which zsh)"
+    echo "Shell changed to zsh. Log out and back in for changes to take effect."
 fi
 
 echo "Done! Relaunch your shell to see changes."

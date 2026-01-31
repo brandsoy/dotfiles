@@ -1,0 +1,127 @@
+# Arch Linux Packages
+# Install with: sudo pacman -S --needed $(grep -v '^#' Archfile | grep -v '^AUR:' | xargs)
+# AUR packages (lines starting with AUR:) need paru
+
+## Core System
+base-devel
+git
+curl
+wget
+stow
+zsh
+
+## Terminal & Shell
+tmux
+starship
+zoxide
+fzf
+bash-completion
+
+## CLI Tools
+neovim
+ripgrep
+fd
+bat
+tree
+btop
+htop
+jq
+age
+unzip
+p7zip
+tealdeer
+yazi
+
+## Development Tools
+rust
+cmake
+make
+ansible
+terraform
+github-cli
+lazygit
+lazydocker
+mise
+
+## File Management & Sync
+rsync
+rclone
+syncthing
+
+## Networking & Security
+openssh
+tailscale
+wireguard-tools
+
+## Wayland & Hyprland
+hyprland
+hyprpaper
+hyprlock
+hypridle
+xdg-desktop-portal-hyprland
+qt5-wayland
+qt6-wayland
+waybar
+swaync
+rofi-wayland
+keyd
+AUR: walker
+
+## Clipboard & Screenshots
+wl-clipboard
+cliphist
+grim
+slurp
+swappy
+
+## Audio & Bluetooth
+pipewire
+pipewire-pulse
+pipewire-alsa
+pipewire-jack
+wireplumber
+pavucontrol
+bluez
+bluez-utils
+blueman
+
+## Fonts
+ttf-fira-code
+ttf-jetbrains-mono-nerd
+ttf-font-awesome
+noto-fonts
+noto-fonts-emoji
+otf-monaspace-nerd
+
+## Terminal Emulators
+kitty
+
+## Browsers
+AUR: brave-bin
+
+## GUI Applications
+obsidian
+signal-desktop
+AUR: visual-studio-code-bin
+AUR: localsend-bin
+
+## Container & Virtualization
+docker
+docker-compose
+
+## Power Management
+tlp
+tlp-rdw
+powertop
+
+## System Utilities
+reflector
+timeshift
+gparted
+filelight
+AUR: pnpm-bin
+
+## Display Manager (choose one)
+# sddm
+# gdm
+# ly

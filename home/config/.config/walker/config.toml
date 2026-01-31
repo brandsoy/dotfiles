@@ -28,6 +28,10 @@ anchor_right = true
 [placeholders]
 "default" = { input = "Search", list = "No Results" } # placeholders for input and empty list, key is the providers name, so f.e. "desktopapplications" or "menus:other"
 
+[ui]
+font = "Monaspace Neon"
+icon_theme = "Papirus-Dark"
+
 [keybinds]
 close = ["Escape"]
 next = ["Down"]
