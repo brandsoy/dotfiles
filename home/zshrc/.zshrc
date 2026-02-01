@@ -222,9 +222,6 @@ function fkill {
 path_prepend "$HOME/.tsp/bin"
 path_prepend "$HOME/.opencode/bin"
 
-# --- API keys -------------------------------------------------------------
-# export GEMINI_API_KEY="${GEMINI_API_KEY:-AIzaSyAK1EWAqybtchh-k5uNCmWvnSIRhUqJcgc}"
-
 # bun completions
 [ -s "$HOME/.bun/_bun" ] && source "$HOME/.bun/_bun"
 
@@ -253,5 +250,7 @@ if [[ "$OSTYPE" == "darwin"* ]]; then
 fi
 export PATH="/home/mattis/.local/bin:$PATH"
 
+alias wifistat="watch -n 1 'iwctl station wlan0 show | grep -E \"(Connected BSSID|RSSI|Frequency|Tx-Rate)\"'"
+
 # Make NMTUI greate again
-alias nmtui='NEWT_COLORS="root=lavender,crust border=sapphire,base window=overlay0,base title=rosewater,crust button=surface2,lavender button_active=crust,maroon" nmtui'   
+# alias nmtui='NEWT_COLORS="root=lavender,crust border=sapphire,base window=overlay0,base title=rosewater,crust button=surface2,lavender button_active=crust,maroon" nmtui'   
