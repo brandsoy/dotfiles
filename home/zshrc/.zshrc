@@ -254,3 +254,6 @@ alias wifistat="watch -n 1 'iwctl station wlan0 show | grep -E \"(Connected BSSI
 
 # Make NMTUI greate again
 # alias nmtui='NEWT_COLORS="root=lavender,crust border=sapphire,base window=overlay0,base title=rosewater,crust button=surface2,lavender button_active=crust,maroon" nmtui'   
+
+# Lenovo x13 tweaks
+export MESA_LOG_LEVEL=error
