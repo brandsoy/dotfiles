@@ -63,9 +63,7 @@ qt5-wayland
 qt6-wayland
 waybar
 swaync
-rofi-wayland
 keyd
-AUR: walker
 
 ## Clipboard & Screenshots
 wl-clipboard

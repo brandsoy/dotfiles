@@ -37,14 +37,16 @@
     "tooltip-format-wifi": "{essid} ({signalStrength}%) ",
     "tooltip-format-ethernet": "{ifname} ",
     "tooltip-format-disconnected": "Disconnected",
-    "on-click": "nm-connection-editor",
+    "on-click": "iwgtk",
+    // "on-click": "nm-connection-editor",
     "max-length": 50
   },
   "bluetooth": {
     "format": "",
     "format-connected": " {num_connections}",
     "format-disabled": "󰂲",
-    "on-click": "blueman-manager",
+    "on-click": "overskride",
+    // "on-click": "blueman-manager",
     "tooltip-format": "{controller_alias}\t{controller_address}"
   },
   // -------------------------------------------------------------------------
