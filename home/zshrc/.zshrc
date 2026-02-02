@@ -257,3 +257,5 @@ alias wifistat="watch -n 1 'iwctl station wlan0 show | grep -E \"(Connected BSSI
 
 # Lenovo x13 tweaks
 export MESA_LOG_LEVEL=error
+# Arch Dark Mode
+export QT_QPA_PLATFORMTHEME=qt5ct
