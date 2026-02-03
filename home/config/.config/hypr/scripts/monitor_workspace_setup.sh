@@ -11,14 +11,14 @@ if [ "$EXTERNAL_MONITORS" -gt "0" ]; then
   echo "External monitors detected - configuring workspaces"
 
   # Assign workspaces 1-9 to external monitors (DP-2 or DP-3)
-  for ws in {1..9}; do
+  for ws in {1..4}; do
     hyprctl dispatch workspace $ws
     hyprctl dispatch movetoworkspacesilent $ws,DP-2,DP-3
   done
 
-  # Assign workspace 10 to laptop monitor
-  hyprctl dispatch workspace 10
-  hyprctl dispatch movetoworkspacesilent 10,eDP-1
+  # Assign workspace 5 to laptop monitor
+  hyprctl dispatch workspace 5
+  hyprctl dispatch movetoworkspacesilent 5,eDP-1
 
   # Go back to workspace 1
   hyprctl dispatch workspace 1
@@ -27,7 +27,7 @@ else
   # No external monitors - assign all workspaces to laptop
   echo "No external monitors detected - configuring all workspaces on laptop"
 
-  for ws in {1..10}; do
+  for ws in {1..5}; do
     hyprctl dispatch workspace $ws
     hyprctl dispatch movetoworkspacesilent $ws,eDP-1
   done

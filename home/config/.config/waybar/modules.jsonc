@@ -38,7 +38,6 @@
     "tooltip-format-ethernet": "{ifname} ",
     "tooltip-format-disconnected": "Disconnected",
     "on-click": "iwgtk",
-    // "on-click": "nm-connection-editor",
     "max-length": 50
   },
   "bluetooth": {
@@ -46,7 +45,6 @@
     "format-connected": " {num_connections}",
     "format-disabled": "󰂲",
     "on-click": "overskride",
-    // "on-click": "blueman-manager",
     "tooltip-format": "{controller_alias}\t{controller_address}"
   },
   // -------------------------------------------------------------------------
@@ -85,16 +83,17 @@
   "hyprland/workspaces": {
     "format": "{name}",
     "format-icons": {
-      //   "1": "",
-      //   "2": "",
-      //   "3": "",
-      //   "4": "",
-      //   "5": "",
+      "1": "",
+      "2": "",
+      "3": "",
+      "4": "",
+      "5": "",
       "active": "",
       "default": ""
     },
     "persistent-workspaces": {
-      "*": 10
+      "DP-2": [1, 2, 3, 4],
+      "eDP-1": [5]
     }
   },
   // -------------------------------------------------------------------------
