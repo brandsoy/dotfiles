@@ -79,48 +79,6 @@ local function configure_servers()
 			},
 		},
 		tsgo = {},
-		-- vtsls = {
-		-- 	settings = {
-		-- 		vtsls = {
-		-- 			autoUseWorkspaceTsdk = true,
-		-- 			experimental = {
-		-- 				maxInlayHintLength = 25,
-		-- 			},
-		-- 		},
-		-- 		typescript = {
-		-- 			inlayHints = {
-		-- 				includeInlayEnumMemberValueHints = true,
-		-- 				includeInlayFunctionLikeReturnTypeHints = true,
-		-- 				includeInlayFunctionParameterTypeHints = true,
-		-- 				includeInlayParameterNameHints = "all",
-		-- 				includeInlayParameterNameHintsWhenArgumentMatchesName = false,
-		-- 				includeInlayPropertyDeclarationTypeHints = true,
-		-- 				includeInlayVariableTypeHints = true,
-		-- 			},
-		-- 		},
-		-- 		javascript = {
-		-- 			inlayHints = {
-		-- 				includeInlayEnumMemberValueHints = true,
-		-- 				includeInlayFunctionLikeReturnTypeHints = true,
-		-- 				includeInlayFunctionParameterTypeHints = true,
-		-- 				includeInlayParameterNameHints = "all",
-		-- 				includeInlayParameterNameHintsWhenArgumentMatchesName = false,
-		-- 				includeInlayPropertyDeclarationTypeHints = true,
-		-- 				includeInlayVariableTypeHints = true,
-		-- 			},
-		-- 		},
-		-- 	},
-		-- 	filetypes = {
-		-- 		"javascript",
-		-- 		"javascriptreact",
-		-- 		"javascript.jsx",
-		-- 		"typescript",
-		-- 		"typescriptreact",
-		-- 		"typescript.tsx",
-		-- 		"vue",
-		-- 		"svelte",
-		-- 	},
-		-- },
 		jsonls = schemastore_ok and {
 			settings = {
 				json = {
@@ -139,16 +97,17 @@ local function configure_servers()
 			},
 		} or {},
 		dockerls = {},
-		-- tailwindcss = {
-		-- 	filetypes = { "html", "javascriptreact", "typescriptreact", "vue", "svelte", "astro" },
-		-- 	root_dir = util.root_pattern(
-		-- 		"tailwind.config.js",
-		-- 		"tailwind.config.ts",
-		-- 		"postcss.config.js",
-		-- 		"package.json",
-		-- 		"node_modules"
-		-- 	),
-		-- },
+		-- ansiblels = {},
+		tailwindcss = {
+			filetypes = { "html", "javascriptreact", "typescriptreact", "vue", "svelte", "astro" },
+			root_dir = util.root_pattern(
+				"tailwind.config.js",
+				"tailwind.config.ts",
+				"postcss.config.js",
+				"package.json",
+				"node_modules"
+			),
+		},
 		bashls = {},
 		bicep = {},
 		tsp_server = {},
@@ -158,17 +117,6 @@ local function configure_servers()
 			cmd = { vim.fn.stdpath("data") .. "/mason/bin/postgres-language-server", "lsp-proxy" },
 		},
 		svelte = {},
-		-- vuels = {
-		-- 	filetypes = { "vue", "typescript", "javascript" },
-		-- 	init_options = {
-		-- 		vue = {
-		-- 			hybridMode = false,
-		-- 		},
-		-- 		typescript = {
-		-- 			tsdk = vim.fn.getcwd() .. "/node_modules/typescript/lib",
-		-- 		},
-		-- 	},
-		-- },
 	}
 
 	local tools = {

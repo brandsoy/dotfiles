@@ -6,8 +6,10 @@ return {
 		opts = {
 			ensure_installed = {
 				"bash",
+				"zsh",
 				"dockerfile",
 				"go",
+				"dotnet",
 				"gomod",
 				"html",
 				"javascript",
@@ -16,10 +18,12 @@ return {
 				"markdown",
 				"markdown_inline",
 				"typescript",
+				"svelte",
 				"yaml",
+				"toml",
 				"vim",
 				"vimdoc",
-				"bicep",
+				"tailwindcss",
 			},
 			sync_install = false,
 			auto_install = false,
@@ -41,8 +45,5 @@ return {
 				},
 			},
 		},
-		-- config = function(_, opts)
-		-- 	require("nvim-treesitter.configs").setup(opts)
-		-- end,
 	},
 }
