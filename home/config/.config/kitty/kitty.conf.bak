@@ -2805,6 +2805,6 @@ adjust_line_height 125%
 hide_window_decorations titlebar-only
 
 # BEGIN_KITTY_THEME
-# Catppuccin-Mocha
+# Tokyo Night
 include current-theme.conf
 # END_KITTY_THEME

@@ -1,84 +1,84 @@
 return {
-  -- Colorschemes: Uncomment the vim.cmd.colorscheme line in ONE theme to activate it
-  {
-    "oskarnurm/koda.nvim",
-    lazy = true,     -- make sure we load this during startup if it is your main colorscheme
-    priority = 1000, -- make sure to load this before all the other start plugins
-    config = function()
-      -- require("koda").setup({ transparent = true })
-      -- vim.cmd("colorscheme koda")
-    end,
-  },
-  {
-    "folke/tokyonight.nvim",
-    lazy = true,
-    priority = 1000,
-    config = function()
-      -- vim.cmd.colorscheme("tokyonight-night")
-      -- Other variants: tokyonight-storm, tokyonight-moon, tokyonight-day
-    end,
-  },
-  {
-    "catppuccin/nvim",
-    name = "catppuccin",
-    lazy = true,
-    priority = 1000,
-    config = function()
-      require("catppuccin").setup({
-        flavour = "auto",
-        background = { light = "latte", dark = "mocha" },
-        transparent_background = true,
-        integrations = {
-          blink_cmp = true,
-          fzf = true,
-          mason = true,
-          markdown = true,
-          mini = { enabled = true },
-          native_lsp = { enabled = true },
-          treesitter = true,
-          which_key = true,
-        },
-      })
-      -- vim.cmd.colorscheme("catppuccin")
-    end,
-  },
-  {
-    "projekt0n/github-nvim-theme",
-    name = "github-theme",
-    lazy = true,
-    priority = 1000,
-    config = function()
-      require("github-theme").setup({})
-      -- vim.cmd.colorscheme("github_dark_tritanopia")
-      -- Other variants: github_dark_default,github_dark_tritanopia, github_light, github_dark_high_contrast
-    end,
-  },
-  {
-    "rose-pine/neovim",
-    name = "rose-pine",
-    lazy = true,
-    priority = 1000,
-    config = function()
-      -- vim.cmd.colorscheme("rose-pine")
-      -- Other variants: rose-pine-main, rose-pine-moon, rose-pine-dawn
-    end,
-  },
+	-- Colorschemes: Uncomment the vim.cmd.colorscheme line in ONE theme to activate it
+	{
+		"oskarnurm/koda.nvim",
+		lazy = true, -- make sure we load this during startup if it is your main colorscheme
+		priority = 1000, -- make sure to load this before all the other start plugins
+		config = function()
+			-- require("koda").setup({ transparent = true })
+			-- vim.cmd("colorscheme koda")
+		end,
+	},
+	{
+		"folke/tokyonight.nvim",
+		lazy = true,
+		priority = 1000,
+		config = function()
+			-- vim.cmd.colorscheme("tokyonight-night")
+			-- Other variants: tokyonight-storm, tokyonight-moon, tokyonight-day
+		end,
+	},
+	{
+		"catppuccin/nvim",
+		name = "catppuccin",
+		lazy = false,
+		priority = 1000,
+		config = function()
+			require("catppuccin").setup({
+				flavour = "auto",
+				background = { light = "latte", dark = "mocha" },
+				transparent_background = true,
+				integrations = {
+					blink_cmp = true,
+					fzf = true,
+					mason = true,
+					markdown = true,
+					mini = { enabled = true },
+					native_lsp = { enabled = true },
+					treesitter = true,
+					which_key = true,
+				},
+			})
+			vim.cmd.colorscheme("catppuccin")
+		end,
+	},
+	{
+		"projekt0n/github-nvim-theme",
+		name = "github-theme",
+		lazy = true,
+		priority = 1000,
+		config = function()
+			require("github-theme").setup({})
+			-- vim.cmd.colorscheme("github_dark_tritanopia")
+			-- Other variants: github_dark_default,github_dark_tritanopia, github_light, github_dark_high_contrast
+		end,
+	},
+	{
+		"rose-pine/neovim",
+		name = "rose-pine",
+		lazy = true,
+		priority = 1000,
+		config = function()
+			-- vim.cmd.colorscheme("rose-pine")
+			-- Other variants: rose-pine-main, rose-pine-moon, rose-pine-dawn
+		end,
+	},
 
-  {
-    "p00f/alabaster.nvim",
-    name = "alabaster",
-    lazy = false,
-    priority = 1000,
-    config = function()
-      vim.cmd.colorscheme("alabaster")
-    end,
-  },
+	{
+		"p00f/alabaster.nvim",
+		name = "alabaster",
+		lazy = true,
+		priority = 1000,
+		config = function()
+			-- vim.cmd.colorscheme("alabaster")
+		end,
+	},
 
-  {
-    "nvim-mini/mini.statusline",
-    event = "VeryLazy",
-    config = function()
-      require("mini.statusline").setup()
-    end,
-  },
+	{
+		"nvim-mini/mini.statusline",
+		event = "VeryLazy",
+		config = function()
+			require("mini.statusline").setup()
+		end,
+	},
 }

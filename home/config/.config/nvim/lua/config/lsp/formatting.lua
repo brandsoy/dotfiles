@@ -138,7 +138,7 @@ function M.setup_conform()
 		end,
 		formatters = {
 			biome = {
-				condition = function(ctx)
+				condition = function(_, ctx)
 					return root_has_file(ctx.filename, {
 						"biome.json",
 						"biome.jsonc",
@@ -148,26 +148,26 @@ function M.setup_conform()
 				end,
 			},
 			prettierd = {
-				condition = function(ctx)
+				condition = function(_, ctx)
 					return is_package_json(ctx.filename) or root_has_prettier_config(ctx.filename)
 				end,
 			},
 			prettier = {
-				condition = function(ctx)
+				condition = function(_, ctx)
 					return is_package_json(ctx.filename) or root_has_prettier_config(ctx.filename)
 				end,
 			},
 		},
 		formatters_by_ft = {
 			lua = { "stylua" },
-			javascript = { "prettierd", "prettier", "biome" },
-			javascriptreact = { "prettierd", "prettier", "biome" },
-			typescript = { "prettierd", "prettier", "biome" },
-			typescriptreact = { "prettierd", "prettier", "biome" },
+			javascript = { "biome", "prettierd", "prettier", stop_after_first = true },
+			javascriptreact = { "biome", "prettierd", "prettier", stop_after_first = true },
+			typescript = { "biome", "prettierd", "prettier", stop_after_first = true },
+			typescriptreact = { "biome", "prettierd", "prettier", stop_after_first = true },
 			svelte = {},
-			json = { "prettierd", "prettier", "biome" },
-			yaml = { "prettierd", "prettier", "biome" },
-			markdown = { "prettierd", "prettier", "biome" },
+			json = { "biome", "prettierd", "prettier", stop_after_first = true },
+			yaml = { "prettierd", "prettier", stop_after_first = true },
+			markdown = { "prettierd", "prettier", stop_after_first = true },
 			go = { "golines", "gofumpt" },
 			sql = { "pg_format" },
 			python = { "ruff_format", "ruff_organize_imports" },

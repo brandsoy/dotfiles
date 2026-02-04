@@ -3,31 +3,6 @@
 -- ABOUT : automatically run code on defined events (e.g. save, yank)
 -- ================================================================================================
 
--- Register custom filetypes for LSP servers
-vim.filetype.add({
-	extension = {
-		bicep = "bicep",
-		bicepparam = "bicep-params",
-		tsp = "typespec",
-	},
-	filename = {
-		["docker-compose.yml"] = "yaml.docker-compose",
-		["docker-compose.yaml"] = "yaml.docker-compose",
-		["compose.yml"] = "yaml.docker-compose",
-		["compose.yaml"] = "yaml.docker-compose",
-		[".gitlab-ci.yml"] = "yaml.gitlab",
-		[".gitlab-ci.yaml"] = "yaml.gitlab",
-	},
-	pattern = {
-		["docker%-compose%..*%.ya?ml"] = "yaml.docker-compose",
-		["compose%..*%.ya?ml"] = "yaml.docker-compose",
-		[".*/%.gitlab%-ci%.ya?ml"] = "yaml.gitlab",
-		[".*%.gitlab%-ci%.ya?ml"] = "yaml.gitlab",
-		[".*/helm.*/values%.ya?ml"] = "yaml.helm-values",
-		[".*/charts/.*/values%.ya?ml"] = "yaml.helm-values",
-	},
-})
-
 -- Restore last cursor position when reopening a file
 local last_cursor_group = vim.api.nvim_create_augroup("LastCursorGroup", {})
 vim.api.nvim_create_autocmd("BufReadPost", {

@@ -76,6 +76,7 @@ local function configure_servers()
 				matcher = "Fuzzy",
 				directoryFilters = { "-node_modules" },
 				gofumpt = true,
+				filetypes = { "go", "gomod", "gowork", "gotmpl" },
 			},
 		},
 		tsgo = {},
