@@ -50,7 +50,7 @@ vim.opt.backup = false                       -- Don't create backup files
 vim.opt.writebackup = false                  -- Don't backup before overwriting
 vim.opt.swapfile = false                     -- Don't create swap files
 vim.opt.undofile = true                      -- Persistent undo
-vim.opt.updatetime = 500                     -- Time in ms to trigger CursorHold
+vim.opt.updatetime = 200                     -- Time in ms to trigger CursorHold (faster diagnostics)
 vim.opt.timeoutlen = 500                     -- Time in ms to wait for mapped sequence
 vim.opt.ttimeoutlen = 0                      -- No wait for key code sequences
 vim.opt.autoread = true                      -- Auto-reload file if changed outside
@@ -95,6 +95,13 @@ vim.opt.foldlevel = 99                               -- Keep all folds open by d
 -- Split Behavior
 vim.opt.splitbelow = true -- Horizontal splits open below
 vim.opt.splitright = true -- Vertical splits open to the right
+
+-- Fillchars for better visual indicators
+vim.opt.fillchars = {
+	diff = "╱", -- Better diff character
+	foldopen = "▾",
+	foldclose = "▸",
+}
 
 -- Force Neovim to use terminal colors
 vim.opt.termguicolors = true

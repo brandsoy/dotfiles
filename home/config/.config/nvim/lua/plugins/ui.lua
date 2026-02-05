@@ -2,8 +2,9 @@ return {
 	-- Colorschemes: Uncomment the vim.cmd.colorscheme line in ONE theme to activate it
 	{
 		"oskarnurm/koda.nvim",
-		lazy = true, -- make sure we load this during startup if it is your main colorscheme
-		priority = 1000, -- make sure to load this before all the other start plugins
+		lazy = true,
+		cmd = "Colorscheme",
+		priority = 1000,
 		config = function()
 			-- require("koda").setup({ transparent = true })
 			-- vim.cmd("colorscheme koda")
@@ -12,6 +13,7 @@ return {
 	{
 		"folke/tokyonight.nvim",
 		lazy = true,
+		cmd = "Colorscheme",
 		priority = 1000,
 		config = function()
 			-- vim.cmd.colorscheme("tokyonight-night")
@@ -21,7 +23,8 @@ return {
 	{
 		"catppuccin/nvim",
 		name = "catppuccin",
-		lazy = false,
+		lazy = true,
+		cmd = "Colorscheme",
 		priority = 1000,
 		config = function()
 			require("catppuccin").setup({
@@ -39,17 +42,17 @@ return {
 					which_key = true,
 				},
 			})
-			vim.cmd.colorscheme("catppuccin")
+			-- vim.cmd.colorscheme("catppuccin")
 		end,
 	},
 	{
 		"projekt0n/github-nvim-theme",
 		name = "github-theme",
-		lazy = true,
+		lazy = false, -- Active theme loads immediately
 		priority = 1000,
 		config = function()
 			require("github-theme").setup({})
-			-- vim.cmd.colorscheme("github_dark_tritanopia")
+			vim.cmd.colorscheme("github_dark_tritanopia")
 			-- Other variants: github_dark_default,github_dark_tritanopia, github_light, github_dark_high_contrast
 		end,
 	},
@@ -57,6 +60,7 @@ return {
 		"rose-pine/neovim",
 		name = "rose-pine",
 		lazy = true,
+		cmd = "Colorscheme",
 		priority = 1000,
 		config = function()
 			-- vim.cmd.colorscheme("rose-pine")
@@ -68,6 +72,7 @@ return {
 		"p00f/alabaster.nvim",
 		name = "alabaster",
 		lazy = true,
+		cmd = "Colorscheme",
 		priority = 1000,
 		config = function()
 			-- vim.cmd.colorscheme("alabaster")
@@ -80,5 +85,25 @@ return {
 		config = function()
 			require("mini.statusline").setup()
 		end,
+	},
+
+	{
+		"j-hui/fidget.nvim",
+		event = "LspAttach",
+		opts = {
+			notification = {
+				window = { winblend = 0 },
+			},
+		},
+	},
+
+	{
+		"folke/which-key.nvim",
+		event = "VeryLazy",
+		opts = {
+			preset = "helix",
+			delay = 200, -- Match updatetime
+			icons = { mappings = false }, -- Less visual clutter
+		},
 	},
 }

@@ -113,28 +113,9 @@ end, "Toggle spell checking")
 vim.opt.splitright = true -- vertical splits open to the right
 vim.opt.splitbelow = true -- horizontal splits open below
 
--- LSP: go to definition in a vertical split (keep normal `gd` unchanged)
-map({ "n" }, "<leader>ldv", function()
-  vim.cmd("vsplit")
-  vim.lsp.buf.definition()
-end, "LSP: go to definition in vertical split")
-
--- LSP: go to definition in a horizontal split (optional)
-map({ "n" }, "<leader>ldh", function()
-  vim.cmd("split")
-  vim.lsp.buf.definition()
-end, "LSP: go to definition in horizontal split")
-
--- Native motion: run exact `gd` in a new split (if you prefer Vim's native behavior)
-map({ "n" }, "<leader>lDv", function()
-  vim.cmd("vsplit")
-  vim.cmd("normal! gd")
-end, "Native gd in vertical split")
-
-map({ "n" }, "<leader>lDh", function()
-  vim.cmd("split")
-  vim.cmd("normal! gd")
-end, "Native gd in horizontal split")
+-- LSP: go to definition in splits
+map("n", "<leader>ldv", "<cmd>vsplit | lua vim.lsp.buf.definition()<cr>", "LSP: definition in vsplit")
+map("n", "<leader>ldh", "<cmd>split | lua vim.lsp.buf.definition()<cr>", "LSP: definition in split")
 
 -- File under cursor (`gf`) in a vertical split
 map("n", "gx", function()

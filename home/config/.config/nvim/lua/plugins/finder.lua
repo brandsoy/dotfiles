@@ -115,6 +115,13 @@ return {
         end,
         desc = "Notification history",
       },
+      {
+        "<leader>/",
+        function()
+          require("fzf-lua").lgrep_curbuf()
+        end,
+        desc = "Buffer fuzzy search",
+      },
     },
     config = function()
       local fzf = require("fzf-lua")

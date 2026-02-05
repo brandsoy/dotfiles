@@ -12,6 +12,8 @@ function M.setup()
 	blink.setup({
 		keymap = {
 			preset = "default", -- <Tab> confirm, <C-n>/<C-p> navigate
+			["<C-space>"] = { "show", "show_documentation", "hide_documentation" },
+			["<C-e>"] = { "hide" },
 		},
 		appearance = {
 			nerd_font_variant = "mono",
@@ -23,11 +25,24 @@ function M.setup()
 			},
 		},
 		completion = {
-			documentation = { auto_show = false }, -- avoid extra UI work
-			ghost_text = { enabled = false }, -- reduce inline rendering
+			documentation = {
+				auto_show = true, -- Show docs automatically for better DX
+				auto_show_delay_ms = 200,
+			},
+			menu = {
+				draw = {
+					treesitter = { "lsp" }, -- Highlight LSP items with treesitter
+				},
+			},
+			ghost_text = { enabled = false }, -- Keep this off for performance
 		},
 		sources = {
-			default = { "lsp", "path" },
+			default = { "lsp", "path", "buffer" }, -- Add buffer completion
+			providers = {
+				buffer = {
+					min_keyword_length = 4, -- Only suggest buffer words > 3 chars
+				},
+			},
 		},
 	})
 end

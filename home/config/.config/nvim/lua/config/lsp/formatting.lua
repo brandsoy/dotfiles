@@ -130,6 +130,11 @@ function M.setup_conform()
 	local conform = require("conform")
 	conform.setup({
 		format_on_save = function(bufnr)
+			-- Skip if buffer is large
+			if vim.b[bufnr].large_file then
+				return
+			end
+
 			local ft = vim.bo[bufnr].filetype
 			if ft == "svelte" then
 				return { lsp_format = "prefer", timeout_ms = 1000 }
@@ -171,6 +176,8 @@ function M.setup_conform()
 			go = { "golines", "gofumpt" },
 			sql = { "pg_format" },
 			python = { "ruff_format", "ruff_organize_imports" },
+			terraform = { "terraform_fmt" },
+			hcl = { "terraform_fmt" },
 		},
 	})
 end

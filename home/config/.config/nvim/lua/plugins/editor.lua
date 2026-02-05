@@ -6,7 +6,7 @@ return {
       "nvim-lua/plenary.nvim",
       "MunifTanjim/nui.nvim",
     },
-    lazy = false, -- neo-tree will lazily load itself
+    lazy = true, -- neo-tree will lazily load itself via keys
     keys = {
       { "<leader>e",  "<cmd>Neotree toggle<cr>",     desc = "Explorer" },
       { "<leader>fe", "<cmd>Neotree focus<cr>",      desc = "Explorer focus" },
@@ -267,7 +267,7 @@ return {
           clue.gen_clues.z(),
         },
         window = {
-          delay = 300,
+          delay = 200, -- Match updatetime
         },
       })
     end,

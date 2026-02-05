@@ -65,7 +65,7 @@ preset = 'qwerty'
 inner.horizontal = 10
 inner.vertical = 10
 outer.bottom = 10
-outer.top = [{ monitor.main = 30 }, 30]
+outer.top = [{ monitor.main = 10 }, 10]
 outer.right = 10
 outer.left = 10
 
@@ -100,8 +100,8 @@ outer.left = 10
 # '''
 
 # App shortcuts
-alt-enter = 'exec-and-forget open -a /Applications/Ghostty.app'
-# alt-b = 'exec-and-forget open -a /Applications/Firefox.app'
+alt-enter = 'exec-and-forget open -a /Applications/kitty.app'
+# alt-b = 'exec-and-forget open -a /Applications/Brave Browser.app'
 # alt-z = 'exec-and-forget open -a /Applications/zed.app'
 # alt-c = 'exec-and-forget open -a /Applications/Visual Studio Code - Insiders.app'
 # alt-i = 'exec-and-forget open -a /Applications/Ghostty.app'
@@ -154,7 +154,7 @@ alt-5 = 'workspace 5'
 # alt-7 = 'workspace 7'
 # alt-8 = 'workspace 8'
 # alt-9 = 'workspace 9'
-alt-0 = 'workspace 0'
+alt-s = 'workspace 0'
 
 # See: https://nikitabobko.github.io/AeroSpace/commands#move-node-to-workspace
 alt-shift-1 = 'move-node-to-workspace 1'

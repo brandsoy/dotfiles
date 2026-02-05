@@ -118,6 +118,9 @@ local function configure_servers()
 			cmd = { vim.fn.stdpath("data") .. "/mason/bin/postgres-language-server", "lsp-proxy" },
 		},
 		svelte = {},
+		terraformls = {
+			filetypes = { "terraform", "terraform-vars" },
+		},
 	}
 
 	local tools = {

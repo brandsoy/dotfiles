@@ -23,14 +23,34 @@ function M.setup()
 				keymap(mode, lhs, rhs, vim.tbl_extend("force", opts, { desc = desc }))
 			end
 
+			-- Navigation
 			map("n", "gd", vim.lsp.buf.definition, "Go to Definition")
 			map("n", "gD", vim.lsp.buf.declaration, "Go to Declaration")
 			map("n", "gi", vim.lsp.buf.implementation, "Go to Implementation")
 			map("n", "gr", vim.lsp.buf.references, "List References")
 			map("n", "K", vim.lsp.buf.hover, "Hover Documentation")
-			map("n", "<leader>lr", vim.lsp.buf.rename, "Rename Symbol")
-			map("n", "<leader>la", vim.lsp.buf.code_action, "Code Action")
 			map("n", "<leader>lk", vim.lsp.buf.signature_help, "Signature Help")
+
+			-- Actions
+			keymap("n", "<leader>lr", function()
+				local inc_rename_ok = pcall(require, "inc_rename")
+				if inc_rename_ok then
+					return ":IncRename " .. vim.fn.expand("<cword>")
+				else
+					vim.lsp.buf.rename()
+					return ""
+				end
+			end, vim.tbl_extend("force", opts, { desc = "Rename Symbol", expr = true }))
+
+			map("n", "<leader>la", function()
+				local actions_ok, actions = pcall(require, "actions-preview")
+				if actions_ok then
+					actions.code_actions()
+				else
+					vim.lsp.buf.code_action()
+				end
+			end, "Code Action")
+
 			map("n", "<leader>lf", function()
 				local ok_conform, conform = pcall(require, "conform")
 				if not ok_conform then
@@ -40,9 +60,13 @@ function M.setup()
 				conform.format({ async = true, lsp_fallback = true })
 			end, "Format Buffer")
 
+			map("n", "<leader>lR", "<cmd>LspRestart<cr>", "Restart LSP")
+
+			-- Diagnostics
 			map("n", "[d", vim.diagnostic.goto_prev, "Previous Diagnostic")
 			map("n", "]d", vim.diagnostic.goto_next, "Next Diagnostic")
 			map("n", "<leader>le", vim.diagnostic.open_float, "Show Diagnostics (Float)")
+			map("n", "gl", vim.diagnostic.open_float, "Show Diagnostics (Float)")
 			map("n", "<leader>lq", vim.diagnostic.setloclist, "Diagnostics to Location List")
 			map("n", "<leader>lQ", vim.diagnostic.setqflist, "Diagnostics to Quickfix List")
 			
@@ -61,7 +85,7 @@ function M.setup()
 				vim.notify("Copied diagnostic: " .. message, vim.log.levels.INFO)
 			end, "Copy Diagnostic Message")
 
-			-- Toggle diagnostics virtual text
+			-- Toggles
 			map("n", "<leader>lt", function()
 				local cfg = vim.diagnostic.config()
 				local vt = cfg.virtual_text

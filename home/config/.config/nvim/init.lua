@@ -21,6 +21,9 @@ require("lazy").setup({
 	defaults = { lazy = true },
 	checker = { enabled = false },
 	change_detection = { notify = false },
+	rocks = {
+		enabled = false, -- Disable luarocks support (not needed for any plugins)
+	},
 	performance = {
 		rtp = {
 			reset = true, -- reset the runtime path to $VIMRUNTIME and your config directory
