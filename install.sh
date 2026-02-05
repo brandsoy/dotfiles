@@ -185,6 +185,78 @@ install_packages() {
     fi
 }
 
+# Install extra tools (lazydocker, lazygit, gh)
+install_extra_tools() {
+    echo ""
+    echo "Checking extra tools (lazydocker, lazygit, gh)..."
+
+    # gh CLI
+    if ! has_cmd gh; then
+        echo "Installing GitHub CLI..."
+        if [[ "$OS" == "macos" ]]; then
+            brew install gh
+        elif [[ "$OS" == "arch" ]]; then
+            sudo pacman -S --needed --noconfirm github-cli
+        elif [[ "$OS" == "debian" ]]; then
+            curl -fsSL https://cli.github.com/packages/githubcli-archive-keyring.gpg | sudo dd of=/usr/share/keyrings/githubcli-archive-keyring.gpg
+            sudo chmod go+r /usr/share/keyrings/githubcli-archive-keyring.gpg
+            echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/githubcli-archive-keyring.gpg] https://cli.github.com/packages stable main" | sudo tee /etc/apt/sources.list.d/github-cli.list > /dev/null
+            sudo apt-get update
+            sudo apt-get install -y gh
+        elif [[ "$OS" == "redhat" ]]; then
+            sudo dnf install -y gh
+        fi
+    fi
+
+    # lazygit
+    if ! has_cmd lazygit; then
+        echo "Installing lazygit..."
+        if [[ "$OS" == "macos" ]]; then
+            brew install lazygit
+        elif [[ "$OS" == "arch" ]]; then
+            sudo pacman -S --needed --noconfirm lazygit
+        else
+            LAZYGIT_VERSION=$(curl -s "https://api.github.com/repos/jesseduffield/lazygit/releases/latest" | grep -Po '"tag_name": "v\K[^"]*')
+            curl -Lo /tmp/lazygit.tar.gz "https://github.com/jesseduffield/lazygit/releases/latest/download/lazygit_${LAZYGIT_VERSION}_Linux_x86_64.tar.gz"
+            tar xf /tmp/lazygit.tar.gz -C /tmp lazygit
+            sudo install /tmp/lazygit /usr/local/bin
+            rm -f /tmp/lazygit /tmp/lazygit.tar.gz
+        fi
+    fi
+
+    # lazydocker
+    if ! has_cmd lazydocker; then
+        echo "Installing lazydocker..."
+        if [[ "$OS" == "macos" ]]; then
+            brew install lazydocker
+        elif [[ "$OS" == "arch" ]]; then
+            if has_cmd paru; then
+                paru -S --needed --noconfirm lazydocker
+            elif has_cmd yay; then
+                yay -S --needed --noconfirm lazydocker
+            else
+                echo "Warning: No AUR helper (paru/yay) found. Cannot install lazydocker on Arch without one."
+            fi
+        else
+            LAZYDOCKER_VERSION=$(curl -s "https://api.github.com/repos/jesseduffield/lazydocker/releases/latest" | grep -Po '"tag_name": "v\K[^"]*')
+            curl -Lo /tmp/lazydocker.tar.gz "https://github.com/jesseduffield/lazydocker/releases/latest/download/lazydocker_${LAZYDOCKER_VERSION}_Linux_x86_64.tar.gz"
+            tar xf /tmp/lazydocker.tar.gz -C /tmp lazydocker
+            sudo install /tmp/lazydocker /usr/local/bin
+            rm -f /tmp/lazydocker /tmp/lazydocker.tar.gz
+        fi
+    fi
+
+    # mise (mise-en-place)
+    if ! has_cmd mise; then
+        echo "Installing mise..."
+        if [[ "$OS" == "macos" ]]; then
+            brew install mise
+        else
+            curl https://mise.run | sh
+        fi
+    fi
+}
+
 # Main Execution
 detect_os
 install_dependencies
@@ -205,11 +277,14 @@ if [[ $# -eq 0 ]]; then
     fi
 
     install_packages
+    install_extra_tools
 else
     # Arguments provided: Install specific packages
     for target in "$@"; do
         if [[ "$target" == "packages" || "$target" == "brew" ]]; then
             install_packages
+        elif [[ "$target" == "tools" ]]; then
+            install_extra_tools
         elif [[ "$target" == "shared" ]]; then
             echo "Stowing shared dotfiles..."
             stow_all_from "$SHARED_DIR"
