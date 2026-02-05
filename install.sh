@@ -3,7 +3,9 @@ set -e
 
 # Configuration
 DOTFILES_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
-STOW_DIR="$DOTFILES_DIR/home"
+SHARED_DIR="$DOTFILES_DIR/shared"
+MAC_DIR="$DOTFILES_DIR/mac"
+LINUX_DIR="$DOTFILES_DIR/linux"
 TARGET_DIR="$HOME"
 OS=""
 
@@ -16,7 +18,7 @@ detect_os() {
     elif [[ -f /etc/debian_version ]]; then
         OS="debian"
     elif [[ -f /etc/redhat-release ]]; then
-        OS="redhat" # Basic support
+        OS="redhat"
     else
         echo "Warning: Unsupported OS ($OSTYPE). Assuming generic Linux."
         OS="linux"
@@ -27,7 +29,7 @@ detect_os() {
 # Helper: Check command existence
 has_cmd() { command -v "$1" >/dev/null 2>&1; }
 
-# 1. Install Dependencies
+# Install Dependencies
 install_dependencies() {
     echo "Checking dependencies..."
     if [[ "$OS" == "macos" ]]; then
@@ -43,7 +45,6 @@ install_dependencies() {
         echo "Updating pacman..."
         sudo pacman -Syu --noconfirm
         echo "Installing core dependencies..."
-        # git and base-devel are usually present if running this, but good to ensure
         sudo pacman -S --needed --noconfirm stow git curl base-devel zsh
     elif [[ "$OS" == "debian" ]]; then
         echo "Updating apt..."
@@ -55,49 +56,72 @@ install_dependencies() {
     fi
 }
 
-# Helper: Stow a single package
+# Helper: Stow a single package from a directory
 stow_package() {
-    local pkg="$1"
-    # Check if package exists in STOW_DIR
-    if [[ -d "$STOW_DIR/$pkg" ]]; then
+    local stow_dir="$1"
+    local pkg="$2"
+    if [[ -d "$stow_dir/$pkg" ]]; then
         echo "  - Stowing $pkg"
-        # We need to run stow from the stow directory or use -d
-        pushd "$STOW_DIR" >/dev/null
+        pushd "$stow_dir" >/dev/null
         stow -R -t "$TARGET_DIR" "$pkg"
         popd >/dev/null
     else
-        echo "Warning: Package '$pkg' not found in $STOW_DIR"
+        echo "Warning: Package '$pkg' not found in $stow_dir"
     fi
 }
 
-# 2. Install Packages
+# Stow all packages from a directory
+stow_all_from() {
+    local stow_dir="$1"
+    local skip_pattern="$2"
+
+    if [[ ! -d "$stow_dir" ]]; then
+        echo "Warning: Directory '$stow_dir' not found"
+        return
+    fi
+
+    for package_path in "$stow_dir"/*; do
+        [[ -d "$package_path" ]] || continue
+        local package_name=$(basename "$package_path")
+
+        # Skip if matches pattern
+        if [[ -n "$skip_pattern" && "$package_name" =~ $skip_pattern ]]; then
+            continue
+        fi
+
+        stow_package "$stow_dir" "$package_name"
+    done
+}
+
+# Install Packages
 install_packages() {
     if [[ "$OS" == "macos" ]]; then
-        if [[ -f "$DOTFILES_DIR/Brewfile" ]]; then
+        if [[ -f "$MAC_DIR/Brewfile" ]]; then
             echo "Installing Homebrew bundle..."
-            brew bundle --file="$DOTFILES_DIR/Brewfile"
+            brew bundle --file="$MAC_DIR/Brewfile"
         fi
         # Configure git credential helper for macOS
         git config --global credential.helper osxkeychain
+
     elif [[ "$OS" == "arch" ]]; then
         echo "Installing Arch packages from Archfile..."
-        
-        if [[ -f "$DOTFILES_DIR/Archfile" ]]; then
+
+        if [[ -f "$LINUX_DIR/Archfile" ]]; then
             # Install pacman packages (exclude comments and AUR lines)
-            local packages=($(grep -v '^#' "$DOTFILES_DIR/Archfile" | grep -v '^AUR:' | grep -v '^$' | xargs))
+            local packages=($(grep -v '^#' "$LINUX_DIR/Archfile" | grep -v '^AUR:' | grep -v '^$' | xargs))
             if [ ${#packages[@]} -gt 0 ]; then
                 sudo pacman -S --needed --noconfirm "${packages[@]}"
             fi
-            
+
             # Check for AUR helper and install AUR packages
             if has_cmd paru; then
-                local aur_packages=($(grep '^AUR:' "$DOTFILES_DIR/Archfile" | sed 's/^AUR: //' | xargs))
+                local aur_packages=($(grep '^AUR:' "$LINUX_DIR/Archfile" | sed 's/^AUR: //' | xargs))
                 if [ ${#aur_packages[@]} -gt 0 ]; then
                     echo "Installing AUR packages..."
                     paru -S --needed --noconfirm "${aur_packages[@]}"
                 fi
             elif has_cmd yay; then
-                local aur_packages=($(grep '^AUR:' "$DOTFILES_DIR/Archfile" | sed 's/^AUR: //' | xargs))
+                local aur_packages=($(grep '^AUR:' "$LINUX_DIR/Archfile" | sed 's/^AUR: //' | xargs))
                 if [ ${#aur_packages[@]} -gt 0 ]; then
                     echo "Installing AUR packages..."
                     yay -S --needed --noconfirm "${aur_packages[@]}"
@@ -106,19 +130,17 @@ install_packages() {
                 echo "Warning: No AUR helper (paru/yay) found. Install one to get AUR packages."
             fi
         fi
-        
-        # Configure git credential helper
+
         git config --global credential.helper cache
-        
         echo "Arch package installation complete."
+
     elif [[ "$OS" == "debian" ]]; then
         echo "Installing recommended Debian packages..."
-        # List of common tools from Brewfile that are in apt
         local packages=(
             tmux neovim ripgrep fzf bat jq unzip tree
             htop btop fd-find
         )
-        
+
         sudo apt-get install -y "${packages[@]}"
 
         # Install Starship (Shell prompt)
@@ -132,16 +154,34 @@ install_packages() {
             echo "Installing zoxide..."
             curl -sS https://raw.githubusercontent.com/ajeetdsouza/zoxide/main/install.sh | bash
         fi
-        
+
         # Bat on debian is sometimes 'batcat', let's fix alias if needed
         if command -v batcat &>/dev/null && ! command -v bat &>/dev/null; then
              mkdir -p ~/.local/bin
              ln -sf /usr/bin/batcat ~/.local/bin/bat
              echo "Aliased batcat to bat in ~/.local/bin/bat"
         fi
-        
+
         git config --global credential.helper cache
         echo "Debian package installation complete."
+
+    elif [[ "$OS" == "redhat" ]]; then
+        echo "Installing recommended Fedora/RHEL packages..."
+        local packages=(
+            tmux neovim ripgrep fzf bat jq unzip tree
+            htop btop fd-find zoxide
+        )
+
+        sudo dnf install -y "${packages[@]}"
+
+        # Install Starship (Shell prompt)
+        if ! has_cmd starship; then
+            echo "Installing Starship..."
+            curl -sS https://starship.rs/install.sh | sh -s -- -y
+        fi
+
+        git config --global credential.helper cache
+        echo "Fedora/RHEL package installation complete."
     fi
 }
 
@@ -151,23 +191,18 @@ install_dependencies
 
 if [[ $# -eq 0 ]]; then
     # No arguments: Install everything
-    echo "Stowing all dotfiles..."
-    
-    # Iterate over directories in STOW_DIR
-    for package_path in "$STOW_DIR"/*; do
-        package_name=$(basename "$package_path")
+    echo ""
+    echo "Stowing shared dotfiles..."
+    stow_all_from "$SHARED_DIR"
 
-        # Skip macOS-specific packages on Linux
-        if [[ "$OS" != "macos" ]]; then
-            case "$package_name" in
-                aerospace|karabiner|raycast)
-                    continue
-                    ;;
-            esac
-        fi
-        
-        stow_package "$package_name"
-    done
+    echo ""
+    if [[ "$OS" == "macos" ]]; then
+        echo "Stowing macOS-specific dotfiles..."
+        stow_all_from "$MAC_DIR" "Brewfile"
+    else
+        echo "Stowing Linux-specific dotfiles..."
+        stow_all_from "$LINUX_DIR" "Archfile"
+    fi
 
     install_packages
 else
@@ -175,8 +210,26 @@ else
     for target in "$@"; do
         if [[ "$target" == "packages" || "$target" == "brew" ]]; then
             install_packages
+        elif [[ "$target" == "shared" ]]; then
+            echo "Stowing shared dotfiles..."
+            stow_all_from "$SHARED_DIR"
+        elif [[ "$target" == "mac" ]]; then
+            echo "Stowing macOS dotfiles..."
+            stow_all_from "$MAC_DIR" "Brewfile"
+        elif [[ "$target" == "linux" ]]; then
+            echo "Stowing Linux dotfiles..."
+            stow_all_from "$LINUX_DIR" "Archfile"
         else
-            stow_package "$target"
+            # Try to find the package in shared, mac, or linux
+            if [[ -d "$SHARED_DIR/$target" ]]; then
+                stow_package "$SHARED_DIR" "$target"
+            elif [[ -d "$MAC_DIR/$target" ]]; then
+                stow_package "$MAC_DIR" "$target"
+            elif [[ -d "$LINUX_DIR/$target" ]]; then
+                stow_package "$LINUX_DIR" "$target"
+            else
+                echo "Warning: Package '$target' not found in shared, mac, or linux"
+            fi
         fi
     done
 fi
@@ -185,7 +238,7 @@ fi
 if [[ ! -d "$HOME/.tmux/plugins/tpm" ]]; then
     echo "Installing Tmux Plugin Manager..."
     git clone https://github.com/tmux-plugins/tpm "$HOME/.tmux/plugins/tpm"
-    echo "TPM installed. Start tmux and press Ctrl+s I (capital i) to install plugins."
+    echo "TPM installed. Start tmux and press Ctrl+b I (capital i) to install plugins."
 else
     echo "TPM already installed."
 fi
@@ -197,4 +250,5 @@ if [[ "$SHELL" != *"zsh"* ]] && has_cmd zsh; then
     echo "Shell changed to zsh. Log out and back in for changes to take effect."
 fi
 
+echo ""
 echo "Done! Relaunch your shell to see changes."

@@ -1,19 +1,26 @@
 # Dotfiles
 
-Personal configuration files for macOS and Linux (Debian).
+Personal configuration files for macOS and Linux (Arch/Debian).
 
 ## Structure
 
 ```
 dotfiles/
-├── home/          # User home directory configs (stow packages)
-│   ├── bashrc/    # Bash shell configuration
-│   ├── bin/       # Personal scripts
-│   ├── config/    # XDG config directory (~/.config/)
-│   ├── vscode/    # VSCode settings (handled specially)
-│   └── ...
-├── install.sh     # Main installation script
-└── Brewfile       # Homebrew package list (macOS)
+├── shared/            # Cross-platform configs (stow packages)
+│   ├── bin/           # Personal scripts
+│   ├── config/        # Shared .config (nvim, alacritty, bat, etc.)
+│   ├── git/           # Git configuration
+│   ├── ssh/           # SSH keys
+│   ├── tmux/          # Tmux configuration
+│   └── zshrc/         # Zsh configuration
+├── mac/               # macOS-specific configs
+│   ├── config/        # aerospace, karabiner, raycast
+│   └── Brewfile       # Homebrew packages
+├── linux/             # Linux-specific configs
+│   ├── config/        # hypr, waybar, keyd, swaync, gtk, etc.
+│   ├── scripts/       # Linux scripts
+│   └── Archfile       # Arch Linux packages
+└── install.sh         # Auto-detecting installation script
 ```
 
 ## Quick Start
@@ -30,26 +37,44 @@ dotfiles/
     ```
 
 This script will:
--   **Detect OS** (macOS or Debian).
--   **Install dependencies**:
-    -   macOS: Homebrew, `stow`.
-    -   Debian: `stow`, `git`, `curl`, `zsh`, `build-essential`.
--   **Symlink configuration files** using GNU Stow.
--   **Install Packages**:
-    -   macOS: Installs from `Brewfile`.
-    -   Debian: Installs common tools (`neovim`, `tmux`, `ripgrep`, `fzf`, etc.) and `starship`/`zoxide`.
+-   **Detect OS** (macOS, Arch, Debian, or generic Linux)
+-   **Install dependencies** (stow, git, curl, zsh, etc.)
+-   **Symlink shared configs** using GNU Stow
+-   **Symlink OS-specific configs** based on detected OS
+-   **Install packages**:
+    -   macOS: Installs from `mac/Brewfile`
+    -   Arch: Installs from `linux/Archfile` (pacman + AUR)
+    -   Debian: Installs common tools via apt
+
+## Selective Installation
+
+```bash
+# Install only shared configs
+./install.sh shared
+
+# Install only OS-specific configs
+./install.sh mac
+./install.sh linux
+
+# Install a specific package
+./install.sh config
+./install.sh nvim
+
+# Only install packages (no stow)
+./install.sh packages
+```
 
 ## Uninstalling
 
-To remove symlinks, you can use `stow` manually:
+To remove symlinks:
 
 ```bash
-cd ~/dotfiles/home
-stow -D -t ~ <package_name>
-```
+# Shared packages
+cd ~/dotfiles/shared && stow -D -t ~ <package>
 
-Example:
-```bash
-cd ~/dotfiles/home
-stow -D -t ~ bashrc
+# Mac packages
+cd ~/dotfiles/mac && stow -D -t ~ config
+
+# Linux packages
+cd ~/dotfiles/linux && stow -D -t ~ config
 ```
