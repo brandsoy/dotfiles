@@ -12,4 +12,4 @@
 	helper = 
 	helper = !/usr/bin/gh auth git-credential
 [credential]
-	helper = cache
+	helper = osxkeychain
