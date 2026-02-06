@@ -986,7 +986,6 @@
 #: that setting a non-zero window_margin_width overrides this and
 #: causes all borders to be drawn.
 
-window_margin_width 10
 
 #: The window margin (in pts) (blank area outside the border). A
 #: single value sets all four sides. Two values set the vertical and
@@ -2794,8 +2793,7 @@ macos_thicken_font 0
 # background_blur 20
 
 # BEGIN_KITTY_FONTS
-# font_family      GeistMono Nerd Font
-font_family      GeistMono Nerd Font Mono
+font_family      family="GeistMono Nerd Font Mono"
 bold_font        auto
 italic_font      auto
 bold_italic_font auto
@@ -2803,9 +2801,12 @@ bold_italic_font auto
 
 adjust_line_height 125%
 # window_padding_width 10
-hide_window_decorations titlebar-only
+window_margin_width 5
+# hide_window_decorations titlebar-only
+hide_window_decorations yes
+
 
 # BEGIN_KITTY_THEME
-# Adwaita dark
+# Base2Tone Suburb Dark
 include current-theme.conf
 # END_KITTY_THEME

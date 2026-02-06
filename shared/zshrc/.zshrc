@@ -24,9 +24,9 @@ typeset -U PATH path
 # --- Homebrew & Paths -----------------------------------------------------
 # Try Apple Silicon path first, then Intel
 if [[ -x "/opt/homebrew/bin/brew" ]]; then
-    eval "$(/opt/homebrew/bin/brew shellenv)"
+  eval "$(/opt/homebrew/bin/brew shellenv)"
 elif [[ -x "/usr/local/bin/brew" ]]; then
-    eval "$(/usr/local/bin/brew shellenv)"
+  eval "$(/usr/local/bin/brew shellenv)"
 fi
 
 path_prepend "$HOME/.local/share/pnpm"
@@ -261,3 +261,8 @@ export MESA_LOG_LEVEL=error
 export QT_QPA_PLATFORMTHEME=qt5ct
 
 eval "$(/home/mattis/.local/bin/mise activate zsh)" # added by https://mise.run/zsh
+
+# opencode
+export PATH=/home/mattis/.opencode/bin:$PATH
+export PATH=/home/mattis/.cargo/bin:$PATH
+export XDG_DATA_DIRS=$XDG_DATA_DIRS:/var/lib/flatpak/exports/share:/home/$USER/.local/share/flatpak/exports/share

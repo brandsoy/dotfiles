@@ -4,7 +4,7 @@
    border: none;
    border-radius: 0;
 
-   font-family: "Adwaita Sans","Jetbrains Mono Nerd Font Propo", sans-serif;
+   font-family: "Jetbrains Mono Nerd Font Propo", "Adwaita Sans",sans-serif;
    font-size:14px;
 
    min-height: 0;

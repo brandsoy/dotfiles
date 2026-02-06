@@ -37,7 +37,7 @@
     "tooltip-format-wifi": "{essid} ({signalStrength}%) ",
     "tooltip-format-ethernet": "{ifname} ",
     "tooltip-format-disconnected": "Disconnected",
-    "on-click": "iwgtk",
+    "on-click": "nm-applet",
     "max-length": 50
   },
   "bluetooth": {
@@ -92,8 +92,15 @@
       "default": ""
     },
     "persistent-workspaces": {
-      "DP-2": [1, 2, 3, 4],
-      "eDP-1": [5]
+      "DP-2": [
+        1,
+        2,
+        3,
+        4
+      ],
+      "eDP-1": [
+        5
+      ]
     }
   },
   // -------------------------------------------------------------------------
