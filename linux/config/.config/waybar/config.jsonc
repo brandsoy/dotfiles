@@ -5,13 +5,16 @@
   "include": [
     "~/.config/waybar/modules.jsonc"
   ],
-  "modules-left": ["hyprland/language"],
+  "modules-left": [
+    "hyprland/language"
+  ],
   "modules-center": [
     "hyprland/workspaces"
   ],
   "modules-right": [
-    "group/connectivity",
-    "group/multimedia",
+    "tray",
+    // "group/connectivity",
+    // "group/multimedia",
     "battery",
     "clock",
     "custom/notification"

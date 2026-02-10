@@ -63,7 +63,7 @@ tooltip label {
 }
 
 
-#workspaces button.urgen {
+#workspaces button.urgent {
   background-color: @red;
   color: @bg0;
   border-radius: 16px;
@@ -126,7 +126,7 @@ tooltip label {
 }
 
 #pulseaudio {
-  color: @yellow
+  color: @yellow;
 }
 
 #network {

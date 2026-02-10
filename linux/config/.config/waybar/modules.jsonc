@@ -25,53 +25,53 @@
     ],
     "max-length": 25
   },
-  // -------------------------------------------------------------------------
-  // Connectivity
-  // -------------------------------------------------------------------------
-  "network": {
-    "format": "{ifname}",
-    "format-wifi": "{essid} ",
-    "format-ethernet": "{ipaddr}/{cidr} 󰊗",
-    "format-disconnected": "",
-    "tooltip-format": "{ifname} via {gwaddr} 󰊗",
-    "tooltip-format-wifi": "{essid} ({signalStrength}%) ",
-    "tooltip-format-ethernet": "{ifname} ",
-    "tooltip-format-disconnected": "Disconnected",
-    "on-click": "nm-applet",
-    "max-length": 50
-  },
-  "bluetooth": {
-    "format": "",
-    "format-connected": " {num_connections}",
-    "format-disabled": "󰂲",
-    "on-click": "overskride",
-    "tooltip-format": "{controller_alias}\t{controller_address}"
-  },
-  // -------------------------------------------------------------------------
-  // Audio
-  // -------------------------------------------------------------------------
-  "pulseaudio": {
-    "format": "{icon}",
-    // "format": "{icon} {volume}%",
-    "format-bluetooth": "{icon} ",
-    // "format-bluetooth": "{icon} {volume}% ",
-    "format-muted": "",
-    "format-icons": {
-      "headphone": "",
-      "hands-free": "",
-      "headset": "",
-      "phone": "",
-      "portable": "",
-      "car": "",
-      "default": [
-        "",
-        ""
-      ]
-    },
-    "scroll-step": 5,
-    "on-click": "pactl set-sink-mute @DEFAULT_SINK@ toggle",
-    "on-click-right": "pavucontrol"
-  },
+  // // -------------------------------------------------------------------------
+  // // Connectivity
+  // // -------------------------------------------------------------------------
+  // "network": {
+  //   "format": "{ifname}",
+  //   "format-wifi": "{essid} ",
+  //   "format-ethernet": "{ipaddr}/{cidr} 󰊗",
+  //   "format-disconnected": "",
+  //   "tooltip-format": "{ifname} via {gwaddr} 󰊗",
+  //   "tooltip-format-wifi": "{essid} ({signalStrength}%) ",
+  //   "tooltip-format-ethernet": "{ifname} ",
+  //   "tooltip-format-disconnected": "Disconnected",
+  //   "on-click": "nm-applet",
+  //   "max-length": 50
+  // },
+  // "bluetooth": {
+  //   "format": "",
+  //   "format-connected": " {num_connections}",
+  //   "format-disabled": "󰂲",
+  //   "on-click": "overskride",
+  //   "tooltip-format": "{controller_alias}\t{controller_address}"
+  // },
+  // // -------------------------------------------------------------------------
+  // // Audio
+  // // -------------------------------------------------------------------------
+  // "pulseaudio": {
+  //   "format": "{icon}",
+  //   // "format": "{icon} {volume}%",
+  //   "format-bluetooth": "{icon} ",
+  //   // "format-bluetooth": "{icon} {volume}% ",
+  //   "format-muted": "",
+  //   "format-icons": {
+  //     "headphone": "",
+  //     "hands-free": "",
+  //     "headset": "",
+  //     "phone": "",
+  //     "portable": "",
+  //     "car": "",
+  //     "default": [
+  //       "",
+  //       ""
+  //     ]
+  //   },
+  //   "scroll-step": 5,
+  //   "on-click": "pactl set-sink-mute @DEFAULT_SINK@ toggle",
+  //   "on-click-right": "pavucontrol"
+  // },
   // "pulseaudio/slider": {
   //   "min": 0,
   //   "max": 100,
@@ -103,23 +103,22 @@
       ]
     }
   },
-  // -------------------------------------------------------------------------
-  // Groups
-  // -------------------------------------------------------------------------
-  "group/multimedia": {
-    "orientation": "horizontal",
-    "modules": [
-      "pulseaudio",
-      "pulseaudio/slider"
-    ]
-  },
-  "group/connectivity": {
-    "orientation": "horizontal",
-    "modules": [
-      "network",
-      "bluetooth"
-    ]
-  },
+  // // -------------------------------------------------------------------------
+  // // Groups
+  // // -------------------------------------------------------------------------
+  // "group/multimedia": {
+  //   "orientation": "horizontal",
+  //   "modules": [
+  //     "pulseaudio"
+  //   ]
+  // },
+  // "group/connectivity": {
+  //   "orientation": "horizontal",
+  //   "modules": [
+  //     "network",
+  //     "bluetooth"
+  //   ]
+  // },
   // -------------------------------------------------------------------------
   // Custom
   // -------------------------------------------------------------------------
@@ -147,7 +146,7 @@
     "icon-size": 21,
     "spacing": 10
   },
-  "language": {
+  "hyprland/language": {
     "format": "{short}",
     "format-en": "US",
     "format-no": "NO"
