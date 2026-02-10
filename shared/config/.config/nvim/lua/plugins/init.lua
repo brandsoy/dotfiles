@@ -7,5 +7,6 @@ return {
 	{ import = "plugins.ai" },
 	{ import = "plugins.lsp" },
 	{ import = "plugins.markdown" },
+	{ import = "plugins.obsidian" },
 	{ import = "plugins.git" },
 }
