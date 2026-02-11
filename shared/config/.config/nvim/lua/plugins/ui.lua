@@ -1,12 +1,12 @@
 return {
 	{
 		"oskarnurm/koda.nvim",
-		lazy = false,
+		lazy = true,
 		cmd = "Colorscheme",
 		priority = 1000,
 		config = function()
 			require("koda").setup({ transparent = true })
-			vim.cmd("colorscheme koda")
+			-- vim.cmd("colorscheme koda")
 		end,
 	},
 	{
@@ -80,15 +80,15 @@ return {
 	{
 		"navarasu/onedark.nvim",
 		name = "onedark",
-		lazy = true,
+		lazy = false,
 		cmd = "Colorscheme",
 		config = function()
 			-- vim.cmd.colorscheme("alabaster")
 			require("onedark").setup({
 				style = "darker",
 			})
-			-- require('onedark').load()
-			-- vim.cmd.colorscheme("onedark")
+			-- require("onedark").load()
+			vim.cmd.colorscheme("onedark")
 		end,
 	},
 	-- END THEMES

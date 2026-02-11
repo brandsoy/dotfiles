@@ -266,3 +266,8 @@ eval "$(/home/mattis/.local/bin/mise activate zsh)" # added by https://mise.run/
 export PATH=/home/mattis/.opencode/bin:$PATH
 export PATH=/home/mattis/.cargo/bin:$PATH
 export XDG_DATA_DIRS=$XDG_DATA_DIRS:/var/lib/flatpak/exports/share:/home/$USER/.local/share/flatpak/exports/share
+# The following lines have been added by Docker Desktop to enable Docker CLI completions.
+fpath=(/Users/mattis/.docker/completions $fpath)
+autoload -Uz compinit
+compinit
+# End of Docker CLI completions
