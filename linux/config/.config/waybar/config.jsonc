@@ -12,9 +12,9 @@
     "hyprland/workspaces"
   ],
   "modules-right": [
-    "tray",
-    // "group/connectivity",
-    // "group/multimedia",
+    // "tray",
+    "group/connectivity",
+    "group/multimedia",
     "battery",
     "clock",
     "custom/notification"
