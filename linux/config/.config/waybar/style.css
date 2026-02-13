@@ -141,6 +141,12 @@ tooltip label {
   color: @fg;
 }
 
+#custom-keyboard-layout {
+  color: @fg;
+  padding: 0 15px 0 15px;
+  margin: 0 0 0 12px;
+}
+
 #clock {
   color: @fg;
 }

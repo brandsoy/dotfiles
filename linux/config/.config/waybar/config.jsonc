@@ -6,13 +6,12 @@
     "~/.config/waybar/modules.jsonc"
   ],
   "modules-left": [
-    "hyprland/language"
+    "custom/keyboard-layout"
   ],
   "modules-center": [
     "hyprland/workspaces"
   ],
   "modules-right": [
-    // "tray",
     "group/connectivity",
     "group/multimedia",
     "battery",

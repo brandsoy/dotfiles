@@ -147,8 +147,13 @@
   //   "spacing": 10
   // },
   "hyprland/language": {
-    "format": "{short}",
-    "format-en": "US",
-    "format-no": "NO"
+    "format": "{}",
+    "keyboard-name": "at-translated-set-2-keyboard"
+  },
+  "custom/keyboard-layout": {
+    "exec": "hyprctl devices -j | jq -r '.keyboards[] | select(.main == true) | .active_keymap' | cut -c1-2",
+    "interval": 1,
+    "format": "{}",
+    "tooltip": false
   }
 }
