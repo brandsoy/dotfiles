@@ -11,12 +11,13 @@ return {
 	},
 	{
 		"folke/tokyonight.nvim",
-		lazy = true,
+		lazy = false,
 		cmd = "Colorscheme",
 		priority = 1000,
 		config = function()
-			-- vim.cmd.colorscheme("tokyonight-night")
+			-- vim.alt.colorscheme("tokyonight-night")
 			-- Other variants: tokyonight-storm, tokyonight-moon, tokyonight-day
+			vim.cmd.colorscheme("tokyonight-night")
 		end,
 	},
 	{
@@ -80,15 +81,15 @@ return {
 	{
 		"navarasu/onedark.nvim",
 		name = "onedark",
-		lazy = false,
+		lazy = true,
 		cmd = "Colorscheme",
 		config = function()
 			-- vim.cmd.colorscheme("alabaster")
-			require("onedark").setup({
-				style = "darker",
-			})
+			-- require("onedark").setup({
+			-- style = "darker",
+			-- })
 			-- require("onedark").load()
-			vim.cmd.colorscheme("onedark")
+			-- vim.cmd.colorscheme("onedark")
 		end,
 	},
 	-- END THEMES
