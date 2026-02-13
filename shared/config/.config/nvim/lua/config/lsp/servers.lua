@@ -121,6 +121,44 @@ local function configure_servers()
 		terraformls = {
 			filetypes = { "terraform", "terraform-vars" },
 		},
+		roslyn = {
+			filetypes = { "cs", "razor" },
+			settings = {
+				["csharp|inlay_hints"] = {
+					csharp_enable_inlay_hints_for_implicit_object_creation = true,
+					csharp_enable_inlay_hints_for_implicit_variable_types = true,
+					csharp_enable_inlay_hints_for_lambda_parameter_types = true,
+					csharp_enable_inlay_hints_for_types = true,
+					dotnet_enable_inlay_hints_for_indexer_parameters = true,
+					dotnet_enable_inlay_hints_for_literal_parameters = true,
+					dotnet_enable_inlay_hints_for_object_creation_parameters = true,
+					dotnet_enable_inlay_hints_for_other_parameters = true,
+					dotnet_enable_inlay_hints_for_parameters = true,
+					dotnet_suppress_inlay_hints_for_parameters_that_differ_only_by_suffix = true,
+					dotnet_suppress_inlay_hints_for_parameters_that_match_argument_name = true,
+					dotnet_suppress_inlay_hints_for_parameters_that_match_method_intent = true,
+				},
+				["csharp|code_lens"] = {
+					dotnet_enable_references_code_lens = false,
+					dotnet_enable_tests_code_lens = false,
+				},
+				["csharp|background_analysis"] = {
+					background_analysis_dotnet_analyzer_diagnostics_scope = "openFiles",
+					background_analysis_dotnet_compiler_diagnostics_scope = "openFiles",
+				},
+				["csharp|completion"] = {
+					dotnet_provide_regex_completions = true,
+					dotnet_show_completion_items_from_unimported_namespaces = true,
+					dotnet_show_name_completion_suggestions = true,
+				},
+				["csharp|symbol_search"] = {
+					dotnet_search_reference_assemblies = true,
+				},
+				["csharp|formatting"] = {
+					dotnet_organize_imports_on_format = true,
+				},
+			},
+		},
 	}
 
 	local tools = {
@@ -135,9 +173,13 @@ local function configure_servers()
 		"gotests",
 		"pgformatter",
 		"iferr",
+		"roslyn",
 	}
 
-	local server_names = vim.tbl_keys(servers)
+	local all_server_names = vim.tbl_keys(servers)
+	local mason_lsp_servers = vim.tbl_filter(function(name)
+		return name ~= "roslyn"
+	end, all_server_names)
 
 	local mason_ok, mason = pcall(require, "mason")
 	if not mason_ok then
@@ -165,13 +207,13 @@ local function configure_servers()
 	})
 
 	mason_lspconfig.setup({
-		ensure_installed = server_names,
+		ensure_installed = mason_lsp_servers,
 		automatic_enable = false,
 	})
 
 	mason_tool_installer.setup({
 		ensure_installed = tools,
-		run_on_start = false,
+		run_on_start = true,
 		debounce_hours = 12,
 	})
 
@@ -211,7 +253,7 @@ local function configure_servers()
 		end
 	end
 
-	for _, server_name in ipairs(server_names) do
+	for _, server_name in ipairs(all_server_names) do
 		setup_server(server_name)
 	end
 

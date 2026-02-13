@@ -129,6 +129,10 @@ tooltip label {
   color: @yellow;
 }
 
+#bluetooth{
+  color: @yellow;
+}
+
 #network {
   color: @purple;
 }
