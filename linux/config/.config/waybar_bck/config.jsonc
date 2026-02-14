@@ -1,17 +1,21 @@
 // -*- mode: jsonc -*-
 {
   "position": "top",
-  "spacing": 2,
+  "spacing": 4,
   "include": [
     "~/.config/waybar/modules.jsonc"
   ],
   "modules-left": [
-    "group/left"
+    "hyprland/workspaces"
   ],
   "modules-center": [
-    "group/center"
+    "clock"
   ],
   "modules-right": [
-    "group/right"
+    "group/connectivity",
+    "group/multimedia",
+    "battery",
+    "custom/keyboard-layout",
+    "custom/notification"
   ]
 }
