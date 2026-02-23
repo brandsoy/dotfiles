@@ -3,10 +3,10 @@
 
 after-login-command = []
 
-# JankyBorders: https://github.com/FelixKratz/JankyBorders
-after-startup-command = [
-    'exec-and-forget borders active_color=0xcc9d7cd8 inactive_color=0xcc1a1b26 width=8.0',
-]
+# # JankyBorders: https://github.com/FelixKratz/JankyBorders
+# after-startup-command = [
+#     'exec-and-forget borders active_color=0xcc9d7cd8 inactive_color=0xcc1a1b26 width=8.0',
+# ]
 
 start-at-login = true
 
