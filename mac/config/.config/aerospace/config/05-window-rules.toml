@@ -13,20 +13,20 @@ run = ['move-node-to-workspace 1']
 # Workspace 2 - Terminals
 [[on-window-detected]]
 if.app-id = 'com.mitchellh.ghostty'
-run = ['move-node-to-workspace 2']
+run = ['move-node-to-workspace 1']
 
 [[on-window-detected]]
 if.app-id = 'net.kovidgoyal.kitty'
-run = ['move-node-to-workspace 2']
+run = ['move-node-to-workspace 1']
 
 # Workspace 0 - Communication
 [[on-window-detected]]
 if.app-id = 'com.microsoft.Outlook'
-run = ['move-node-to-workspace 5']
+run = ['move-node-to-workspace 0']
 
 [[on-window-detected]]
 if.app-id = 'com.microsoft.teams2'
-run = ['move-node-to-workspace 5']
+run = ['move-node-to-workspace 0']
 
 # Floating windows
 [[on-window-detected]]

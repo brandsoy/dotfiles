@@ -150,6 +150,7 @@ zstyle ':completion:*' matcher-list 'm:{a-z}={A-Za-z}'
 zstyle ':completion:*' list-colors "${(s.:.)LS_COLORS}"
 zstyle ':completion:*' menu no
 
+
 # --- Aliases & helpers ----------------------------------------------------
 # Cross-platform ls color support & fzf-preview
 if ls --color > /dev/null 2>&1; then
@@ -274,3 +275,6 @@ compinit
 
 # Added by get-aspire-cli.sh
 export PATH="$HOME/.aspire/bin:$PATH"
+
+# This calls the mise-managed nightly specifically
+alias nv12='NVIM_APPNAME=nvim-v12 mise exec neovim@nightly -- nvim'

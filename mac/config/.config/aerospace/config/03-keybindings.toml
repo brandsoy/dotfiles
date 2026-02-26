@@ -55,7 +55,7 @@ alt-shift-2 = 'move-node-to-workspace 2'
 alt-shift-3 = 'move-node-to-workspace 3'
 alt-shift-4 = 'move-node-to-workspace 4'
 alt-shift-5 = 'move-node-to-workspace 5'
-alt-shift-0 = 'move-node-to-workspace 0'
+alt-shift-s = 'move-node-to-workspace 0'
 
 # Workspace navigation
 alt-tab = 'workspace-back-and-forth'

@@ -2,9 +2,9 @@
 # Inner gaps between windows, outer gaps from monitor edges
 
 [gaps]
-inner.horizontal = 10
-inner.vertical = 10
-outer.bottom = 10
-outer.top = [{ monitor.main = 10 }, 10]
-outer.right = 10
-outer.left = 10
+inner.horizontal = 5
+inner.vertical = 5
+outer.bottom = 5
+outer.top = [{ monitor.main = 5 }, 5]
+outer.right = 5
+outer.left = 5

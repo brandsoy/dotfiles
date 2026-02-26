@@ -32,12 +32,12 @@ preset = 'qwerty'
 # Inner gaps between windows, outer gaps from monitor edges
 
 [gaps]
-inner.horizontal = 10
-inner.vertical = 10
-outer.bottom = 10
-outer.top = [{ monitor.main = 10 }, 10]
-outer.right = 10
-outer.left = 10
+inner.horizontal = 5
+inner.vertical = 5
+outer.bottom = 5
+outer.top = [{ monitor.main = 5 }, 5]
+outer.right = 5
+outer.left = 5
 
 # Main Keybindings
 
@@ -96,7 +96,7 @@ alt-shift-2 = 'move-node-to-workspace 2'
 alt-shift-3 = 'move-node-to-workspace 3'
 alt-shift-4 = 'move-node-to-workspace 4'
 alt-shift-5 = 'move-node-to-workspace 5'
-alt-shift-0 = 'move-node-to-workspace 0'
+alt-shift-s = 'move-node-to-workspace 0'
 
 # Workspace navigation
 alt-tab = 'workspace-back-and-forth'
@@ -141,20 +141,20 @@ run = ['move-node-to-workspace 1']
 # Workspace 2 - Terminals
 [[on-window-detected]]
 if.app-id = 'com.mitchellh.ghostty'
-run = ['move-node-to-workspace 2']
+run = ['move-node-to-workspace 1']
 
 [[on-window-detected]]
 if.app-id = 'net.kovidgoyal.kitty'
-run = ['move-node-to-workspace 2']
+run = ['move-node-to-workspace 1']
 
 # Workspace 0 - Communication
 [[on-window-detected]]
 if.app-id = 'com.microsoft.Outlook'
-run = ['move-node-to-workspace 5']
+run = ['move-node-to-workspace 0']
 
 [[on-window-detected]]
 if.app-id = 'com.microsoft.teams2'
-run = ['move-node-to-workspace 5']
+run = ['move-node-to-workspace 0']
 
 # Floating windows
 [[on-window-detected]]
