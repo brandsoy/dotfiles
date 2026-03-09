@@ -9,8 +9,12 @@ return {
 		opts = {
 			workspaces = {
 				{
-					name = "Work",
-					path = "~/Sync/Obsidian/work_vault",
+					name = "WorkNotes",
+					path = "~/Sync/WorkNotes",
+				},
+				{
+					name = "PrivateNotes",
+					path = "~/Sync/PrivateNotes",
 				},
 			},
 
@@ -36,6 +40,33 @@ return {
 				folder = "templates",
 				date_format = "%Y-%m-%d",
 				time_format = "%H:%M",
+			},
+
+			-- Frontmatter with created/updated timestamps
+			frontmatter = {
+				func = function(note)
+					local out = { id = note.id, aliases = note.aliases, tags = note.tags }
+					local now = os.date("%Y-%m-%d")
+					if note.metadata ~= nil and note.metadata.created then
+						out.created = note.metadata.created
+					else
+						local stat = vim.uv.fs_stat(tostring(note.path))
+						if stat and stat.birthtime and stat.birthtime.sec > 0 then
+							out.created = os.date("%Y-%m-%d", stat.birthtime.sec)
+						else
+							out.created = now
+						end
+					end
+					out.updated = now
+					if note.metadata ~= nil then
+						for k, v in pairs(note.metadata) do
+							if out[k] == nil then
+								out[k] = v
+							end
+						end
+					end
+					return out
+				end,
 			},
 
 			-- Note ID generation

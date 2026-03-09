@@ -278,3 +278,11 @@ export PATH="$HOME/.aspire/bin:$PATH"
 
 # This calls the mise-managed nightly specifically
 alias nv12='NVIM_APPNAME=nvim-v12 mise exec neovim@nightly -- nvim'
+
+# pnpm
+export PNPM_HOME="/Users/mattis/Library/pnpm"
+case ":$PATH:" in
+  *":$PNPM_HOME:"*) ;;
+  *) export PATH="$PNPM_HOME:$PATH" ;;
+esac
+# pnpm end

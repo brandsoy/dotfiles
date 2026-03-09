@@ -136,6 +136,13 @@ function M.setup_conform()
 			end
 
 			local ft = vim.bo[bufnr].filetype
+			if ft == "markdown" then
+				local filename = vim.api.nvim_buf_get_name(bufnr)
+				if not root_has_prettier_config(filename) then
+					return nil
+				end
+			end
+
 			if ft == "svelte" then
 				return { lsp_format = "prefer", timeout_ms = 1000 }
 			end
