@@ -1,10 +1,16 @@
+# Repo files — never deployed to home dir
+README.md
+TODO.md
+mise.toml
+brave
+
 # macOS-only configs
 {{ if ne .chezmoi.os "darwin" }}
 dot_config/aerospace
 dot_config/karabiner
 dot_config/raycast
-Brewfile
 {{ end }}
+Brewfile
 
 # Linux-only configs
 {{ if ne .chezmoi.os "linux" }}
@@ -19,5 +25,5 @@ dot_config/waybar_bck
 dot_gtkrc-2.0
 dot_themes
 wifi-roam.sh
-Archfile
 {{ end }}
+Archfile
