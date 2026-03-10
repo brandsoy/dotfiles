@@ -24,6 +24,6 @@ dot_config/waybar
 dot_config/waybar_bck
 dot_gtkrc-2.0
 dot_themes
-wifi-roam.sh
+dot_local/bin/wifi-roam.sh
 {{ end }}
 Archfile

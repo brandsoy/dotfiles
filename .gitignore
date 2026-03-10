@@ -14,6 +14,8 @@ dot_config/raycast/extensions/
 **/*.log
 **/*.mdb
 **/.DS_Store
+**/*.bak
+dot_config/karabiner/automatic_backups/
 
 # Editor-specific
 dot_config/nvim/lazy-lock.json
