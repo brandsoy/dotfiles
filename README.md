@@ -98,3 +98,50 @@ OS filtering is handled by `.chezmoiignore`:
 
 - **macOS only**: `dot_config/aerospace`, `dot_config/karabiner`, `dot_config/raycast`, `Brewfile`
 - **Linux only**: `dot_config/hypr`, `dot_config/waybar`, `dot_config/keyd`, `dot_config/swaync`, `dot_config/gtk-*`, `Archfile`
+
+## Secrets (Proton Pass)
+
+Secrets are managed via [Proton Pass](https://proton.me/pass) using the [`pass-cli`](https://protonpass.github.io/pass-cli/) tool, which chezmoi supports natively.
+
+### Setup
+
+```bash
+# Install (included in Brewfile, or manually)
+brew install protonpass/tap/pass-cli
+
+# Authenticate (opens browser)
+pass-cli login
+```
+
+### Finding secret URIs
+
+```bash
+# List vaults to get SHARE_ID
+pass-cli vault list
+
+# List items in a vault to get ITEM_ID
+pass-cli item list --vault-id <SHARE_ID>
+
+# Inspect an item's fields
+pass-cli item view pass://<SHARE_ID>/<ITEM_ID>
+```
+
+### Using secrets in templates
+
+Any dotfile can be made a template by adding a `.tmpl` suffix. Reference secrets with:
+
+```
+# Simple field
+{{ protonPass "pass://<SHARE_ID>/<ITEM_ID>/<FIELD>" }}
+
+# Structured item (login with multiple fields)
+{{ (protonPassJSON "pass://<SHARE_ID>/<ITEM_ID>").item.content.content.key.password }}
+```
+
+Example — `dot_gitconfig.tmpl`:
+
+```
+[user]
+    name  = {{ protonPass "pass://abc123/def456/username" }}
+    email = {{ protonPass "pass://abc123/def456/email" }}
+```
