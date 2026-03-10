@@ -30,3 +30,4 @@ dot_config/nvim/test
 # pgcli runtime files
 dot_config/pgcli/history
 dot_config/pgcli/log
+.claude/
