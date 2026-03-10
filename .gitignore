@@ -1,12 +1,12 @@
 # Auth tokens (CRITICAL)
-shared/config/.config/gh/hosts.yml
-shared/config/.config/github-copilot/apps.json
-shared/config/.config/github-copilot/hosts.json
+dot_config/gh/hosts.yml
+dot_config/github-copilot/apps.json
+dot_config/github-copilot/hosts.json
 
 # Generated/runtime directories
-shared/config/.config/github-copilot/rd/
-shared/config/.config/github-copilot/go/
-mac/config/.config/raycast/extensions/
+dot_config/github-copilot/rd/
+dot_config/github-copilot/go/
+dot_config/raycast/extensions/
 
 # Runtime/cache files
 **/.cache/
@@ -16,11 +16,17 @@ mac/config/.config/raycast/extensions/
 **/.DS_Store
 
 # Editor-specific
-shared/config/.config/nvim/lazy-lock.json
+dot_config/nvim/lazy-lock.json
 
-# keys
+# SSH keys
 **/id_*
 **/*.pub
 **/known_hosts*
-shared/config/.config/gh
-shared/config/.config/nvim/test
+
+# Sensitive directories
+dot_config/gh
+dot_config/nvim/test
+
+# pgcli runtime files
+dot_config/pgcli/history
+dot_config/pgcli/log

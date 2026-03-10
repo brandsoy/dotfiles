@@ -1,80 +1,100 @@
 # Dotfiles
 
-Personal configuration files for macOS and Linux (Arch/Debian).
+Personal configuration files for macOS and Linux (Arch/Debian), managed with [chezmoi](https://www.chezmoi.io/).
 
 ## Structure
 
 ```
-dotfiles/
-├── shared/            # Cross-platform configs (stow packages)
-│   ├── bin/           # Personal scripts
-│   ├── config/        # Shared .config (nvim, alacritty, bat, etc.)
-│   ├── git/           # Git configuration
-│   ├── ssh/           # SSH keys
-│   ├── tmux/          # Tmux configuration
-│   └── zshrc/         # Zsh configuration
-├── mac/               # macOS-specific configs
-│   ├── config/        # aerospace, karabiner, raycast
-│   └── Brewfile       # Homebrew packages
-├── linux/             # Linux-specific configs
-│   ├── config/        # hypr, waybar, keyd, swaync, gtk, etc.
-│   ├── scripts/       # Linux scripts
-│   └── Archfile       # Arch Linux packages
-└── install.sh         # Auto-detecting installation script
+dotfiles/                          # chezmoi source directory
+├── dot_config/                    # → ~/.config/
+│   ├── nvim/                      # Neovim (shared)
+│   ├── ghostty/                   # Ghostty terminal (shared)
+│   ├── kitty/                     # Kitty terminal (shared)
+│   ├── alacritty/                 # Alacritty terminal (shared)
+│   ├── tmux/ (via dot_tmux.conf)  # Tmux (shared)
+│   ├── lazygit/                   # lazygit (shared)
+│   ├── lazydocker/                # lazydocker (shared)
+│   ├── starship.toml              # Starship prompt (shared)
+│   ├── aerospace/                 # macOS window manager
+│   ├── karabiner/                 # macOS key remapping
+│   ├── raycast/                   # macOS launcher
+│   ├── hypr/                      # Hyprland compositor (Linux)
+│   ├── waybar/                    # Waybar status bar (Linux)
+│   ├── keyd/                      # Key remapping (Linux)
+│   ├── swaync/                    # Notification daemon (Linux)
+│   └── gtk-*/                     # GTK themes (Linux)
+├── dot_gitconfig                  # → ~/.gitconfig
+├── dot_zshrc                      # → ~/.zshrc
+├── dot_zprofile                   # → ~/.zprofile
+├── dot_zshenv                     # → ~/.zshenv
+├── dot_tmux.conf                  # → ~/.tmux.conf
+├── dot_ssh/                       # → ~/.ssh/ (config only, no keys)
+├── Brewfile                       # Homebrew packages (macOS)
+├── Archfile                       # Arch Linux packages
+├── .chezmoiignore                 # OS-conditional file exclusions
+├── .chezmoi.toml.tmpl             # chezmoi config template
+└── run_once_install-packages.sh.tmpl  # One-time package installation
 ```
 
 ## Quick Start
 
-1.  Clone the repository:
-    ```bash
-    git clone <your-repo-url> ~/dotfiles
-    cd ~/dotfiles
-    ```
+### Prerequisites
 
-2.  Run the installation script:
-    ```bash
-    ./install.sh
-    ```
-
-This script will:
--   **Detect OS** (macOS, Arch, Debian, or generic Linux)
--   **Install dependencies** (stow, git, curl, zsh, etc.)
--   **Symlink shared configs** using GNU Stow
--   **Symlink OS-specific configs** based on detected OS
--   **Install packages**:
-    -   macOS: Installs from `mac/Brewfile`
-    -   Arch: Installs from `linux/Archfile` (pacman + AUR)
-    -   Debian: Installs common tools via apt
-
-## Selective Installation
+Install chezmoi:
 
 ```bash
-# Install only shared configs
-./install.sh shared
+# macOS
+brew install chezmoi
 
-# Install only OS-specific configs
-./install.sh mac
-./install.sh linux
-
-# Install a specific package
-./install.sh config
-./install.sh nvim
-
-# Only install packages (no stow)
-./install.sh packages
+# Linux
+sh -c "$(curl -fsLS get.chezmoi.io)"
 ```
 
-## Uninstalling
-
-To remove symlinks:
+### Apply dotfiles
 
 ```bash
-# Shared packages
-cd ~/dotfiles/shared && stow -D -t ~ <package>
-
-# Mac packages
-cd ~/dotfiles/mac && stow -D -t ~ config
-
-# Linux packages
-cd ~/dotfiles/linux && stow -D -t ~ config
+chezmoi init --apply https://github.com/mattis/dotfiles
 ```
+
+Or if you've already cloned the repo:
+
+```bash
+chezmoi init --source ~/dotfiles
+chezmoi apply
+```
+
+### What happens on first apply
+
+- chezmoi reads `.chezmoiignore` to skip OS-inappropriate configs
+- `run_once_install-packages.sh.tmpl` runs once to install packages and tools:
+  - macOS: `brew bundle` from `Brewfile`
+  - Arch: `pacman` + AUR packages from `Archfile`
+  - Debian/Ubuntu: `apt` with common tools
+  - Installs: lazygit, lazydocker, mise, gh CLI, TPM
+  - Sets zsh as default shell
+
+## Day-to-day Usage
+
+```bash
+# See what changes chezmoi would make
+chezmoi diff
+
+# Apply dotfiles
+chezmoi apply
+
+# Edit a file in source directory
+chezmoi edit ~/.zshrc
+
+# Add a new file
+chezmoi add ~/.config/something/config
+
+# Pull latest and apply
+chezmoi update
+```
+
+## OS-Specific Configs
+
+OS filtering is handled by `.chezmoiignore`:
+
+- **macOS only**: `dot_config/aerospace`, `dot_config/karabiner`, `dot_config/raycast`, `Brewfile`
+- **Linux only**: `dot_config/hypr`, `dot_config/waybar`, `dot_config/keyd`, `dot_config/swaync`, `dot_config/gtk-*`, `Archfile`

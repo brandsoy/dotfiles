@@ -1,0 +1,23 @@
+# macOS-only configs
+{{ if ne .chezmoi.os "darwin" }}
+dot_config/aerospace
+dot_config/karabiner
+dot_config/raycast
+Brewfile
+{{ end }}
+
+# Linux-only configs
+{{ if ne .chezmoi.os "linux" }}
+dot_config/gtk-3.0
+dot_config/gtk-4.0
+dot_config/hypr
+dot_config/keyd
+dot_config/paru
+dot_config/swaync
+dot_config/waybar
+dot_config/waybar_bck
+dot_gtkrc-2.0
+dot_themes
+wifi-roam.sh
+Archfile
+{{ end }}

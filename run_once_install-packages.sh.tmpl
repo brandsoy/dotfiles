@@ -1,0 +1,209 @@
+#!/usr/bin/env bash
+set -e
+
+# Helper: Check command existence
+has_cmd() { command -v "$1" >/dev/null 2>&1; }
+
+OS="{{ .chezmoi.os }}"
+
+echo "Running package installation for OS: $OS"
+
+# ── Install core dependencies ──────────────────────────────────────────────────
+
+if [[ "$OS" == "darwin" ]]; then
+    if ! has_cmd brew; then
+        echo "Installing Homebrew..."
+        /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+    fi
+
+elif [[ "$OS" == "linux" ]]; then
+    if [[ -f /etc/arch-release ]]; then
+        echo "Updating pacman and installing core dependencies..."
+        sudo pacman -Syu --noconfirm
+        sudo pacman -S --needed --noconfirm git curl base-devel zsh
+
+    elif [[ -f /etc/debian_version ]]; then
+        echo "Updating apt and installing core dependencies..."
+        sudo apt-get update -y
+        sudo apt-get install -y git curl build-essential zsh
+
+    elif [[ -f /etc/redhat-release ]]; then
+        sudo dnf install -y git curl zsh
+    fi
+fi
+
+# ── Install packages ───────────────────────────────────────────────────────────
+
+if [[ "$OS" == "darwin" ]]; then
+    BREWFILE="{{ .chezmoi.sourceDir }}/Brewfile"
+    if [[ -f "$BREWFILE" ]]; then
+        echo "Installing Homebrew bundle..."
+        brew bundle --file="$BREWFILE"
+    fi
+    git config --global credential.helper osxkeychain
+
+elif [[ "$OS" == "linux" ]]; then
+    if [[ -f /etc/arch-release ]]; then
+        echo "Installing Arch packages from Archfile..."
+        ARCHFILE="{{ .chezmoi.sourceDir }}/Archfile"
+        if [[ -f "$ARCHFILE" ]]; then
+            # Install pacman packages (exclude comments and AUR lines)
+            mapfile -t packages < <(grep -v '^#' "$ARCHFILE" | grep -v '^AUR:' | grep -v '^$')
+            if [[ ${#packages[@]} -gt 0 ]]; then
+                sudo pacman -S --needed --noconfirm "${packages[@]}"
+            fi
+
+            # Install AUR packages
+            if has_cmd paru; then
+                mapfile -t aur_packages < <(grep '^AUR:' "$ARCHFILE" | sed 's/^AUR: //')
+                if [[ ${#aur_packages[@]} -gt 0 ]]; then
+                    echo "Installing AUR packages..."
+                    paru -S --needed --noconfirm "${aur_packages[@]}"
+                fi
+            elif has_cmd yay; then
+                mapfile -t aur_packages < <(grep '^AUR:' "$ARCHFILE" | sed 's/^AUR: //')
+                if [[ ${#aur_packages[@]} -gt 0 ]]; then
+                    echo "Installing AUR packages..."
+                    yay -S --needed --noconfirm "${aur_packages[@]}"
+                fi
+            else
+                echo "Warning: No AUR helper (paru/yay) found. Install one to get AUR packages."
+            fi
+        fi
+        git config --global credential.helper cache
+
+    elif [[ -f /etc/debian_version ]]; then
+        echo "Installing Debian packages..."
+        sudo apt-get install -y \
+            tmux neovim ripgrep fzf bat jq unzip tree \
+            htop btop fd-find
+
+        # Install Starship
+        if ! has_cmd starship; then
+            echo "Installing Starship..."
+            curl -sS https://starship.rs/install.sh | sh -s -- -y
+        fi
+
+        # Install zoxide
+        if ! has_cmd zoxide; then
+            echo "Installing zoxide..."
+            curl -sS https://raw.githubusercontent.com/ajeetdsouza/zoxide/main/install.sh | bash
+        fi
+
+        # Alias batcat → bat on Debian
+        if command -v batcat &>/dev/null && ! command -v bat &>/dev/null; then
+            mkdir -p ~/.local/bin
+            ln -sf /usr/bin/batcat ~/.local/bin/bat
+        fi
+        git config --global credential.helper cache
+
+    elif [[ -f /etc/redhat-release ]]; then
+        echo "Installing Fedora/RHEL packages..."
+        sudo dnf install -y \
+            tmux neovim ripgrep fzf bat jq unzip tree \
+            htop btop fd-find zoxide
+
+        if ! has_cmd starship; then
+            echo "Installing Starship..."
+            curl -sS https://starship.rs/install.sh | sh -s -- -y
+        fi
+        git config --global credential.helper cache
+    fi
+fi
+
+# ── Install extra tools ────────────────────────────────────────────────────────
+
+echo "Installing extra tools (gh, lazygit, lazydocker, mise)..."
+
+# gh CLI
+if ! has_cmd gh; then
+    echo "Installing GitHub CLI..."
+    if [[ "$OS" == "darwin" ]]; then
+        brew install gh
+    elif [[ -f /etc/arch-release ]]; then
+        sudo pacman -S --needed --noconfirm github-cli
+    elif [[ -f /etc/debian_version ]]; then
+        curl -fsSL https://cli.github.com/packages/githubcli-archive-keyring.gpg \
+            | sudo dd of=/usr/share/keyrings/githubcli-archive-keyring.gpg
+        sudo chmod go+r /usr/share/keyrings/githubcli-archive-keyring.gpg
+        echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/githubcli-archive-keyring.gpg] https://cli.github.com/packages stable main" \
+            | sudo tee /etc/apt/sources.list.d/github-cli.list > /dev/null
+        sudo apt-get update
+        sudo apt-get install -y gh
+    elif [[ -f /etc/redhat-release ]]; then
+        sudo dnf install -y gh
+    fi
+fi
+
+# lazygit
+if ! has_cmd lazygit; then
+    echo "Installing lazygit..."
+    if [[ "$OS" == "darwin" ]]; then
+        brew install lazygit
+    elif [[ -f /etc/arch-release ]]; then
+        sudo pacman -S --needed --noconfirm lazygit
+    else
+        LAZYGIT_VERSION=$(curl -s "https://api.github.com/repos/jesseduffield/lazygit/releases/latest" \
+            | grep -Po '"tag_name": "v\K[^"]*')
+        curl -Lo /tmp/lazygit.tar.gz \
+            "https://github.com/jesseduffield/lazygit/releases/latest/download/lazygit_${LAZYGIT_VERSION}_Linux_x86_64.tar.gz"
+        tar xf /tmp/lazygit.tar.gz -C /tmp lazygit
+        sudo install /tmp/lazygit /usr/local/bin
+        rm -f /tmp/lazygit /tmp/lazygit.tar.gz
+    fi
+fi
+
+# lazydocker
+if ! has_cmd lazydocker; then
+    echo "Installing lazydocker..."
+    if [[ "$OS" == "darwin" ]]; then
+        brew install lazydocker
+    elif [[ -f /etc/arch-release ]]; then
+        if has_cmd paru; then
+            paru -S --needed --noconfirm lazydocker
+        elif has_cmd yay; then
+            yay -S --needed --noconfirm lazydocker
+        else
+            echo "Warning: No AUR helper found. Cannot install lazydocker."
+        fi
+    else
+        LAZYDOCKER_VERSION=$(curl -s "https://api.github.com/repos/jesseduffield/lazydocker/releases/latest" \
+            | grep -Po '"tag_name": "v\K[^"]*')
+        curl -Lo /tmp/lazydocker.tar.gz \
+            "https://github.com/jesseduffield/lazydocker/releases/latest/download/lazydocker_${LAZYDOCKER_VERSION}_Linux_x86_64.tar.gz"
+        tar xf /tmp/lazydocker.tar.gz -C /tmp lazydocker
+        sudo install /tmp/lazydocker /usr/local/bin
+        rm -f /tmp/lazydocker /tmp/lazydocker.tar.gz
+    fi
+fi
+
+# mise
+if ! has_cmd mise; then
+    echo "Installing mise..."
+    if [[ "$OS" == "darwin" ]]; then
+        brew install mise
+    else
+        curl https://mise.run | sh
+    fi
+fi
+
+# ── Install TPM (Tmux Plugin Manager) ─────────────────────────────────────────
+
+if [[ ! -d "$HOME/.tmux/plugins/tpm" ]]; then
+    echo "Installing Tmux Plugin Manager..."
+    git clone https://github.com/tmux-plugins/tpm "$HOME/.tmux/plugins/tpm"
+    echo "TPM installed. Start tmux and press Ctrl+b I to install plugins."
+else
+    echo "TPM already installed."
+fi
+
+# ── Set zsh as default shell ───────────────────────────────────────────────────
+
+if [[ "$SHELL" != *"zsh"* ]] && has_cmd zsh; then
+    echo "Setting zsh as default shell..."
+    chsh -s "$(which zsh)"
+    echo "Shell changed to zsh. Log out and back in for changes to take effect."
+fi
+
+echo ""
+echo "Done! Relaunch your shell to see changes."
