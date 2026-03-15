@@ -6,6 +6,7 @@ DOTFILES_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 SHARED_DIR="$DOTFILES_DIR/shared"
 MAC_DIR="$DOTFILES_DIR/mac"
 LINUX_DIR="$DOTFILES_DIR/linux"
+HOMEBREW_DIR="$DOTFILES_DIR/homebrew"
 TARGET_DIR="$HOME"
 OS=""
 
@@ -96,9 +97,9 @@ stow_all_from() {
 # Install Packages
 install_packages() {
     if [[ "$OS" == "macos" ]]; then
-        if [[ -f "$MAC_DIR/Brewfile" ]]; then
+        if [[ -f "$HOMEBREW_DIR/Brewfile" ]]; then
             echo "Installing Homebrew bundle..."
-            brew bundle --file="$MAC_DIR/Brewfile"
+            brew bundle --file="$HOMEBREW_DIR/Brewfile"
         fi
         # Configure git credential helper for macOS
         git config --global credential.helper osxkeychain

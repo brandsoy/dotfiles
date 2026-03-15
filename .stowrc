@@ -1,4 +1,6 @@
 --ignore=\.stowrc
+--ignore=assets
+--ignore=homebrew
 --ignore=\.DS_Store
 --ignore=\.git
 --ignore=\.gitignore

@@ -41,6 +41,17 @@ elif [[ -d "/usr/local/opt/libpq/bin" ]]; then
   path_prepend "/usr/local/opt/libpq/bin"
 fi
 
+# Auto update Brewfile when installing or removing packages
+brew() {
+  command brew "$@" || return $?
+
+  # Only run dump if the command was install, uninstall, or reinstall
+  if [[ "$1" == "install" || "$1" == "uninstall" || "$1" == "remove" || "$1" == "rm" || "$1" == "reinstall" || "$1" == "upgrade" ]]; then
+    echo "Updating Brewfile..."
+    command brew bundle dump --force --file=~/dotfiles/homebrew/Brewfile
+  fi
+}
+
 # --- Zinit bootstrap ------------------------------------------------------
 ZINIT_HOME="${XDG_DATA_HOME:-${HOME}/.local/share}/zinit/zinit.git"
 if [[ ! -d "$ZINIT_HOME" ]]; then
