@@ -1,8 +1,14 @@
-# AUTO-GENERATED — edit files in config/ then run ./build.sh
+# ==============================================================================
+# AUTO-GENERATED CONFIG
+# Edit files in config/ then run ./build.sh
+# ==============================================================================
 
+# ==============================================================================
 # Core Settings
 # Startup commands, normalization, and general behavior
+# ==============================================================================
 
+start-at-login = true
 after-login-command = []
 
 # # JankyBorders: https://github.com/FelixKratz/JankyBorders
@@ -10,26 +16,33 @@ after-login-command = []
 #     'exec-and-forget borders active_color=0xcc9d7cd8 inactive_color=0xcc1a1b26 width=8.0',
 # ]
 
-start-at-login = true
-
 # Normalizations: https://nikitabobko.github.io/AeroSpace/guide#normalization
 enable-normalization-flatten-containers = true
 enable-normalization-opposite-orientation-for-nested-containers = true
 
+# Default Layout
 accordion-padding = 0
 default-root-container-layout = 'tiles'
 default-root-container-orientation = 'auto'
+automatically-unhide-macos-hidden-apps = true
 
+# Mouse Behavior
 # Mouse follows focus when focused monitor changes
 on-focused-monitor-changed = ['move-mouse monitor-lazy-center']
 
-automatically-unhide-macos-hidden-apps = true
+
+# ==============================================================================
+# Key Mapping
+# ==============================================================================
 
 [key-mapping]
 preset = 'qwerty'
 
+
+# ==============================================================================
 # Gaps
 # Inner gaps between windows, outer gaps from monitor edges
+# ==============================================================================
 
 [gaps]
 inner.horizontal = 5
@@ -39,14 +52,17 @@ outer.top = [{ monitor.main = 5 }, 5]
 outer.right = 5
 outer.left = 5
 
+
+# ==============================================================================
 # Main Keybindings
+# ==============================================================================
 
 [mode.main.binding]
 
-# App launchers
+# --- App Launchers ---
 alt-enter = 'exec-and-forget open -a /Applications/kitty.app'
 
-# Focus (wrap-around like Hyprland)
+# --- Focus Navigation (Wrap-around) ---
 alt-h = 'focus --boundaries-action wrap-around-the-workspace left'
 alt-j = 'focus --boundaries-action wrap-around-the-workspace down'
 alt-k = 'focus --boundaries-action wrap-around-the-workspace up'
@@ -57,13 +73,13 @@ alt-down = 'focus --boundaries-action wrap-around-the-workspace down'
 alt-up = 'focus --boundaries-action wrap-around-the-workspace up'
 alt-right = 'focus --boundaries-action wrap-around-the-workspace right'
 
-# Move windows
+# --- Move Windows ---
 alt-shift-h = 'move left'
 alt-shift-j = 'move down'
 alt-shift-k = 'move up'
 alt-shift-l = 'move right'
 
-# Layout
+# --- Layout Modification ---
 alt-e = 'layout tiles horizontal vertical'
 alt-comma = 'layout accordion horizontal vertical'
 alt-f = 'fullscreen'
@@ -72,17 +88,17 @@ alt-y = ['focus right', 'join-with down', 'layout tiles horizontal']
 alt-b = 'balance-sizes'
 alt-r = 'flatten-workspace-tree'
 
-# Stack/join windows
+# --- Stack/Join Windows ---
 alt-shift-left = 'join-with left'
 alt-shift-down = 'join-with down'
 alt-shift-up = 'join-with up'
 alt-shift-right = 'join-with right'
 
-# Resize
-alt-shift-minus = 'resize smart -50'
-alt-shift-equal = 'resize smart +50'
+# --- Resize Windows ---
+alt-shift-minus = 'resize smart -100'
+alt-shift-equal = 'resize smart +100'
 
-# Workspaces
+# --- Workspace Navigation ---
 alt-1 = 'workspace 1'
 alt-2 = 'workspace 2'
 alt-3 = 'workspace 3'
@@ -90,7 +106,10 @@ alt-4 = 'workspace 4'
 alt-5 = 'workspace 5'
 alt-s = 'workspace 0'
 
-# Move windows to workspaces
+alt-tab = 'workspace-back-and-forth'
+alt-shift-tab = 'move-workspace-to-monitor --wrap-around next'
+
+# --- Move Windows to Workspaces ---
 alt-shift-1 = 'move-node-to-workspace 1'
 alt-shift-2 = 'move-node-to-workspace 2'
 alt-shift-3 = 'move-node-to-workspace 3'
@@ -98,24 +117,23 @@ alt-shift-4 = 'move-node-to-workspace 4'
 alt-shift-5 = 'move-node-to-workspace 5'
 alt-shift-s = 'move-node-to-workspace 0'
 
-# Workspace navigation
-alt-tab = 'workspace-back-and-forth'
-alt-shift-tab = 'move-workspace-to-monitor --wrap-around next'
-
-# Enter modes
+# --- Enter Sub-Modes ---
 alt-shift-semicolon = 'mode service'
 alt-shift-r = 'mode resize'
 
-# Extra Modes (service, resize)
 
-# Service mode
+# ==============================================================================
+# Extra Modes (Service, Resize)
+# ==============================================================================
+
+# Service Mode
 [mode.service.binding]
 esc = ['reload-config', 'mode main']
 r = ['flatten-workspace-tree', 'mode main']
 f = ['layout floating tiling', 'mode main']
 backspace = ['close-all-windows-but-current', 'mode main']
 
-# Resize mode (like Hyprland submap)
+# Resize Mode
 [mode.resize.binding]
 h = 'resize width -50'
 j = 'resize height +50'
@@ -126,10 +144,13 @@ equal = 'resize smart +50'
 enter = 'mode main'
 esc = 'mode main'
 
-# Window Rules
-# Workspace assignments and floating window overrides
 
-# Workspace 1 - Browsers
+# ==============================================================================
+# Window Rules (Callbacks)
+# Workspace assignments and floating window overrides
+# ==============================================================================
+
+# --- Browsers -> Workspace 1 ---
 [[on-window-detected]]
 if.app-id = 'com.firefox.Firefox'
 run = ['move-node-to-workspace 1']
@@ -138,7 +159,7 @@ run = ['move-node-to-workspace 1']
 if.app-id = 'com.google.Chrome'
 run = ['move-node-to-workspace 1']
 
-# Workspace 2 - Terminals
+# --- Terminals -> Workspace 1 ---
 [[on-window-detected]]
 if.app-id = 'com.mitchellh.ghostty'
 run = ['move-node-to-workspace 1']
@@ -147,7 +168,7 @@ run = ['move-node-to-workspace 1']
 if.app-id = 'net.kovidgoyal.kitty'
 run = ['move-node-to-workspace 1']
 
-# Workspace 0 - Communication
+# --- Communication -> Workspace 0 ---
 [[on-window-detected]]
 if.app-id = 'com.microsoft.Outlook'
 run = ['move-node-to-workspace 0']
@@ -156,7 +177,7 @@ run = ['move-node-to-workspace 0']
 if.app-id = 'com.microsoft.teams2'
 run = ['move-node-to-workspace 0']
 
-# Floating windows
+# --- Floating Windows ---
 [[on-window-detected]]
 if.app-id = 'com.apple.finder'
 run = 'layout floating'
@@ -169,8 +190,11 @@ run = 'layout floating'
 if.app-id = 'dev.kdrag0n.MacVirt'
 run = ['layout floating']
 
+
+# ==============================================================================
 # Monitor Configuration
 # Force workspace-to-monitor assignments
+# ==============================================================================
 
 [workspace-to-monitor-force-assignment]
 1 = 'main'
@@ -179,4 +203,4 @@ run = ['layout floating']
 4 = 'main'
 0 = 'main'
 5 = 'secondary'
-
+6 = 'secondary'
