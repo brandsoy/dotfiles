@@ -204,5 +204,3 @@ if [[ "$OSTYPE" == "darwin"* && -d "$HOME/.docker/completions" ]]; then
   fpath=($HOME/.docker/completions $fpath)
 fi
 
-# --- mise managed nightly neovim --------------------------------------------
-alias nv12='NVIM_APPNAME=nvim-v12 mise exec neovim@nightly -- nvim'
