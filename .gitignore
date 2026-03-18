@@ -6,7 +6,7 @@ shared/config/.config/github-copilot/hosts.json
 # Generated/runtime directories
 shared/config/.config/github-copilot/rd/
 shared/config/.config/github-copilot/go/
-mac/config/.config/raycast/extensions/
+mac/config/.config/raycast/
 
 # Runtime/cache files
 **/.cache/
