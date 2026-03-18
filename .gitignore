@@ -14,9 +14,10 @@ mac/config/.config/raycast/extensions/
 **/*.log
 **/*.mdb
 **/.DS_Store
-
-# Editor-specific
-shared/config/.config/nvim/lazy-lock.json
+**/*.bak
+**/*.old
+shared/config/.config/pgcli/history
+shared/config/.config/pgcli/log
 
 # keys
 **/id_*

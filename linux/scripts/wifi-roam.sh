@@ -1,6 +1,8 @@
-#!/bin/zsh
-INTERFACE="wlan0" # Find your interface with 'ip link'
-SSID="docksrv"
+#!/usr/bin/env bash
+# Override defaults via environment variables:
+#   WIFI_INTERFACE=wlp3s0 WIFI_SSID=myhomenet ./wifi-roam.sh
+INTERFACE="${WIFI_INTERFACE:-wlan0}" # Find your interface with 'ip link'
+SSID="${WIFI_SSID:-docksrv}"
 THRESHOLD=-75 # Signal level in dBm to start looking
 DIFF=15       # Only switch if the new AP is at least 15dBm stronger
 
