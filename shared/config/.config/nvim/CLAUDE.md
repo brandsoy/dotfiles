@@ -58,6 +58,7 @@ lua/
 ├── core/                   # Core Neovim settings (no plugins)
 │   ├── options.lua         # Editor options (indentation, search, UI)
 │   ├── keymaps.lua         # Global keymaps (window nav, buffers, toggles)
+│   ├── globals.lua         # Global utility functions
 │   └── autocmds.lua        # Autocommands (cursor position, yank highlight, large file detection)
 ├── config/
 │   └── lsp/                # LSP configuration modules
@@ -72,7 +73,10 @@ lua/
     ├── finder.lua          # fzf-lua for fuzzy finding
     ├── treesitter.lua      # Syntax highlighting and code intelligence
     ├── markdown.lua        # Markdown rendering
-    ├── ai.lua              # Sidekick.nvim (AI assistance)
+    ├── ai.lua              # GitHub Copilot (inline suggestions)
+    ├── git.lua             # Gitsigns (hunk navigation, blame, diff)
+    ├── database.lua        # vim-dadbod + UI (DB explorer via <leader>db)
+    ├── obsidian.lua        # Obsidian.nvim (note-taking, two workspaces)
     ├── roslyn.lua          # C# language support
     └── lsp/init.lua        # LSP plugin specifications
 ```
@@ -202,12 +206,14 @@ Leader key is `<Space>`.
 - `<leader>b` - Buffer management (next/prev/delete/close others)
 - `<leader>f` - Finder/search (files, grep, buffers, symbols, diagnostics via fzf-lua)
 - `<leader>l` - LSP commands (definition, rename, code actions, format, diagnostics)
+- `<leader>g` - Git operations (blame, diff, hunk stage/reset/preview via gitsigns)
 - `<leader>m` - Markdown operations (todo, checkbox, link, wrap)
+- `<leader>o` - Obsidian commands (new note, search, follow link, daily notes, templates)
 - `<leader>q` - Quit commands
 - `<leader>s` - Split/window management
 - `<leader>t` - Toggle UI elements (relative numbers, cursorline, wrap, spell)
 - `<leader>w` - Write/save commands
-- `<leader>a` - AI/Sidekick commands
+- `<leader>db` - Database UI toggle (vim-dadbod)
 
 ### Important Global Keymaps
 - `<C-h/j/k/l>` - Navigate between windows (works in normal and terminal mode)
