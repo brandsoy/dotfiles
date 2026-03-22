@@ -3,31 +3,15 @@ background-opacity = 0.98
 background-blur-radius = 30
 mouse-hide-while-typing = true
 
-# theme = Vercel
-# theme = poimandres
-# theme = Vesper
-# theme = Ayu Mirage
-# theme = Rose Pine
-# theme = dark:Nord Wave,light:Nord Light
-# theme = dark:Catppuccin Mocha, light:Catppuccin Latte
-# theme = rose-pine
-# theme = dark:Rose Pine,light:Rose Pine Dawn
-# theme = ayu
-# theme = dark:GitHub Dark,light:Github
-
 # Titlebar
 macos-titlebar-style = "transparent"
 macos-titlebar-proxy-icon = "hidden"
 
 # Font
 font-size = 14
+font-family = "JetBrainsMono Nerd Font Mono"
 # font-family = "GeistMono Nerd Font Mono"
-font-thicken = true
-font-family = "CaskaydiaMono Nerd Font Mono"
-# font-feature = calt
-# font-feature = liga
-# font-feature = dig
-# font-synthetic-style = true
+# font-family = "CaskaydiaMono Nerd Font Mono"
 
 adjust-cell-height = 10%
 
