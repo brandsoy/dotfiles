@@ -1,4 +1,5 @@
 # ~/.zprofile
+# shellcheck shell=bash
 # Sourced once at login shell startup (before .zshrc)
 # Path helpers are available from .zshenv
 

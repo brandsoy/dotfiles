@@ -83,7 +83,8 @@ stow_all_from() {
 
     for package_path in "$stow_dir"/*; do
         [[ -d "$package_path" ]] || continue
-        local package_name=$(basename "$package_path")
+        local package_name
+        package_name=$(basename "$package_path")
 
         # Skip if matches pattern
         if [[ -n "$skip_pattern" && "$package_name" =~ $skip_pattern ]]; then
@@ -109,26 +110,35 @@ install_packages() {
 
         if [[ -f "$LINUX_DIR/Archfile" ]]; then
             # Install pacman packages (exclude comments and AUR lines)
-            local packages=($(grep -v '^#' "$LINUX_DIR/Archfile" | grep -v '^AUR:' | grep -v '^$' | xargs))
-            if [ ${#packages[@]} -gt 0 ]; then
+            local packages=()
+            while IFS= read -r pkg; do
+                packages+=("$pkg")
+            done < <(
+                awk '!/^#/ && !/^AUR:/ && NF { for (i=1;i<=NF;i++) print $i }' "$LINUX_DIR/Archfile"
+            )
+
+            if ((${#packages[@]} > 0)); then
                 sudo pacman -S --needed --noconfirm "${packages[@]}"
             fi
 
+            local aur_packages=()
+            while IFS= read -r pkg; do
+                aur_packages+=("$pkg")
+            done < <(
+                awk '/^AUR:/ { sub(/^AUR:[[:space:]]*/, ""); for (i=1;i<=NF;i++) print $i }' "$LINUX_DIR/Archfile"
+            )
+
             # Check for AUR helper and install AUR packages
-            if has_cmd paru; then
-                local aur_packages=($(grep '^AUR:' "$LINUX_DIR/Archfile" | sed 's/^AUR: //' | xargs))
-                if [ ${#aur_packages[@]} -gt 0 ]; then
+            if ((${#aur_packages[@]} > 0)); then
+                if has_cmd paru; then
                     echo "Installing AUR packages..."
                     paru -S --needed --noconfirm "${aur_packages[@]}"
-                fi
-            elif has_cmd yay; then
-                local aur_packages=($(grep '^AUR:' "$LINUX_DIR/Archfile" | sed 's/^AUR: //' | xargs))
-                if [ ${#aur_packages[@]} -gt 0 ]; then
+                elif has_cmd yay; then
                     echo "Installing AUR packages..."
                     yay -S --needed --noconfirm "${aur_packages[@]}"
+                else
+                    echo "Warning: No AUR helper (paru/yay) found. Install one to get AUR packages."
                 fi
-            else
-                echo "Warning: No AUR helper (paru/yay) found. Install one to get AUR packages."
             fi
         fi
 

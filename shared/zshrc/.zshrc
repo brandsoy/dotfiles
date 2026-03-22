@@ -1,5 +1,7 @@
 # ~/.zshrc
 
+# shellcheck shell=bash
+
 # --- Homebrew wrapper -------------------------------------------------------
 # Auto update Brewfile when installing or removing packages
 brew() {
@@ -24,6 +26,7 @@ if [[ ! -d "$ZINIT_HOME" ]]; then
 fi
 
 if [[ -f "${ZINIT_HOME}/zinit.zsh" ]]; then
+  # shellcheck disable=SC1091
   source "${ZINIT_HOME}/zinit.zsh"
 else
   return 1
@@ -43,7 +46,7 @@ zinit light Aloxaf/fzf-tab
 zinit ice wait lucid
 zinit snippet OMZP::sudo
 
-zinit ice wait lucid if'[[ -f /etc/arch-release ]]'
+zinit ice wait lucid if '[[ -f /etc/arch-release ]]'
 zinit snippet OMZP::archlinux
 
 # Syntax highlighting should load last, but in turbo mode, we ensure it wraps up nicely
@@ -53,7 +56,15 @@ zinit light zdharma-continuum/fast-syntax-highlighting
 # --- Completion System (Optimized) ------------------------------------------
 autoload -Uz compinit
 # Only regenerate compdump once a day
-if [[ -n ${ZDOTDIR:-$HOME}/.zcompdump(#qN.mh+24) ]]; then
+compdump="${ZDOTDIR:-$HOME}/.zcompdump"
+mtime=0
+if [[ -f "$compdump" ]]; then
+  mtime=$(stat -f %m "$compdump" 2>/dev/null || stat -c %Y "$compdump" 2>/dev/null || echo 0)
+fi
+now=$(date +%s)
+age=$(( now - mtime ))
+
+if [[ ! -f "$compdump" || $age -gt 86400 ]]; then
   compinit
 else
   compinit -C
@@ -66,14 +77,17 @@ fi
 
 # --- Tool integrations ------------------------------------------------------
 if [[ -f "$HOME/.config/theme-sync/current.env" ]]; then
+  # shellcheck disable=SC1091
   source "$HOME/.config/theme-sync/current.env"
 fi
 
 if command -v fzf &>/dev/null; then
   eval "$(fzf --zsh)"
   if [[ -n "$FZF_THEME_FILE" && -f "$FZF_THEME_FILE" ]]; then
+    # shellcheck disable=SC1090
     source "$FZF_THEME_FILE"
   elif [[ -f "$HOME/.config/fzf/tokyonight_night.sh" ]]; then
+    # shellcheck disable=SC1091
     source "$HOME/.config/fzf/tokyonight_night.sh"
   fi
 fi
@@ -93,6 +107,7 @@ bindkey '^n' history-beginning-search-forward
 bindkey '^[w' kill-region
 
 HISTSIZE=10000
+# shellcheck disable=SC2034
 SAVEHIST=10000
 HISTFILE="${HISTFILE:-$HOME/.zsh_history}"
 
@@ -108,6 +123,7 @@ setopt hist_find_no_dups
 
 # --- Completion styling -----------------------------------------------------
 zstyle ':completion:*' matcher-list 'm:{a-z}={A-Za-z}'
+# shellcheck disable=SC2296
 zstyle ':completion:*' list-colors "${(s.:.)LS_COLORS}"
 zstyle ':completion:*' menu no
 
@@ -115,11 +131,15 @@ zstyle ':completion:*' menu no
 # Cross-platform ls color support & fzf-preview
 if ls --color > /dev/null 2>&1; then
   alias ls='ls --color=auto'
+  # shellcheck disable=SC2016
   zstyle ':fzf-tab:complete:cd:*' fzf-preview 'ls --color $realpath'
+  # shellcheck disable=SC2016
   zstyle ':fzf-tab:complete:__zoxide_z:*' fzf-preview 'ls --color $realpath'
 else
   alias ls='ls -G'
+  # shellcheck disable=SC2016
   zstyle ':fzf-tab:complete:cd:*' fzf-preview 'ls -G $realpath'
+  # shellcheck disable=SC2016
   zstyle ':fzf-tab:complete:__zoxide_z:*' fzf-preview 'ls -G $realpath'
 fi
 
@@ -127,7 +147,7 @@ alias l='ls -lah'
 alias c='clear'
 alias ld='lazydocker'
 alias lg='lazygit'
-alias theme-sync="$HOME/.config/theme-sync/theme-sync"
+alias theme-sync='$HOME/.config/theme-sync/theme-sync'
 alias v='nvim'
 alias vim='nvim'
 alias ff="fd --type f --hidden --exclude .git | fzf --preview 'bat --color=always {}'"
@@ -155,7 +175,7 @@ function fdnav {
   local dir
   dir=$(find . -maxdepth 1 -mindepth 1 -type d 2>/dev/null | sed 's|^\./||' | fzf --height 40% --reverse --preview 'tree -C {}' 2>/dev/null) || return
   [[ -n "$dir" ]] || return
-  builtin cd "$dir"
+  builtin cd "$dir" || return
 }
 
 function fh {
@@ -183,11 +203,13 @@ function fkill {
 # --- Print ip information ---------------------------------------------------
 myip() {
     echo "----------------------------"
-    local wan_ip=$(curl -s --max-time 2 ifconfig.co || echo "Offline")
+    local wan_ip
+    wan_ip=$(curl -s --max-time 2 ifconfig.co || echo "Offline")
     local lan_ip=""
 
     if [[ "$OSTYPE" == "darwin"* ]]; then
-        local iface=$(route -n get default 2>/dev/null | awk '/interface: / {print $2}')
+        local iface
+        iface=$(route -n get default 2>/dev/null | awk '/interface: / {print $2}')
         [[ -n "$iface" ]] && lan_ip=$(ipconfig getifaddr "$iface")
     else
         # Linux / generic
@@ -211,5 +233,5 @@ fi
 
 # --- Docker Desktop completions (macOS) -------------------------------------
 if [[ "$OSTYPE" == "darwin"* && -d "$HOME/.docker/completions" ]]; then
-  fpath=($HOME/.docker/completions $fpath)
+  fpath=("$HOME/.docker/completions" "${fpath[@]}")
 fi
