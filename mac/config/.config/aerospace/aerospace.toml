@@ -94,23 +94,25 @@ alt-shift-minus = 'resize smart -100'
 alt-shift-equal = 'resize smart +100'
 
 # --- Workspace Navigation ---
-alt-1 = 'workspace 1'
-alt-2 = 'workspace 2'
-alt-3 = 'workspace 3'
-alt-4 = 'workspace 4'
-alt-5 = 'workspace 5'
-alt-s = 'workspace 0'
+alt-1 = 'workspace web'
+alt-2 = 'workspace term'
+alt-3 = 'workspace code'
+alt-4 = 'workspace misc'
+alt-s = 'workspace comms'
+alt-d = 'workspace notes'
+alt-m = 'workspace media'
 
 alt-tab = 'workspace-back-and-forth'
 alt-shift-tab = 'move-workspace-to-monitor --wrap-around next'
 
 # --- Move Windows to Workspaces ---
-alt-shift-1 = 'move-node-to-workspace 1'
-alt-shift-2 = 'move-node-to-workspace 2'
-alt-shift-3 = 'move-node-to-workspace 3'
-alt-shift-4 = 'move-node-to-workspace 4'
-alt-shift-5 = 'move-node-to-workspace 5'
-alt-shift-s = 'move-node-to-workspace 0'
+alt-shift-1 = 'move-node-to-workspace web'
+alt-shift-2 = 'move-node-to-workspace term'
+alt-shift-3 = 'move-node-to-workspace code'
+alt-shift-4 = 'move-node-to-workspace misc'
+alt-shift-s = 'move-node-to-workspace comms'
+alt-shift-d = 'move-node-to-workspace notes'
+alt-shift-m = 'move-node-to-workspace media'
 
 # --- Enter Sub-Modes ---
 alt-shift-semicolon = 'mode service'
@@ -145,32 +147,50 @@ esc = 'mode main'
 # Workspace assignments and floating window overrides
 # ==============================================================================
 
-# --- Browsers -> Workspace 1 ---
+# --- Browsers -> Workspace web ---
 [[on-window-detected]]
 if.app-id = 'org.mozilla.firefox'
-run = ['move-node-to-workspace 1']
+run = ['move-node-to-workspace web']
 
 [[on-window-detected]]
 if.app-id = 'com.google.Chrome'
-run = ['move-node-to-workspace 1']
+run = ['move-node-to-workspace web']
 
-# --- Terminals -> Workspace 2 ---
+[[on-window-detected]]
+if.app-id = 'com.brave.Browser'
+run = ['move-node-to-workspace web']
+
+# --- Terminals -> Workspace term ---
 [[on-window-detected]]
 if.app-id = 'com.mitchellh.ghostty'
-run = ['move-node-to-workspace 2']
+run = ['move-node-to-workspace term']
 
 [[on-window-detected]]
 if.app-id = 'net.kovidgoyal.kitty'
-run = ['move-node-to-workspace 2']
+run = ['move-node-to-workspace term']
 
-# --- Communication -> Workspace 0 ---
+# --- Editors -> Workspace code ---
+[[on-window-detected]]
+if.app-id = 'com.microsoft.VSCode'
+run = ['move-node-to-workspace code']
+
+[[on-window-detected]]
+if.app-id = 'dev.zed.Zed'
+run = ['move-node-to-workspace code']
+
+# --- Notes / Reference -> Workspace notes ---
+[[on-window-detected]]
+if.app-id = 'md.obsidian'
+run = ['move-node-to-workspace notes']
+
+# --- Communication -> Workspace comms ---
 [[on-window-detected]]
 if.app-id = 'com.microsoft.Outlook'
-run = ['move-node-to-workspace 0']
+run = ['move-node-to-workspace comms']
 
 [[on-window-detected]]
 if.app-id = 'com.microsoft.teams2'
-run = ['move-node-to-workspace 0']
+run = ['move-node-to-workspace comms']
 
 # --- Floating Windows ---
 [[on-window-detected]]
@@ -192,10 +212,10 @@ run = ['layout floating']
 # ==============================================================================
 
 [workspace-to-monitor-force-assignment]
-1 = 'main'
-2 = 'main'
-3 = 'main'
-4 = 'main'
-0 = 'main'
-5 = 'secondary'
-6 = 'secondary'
+web = 'main'
+term = 'main'
+code = 'main'
+misc = 'main'
+comms = 'built-in'
+notes = ['EV2436W', 'main']
+media = ['EV2436W', 'main']
