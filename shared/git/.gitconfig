@@ -1,6 +1,8 @@
-[user]
-	name = Mattis Brandsøy
-	email = mattis.brandsoy@pm.me
+[includeIf "gitdir:~/Developer/work"]
+    path = .gitconfig-work
+[includeIf "gitdir:~/Developer/personal"]
+    path = .gitconfig-personal   
+
 [fetch]
 	prune = true
 [init]

@@ -22,6 +22,8 @@ local function notify_option(label, enabled)
   )
 end
 
+require("core.theme").setup()
+
 ------------------------------------------------------------------------------
 --- Normal Mode
 ------------------------------------------------------------------------------
@@ -108,6 +110,14 @@ map("n", "<leader>us", function()
   vim.wo.spell = not vim.wo.spell
   notify_option("Spell check", vim.wo.spell)
 end, "Toggle spell checking")
+
+map("n", "<leader>ut", function()
+  require("core.theme").select()
+end, "Pick theme")
+
+map("n", "<leader>uT", function()
+  require("core.theme").cycle(1)
+end, "Next theme")
 
 -- Ensure splits open where you like (optional)
 vim.opt.splitright = true -- vertical splits open to the right

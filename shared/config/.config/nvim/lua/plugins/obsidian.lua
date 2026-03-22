@@ -2,7 +2,7 @@ return {
 	{
 		"obsidian-nvim/obsidian.nvim",
 		version = "*",
-		ft = "markdown",
+		cmd = { "Obsidian" },
 		dependencies = {
 			"nvim-lua/plenary.nvim",
 		},
@@ -121,60 +121,68 @@ return {
 		config = function(_, opts)
 			require("obsidian").setup(opts)
 
-			-- Keymaps
-			local function map(mode, lhs, rhs, desc)
-				vim.keymap.set(mode, lhs, rhs, { silent = true, desc = desc, buffer = true })
+			local function map(mode, lhs, rhs, desc, extra)
+				local o = vim.tbl_extend("force", { silent = true, desc = desc }, extra or {})
+				vim.keymap.set(mode, lhs, rhs, o)
 			end
 
-			-- Only set keymaps in markdown files
-			vim.api.nvim_create_autocmd("FileType", {
-				pattern = "markdown",
-				callback = function()
-					-- Note creation and navigation
-					map("n", "<leader>on", "<cmd>Obsidian new<cr>", "New note")
-					map("n", "<leader>oo", "<cmd>Obsidian quick_switch<cr>", "Quick switch")
-					map("n", "<leader>os", "<cmd>Obsidian search<cr>", "Search notes")
-					map("n", "<leader>of", "<cmd>Obsidian follow_link<cr>", "Follow link")
-					map("n", "<leader>oO", "<cmd>Obsidian open<cr>", "Open in Obsidian app")
+			-- Global leader keymaps (lazy-load plugin on first use)
+			map("n", "<leader>on", "<cmd>Obsidian new<cr>", "New note")
+			map("n", "<leader>oo", "<cmd>Obsidian quick_switch<cr>", "Quick switch")
+			map("n", "<leader>os", "<cmd>Obsidian search<cr>", "Search notes")
+			map("n", "<leader>of", "<cmd>Obsidian follow_link<cr>", "Follow link")
+			map("n", "<leader>oO", "<cmd>Obsidian open<cr>", "Open in Obsidian app")
+			map("n", "<leader>od", "<cmd>Obsidian today<cr>", "Today's note")
+			map("n", "<leader>oD", "<cmd>Obsidian dailies<cr>", "Browse dailies")
+			map("n", "<leader>oy", "<cmd>Obsidian yesterday<cr>", "Yesterday's note")
+			map("n", "<leader>om", "<cmd>Obsidian tomorrow<cr>", "Tomorrow's note")
+			map("n", "<leader>ot", "<cmd>Obsidian template<cr>", "Insert template")
+			map("n", "<leader>oT", "<cmd>Obsidian toc<cr>", "Table of contents")
+			map("n", "<leader>ob", "<cmd>Obsidian backlinks<cr>", "Show backlinks")
+			map("n", "<leader>ol", "<cmd>Obsidian links<cr>", "Show links")
+			map("n", "<leader>og", "<cmd>Obsidian tags<cr>", "Search tags")
+			map("n", "<leader>op", "<cmd>Obsidian paste_img<cr>", "Paste image")
+			map("n", "<leader>or", "<cmd>Obsidian rename<cr>", "Rename note")
+			map("n", "<leader>oc", "<cmd>Obsidian toggle_checkbox<cr>", "Toggle checkbox")
+			map("n", "<leader>ow", "<cmd>Obsidian workspace<cr>", "Switch workspace")
+			map("v", "<leader>ol", "<cmd>Obsidian link<cr>", "Link to note")
+			map("v", "<leader>on", "<cmd>Obsidian link_new<cr>", "Link to new note")
+			map("v", "<leader>oe", "<cmd>Obsidian extract_note<cr>", "Extract to new note")
 
-					-- Daily notes
-					map("n", "<leader>od", "<cmd>Obsidian today<cr>", "Today's note")
-					map("n", "<leader>oD", "<cmd>Obsidian dailies<cr>", "Browse dailies")
-					map("n", "<leader>oy", "<cmd>Obsidian yesterday<cr>", "Yesterday's note")
-					map("n", "<leader>om", "<cmd>Obsidian tomorrow<cr>", "Tomorrow's note")
-
-					-- Templates and structure
-					map("n", "<leader>ot", "<cmd>Obsidian template<cr>", "Insert template")
-					map("n", "<leader>oT", "<cmd>Obsidian toc<cr>", "Table of contents")
-
-					-- Links and references
-					map("n", "<leader>ob", "<cmd>Obsidian backlinks<cr>", "Show backlinks")
-					map("n", "<leader>ol", "<cmd>Obsidian links<cr>", "Show links")
-					map("n", "<leader>og", "<cmd>Obsidian tags<cr>", "Search tags")
-
-					-- Utilities
-					map("n", "<leader>op", "<cmd>Obsidian paste_img<cr>", "Paste image")
-					map("n", "<leader>or", "<cmd>Obsidian rename<cr>", "Rename note")
-					map("n", "<leader>oc", "<cmd>Obsidian toggle_checkbox<cr>", "Toggle checkbox")
-					map("n", "<leader>ow", "<cmd>Obsidian workspace<cr>", "Switch workspace")
-
-					-- Visual mode mappings
-					map("v", "<leader>ol", "<cmd>Obsidian link<cr>", "Link to note")
-					map("v", "<leader>on", "<cmd>Obsidian link_new<cr>", "Link to new note")
-					map("v", "<leader>oe", "<cmd>Obsidian extract_note<cr>", "Extract to new note")
-
-					-- Smart action on Enter
+			-- Buffer-local keymaps only in Obsidian workspace markdown files
+			vim.api.nvim_create_autocmd("BufEnter", {
+				pattern = "*.md",
+				callback = function(args)
+					local buf = args.buf
+					local path = vim.api.nvim_buf_get_name(buf)
+					if path == "" then
+						return
+					end
+					local client = require("obsidian").get_client()
+					if not client then
+						return
+					end
+					-- Check if file is within an Obsidian workspace
+					local in_workspace = false
+					for _, ws in ipairs(client.opts.workspaces or {}) do
+						local ws_path = vim.fn.expand(ws.path)
+						if path:sub(1, #ws_path) == ws_path then
+							in_workspace = true
+							break
+						end
+					end
+					if not in_workspace then
+						return
+					end
 					map("n", "<cr>", function()
 						return require("obsidian").util.smart_action()
-					end, "Obsidian smart action")
-
-					-- Link navigation
+					end, "Obsidian smart action", { buffer = buf })
 					map("n", "[o", function()
 						return require("obsidian").util.nav_link("prev")
-					end, "Previous link")
+					end, "Previous link", { buffer = buf })
 					map("n", "]o", function()
 						return require("obsidian").util.nav_link("next")
-					end, "Next link")
+					end, "Next link", { buffer = buf })
 				end,
 			})
 		end,

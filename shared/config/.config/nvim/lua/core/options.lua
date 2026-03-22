@@ -88,9 +88,8 @@ vim.opt.guicursor = {
 }
 
 -- Folding Settings
-vim.opt.foldmethod = "expr"                          -- Use expression for folding
-vim.opt.foldexpr = "v:lua.vim.treesitter.foldexpr()" -- Use treesitter for folding
-vim.opt.foldlevel = 99                               -- Keep all folds open by default
+vim.opt.foldmethod = "indent" -- Use indent for folding (zero-cost vs treesitter expr)
+vim.opt.foldlevel = 99        -- Keep all folds open by default
 
 -- Split Behavior
 vim.opt.splitbelow = true -- Horizontal splits open below

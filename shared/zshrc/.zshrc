@@ -65,8 +65,17 @@ if command -v starship &>/dev/null; then
 fi
 
 # --- Tool integrations ------------------------------------------------------
+if [[ -f "$HOME/.config/theme-sync/current.env" ]]; then
+  source "$HOME/.config/theme-sync/current.env"
+fi
+
 if command -v fzf &>/dev/null; then
   eval "$(fzf --zsh)"
+  if [[ -n "$FZF_THEME_FILE" && -f "$FZF_THEME_FILE" ]]; then
+    source "$FZF_THEME_FILE"
+  elif [[ -f "$HOME/.config/fzf/tokyonight_night.sh" ]]; then
+    source "$HOME/.config/fzf/tokyonight_night.sh"
+  fi
 fi
 
 if command -v zoxide &>/dev/null; then
@@ -118,6 +127,7 @@ alias l='ls -lah'
 alias c='clear'
 alias ld='lazydocker'
 alias lg='lazygit'
+alias theme-sync="$HOME/.config/theme-sync/theme-sync"
 alias v='nvim'
 alias vim='nvim'
 alias ff="fd --type f --hidden --exclude .git | fzf --preview 'bat --color=always {}'"
@@ -203,4 +213,3 @@ fi
 if [[ "$OSTYPE" == "darwin"* && -d "$HOME/.docker/completions" ]]; then
   fpath=($HOME/.docker/completions $fpath)
 fi
-

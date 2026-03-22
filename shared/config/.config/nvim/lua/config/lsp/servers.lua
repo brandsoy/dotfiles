@@ -24,6 +24,7 @@ local function configure_servers()
 		virtual_text = { prefix = "●" },
 		severity_sort = true,
 		float = { border = "rounded", source = "if_many" },
+		update_in_insert = false,
 	})
 
 	local servers = {

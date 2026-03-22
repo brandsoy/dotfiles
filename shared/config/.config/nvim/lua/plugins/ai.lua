@@ -8,6 +8,7 @@ return {
 				suggestion = {
 					enabled = true,
 					auto_trigger = true,
+					debounce = 150,
 					keymap = {
 						accept = "<Tab>",
 						next = "<M-]>",

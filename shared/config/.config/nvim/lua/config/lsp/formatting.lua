@@ -209,7 +209,7 @@ function M.setup_lint()
 		typescript = true,
 		typescriptreact = true,
 	}
-	vim.api.nvim_create_autocmd({ "BufWritePost", "InsertLeave" }, {
+	vim.api.nvim_create_autocmd({ "BufWritePost" }, {
 		group = lint_group,
 		callback = function(args)
 			local ft = vim.bo[args.buf].filetype

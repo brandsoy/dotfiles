@@ -1,0 +1,203 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+CONFIG_HOME="${XDG_CONFIG_HOME:-$HOME/.config}"
+STATE_HOME="${XDG_STATE_HOME:-$HOME/.local/state}"
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+
+if [[ -n "${THEME_SYNC_ROOT:-}" ]]; then
+  ROOT="$THEME_SYNC_ROOT"
+elif [[ -d "$CONFIG_HOME/theme-sync/themes" ]]; then
+  ROOT="$CONFIG_HOME/theme-sync"
+else
+  ROOT="$SCRIPT_DIR"
+fi
+
+THEMES_DIR="$ROOT/themes"
+CURRENT_FILE="$ROOT/current"
+CURRENT_ENV_FILE="$ROOT/current.env"
+
+TARGET_GHOSTTY="$CONFIG_HOME/ghostty/auto/theme.ghostty"
+TARGET_ALACRITTY="$CONFIG_HOME/alacritty/alacritty.toml"
+TARGET_KITTY="$CONFIG_HOME/kitty/kitty.conf"
+TARGET_BAT="$CONFIG_HOME/bat/config"
+TARGET_BTOP="$CONFIG_HOME/btop/btop.conf"
+TARGET_LAZYGIT="$CONFIG_HOME/lazygit/config.yml"
+TARGET_YAZI_THEME="$CONFIG_HOME/yazi/theme.toml"
+TARGET_EZA_THEME="$CONFIG_HOME/eza/theme.yml"
+TARGET_NVIM_STATE="$STATE_HOME/nvim/theme.txt"
+
+usage() {
+  cat <<'EOF'
+Usage: theme-sync <command> [theme]
+
+Commands:
+  list              List available themes
+  current           Show current theme and resolved values
+  set <theme>       Set current theme and apply it
+  apply             Re-apply current theme
+
+Environment:
+  THEME_SYNC_ROOT   Override root path (default: ~/.config/theme-sync)
+EOF
+}
+
+ensure_dirs() {
+  mkdir -p "$ROOT"
+}
+
+write_current_env() {
+  local theme="$1"
+  mkdir -p "$ROOT"
+  cat > "$CURRENT_ENV_FILE" <<EOF
+export TERMINAL_THEME="$theme"
+export BAT_THEME="${BAT_THEME:-}"
+export FZF_THEME_FILE="${FZF_THEME_FILE:-}"
+EOF
+}
+
+update_line() {
+  local file="$1"
+  local pattern="$2"
+  local replacement="$3"
+
+  [[ -f "$file" ]] || return 0
+
+  if grep -qE "$pattern" "$file"; then
+    perl -0pi -e "s~$pattern~$replacement~m" "$file"
+  else
+    printf '%s\n' "$replacement" >> "$file"
+  fi
+}
+
+load_theme() {
+  local theme="$1"
+  local theme_file="$THEMES_DIR/$theme/theme.env"
+
+  if [[ ! -f "$theme_file" ]]; then
+    echo "Unknown theme: $theme"
+    echo "Run 'theme-sync list' to view available themes."
+    exit 1
+  fi
+
+  # shellcheck disable=SC1090
+  source "$theme_file"
+}
+
+copy_if_present() {
+  local source_file="$1"
+  local target_file="$2"
+
+  if [[ -f "$source_file" ]]; then
+    mkdir -p "$(dirname "$target_file")"
+    cp "$source_file" "$target_file"
+  fi
+}
+
+apply_theme() {
+  local theme="$1"
+  local theme_dir="$THEMES_DIR/$theme"
+
+  load_theme "$theme"
+
+  mkdir -p "$(dirname "$TARGET_GHOSTTY")"
+  printf 'theme = %s\n' "$GHOSTTY_THEME" > "$TARGET_GHOSTTY"
+
+  if [[ -f "$TARGET_ALACRITTY" ]]; then
+    perl -0pi -e 's~(\[general\]\s*import\s*=\s*\[\s*\n\s*")([^"]+)("\s*\n\s*\])~$1'"$ALACRITTY_IMPORT"'$3~m' "$TARGET_ALACRITTY"
+  fi
+
+  update_line "$TARGET_KITTY" '^include\s+.*$' "include $KITTY_INCLUDE"
+  update_line "$TARGET_BAT" '^--theme=.*$' "--theme=\"$BAT_THEME\""
+  update_line "$TARGET_BTOP" '^color_theme\s*=.*$' "color_theme = \"$BTOP_THEME\""
+
+  mkdir -p "$(dirname "$TARGET_NVIM_STATE")"
+  printf '%s\n' "$NVIM_THEME" > "$TARGET_NVIM_STATE"
+
+  copy_if_present "$theme_dir/lazygit.yml" "$TARGET_LAZYGIT"
+  copy_if_present "$theme_dir/yazi.theme.toml" "$TARGET_YAZI_THEME"
+  copy_if_present "$theme_dir/eza.theme.yml" "$TARGET_EZA_THEME"
+
+  write_current_env "$theme"
+  printf '%s\n' "$theme" > "$CURRENT_FILE"
+
+  echo "Applied theme: $theme"
+}
+
+list_themes() {
+  [[ -d "$THEMES_DIR" ]] || return 0
+  for dir in "$THEMES_DIR"/*; do
+    [[ -d "$dir" ]] || continue
+    basename "$dir"
+  done
+}
+
+current_theme() {
+  if [[ -f "$CURRENT_FILE" ]]; then
+    tr -d '\n' < "$CURRENT_FILE"
+  else
+    echo ""
+  fi
+}
+
+show_current() {
+  local theme
+  theme="$(current_theme)"
+
+  if [[ -z "$theme" ]]; then
+    echo "No current theme set."
+    exit 1
+  fi
+
+  load_theme "$theme"
+  echo "theme: $theme"
+  echo "ghostty: $GHOSTTY_THEME"
+  echo "alacritty import: $ALACRITTY_IMPORT"
+  echo "kitty include: $KITTY_INCLUDE"
+  echo "nvim: $NVIM_THEME"
+  echo "bat: $BAT_THEME"
+  echo "btop: $BTOP_THEME"
+  echo "fzf file: ${FZF_THEME_FILE:-}"
+}
+
+main() {
+  ensure_dirs
+
+  local cmd="${1:-}"
+  case "$cmd" in
+    list)
+      list_themes
+      ;;
+    current)
+      show_current
+      ;;
+    set)
+      local theme="${2:-}"
+      if [[ -z "$theme" ]]; then
+        echo "Missing theme name."
+        usage
+        exit 1
+      fi
+      apply_theme "$theme"
+      ;;
+    apply)
+      local theme
+      theme="$(current_theme)"
+      if [[ -z "$theme" ]]; then
+        echo "No current theme set. Use: theme-sync set <theme>"
+        exit 1
+      fi
+      apply_theme "$theme"
+      ;;
+    ""|-h|--help|help)
+      usage
+      ;;
+    *)
+      echo "Unknown command: $cmd"
+      usage
+      exit 1
+      ;;
+  esac
+}
+
+main "$@"

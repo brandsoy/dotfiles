@@ -13,7 +13,7 @@ mouse-hide-while-typing = true
 # theme = rose-pine
 # theme = dark:Rose Pine,light:Rose Pine Dawn
 # theme = ayu
-theme = dark:GitHub Dark,light:Github
+# theme = dark:GitHub Dark,light:Github
 
 # Titlebar
 macos-titlebar-style = "transparent"
@@ -21,8 +21,9 @@ macos-titlebar-proxy-icon = "hidden"
 
 # Font
 font-size = 14
-font-family = "Monaspace Neon NF"
-# font-family = "CaskaydiaMono Nerd Font Mono"
+# font-family = "GeistMono Nerd Font Mono"
+font-thicken = true
+font-family = "CaskaydiaMono Nerd Font Mono"
 # font-feature = calt
 # font-feature = liga
 # font-feature = dig
@@ -99,3 +100,4 @@ keybind = ctrl+`=toggle_quick_terminal
 
 # other
 copy-on-select = clipboard
+config-file = ?auto/theme.ghostty

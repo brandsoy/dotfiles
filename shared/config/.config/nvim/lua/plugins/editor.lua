@@ -130,6 +130,33 @@ return {
     end,
   },
   {
+    "numToStr/Comment.nvim",
+    dependencies = {
+      {
+        "JoosepAlviste/nvim-ts-context-commentstring",
+        opts = {
+          enable_autocmd = false,
+        },
+      },
+    },
+    keys = {
+      { "gcc", mode = "n", desc = "Toggle line comment" },
+      { "gbc", mode = "n", desc = "Toggle block comment" },
+      { "gc", mode = { "n", "x" }, desc = "Comment operator" },
+      { "gb", mode = { "n", "x" }, desc = "Block comment operator" },
+    },
+    opts = function()
+      local pre_hook = require("ts_context_commentstring.integrations.comment_nvim").create_pre_hook()
+
+      return {
+        pre_hook = pre_hook,
+      }
+    end,
+    config = function(_, opts)
+      require("Comment").setup(opts)
+    end,
+  },
+  {
     "nvim-mini/mini.notify",
     event = "VeryLazy",
     config = function()
@@ -249,6 +276,8 @@ return {
           { mode = "n", keys = "<leader>d",  desc = "Debug" },
           { mode = "n", keys = "<leader>e",  desc = "Explorer" },
           { mode = "n", keys = "<leader>f",  desc = "Find" },
+          { mode = "n", keys = "gc", desc = "Comment" },
+          { mode = "n", keys = "gb", desc = "Block comment" },
           { mode = "n", keys = "<leader>g",  desc = "Git" },
           { mode = "n", keys = "<leader>l",  desc = "LSP" },
           { mode = "n", keys = "<leader>ld", desc = "LSP Definition (split)" },
@@ -258,6 +287,8 @@ return {
           { mode = "n", keys = "<leader>q",  desc = "Quit" },
           { mode = "n", keys = "<leader>s",  desc = "Splits" },
           { mode = "n", keys = "<leader>u",  desc = "Toggles" },
+          { mode = "n", keys = "<leader>ut", desc = "Theme picker" },
+          { mode = "n", keys = "<leader>uT", desc = "Next theme" },
           { mode = "n", keys = "<leader>w",  desc = "Write" },
           clue.gen_clues.builtin_completion(),
           clue.gen_clues.g(),
