@@ -1,15 +1,14 @@
-return {
-	{
-		"MeanderingProgrammer/render-markdown.nvim",
-		ft = { "markdown", "mdx" },
-		dependencies = {
-			"nvim-treesitter/nvim-treesitter",
-		},
-		opts = {
-			completions = { lsp = { enabled = true } },
-		},
-		config = function(_, opts)
-			require("render-markdown").setup(opts)
-		end,
-	},
-}
+local M = {}
+
+function M.setup()
+	local ok, render = pcall(require, "render-markdown")
+	if not ok then
+		return
+	end
+
+	render.setup({
+		completions = { lsp = { enabled = true } },
+	})
+end
+
+return M
