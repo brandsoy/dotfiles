@@ -78,3 +78,48 @@ cd ~/dotfiles/mac && stow -D -t ~ config
 # Linux packages
 cd ~/dotfiles/linux && stow -D -t ~ config
 ```
+
+## Hosts blocklist (macOS + Linux)
+
+This repo includes a cross-platform hosts blocklist workflow:
+
+- Script: `shared/bin/.local/bin/update-hosts-blocklist`
+- Config: `shared/blocklists/.config/blocklists/`
+
+Stow the shared packages, then run:
+
+```bash
+update-hosts-blocklist --dry-run
+update-hosts-blocklist
+```
+
+Default source list includes:
+
+- StevenBlack hosts
+- AdAway hosts
+- someonewhocares hosts
+
+Tune behavior with:
+
+- `~/.config/blocklists/allowlist.txt` (always allow)
+- `~/.config/blocklists/denylist.txt` (always block)
+- `~/.config/blocklists/false-positive-patterns.txt` (regex drop rules)
+
+Set up weekly automatic updates:
+
+```bash
+# Install weekly scheduler (root-level, works on macOS + Linux)
+hosts-blocklist-schedule install
+
+# Check scheduler status
+hosts-blocklist-schedule status
+
+# Remove scheduler
+hosts-blocklist-schedule uninstall
+```
+
+Notes:
+
+- macOS uses a LaunchDaemon (`/Library/LaunchDaemons/com.dotfiles.hosts-blocklist.plist`) every Sunday at 04:17
+- Linux uses a systemd timer (`com.dotfiles.hosts-blocklist.timer`) with default `OnCalendar=Sun *-*-* 04:17:00`
+- Linux schedule can be overridden at install time, for example: `hosts-blocklist-schedule install --schedule 'Mon *-*-* 03:30:00'`

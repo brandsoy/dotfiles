@@ -1,0 +1,201 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+usage() {
+  cat <<'EOF'
+Usage: update-hosts-blocklist [options]
+
+Build a merged adware/malware hosts blocklist from configured sources and install it.
+
+Options:
+  --dry-run             Build list, print stats, do not write /etc/hosts
+  --no-flush            Skip DNS cache flush after install
+  --config-dir DIR      Use blocklist config directory (default: ~/.config/blocklists)
+  --output FILE         Write generated hosts file to FILE
+  -h, --help            Show this help
+EOF
+}
+
+CONFIG_DIR="${XDG_CONFIG_HOME:-$HOME/.config}/blocklists"
+OUTPUT_FILE=""
+DRY_RUN=0
+NO_FLUSH=0
+
+while [[ $# -gt 0 ]]; do
+  case "$1" in
+    --dry-run)
+      DRY_RUN=1
+      ;;
+    --no-flush)
+      NO_FLUSH=1
+      ;;
+    --config-dir)
+      CONFIG_DIR="$2"
+      shift
+      ;;
+    --output)
+      OUTPUT_FILE="$2"
+      shift
+      ;;
+    -h|--help)
+      usage
+      exit 0
+      ;;
+    *)
+      echo "Unknown option: $1" >&2
+      usage >&2
+      exit 1
+      ;;
+  esac
+  shift
+done
+
+SOURCES_FILE="$CONFIG_DIR/sources.txt"
+ALLOWLIST_FILE="$CONFIG_DIR/allowlist.txt"
+DENYLIST_FILE="$CONFIG_DIR/denylist.txt"
+FALSE_POSITIVES_FILE="$CONFIG_DIR/false-positive-patterns.txt"
+
+if [[ ! -f "$SOURCES_FILE" ]]; then
+  echo "Missing sources file: $SOURCES_FILE" >&2
+  exit 1
+fi
+
+WORKDIR="$(mktemp -d)"
+trap 'rm -rf "$WORKDIR"' EXIT
+
+RAW_FILE="$WORKDIR/raw.txt"
+DOMAINS_FILE="$WORKDIR/domains.txt"
+FILTERED_FILE="$WORKDIR/domains.filtered.txt"
+FINAL_DOMAINS_FILE="$WORKDIR/domains.final.txt"
+GENERATED_HOSTS_FILE="$WORKDIR/hosts.generated"
+
+touch "$RAW_FILE"
+
+while IFS= read -r source || [[ -n "$source" ]]; do
+  source="${source%%#*}"
+  source="$(printf '%s' "$source" | tr -d '[:space:]')"
+  [[ -z "$source" ]] && continue
+
+  echo "Fetching: $source"
+  curl -fsSL "$source" >> "$RAW_FILE"
+  printf '\n' >> "$RAW_FILE"
+done < "$SOURCES_FILE"
+
+awk '
+function is_domain(d) {
+  return d ~ /^[a-z0-9]([a-z0-9-]*[a-z0-9])?(\.[a-z0-9]([a-z0-9-]*[a-z0-9])?)+$/
+}
+{
+  line = tolower($0)
+  sub(/#.*/, "", line)
+  gsub(/^[[:space:]]+|[[:space:]]+$/, "", line)
+  if (line == "") next
+
+  n = split(line, parts, /[[:space:]]+/)
+  first = parts[1]
+
+  if (first ~ /^[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+$/ || first == "::1" || first == "::") {
+    for (i = 2; i <= n; i++) {
+      d = parts[i]
+      gsub(/\.$/, "", d)
+      if (d == "" || d == "localhost") continue
+      if (is_domain(d)) print d
+    }
+  } else {
+    d = first
+    gsub(/\.$/, "", d)
+    if (is_domain(d)) print d
+  }
+}
+' "$RAW_FILE" | sort -u > "$DOMAINS_FILE"
+
+cp "$DOMAINS_FILE" "$FILTERED_FILE"
+
+if [[ -f "$FALSE_POSITIVES_FILE" ]]; then
+  awk '
+  {
+    line = $0
+    sub(/#.*/, "", line)
+    gsub(/^[[:space:]]+|[[:space:]]+$/, "", line)
+    if (line != "") print line
+  }
+  ' "$FALSE_POSITIVES_FILE" > "$WORKDIR/false-positive-patterns.normalized.txt"
+
+  if [[ -s "$WORKDIR/false-positive-patterns.normalized.txt" ]]; then
+    grep -E -v -f "$WORKDIR/false-positive-patterns.normalized.txt" "$FILTERED_FILE" > "$WORKDIR/tmp.txt" || true
+    mv "$WORKDIR/tmp.txt" "$FILTERED_FILE"
+  fi
+fi
+
+if [[ -f "$ALLOWLIST_FILE" ]]; then
+  awk '
+  {
+    line = tolower($0)
+    sub(/#.*/, "", line)
+    gsub(/^[[:space:]]+|[[:space:]]+$/, "", line)
+    if (line != "") print line
+  }
+  ' "$ALLOWLIST_FILE" | sort -u > "$WORKDIR/allowlist.normalized.txt"
+
+  grep -F -v -x -f "$WORKDIR/allowlist.normalized.txt" "$FILTERED_FILE" > "$WORKDIR/tmp.txt" || true
+  mv "$WORKDIR/tmp.txt" "$FILTERED_FILE"
+fi
+
+cp "$FILTERED_FILE" "$FINAL_DOMAINS_FILE"
+
+if [[ -f "$DENYLIST_FILE" ]]; then
+  awk '
+  {
+    line = tolower($0)
+    sub(/#.*/, "", line)
+    gsub(/^[[:space:]]+|[[:space:]]+$/, "", line)
+    if (line ~ /^[a-z0-9]([a-z0-9-]*[a-z0-9])?(\.[a-z0-9]([a-z0-9-]*[a-z0-9])?)+$/) print line
+  }
+  ' "$DENYLIST_FILE" >> "$FINAL_DOMAINS_FILE"
+fi
+
+sort -u "$FINAL_DOMAINS_FILE" > "$WORKDIR/final.sorted.txt"
+
+{
+  echo "127.0.0.1 localhost"
+  echo "::1 localhost"
+  echo ""
+  echo "# Managed by update-hosts-blocklist"
+  echo "# Source config: $CONFIG_DIR"
+  echo "# Generated on: $(date -u +'%Y-%m-%dT%H:%M:%SZ')"
+  echo ""
+  awk '{ print "0.0.0.0 " $1 }' "$WORKDIR/final.sorted.txt"
+} > "$GENERATED_HOSTS_FILE"
+
+TOTAL="$(wc -l < "$WORKDIR/final.sorted.txt" | tr -d '[:space:]')"
+echo "Generated domains: $TOTAL"
+
+if [[ -n "$OUTPUT_FILE" ]]; then
+  cp "$GENERATED_HOSTS_FILE" "$OUTPUT_FILE"
+  echo "Wrote generated hosts to: $OUTPUT_FILE"
+fi
+
+if [[ "$DRY_RUN" -eq 1 ]]; then
+  echo "Dry run complete. /etc/hosts unchanged."
+  exit 0
+fi
+
+if [[ ! -w /etc/hosts ]]; then
+  sudo cp /etc/hosts "/etc/hosts.bak.$(date +%Y%m%d%H%M%S)"
+  sudo cp "$GENERATED_HOSTS_FILE" /etc/hosts
+else
+  cp "$GENERATED_HOSTS_FILE" /etc/hosts
+fi
+
+if [[ "$NO_FLUSH" -eq 0 ]]; then
+  if [[ "$(uname -s)" == "Darwin" ]]; then
+    sudo dscacheutil -flushcache >/dev/null 2>&1 || true
+    sudo killall -HUP mDNSResponder >/dev/null 2>&1 || true
+  else
+    sudo resolvectl flush-caches >/dev/null 2>&1 || true
+    sudo systemd-resolve --flush-caches >/dev/null 2>&1 || true
+    sudo service nscd restart >/dev/null 2>&1 || true
+  fi
+fi
+
+echo "Installed updated /etc/hosts"

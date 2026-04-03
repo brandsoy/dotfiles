@@ -235,3 +235,6 @@ fi
 if [[ "$OSTYPE" == "darwin"* && -d "$HOME/.docker/completions" ]]; then
   fpath=("$HOME/.docker/completions" "${fpath[@]}")
 fi
+
+# Added by get-aspire-cli.sh
+export PATH="$HOME/.aspire/bin:$PATH"

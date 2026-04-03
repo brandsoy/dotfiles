@@ -1,0 +1,3 @@
+# Domains to always allow (one domain per line)
+# Example:
+# analytics.example.com

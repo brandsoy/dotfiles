@@ -1,0 +1,3 @@
+# Domains to always block (one domain per line)
+# Example:
+# ads.example.com

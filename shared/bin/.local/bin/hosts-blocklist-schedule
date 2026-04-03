@@ -1,0 +1,201 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+JOB_ID="com.dotfiles.hosts-blocklist"
+DEFAULT_SCHEDULE="Sun *-*-* 04:17:00"
+
+usage() {
+  cat <<'EOF'
+Usage: hosts-blocklist-schedule <command> [options]
+
+Install/manage weekly automatic hosts blocklist updates.
+
+Commands:
+  install               Install and enable scheduler
+  uninstall             Disable and remove scheduler
+  status                Show scheduler status
+
+Options:
+  --user-home DIR       Home directory to use (default: current user's HOME)
+  --schedule CAL        systemd OnCalendar expression (Linux only)
+  -h, --help            Show this help
+
+Examples:
+  hosts-blocklist-schedule install
+  hosts-blocklist-schedule install --schedule 'Mon *-*-* 03:30:00'
+  hosts-blocklist-schedule status
+EOF
+}
+
+if [[ $# -lt 1 ]]; then
+  usage >&2
+  exit 1
+fi
+
+COMMAND="$1"
+shift
+
+USER_HOME="$HOME"
+SCHEDULE="$DEFAULT_SCHEDULE"
+
+while [[ $# -gt 0 ]]; do
+  case "$1" in
+    --user-home)
+      USER_HOME="$2"
+      shift
+      ;;
+    --schedule)
+      SCHEDULE="$2"
+      shift
+      ;;
+    -h|--help)
+      usage
+      exit 0
+      ;;
+    *)
+      echo "Unknown option: $1" >&2
+      usage >&2
+      exit 1
+      ;;
+  esac
+  shift
+done
+
+BLOCKLIST_SCRIPT="$USER_HOME/.local/bin/update-hosts-blocklist"
+CONFIG_DIR="$USER_HOME/.config/blocklists"
+
+require_script() {
+  if [[ ! -x "$BLOCKLIST_SCRIPT" ]]; then
+    echo "Missing executable: $BLOCKLIST_SCRIPT" >&2
+    echo "Run your stow/install first so ~/.local/bin/update-hosts-blocklist exists." >&2
+    exit 1
+  fi
+}
+
+install_linux() {
+  require_script
+
+  local service_path="/etc/systemd/system/${JOB_ID}.service"
+  local timer_path="/etc/systemd/system/${JOB_ID}.timer"
+
+  sudo tee "$service_path" >/dev/null <<EOF
+[Unit]
+Description=Update hosts blocklist from dotfiles
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=oneshot
+ExecStart=${BLOCKLIST_SCRIPT} --config-dir ${CONFIG_DIR}
+EOF
+
+  sudo tee "$timer_path" >/dev/null <<EOF
+[Unit]
+Description=Weekly hosts blocklist update
+
+[Timer]
+OnCalendar=${SCHEDULE}
+Persistent=true
+
+[Install]
+WantedBy=timers.target
+EOF
+
+  sudo systemctl daemon-reload
+  sudo systemctl enable --now "${JOB_ID}.timer"
+  echo "Installed Linux timer: ${JOB_ID}.timer (${SCHEDULE})"
+}
+
+uninstall_linux() {
+  sudo systemctl disable --now "${JOB_ID}.timer" >/dev/null 2>&1 || true
+  sudo rm -f "/etc/systemd/system/${JOB_ID}.service" "/etc/systemd/system/${JOB_ID}.timer"
+  sudo systemctl daemon-reload
+  echo "Removed Linux scheduler: ${JOB_ID}"
+}
+
+status_linux() {
+  sudo systemctl status "${JOB_ID}.timer" --no-pager || true
+}
+
+install_macos() {
+  require_script
+
+  local plist_path="/Library/LaunchDaemons/${JOB_ID}.plist"
+
+  sudo tee "$plist_path" >/dev/null <<EOF
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+  <key>Label</key>
+  <string>${JOB_ID}</string>
+
+  <key>ProgramArguments</key>
+  <array>
+    <string>${BLOCKLIST_SCRIPT}</string>
+    <string>--config-dir</string>
+    <string>${CONFIG_DIR}</string>
+  </array>
+
+  <key>StartCalendarInterval</key>
+  <dict>
+    <key>Weekday</key>
+    <integer>0</integer>
+    <key>Hour</key>
+    <integer>4</integer>
+    <key>Minute</key>
+    <integer>17</integer>
+  </dict>
+
+  <key>StandardOutPath</key>
+  <string>/var/log/hosts-blocklist.log</string>
+  <key>StandardErrorPath</key>
+  <string>/var/log/hosts-blocklist.log</string>
+  <key>RunAtLoad</key>
+  <false/>
+</dict>
+</plist>
+EOF
+
+  sudo launchctl bootout system "$plist_path" >/dev/null 2>&1 || true
+  sudo launchctl bootstrap system "$plist_path"
+  echo "Installed macOS LaunchDaemon: ${JOB_ID} (weekly Sunday 04:17)"
+}
+
+uninstall_macos() {
+  local plist_path="/Library/LaunchDaemons/${JOB_ID}.plist"
+  sudo launchctl bootout system "$plist_path" >/dev/null 2>&1 || true
+  sudo rm -f "$plist_path"
+  echo "Removed macOS scheduler: ${JOB_ID}"
+}
+
+status_macos() {
+  sudo launchctl print "system/${JOB_ID}" || true
+}
+
+main() {
+  case "$(uname -s)" in
+    Darwin)
+      case "$COMMAND" in
+        install) install_macos ;;
+        uninstall) uninstall_macos ;;
+        status) status_macos ;;
+        *) usage >&2; exit 1 ;;
+      esac
+      ;;
+    Linux)
+      case "$COMMAND" in
+        install) install_linux ;;
+        uninstall) uninstall_linux ;;
+        status) status_linux ;;
+        *) usage >&2; exit 1 ;;
+      esac
+      ;;
+    *)
+      echo "Unsupported OS: $(uname -s)" >&2
+      exit 1
+      ;;
+  esac
+}
+
+main

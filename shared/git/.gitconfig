@@ -15,3 +15,10 @@
 	helper = !/usr/bin/gh auth git-credential
 [credential]
 	helper = osxkeychain
+[user]
+	name = Mattis Brandsøy
+	email = mattis.brandsoy@icloud.com
+[rebase]
+	autoStash = true
+[branch]
+	autosetuprebase = always

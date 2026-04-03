@@ -153,7 +153,11 @@ if.app-id = 'org.mozilla.firefox'
 run = ['move-node-to-workspace web']
 
 [[on-window-detected]]
-if.app-id = 'com.google.Chrome'
+if.app-id = 'com.google.chrome'
+run = ['move-node-to-workspace web']
+
+[[on-window-detected]]
+if.app-id = 'com.apple.Safari'
 run = ['move-node-to-workspace web']
 
 [[on-window-detected]]
@@ -190,6 +194,10 @@ run = ['move-node-to-workspace comms']
 
 [[on-window-detected]]
 if.app-id = 'com.microsoft.teams2'
+run = ['move-node-to-workspace comms']
+
+[[on-window-detected]]
+if.app-id = 'com.apple.mail'
 run = ['move-node-to-workspace comms']
 
 # --- Floating Windows ---
