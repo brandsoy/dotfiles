@@ -98,15 +98,13 @@ local function configure_servers()
 
 	local ft_to_servers = {}
 	for name, cfg in pairs(servers) do
-		local fts = cfg.filetypes
-		if fts then
+		local resolved = vim.lsp.config[name]
+		local fts = (resolved and resolved.filetypes) or cfg.filetypes
+		if type(fts) == "table" then
 			for _, ft in ipairs(fts) do
 				ft_to_servers[ft] = ft_to_servers[ft] or {}
 				table.insert(ft_to_servers[ft], name)
 			end
-		else
-			ft_to_servers["*"] = ft_to_servers["*"] or {}
-			table.insert(ft_to_servers["*"], name)
 		end
 	end
 
@@ -119,12 +117,6 @@ local function configure_servers()
 
 			local server_list = ft_to_servers[ev.match] or {}
 			for _, name in ipairs(server_list) do
-				if not vim.lsp.get_clients({ name = name, bufnr = ev.buf })[1] then
-					pcall(vim.lsp.enable, name, { bufnr = ev.buf })
-				end
-			end
-
-			for _, name in ipairs(ft_to_servers["*"] or {}) do
 				if not vim.lsp.get_clients({ name = name, bufnr = ev.buf })[1] then
 					pcall(vim.lsp.enable, name, { bufnr = ev.buf })
 				end
