@@ -150,7 +150,7 @@ brew install lua-language-server stylua ripgrep fd terraform-ls
 Node-based language servers/formatters:
 
 ```bash
-npm i -g @typescript/native-preview vscode-langservers-extracted dockerfile-language-server-nodejs tailwindcss-language-server bash-language-server @biomejs/biome svelte-language-server prettierd prettier
+npm i -g @typescript/native-preview vscode-langservers-extracted dockerfile-language-server-nodejs tailwindcss-language-server bash-language-server @biomejs/biome svelte-language-server @fsouza/prettierd prettier
 ```
 
 Go-based language servers/formatters:
@@ -183,7 +183,7 @@ sudo pacman -S --needed lua-language-server stylua ripgrep fd nodejs npm go
 Node-based language servers/formatters (all Linux distros):
 
 ```bash
-npm i -g @typescript/native-preview vscode-langservers-extracted dockerfile-language-server-nodejs tailwindcss-language-server bash-language-server @biomejs/biome svelte-language-server prettierd prettier
+npm i -g @typescript/native-preview vscode-langservers-extracted dockerfile-language-server-nodejs tailwindcss-language-server bash-language-server @biomejs/biome svelte-language-server @fsouza/prettierd prettier
 ```
 
 Go-based language servers/formatters (all Linux distros):
