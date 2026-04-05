@@ -80,7 +80,16 @@ local function configure_servers()
 		},
 		bashls = {},
 		biome = {},
-		svelte = {},
+		svelte = {
+			root_dir = util.root_pattern(
+				"svelte.config.js",
+				"svelte.config.ts",
+				"vite.config.js",
+				"vite.config.ts",
+				"package.json",
+				".git"
+			),
+		},
 		terraformls = { filetypes = { "terraform", "terraform-vars" } },
 		postgres_lsp = {
 			filetypes = { "sql" },

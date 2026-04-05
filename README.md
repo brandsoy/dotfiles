@@ -139,6 +139,26 @@ Install globally:
 npm i -g @typescript/native-preview
 ```
 
+### Svelte / SvelteKit
+
+This config uses `svelte-language-server` for `.svelte` files and Tailwind LSP for class completion in Svelte components.
+
+For best TypeScript/JavaScript support across `.svelte` and `.ts`/`.js` files inside SvelteKit projects, install and enable the TypeScript Svelte plugin per project:
+
+```bash
+npm i -D typescript-svelte-plugin svelte-check
+```
+
+Then add it to `tsconfig.json`/`jsconfig.json`:
+
+```json
+{
+  "compilerOptions": {
+    "plugins": [{ "name": "typescript-svelte-plugin" }]
+  }
+}
+```
+
 ### Common install one-liners (macOS)
 
 Core binaries used by this config:
