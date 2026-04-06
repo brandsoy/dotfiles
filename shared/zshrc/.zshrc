@@ -238,6 +238,3 @@ fi
 
 # Added by get-aspire-cli.sh
 export PATH="$HOME/.aspire/bin:$PATH"
-
-# FZF ignore folders
-export FZF_DEFAULT_COMMAND='rg --files --hidden --glob "!.git/*" --glob "!build/*" --glob "!node_modules/*"'
