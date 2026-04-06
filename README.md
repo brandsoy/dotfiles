@@ -123,3 +123,105 @@ Notes:
 - macOS uses a LaunchDaemon (`/Library/LaunchDaemons/com.dotfiles.hosts-blocklist.plist`) every Sunday at 04:17
 - Linux uses a systemd timer (`com.dotfiles.hosts-blocklist.timer`) with default `OnCalendar=Sun *-*-* 04:17:00`
 - Linux schedule can be overridden at install time, for example: `hosts-blocklist-schedule install --schedule 'Mon *-*-* 03:30:00'`
+
+## Neovim LSP Setup (0.12+)
+
+This Neovim config uses native LSP (`vim.lsp.config()` / `vim.lsp.enable()`) and does not use Mason.
+Install language servers and formatters on your system PATH.
+
+### TypeScript Go (`tsgo`)
+
+TypeScript uses Microsoft's TypeScript Go language server (`tsgo`) via `nvim-lspconfig`.
+
+Install globally:
+
+```bash
+npm i -g @typescript/native-preview
+```
+
+### Svelte / SvelteKit
+
+This config uses `svelte-language-server` for `.svelte` files and Tailwind LSP for class completion in Svelte components.
+
+For best TypeScript/JavaScript support across `.svelte` and `.ts`/`.js` files inside SvelteKit projects, install and enable the TypeScript Svelte plugin per project:
+
+```bash
+npm i -D typescript-svelte-plugin svelte-check
+```
+
+Then add it to `tsconfig.json`/`jsconfig.json`:
+
+```json
+{
+  "compilerOptions": {
+    "plugins": [{ "name": "typescript-svelte-plugin" }]
+  }
+}
+```
+
+### Common install one-liners (macOS)
+
+Core binaries used by this config:
+
+```bash
+brew install lua-language-server stylua ripgrep fd terraform-ls
+```
+
+Node-based language servers/formatters:
+
+```bash
+npm i -g @typescript/native-preview vscode-langservers-extracted dockerfile-language-server-nodejs tailwindcss-language-server bash-language-server @biomejs/biome svelte-language-server @fsouza/prettierd prettier
+```
+
+Go-based language servers/formatters:
+
+```bash
+go install golang.org/x/tools/gopls@latest
+go install github.com/segmentio/golines@latest
+go install mvdan.cc/gofumpt@latest
+```
+
+Notes:
+
+- `jsonls` and `yamlls` come from `vscode-langservers-extracted`.
+- `postgres-language-server` and `roslyn` are more environment-specific; install them separately if you use SQL/C# heavily.
+
+### Common install one-liners (Linux)
+
+Debian/Ubuntu base packages:
+
+```bash
+sudo apt update && sudo apt install -y lua-language-server stylua ripgrep fd-find npm golang
+```
+
+Arch base packages:
+
+```bash
+sudo pacman -S --needed lua-language-server stylua ripgrep fd nodejs npm go
+```
+
+Node-based language servers/formatters (all Linux distros):
+
+```bash
+npm i -g @typescript/native-preview vscode-langservers-extracted dockerfile-language-server-nodejs tailwindcss-language-server bash-language-server @biomejs/biome svelte-language-server @fsouza/prettierd prettier
+```
+
+Go-based language servers/formatters (all Linux distros):
+
+```bash
+go install golang.org/x/tools/gopls@latest
+go install github.com/segmentio/golines@latest
+go install mvdan.cc/gofumpt@latest
+```
+
+Optional Linux extras:
+
+- `terraform-ls` and `terraform` may be package-manager specific; install from your distro repo or HashiCorp releases.
+- `postgres-language-server` and `roslyn` are environment-specific; install separately if needed.
+
+### Quick checks
+
+Inside Neovim:
+
+- `:LspInfo` (open a `.ts` file and confirm `tsgo` is attached)
+- `:checkhealth vim.lsp`

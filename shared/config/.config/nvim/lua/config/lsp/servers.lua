@@ -1,22 +1,16 @@
 local M = {}
 
 local function configure_servers()
+	if not (vim.lsp and vim.lsp.config and vim.lsp.enable) then
+		vim.notify("Neovim 0.12+ required for this LSP setup", vim.log.levels.ERROR)
+		return
+	end
+
 	local util_ok, util = pcall(require, "lspconfig.util")
 	if not util_ok then
-		vim.notify("nvim-lspconfig util module missing; skipping LSP setup", vim.log.levels.ERROR)
+		vim.notify("nvim-lspconfig util module missing", vim.log.levels.ERROR)
 		return
 	end
-
-	local lspconfig_ok, lspconfig = pcall(require, "lspconfig")
-	if not lspconfig_ok then
-		vim.notify("nvim-lspconfig module missing; skipping LSP setup", vim.log.levels.ERROR)
-		return
-	end
-
-	local supports_new_api = vim.lsp and vim.lsp.config and vim.lsp.enable
-
-	local blink_ok, blink = pcall(require, "blink.cmp")
-	local capabilities = blink_ok and blink.get_lsp_capabilities() or vim.lsp.protocol.make_client_capabilities()
 
 	local schemastore_ok, schemastore = pcall(require, "schemastore")
 
@@ -27,6 +21,8 @@ local function configure_servers()
 		update_in_insert = false,
 	})
 
+	local capabilities = vim.lsp.protocol.make_client_capabilities()
+
 	local servers = {
 		lua_ls = {
 			settings = {
@@ -35,49 +31,28 @@ local function configure_servers()
 					diagnostics = { globals = { "vim" } },
 					hint = { enable = true },
 					runtime = { version = "LuaJIT" },
-					workspace = {
-						checkThirdParty = false,
-						-- rely on neodev.nvim to inject the Neovim runtime instead of eagerly
-						-- adding every runtime path (which triggers repeated workspace loading)
-					},
+					workspace = { checkThirdParty = false },
 					telemetry = { enable = false },
 				},
 			},
 		},
 		gopls = {
 			settings = {
-				analyses = {
-					nilness = true,
-					shadow = true,
-					unusedparams = true,
-					unusedwrite = true,
-					useany = true,
+				gopls = {
+					analyses = {
+						nilness = true,
+						shadow = true,
+						unusedparams = true,
+						unusedwrite = true,
+						useany = true,
+					},
+					usePlaceholders = true,
+					completeUnimported = true,
+					staticcheck = true,
+					matcher = "Fuzzy",
+					directoryFilters = { "-node_modules" },
+					gofumpt = true,
 				},
-				codelenses = {
-					generate = false,
-					gc_details = false,
-					test = false,
-					tidy = false,
-					vendor = false,
-					regenerate_cgo = false,
-					upgrade_dependency = false,
-				},
-				hints = {
-					assignVariableTypes = true,
-					compositeLiteralFields = true,
-					compositeLiteralTypes = true,
-					constantValues = true,
-					functionTypeParameters = true,
-					parameterNames = true,
-					rangeVariableTypes = true,
-				},
-				usePlaceholders = true,
-				completeUnimported = true,
-				staticcheck = true,
-				matcher = "Fuzzy",
-				directoryFilters = { "-node_modules" },
-				gofumpt = true,
-				filetypes = { "go", "gomod", "gowork", "gotmpl" },
 			},
 		},
 		tsgo = {},
@@ -99,219 +74,64 @@ local function configure_servers()
 			},
 		} or {},
 		dockerls = {},
-		-- ansiblels = {},
 		tailwindcss = {
 			filetypes = { "html", "javascriptreact", "typescriptreact", "vue", "svelte", "astro" },
-			root_dir = util.root_pattern(
-				"tailwind.config.js",
-				"tailwind.config.ts",
-				"postcss.config.js",
-				"package.json",
-				"node_modules"
-			),
+			root_dir = util.root_pattern("tailwind.config.js", "tailwind.config.ts", "postcss.config.js", "package.json"),
 		},
 		bashls = {},
-		bicep = {},
-		tsp_server = {},
+		biome = {},
+		svelte = {
+			root_dir = util.root_pattern(
+				"svelte.config.js",
+				"svelte.config.ts",
+				"vite.config.js",
+				"vite.config.ts",
+				"package.json",
+				".git"
+			),
+		},
+		terraformls = { filetypes = { "terraform", "terraform-vars" } },
 		postgres_lsp = {
 			filetypes = { "sql" },
 			workspace_required = false,
-			cmd = { vim.fn.stdpath("data") .. "/mason/bin/postgres-language-server", "lsp-proxy" },
-		},
-		svelte = {},
-		terraformls = {
-			filetypes = { "terraform", "terraform-vars" },
-		},
-		roslyn = {
-			filetypes = { "cs", "razor" },
-			settings = {
-				["csharp|inlay_hints"] = {
-					csharp_enable_inlay_hints_for_implicit_object_creation = true,
-					csharp_enable_inlay_hints_for_implicit_variable_types = true,
-					csharp_enable_inlay_hints_for_lambda_parameter_types = true,
-					csharp_enable_inlay_hints_for_types = true,
-					dotnet_enable_inlay_hints_for_indexer_parameters = true,
-					dotnet_enable_inlay_hints_for_literal_parameters = true,
-					dotnet_enable_inlay_hints_for_object_creation_parameters = true,
-					dotnet_enable_inlay_hints_for_other_parameters = true,
-					dotnet_enable_inlay_hints_for_parameters = true,
-					dotnet_suppress_inlay_hints_for_parameters_that_differ_only_by_suffix = true,
-					dotnet_suppress_inlay_hints_for_parameters_that_match_argument_name = true,
-					dotnet_suppress_inlay_hints_for_parameters_that_match_method_intent = true,
-				},
-				["csharp|code_lens"] = {
-					dotnet_enable_references_code_lens = false,
-					dotnet_enable_tests_code_lens = false,
-				},
-				["csharp|background_analysis"] = {
-					background_analysis_dotnet_analyzer_diagnostics_scope = "openFiles",
-					background_analysis_dotnet_compiler_diagnostics_scope = "openFiles",
-				},
-				["csharp|completion"] = {
-					dotnet_provide_regex_completions = true,
-					dotnet_show_completion_items_from_unimported_namespaces = true,
-					dotnet_show_name_completion_suggestions = true,
-				},
-				["csharp|symbol_search"] = {
-					dotnet_search_reference_assemblies = true,
-				},
-				["csharp|formatting"] = {
-					dotnet_organize_imports_on_format = true,
-				},
-			},
+			cmd = { "postgres-language-server", "lsp-proxy" },
 		},
 	}
 
-	local tools = {
-		"eslint_d",
-		"prettierd",
-		"golines",
-		"stylua",
-		"shfmt",
-		"golangci-lint",
-		"gofumpt",
-		"gomodifytags",
-		"gotests",
-		"pgformatter",
-		"iferr",
-		"roslyn",
-	}
-
-	local all_server_names = vim.tbl_keys(servers)
-	local mason_lsp_servers = vim.tbl_filter(function(name)
-		return name ~= "roslyn"
-	end, all_server_names)
-
-	local mason_ok, mason = pcall(require, "mason")
-	if not mason_ok then
-		vim.notify("mason.nvim not available; skip tooling setup", vim.log.levels.ERROR)
-		return
-	end
-
-	local mason_lspconfig_ok, mason_lspconfig = pcall(require, "mason-lspconfig")
-	if not mason_lspconfig_ok then
-		vim.notify("mason-lspconfig not available; skip LSP installer setup", vim.log.levels.ERROR)
-		return
-	end
-
-	local mason_tool_installer_ok, mason_tool_installer = pcall(require, "mason-tool-installer")
-	if not mason_tool_installer_ok then
-		vim.notify("mason-tool-installer not available; skip tool installer setup", vim.log.levels.ERROR)
-		return
-	end
-
-	mason.setup({
-		registries = {
-			"github:mason-org/mason-registry",
-			"github:Crashdummyy/mason-registry",
-		},
-	})
-
-	mason_lspconfig.setup({
-		ensure_installed = mason_lsp_servers,
-		automatic_enable = false,
-	})
-
-	mason_tool_installer.setup({
-		ensure_installed = tools,
-		run_on_start = true,
-		debounce_hours = 12,
-	})
-
-	local function enable_server_for_buf(name, bufnr)
-		if supports_new_api then
-			if not vim.lsp.get_clients({ name = name, bufnr = bufnr })[1] then
-				pcall(vim.lsp.enable, name, { bufnr = bufnr })
-			end
-			return
-		end
-
-		local server_mod = lspconfig[name]
-		if server_mod and server_mod.manager then
-			server_mod.manager.try_add(bufnr)
-		end
-	end
-
-	local function setup_server(name)
-		local server = vim.tbl_deep_extend("force", {}, servers[name] or {}, { capabilities = capabilities })
-		if supports_new_api then
-			local ok, err = pcall(vim.lsp.config, name, server)
-			if not ok then
-				vim.notify(string.format("Failed to configure %s: %s", name, err), vim.log.levels.ERROR)
-			end
-			return
-		end
-
-		local server_mod = lspconfig[name]
-		if not server_mod then
-			vim.notify(string.format("lspconfig has no server named %s", name), vim.log.levels.WARN)
-			return
-		end
-
-		local ok, err = pcall(server_mod.setup, server)
+	for name, cfg in pairs(servers) do
+		local ok, err = pcall(vim.lsp.config, name, vim.tbl_deep_extend("force", cfg, { capabilities = capabilities }))
 		if not ok then
 			vim.notify(string.format("Failed to configure %s: %s", name, err), vim.log.levels.ERROR)
 		end
 	end
 
-	for _, server_name in ipairs(all_server_names) do
-		setup_server(server_name)
-	end
-
-	-- Defer enabling until matching FileType to reduce startup cost; skip large files
-	if supports_new_api then
-		-- Build filetype to servers lookup table once for performance
-		local ft_to_servers = {}
-		for name, cfg in pairs(servers) do
-			local fts = cfg.filetypes
-
-			if fts then
-				for _, ft in ipairs(fts) do
-					ft_to_servers[ft] = ft_to_servers[ft] or {}
-					table.insert(ft_to_servers[ft], name)
-				end
-			else
-				-- Servers with no explicit filetypes apply to all
-				ft_to_servers["*"] = ft_to_servers["*"] or {}
-				table.insert(ft_to_servers["*"], name)
+	local ft_to_servers = {}
+	for name, cfg in pairs(servers) do
+		local resolved = vim.lsp.config[name]
+		local fts = (resolved and resolved.filetypes) or cfg.filetypes
+		if type(fts) == "table" then
+			for _, ft in ipairs(fts) do
+				ft_to_servers[ft] = ft_to_servers[ft] or {}
+				table.insert(ft_to_servers[ft], name)
 			end
 		end
-
-		local ft_group = vim.api.nvim_create_augroup("LspFileTypeEnable", { clear = true })
-		vim.api.nvim_create_autocmd("FileType", {
-			group = ft_group,
-			callback = function(ev)
-				if vim.b.large_file then
-					return
-				end
-				local ft = ev.match
-				local server_list = ft_to_servers[ft] or {}
-				local fallback_list = ft_to_servers["*"] or {}
-
-				for _, name in ipairs(server_list) do
-					if not vim.lsp.get_clients({ name = name, bufnr = ev.buf })[1] then
-						pcall(vim.lsp.enable, name, { bufnr = ev.buf })
-					end
-				end
-
-				for _, name in ipairs(fallback_list) do
-					if not vim.lsp.get_clients({ name = name, bufnr = ev.buf })[1] then
-						pcall(vim.lsp.enable, name, { bufnr = ev.buf })
-					end
-				end
-			end,
-		})
 	end
 
-	-- User command to force enable all configured servers for current buffer
-	vim.api.nvim_create_user_command("LspEnableAll", function()
-		local bufnr = vim.api.nvim_get_current_buf()
-		for name, _ in pairs(servers) do
-			if not vim.lsp.get_clients({ name = name, bufnr = bufnr })[1] then
-				enable_server_for_buf(name, bufnr)
+	vim.api.nvim_create_autocmd("FileType", {
+		group = vim.api.nvim_create_augroup("LspFileTypeEnable", { clear = true }),
+		callback = function(ev)
+			if vim.b.large_file then
+				return
 			end
-		end
-	end, { desc = "Force enable all configured LSP servers for current buffer" })
+
+			local server_list = ft_to_servers[ev.match] or {}
+			for _, name in ipairs(server_list) do
+				if not vim.lsp.get_clients({ name = name, bufnr = ev.buf })[1] then
+					pcall(vim.lsp.enable, name, { bufnr = ev.buf })
+				end
+			end
+		end,
+	})
 end
 
 function M.setup()

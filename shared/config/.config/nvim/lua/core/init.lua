@@ -21,5 +21,6 @@ if vim.tbl_flatten then
 end
 
 require("core.options")
+require("core.statusline").setup()
 require("core.keymaps")
 require("core.autocmds")

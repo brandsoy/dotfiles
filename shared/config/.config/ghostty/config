@@ -9,7 +9,8 @@ macos-titlebar-proxy-icon = "hidden"
 
 # Font
 font-size = 14
-font-family = "JetBrainsMono Nerd Font Mono"
+font-family = "Maple Mono NF"
+# font-family = "JetBrainsMono Nerd Font Mono"
 # font-family = "GeistMono Nerd Font Mono"
 # font-family = "CaskaydiaMono Nerd Font Mono"
 

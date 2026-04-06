@@ -1,7 +1,7 @@
 -- ================================================================================================
 -- TITLE : globals
 -- ABOUT : you may have different global & local leaders.
---        Must be set BEFORE any plugins (lazy.nvim) are loaded.
+--        Must be set BEFORE plugins are loaded.
 -- ================================================================================================
 
 vim.g.mapleader = " "
