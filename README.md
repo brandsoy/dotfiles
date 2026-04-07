@@ -127,16 +127,21 @@ Notes:
 ## Neovim LSP Setup (0.12+)
 
 This Neovim config uses native LSP (`vim.lsp.config()` / `vim.lsp.enable()`) and does not use Mason.
-Install language servers and formatters on your system PATH.
+Language servers and formatters are managed with `mise` and exposed through the mise shims on your PATH.
 
-### TypeScript Go (`tsgo`)
+### Install tooling with mise
 
-TypeScript uses Microsoft's TypeScript Go language server (`tsgo`) via `nvim-lspconfig`.
-
-Install globally:
+From this dotfiles repo:
 
 ```bash
-npm i -g @typescript/native-preview
+mise install
+```
+
+Optional checks:
+
+```bash
+mise ls
+for bin in lua-language-server stylua terraform-ls gopls golines gofumpt tsgo vscode-json-language-server yaml-language-server docker-langserver tailwindcss-language-server bash-language-server biome svelteserver prettierd prettier; do mise which "$bin"; done
 ```
 
 ### Svelte / SvelteKit
@@ -159,65 +164,16 @@ Then add it to `tsconfig.json`/`jsconfig.json`:
 }
 ```
 
-### Common install one-liners (macOS)
+### Optional manual tools
 
-Core binaries used by this config:
-
-```bash
-brew install lua-language-server stylua ripgrep fd terraform-ls
-```
-
-Node-based language servers/formatters:
-
-```bash
-npm i -g @typescript/native-preview vscode-langservers-extracted dockerfile-language-server-nodejs tailwindcss-language-server bash-language-server @biomejs/biome svelte-language-server @fsouza/prettierd prettier
-```
-
-Go-based language servers/formatters:
-
-```bash
-go install golang.org/x/tools/gopls@latest
-go install github.com/segmentio/golines@latest
-go install mvdan.cc/gofumpt@latest
-```
-
-Notes:
-
-- `jsonls` and `yamlls` come from `vscode-langservers-extracted`.
-- `postgres-language-server` and `roslyn` are more environment-specific; install them separately if you use SQL/C# heavily.
-
-### Common install one-liners (Linux)
-
-Debian/Ubuntu base packages:
-
-```bash
-sudo apt update && sudo apt install -y lua-language-server stylua ripgrep fd-find npm golang
-```
-
-Arch base packages:
-
-```bash
-sudo pacman -S --needed lua-language-server stylua ripgrep fd nodejs npm go
-```
-
-Node-based language servers/formatters (all Linux distros):
-
-```bash
-npm i -g @typescript/native-preview vscode-langservers-extracted dockerfile-language-server-nodejs tailwindcss-language-server bash-language-server @biomejs/biome svelte-language-server @fsouza/prettierd prettier
-```
-
-Go-based language servers/formatters (all Linux distros):
-
-```bash
-go install golang.org/x/tools/gopls@latest
-go install github.com/segmentio/golines@latest
-go install mvdan.cc/gofumpt@latest
-```
-
-Optional Linux extras:
-
-- `terraform-ls` and `terraform` may be package-manager specific; install from your distro repo or HashiCorp releases.
 - `postgres-language-server` and `roslyn` are environment-specific; install separately if needed.
+- `pg_format` is used for SQL formatting in `conform.nvim` and may need a separate package-manager install.
+
+### Notes
+
+- `tsgo` comes from `@typescript/native-preview`.
+- `jsonls` comes from `vscode-langservers-extracted`.
+- `yamlls` comes from `yaml-language-server`.
 
 ### Quick checks
 

@@ -220,10 +220,10 @@ run = ['layout floating']
 # ==============================================================================
 
 [workspace-to-monitor-force-assignment]
-web = 'main'
-term = 'main'
-code = 'main'
-misc = 'main'
+web = 'LS49A950U'
+term = 'LS49A950U'
+code = 'LS49A950U'
+misc = 'LS49A950U'
 comms = 'built-in'
-notes = ['EV2436W', 'main']
-media = ['EV2436W', 'main']
+notes = 'LS49A950U'
+media = 'LS49A950U'
