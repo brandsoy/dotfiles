@@ -9,7 +9,11 @@ function M.setup()
 		require("tokyonight").setup({ style = "night" })
 	end)
 
-	require("core.theme").startup("tokyonight-night")
+	pcall(function()
+		require("nightfox").setup()
+	end)
+
+	require("core.theme").startup("carbonfox")
 end
 
 return M

@@ -13,6 +13,7 @@ function M.setup()
 			"dockerfile",
 			"go",
 			"gomod",
+			"c_sharp",
 			"hcl",
 			"html",
 			"javascript",

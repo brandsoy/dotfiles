@@ -36,8 +36,8 @@ maximize = true
 
 # Windows Padding
 window-padding-balance = true
-window-padding-x = 5 
-window-padding-y = 5 
+window-padding-x = 10 
+window-padding-y = 5
 
 # Window hide top bar
 # window-decoration = "none"

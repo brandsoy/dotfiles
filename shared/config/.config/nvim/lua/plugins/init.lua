@@ -7,6 +7,7 @@ end
 function M.setup()
 	vim.pack.add({
 		gh("0xleodevv/oc-2.nvim"),
+		gh("EdenEast/nightfox.nvim"),
 		gh("folke/tokyonight.nvim"),
 		gh("echasnovski/mini.nvim"),
 		gh("ibhagwan/fzf-lua"),
