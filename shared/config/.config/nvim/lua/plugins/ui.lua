@@ -10,10 +10,14 @@ function M.setup()
 	end)
 
 	pcall(function()
+		require("catppuccin").setup({ flavour = "mocha" })
+	end)
+
+	pcall(function()
 		require("nightfox").setup()
 	end)
 
-	require("core.theme").startup("carbonfox")
+	require("core.theme").startup("catppuccin-mocha")
 end
 
 return M

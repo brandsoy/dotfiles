@@ -1,6 +1,6 @@
 [general]
 import = [
-    "./themes/tokyo_night.toml"
+    "./themes/catppuccin-mocha.toml"
 ]
 
 live_config_reload = true
