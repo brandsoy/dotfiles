@@ -231,6 +231,20 @@ if [[ "$OSTYPE" == linux* ]]; then
   alias wifistat="watch -n 1 'iwctl station wlan0 show | grep -E \"(Connected BSSID|RSSI|Frequency|Tx-Rate)\"'"
 fi
 
+
+# --- Set Nvim as default editor ------------------------------------------------
+export EDITOR='nvim'
+export VISUAL='nvim'
+
+# --- YAZI shell wrapper -----------------------------------------------------
+function y() {
+	local tmp="$(mktemp -t "yazi-cwd.XXXXXX")" cwd
+	command yazi "$@" --cwd-file="$tmp"
+	IFS= read -r -d '' cwd < "$tmp"
+	[ "$cwd" != "$PWD" ] && [ -d "$cwd" ] && builtin cd -- "$cwd"
+	rm -f -- "$tmp"
+}
+
 # --- Docker Desktop completions (macOS) -------------------------------------
 if [[ "$OSTYPE" == "darwin"* && -d "$HOME/.docker/completions" ]]; then
   fpath=("$HOME/.docker/completions" "${fpath[@]}")
@@ -238,3 +252,7 @@ fi
 
 # Added by get-aspire-cli.sh
 export PATH="$HOME/.aspire/bin:$PATH"
+
+# Saga Connect local test vars
+export E2E_USERNAME="super@user.com"
+export E2E_PASSWORD="superuser"
