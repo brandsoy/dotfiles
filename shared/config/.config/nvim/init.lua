@@ -2,5 +2,10 @@ if vim.loader then vim.loader.enable() end
 require("core")
 
 require("plugins").setup()
--- i use mise to install node so disable the checkhealth for node
-vim.g.node_host_prog = "/home/zhang/.local/bin/mise node-host"
+
+local node_host = vim.fn.exepath("neovim-node-host")
+if node_host ~= "" then
+	vim.g.node_host_prog = node_host
+else
+	vim.g.loaded_node_provider = 0
+end

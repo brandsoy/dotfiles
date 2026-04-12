@@ -6,12 +6,15 @@ end
 
 function M.setup()
 	vim.pack.add({
+    -- Themes
 		gh("0xleodevv/oc-2.nvim"),
 		gh("catppuccin/nvim"),
 		gh("EdenEast/nightfox.nvim"),
 		gh("folke/tokyonight.nvim"),
+    -- Plugins
 		gh("echasnovski/mini.nvim"),
 		gh("ibhagwan/fzf-lua"),
+    -- LSP
 		gh("nvim-treesitter/nvim-treesitter"),
 		gh("neovim/nvim-lspconfig"),
 		gh("stevearc/conform.nvim"),

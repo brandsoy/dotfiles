@@ -22,6 +22,7 @@ shell-integration-features = cursor,sudo,title
 quit-after-last-window-closed = "true"
 cursor-style = bar
 cursor-style-blink = true
+desktop-notifications = true
 
 # Icon
 macos-icon = custom-style

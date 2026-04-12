@@ -56,6 +56,9 @@ local function configure_servers()
 			},
 		},
 		tsgo = {},
+		tsp_server = {
+			cmd = { "tsp-server", "--stdio" },
+		},
 		jsonls = schemastore_ok and {
 			settings = {
 				json = {
