@@ -38,12 +38,12 @@ brew "git"
 brew "git-filter-repo"
 brew "glow"
 brew "go"
+brew "htop"
 brew "imagemagick", link: false
 brew "imagemagick-full", link: true
 brew "jq"
 brew "lazydocker"
 brew "lazygit"
-brew "llama.cpp"
 brew "lua-language-server"
 brew "make"
 brew "mise"

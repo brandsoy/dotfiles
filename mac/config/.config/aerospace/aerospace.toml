@@ -173,6 +173,16 @@ run = ['move-node-to-workspace term']
 if.app-id = 'net.kovidgoyal.kitty'
 run = ['move-node-to-workspace term']
 
+# --- Terminals -> Workspace term ---
+[[on-window-detected]]
+if.app-id = 'com.spotify.client'
+run = ['move-node-to-workspace media']
+
+[[on-window-detected]]
+if.app-id = 'com.brave.Browser.app.agimnkijcaahngcdmfeangaknmldooml'
+run = ['move-node-to-workspace media']
+
+
 # --- Editors -> Workspace code ---
 [[on-window-detected]]
 if.app-id = 'com.microsoft.VSCode'

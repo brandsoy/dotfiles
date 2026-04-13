@@ -256,3 +256,12 @@ export PATH="$HOME/.aspire/bin:$PATH"
 # Saga Connect local test vars
 export E2E_USERNAME="super@user.com"
 export E2E_PASSWORD="superuser"
+
+# Force Ollama to use the M5's high-bandwidth MLX path
+export OLLAMA_FLASH_ATTENTION=1
+# Allow the M5 to handle 4 parallel agentic streams
+export OLLAMA_NUM_PARALLEL=4
+# Set the default context high enough for modern codebases
+export OLLAMA_CONTEXT_LENGTH=32768
+# Keep the model loaded in the M5's unified memory (-1 = forever)
+export OLLAMA_KEEP_ALIVE="-1"

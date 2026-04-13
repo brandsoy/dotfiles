@@ -21,6 +21,16 @@ if vim.tbl_flatten then
 end
 
 require("core.options")
+
+pcall(function()
+	if vim.fn.has("nvim-0.12") == 1 then
+		require("vim._core.ui2").enable({
+			enable = true,
+			msg = { targets = "msg" },
+		})
+	end
+end)
+
 require("core.statusline").setup()
 require("core.keymaps")
 require("core.autocmds")
