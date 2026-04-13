@@ -238,10 +238,14 @@ export VISUAL='nvim'
 
 # --- YAZI shell wrapper -----------------------------------------------------
 function y() {
-	local tmp="$(mktemp -t "yazi-cwd.XXXXXX")" cwd
+	local tmp
+	local cwd
+	tmp="$(mktemp -t "yazi-cwd.XXXXXX")"
 	command yazi "$@" --cwd-file="$tmp"
 	IFS= read -r -d '' cwd < "$tmp"
-	[ "$cwd" != "$PWD" ] && [ -d "$cwd" ] && builtin cd -- "$cwd"
+	if [ "$cwd" != "$PWD" ] && [ -d "$cwd" ]; then
+		builtin cd -- "$cwd" || return
+	fi
 	rm -f -- "$tmp"
 }
 

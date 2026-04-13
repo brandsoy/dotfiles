@@ -3,7 +3,8 @@
 get_tmux_option() {
     local option="$1"
     local default_value="$2"
-    local option_value="$(tmux show-option -gqv "$option")"
+    local option_value
+    option_value="$(tmux show-option -gqv "$option")"
     if [ -z "$option_value" ]; then
         echo "$default_value"
     else
@@ -13,18 +14,31 @@ get_tmux_option() {
 
 apply_minimal_theme() {
     # Get theme colors (allow customization)
-    local bg_color=$(get_tmux_option "@minimal_theme_bg_color" "#1A1D23")
-    local active_color=$(get_tmux_option "@minimal_theme_active_color" "#b4befe")
-    local inactive_color=$(get_tmux_option "@minimal_theme_inactive_color" "#6c7086")
-    local text_color=$(get_tmux_option "@minimal_theme_text_color" "#cdd6f4")
-    local accent_color=$(get_tmux_option "@minimal_theme_accent_color" "#b4befe")
-    local border_color=$(get_tmux_option "@minimal_theme_border_color" "#44475a")
-    local icon_session=$(get_tmux_option "@minimal_theme_session_icon" "")
-    local icon_dir=$(get_tmux_option "@minimal_theme_dir_icon" "")
-    local icon_memory=$(get_tmux_option "@minimal_theme_memory_icon" "")
-    local icon_date=$(get_tmux_option "@minimal_theme_date_icon" "")
-    local icon_clock=$(get_tmux_option "@minimal_theme_clock_icon" "")
-    local icon_battery=$(get_tmux_option "@minimal_theme_battery_icon" "")
+    local bg_color
+    local active_color
+    local inactive_color
+    local text_color
+    local accent_color
+    local border_color
+    local icon_session
+    local icon_dir
+    local icon_memory
+    local icon_date
+    local icon_clock
+    local icon_battery
+
+    bg_color=$(get_tmux_option "@minimal_theme_bg_color" "#1A1D23")
+    active_color=$(get_tmux_option "@minimal_theme_active_color" "#b4befe")
+    inactive_color=$(get_tmux_option "@minimal_theme_inactive_color" "#6c7086")
+    text_color=$(get_tmux_option "@minimal_theme_text_color" "#cdd6f4")
+    accent_color=$(get_tmux_option "@minimal_theme_accent_color" "#b4befe")
+    border_color=$(get_tmux_option "@minimal_theme_border_color" "#44475a")
+    icon_session=$(get_tmux_option "@minimal_theme_session_icon" "")
+    icon_dir=$(get_tmux_option "@minimal_theme_dir_icon" "")
+    icon_memory=$(get_tmux_option "@minimal_theme_memory_icon" "")
+    icon_date=$(get_tmux_option "@minimal_theme_date_icon" "")
+    icon_clock=$(get_tmux_option "@minimal_theme_clock_icon" "")
+    icon_battery=$(get_tmux_option "@minimal_theme_battery_icon" "")
 
     # Status bar setup
     tmux set-option -g status on
