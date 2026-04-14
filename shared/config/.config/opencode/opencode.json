@@ -1,6 +1,5 @@
 {
   "$schema": "https://opencode.ai/config.json",
-  "model": "ollama/gemma4-coding",
   "plugin": [
     "@mohak34/opencode-notifier@latest"
   ],

@@ -1,6 +1,12 @@
 [settings]
 idiomatic_version_file_enable_tools = ["ruby"]
 
+[settings.pipx]
+uvx = true
+
+[settings.python]
+uv_venv_auto = true
+
 [settings.ruby]
 
 [tools]
@@ -11,6 +17,8 @@ gum = "latest"
 node = "latest"
 npm = "latest"
 python = "latest"
+uv = "latest"
+ruff = "latest"
 terraform = "latest"
 lua-language-server = "latest"
 stylua = "latest"
