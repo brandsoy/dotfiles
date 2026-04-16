@@ -53,6 +53,18 @@ zinit snippet OMZP::archlinux
 zinit ice wait lucid atinit"zpcompinit; zicdreplay"
 zinit light zdharma-continuum/fast-syntax-highlighting
 
+# --- Docker completions ------------------------------------------------------
+if [[ -d "$HOME/.docker/completions" ]]; then
+  fpath=("$HOME/.docker/completions" "${fpath[@]}")
+fi
+
+if command -v brew >/dev/null 2>&1; then
+  docker_site_functions="$(brew --prefix)/share/zsh/site-functions"
+  if [[ -d "$docker_site_functions" ]]; then
+    fpath=("$docker_site_functions" "${fpath[@]}")
+  fi
+fi
+
 # --- Completion System (Optimized) ------------------------------------------
 autoload -Uz compinit
 # Only regenerate compdump once a day
@@ -249,11 +261,6 @@ function y() {
 	rm -f -- "$tmp"
 }
 
-# --- Docker Desktop completions (macOS) -------------------------------------
-if [[ "$OSTYPE" == "darwin"* && -d "$HOME/.docker/completions" ]]; then
-  fpath=("$HOME/.docker/completions" "${fpath[@]}")
-fi
-
 # Added by get-aspire-cli.sh
 export PATH="$HOME/.aspire/bin:$PATH"
 
@@ -297,4 +304,3 @@ else
   compdef _opencode_yargs_completions opencode
 fi
 ###-end-opencode-completions-###
-

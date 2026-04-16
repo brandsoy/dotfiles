@@ -19,6 +19,19 @@ mac/config/.config/raycast/
 shared/config/.config/pgcli/history
 shared/config/.config/pgcli/log
 
+# Generated local bin shims
+shared/bin/.local/bin/debugpy
+shared/bin/.local/bin/debugpy-adapter
+shared/bin/.local/bin/ipython
+shared/bin/.local/bin/ipython3
+shared/bin/.local/bin/jupyter
+shared/bin/.local/bin/jupyter-kernel
+shared/bin/.local/bin/jupyter-kernelspec
+shared/bin/.local/bin/jupyter-migrate
+shared/bin/.local/bin/jupyter-run
+shared/bin/.local/bin/jupyter-troubleshoot
+shared/bin/.local/bin/pygmentize
+
 # keys
 **/id_*
 **/*.pub

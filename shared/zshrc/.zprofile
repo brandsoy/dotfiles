@@ -21,6 +21,7 @@ elif [[ -d "/usr/local/opt/libpq/bin" ]]; then
 fi
 
 # --- Local tool paths -------------------------------------------------------
+path_prepend "$HOME/.local/bin"
 path_prepend "$HOME/.tsp/bin"
 path_prepend "$HOME/.opencode/bin"
 path_prepend "$HOME/.aspire/bin"
@@ -35,7 +36,6 @@ path_prepend "$PNPM_HOME"
 
 # --- OS-specific (Linux only) -----------------------------------------------
 if [[ "$OSTYPE" == linux* ]]; then
-  path_prepend "$HOME/.local/bin"
   path_prepend "$HOME/.opencode/bin"
   path_prepend "$HOME/.cargo/bin"
   export XDG_DATA_DIRS="$XDG_DATA_DIRS:/var/lib/flatpak/exports/share:$HOME/.local/share/flatpak/exports/share"
@@ -45,3 +45,7 @@ fi
 
 # Added by Obsidian
 path_append "/Applications/Obsidian.app/Contents/MacOS"
+
+# Added by OrbStack: command-line tools and integration
+# This won't be added again if you remove it.
+source ~/.orbstack/shell/init.zsh 2>/dev/null || :

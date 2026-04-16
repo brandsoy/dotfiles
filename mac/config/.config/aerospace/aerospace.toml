@@ -101,6 +101,7 @@ alt-4 = 'workspace misc'
 alt-s = 'workspace comms'
 alt-d = 'workspace notes'
 alt-m = 'workspace media'
+alt-a = 'workspace ai'
 
 alt-tab = 'workspace-back-and-forth'
 alt-shift-tab = 'move-workspace-to-monitor --wrap-around next'
@@ -113,6 +114,7 @@ alt-shift-4 = 'move-node-to-workspace misc'
 alt-shift-s = 'move-node-to-workspace comms'
 alt-shift-d = 'move-node-to-workspace notes'
 alt-shift-m = 'move-node-to-workspace media'
+alt-shift-5 = 'move-node-to-workspace ai'
 
 # --- Enter Sub-Modes ---
 alt-shift-semicolon = 'mode service'
@@ -179,7 +181,7 @@ if.app-id = 'com.spotify.client'
 run = ['move-node-to-workspace media']
 
 [[on-window-detected]]
-if.app-id = 'com.brave.Browser.app.agimnkijcaahngcdmfeangaknmldooml'
+if.app-id = 'com.apple.Safari.WebApp.10C4F224-ABFB-4CFD-891C-60616E2AE109'
 run = ['move-node-to-workspace media']
 
 
@@ -210,6 +212,23 @@ run = ['move-node-to-workspace comms']
 if.app-id = 'com.apple.mail'
 run = ['move-node-to-workspace comms']
 
+[[on-window-detected]]
+if.app-id = 'com.apple.Safari.WebApp.9E470AEC-626A-4AAE-AD52-D8901031A33D'
+run = ['move-node-to-workspace comms']
+
+[[on-window-detected]]
+if.app-id = 'com.apple.Safari.WebApp.A34D3463-4148-430C-97AE-A15563F2327B'
+run = ['move-node-to-workspace comms']
+
+
+[[on-window-detected]]
+if.app-id = 'com.openai.codex'
+run = ['move-node-to-workspace ai']
+
+[[on-window-detected]]
+if.app-id = 'com.openai.chat'
+run = ['move-node-to-workspace ai']
+
 # --- Floating Windows ---
 [[on-window-detected]]
 if.app-id = 'com.apple.finder'
@@ -230,10 +249,11 @@ run = ['layout floating']
 # ==============================================================================
 
 [workspace-to-monitor-force-assignment]
-web = ['EV2436W', 'LS49A950U', 'main']
+web = ['VZ27A', 'LS49A950U', 'main']
 term = ['VZ27A', 'LS49A950U', 'main']
 code = ['VZ27A', 'LS49A950U', 'main']
 misc = ['LS49A950U', 'built-in', 'VZ27A', 'main']
 comms = ['built-in', 'LS49A950U', 'VZ27A', 'main']
 notes = ['EV2436W', 'LS49A950U', 'main']
+ai = ['built-in',  'EV2436W', 'LS49A950U', 'main']
 media = ['built-in', 'LS49A950U', 'VZ27A', 'main']

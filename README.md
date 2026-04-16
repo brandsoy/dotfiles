@@ -36,6 +36,12 @@ dotfiles/
     ./install.sh
     ```
 
+    Or from anywhere after your first install:
+
+    ```bash
+    dotfiles-install
+    ```
+
 This script will:
 -   **Detect OS** (macOS, Arch, Debian, or generic Linux)
 -   **Install dependencies** (stow, git, curl, zsh, etc.)
@@ -62,7 +68,28 @@ This script will:
 
 # Only install packages (no stow)
 ./install.sh packages
+
+# Global command (same behavior)
+dotfiles-install packages
 ```
+
+## Tool Updates (Homebrew + mise)
+
+Use the updater script to check/upgrade Homebrew and mise-managed tools:
+
+```bash
+# Check for available updates only
+dotfiles-update --check
+
+# Upgrade everything managed by brew/mise
+dotfiles-update
+```
+
+Notes:
+
+- `dotfiles-update` runs `brew update`, reports outdated packages, upgrades from `homebrew/Brewfile`, syncs the Brewfile, and runs cleanup.
+- It also runs `mise outdated`, `mise upgrade --yes`, and `mise prune -y`.
+- If your repo is not at `~/dotfiles`, set `DOTFILES_DIR` before running, for example: `DOTFILES_DIR=~/src/dotfiles dotfiles-update`.
 
 ## Uninstalling
 
