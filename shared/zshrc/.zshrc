@@ -58,6 +58,11 @@ if [[ -d "$HOME/.docker/completions" ]]; then
   fpath=("$HOME/.docker/completions" "${fpath[@]}")
 fi
 
+# --- Orbstack completions ------------------------------------------------------
+if [[ -d "$HOME/.zsh/completions" ]]; then
+  fpath=(~/.zsh/completion $fpath)
+fi
+
 if command -v brew >/dev/null 2>&1; then
   docker_site_functions="$(brew --prefix)/share/zsh/site-functions"
   if [[ -d "$docker_site_functions" ]]; then
