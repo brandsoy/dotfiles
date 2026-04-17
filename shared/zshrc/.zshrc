@@ -269,7 +269,7 @@ function y() {
 # Added by get-aspire-cli.sh
 export PATH="$HOME/.aspire/bin:$PATH"
 
-# Saga Connect local test vars
+# Local test vars
 export E2E_USERNAME="super@user.com"
 export E2E_PASSWORD="superuser"
 
