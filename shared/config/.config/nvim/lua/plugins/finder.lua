@@ -6,15 +6,27 @@ function M.setup()
 		return
 	end
 
+	pcall(function()
+		local mini_icons = require("mini.icons")
+		mini_icons.setup()
+		mini_icons.mock_nvim_web_devicons()
+	end)
+
 	local actions = require("fzf-lua.actions")
 	fzf.setup({
-		"max-perf",
+		"default",
+		defaults = {
+			file_icons = "mini",
+			color_icons = true,
+		},
 		files = {
 			fd_opts = [[--color=never --hidden --follow --type f --exclude .git --exclude node_modules --exclude .venv]],
+			file_icons = "mini",
 		},
 		grep = {
 			cmd = "rg --column --vimgrep --hidden --smart-case --glob '!.git' --glob '!node_modules' --glob '!.venv'",
 			actions = { ["ctrl-q"] = actions.file_sel_to_qf },
+			file_icons = "mini",
 		},
 	})
 

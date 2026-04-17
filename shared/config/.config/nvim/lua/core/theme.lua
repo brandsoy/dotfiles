@@ -3,6 +3,8 @@ local M = {}
 local themes = {
 	{ name = "oc-2" },
 	{ name = "oc-2-noir" },
+	{ name = "catppuccin-mocha" },
+	{ name = "carbonfox" },
 	{ name = "tokyonight-night" },
 }
 

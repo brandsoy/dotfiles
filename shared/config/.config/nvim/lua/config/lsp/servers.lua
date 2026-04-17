@@ -6,12 +6,6 @@ local function configure_servers()
 		return
 	end
 
-	local util_ok, util = pcall(require, "lspconfig.util")
-	if not util_ok then
-		vim.notify("nvim-lspconfig util module missing", vim.log.levels.ERROR)
-		return
-	end
-
 	local schemastore_ok, schemastore = pcall(require, "schemastore")
 
 	vim.diagnostic.config({
@@ -56,6 +50,9 @@ local function configure_servers()
 			},
 		},
 		tsgo = {},
+		tsp_server = {
+			cmd = { "tsp-server", "--stdio" },
+		},
 		jsonls = schemastore_ok and {
 			settings = {
 				json = {
@@ -76,20 +73,10 @@ local function configure_servers()
 		dockerls = {},
 		tailwindcss = {
 			filetypes = { "html", "javascriptreact", "typescriptreact", "vue", "svelte", "astro" },
-			root_dir = util.root_pattern("tailwind.config.js", "tailwind.config.ts", "postcss.config.js", "package.json"),
 		},
 		bashls = {},
 		biome = {},
-		svelte = {
-			root_dir = util.root_pattern(
-				"svelte.config.js",
-				"svelte.config.ts",
-				"vite.config.js",
-				"vite.config.ts",
-				"package.json",
-				".git"
-			),
-		},
+		svelte = {},
 		terraformls = { filetypes = { "terraform", "terraform-vars" } },
 		postgres_lsp = {
 			filetypes = { "sql" },

@@ -9,7 +9,15 @@ function M.setup()
 		require("tokyonight").setup({ style = "night" })
 	end)
 
-	require("core.theme").startup("tokyonight-night")
+	pcall(function()
+		require("catppuccin").setup({ flavour = "mocha" })
+	end)
+
+	pcall(function()
+		require("nightfox").setup()
+	end)
+
+	require("core.theme").startup("catppuccin-mocha")
 end
 
 return M

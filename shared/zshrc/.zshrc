@@ -53,6 +53,23 @@ zinit snippet OMZP::archlinux
 zinit ice wait lucid atinit"zpcompinit; zicdreplay"
 zinit light zdharma-continuum/fast-syntax-highlighting
 
+# --- Docker completions ------------------------------------------------------
+if [[ -d "$HOME/.docker/completions" ]]; then
+  fpath=("$HOME/.docker/completions" "${fpath[@]}")
+fi
+
+# --- Orbstack completions ------------------------------------------------------
+if [[ -d "$HOME/.zsh/completions" ]]; then
+  fpath=(~/.zsh/completion $fpath)
+fi
+
+if command -v brew >/dev/null 2>&1; then
+  docker_site_functions="$(brew --prefix)/share/zsh/site-functions"
+  if [[ -d "$docker_site_functions" ]]; then
+    fpath=("$docker_site_functions" "${fpath[@]}")
+  fi
+fi
+
 # --- Completion System (Optimized) ------------------------------------------
 autoload -Uz compinit
 # Only regenerate compdump once a day
@@ -231,10 +248,64 @@ if [[ "$OSTYPE" == linux* ]]; then
   alias wifistat="watch -n 1 'iwctl station wlan0 show | grep -E \"(Connected BSSID|RSSI|Frequency|Tx-Rate)\"'"
 fi
 
-# --- Docker Desktop completions (macOS) -------------------------------------
-if [[ "$OSTYPE" == "darwin"* && -d "$HOME/.docker/completions" ]]; then
-  fpath=("$HOME/.docker/completions" "${fpath[@]}")
-fi
+
+# --- Set Nvim as default editor ------------------------------------------------
+export EDITOR='nvim'
+export VISUAL='nvim'
+
+# --- YAZI shell wrapper -----------------------------------------------------
+function y() {
+	local tmp
+	local cwd
+	tmp="$(mktemp -t "yazi-cwd.XXXXXX")"
+	command yazi "$@" --cwd-file="$tmp"
+	IFS= read -r -d '' cwd < "$tmp"
+	if [ "$cwd" != "$PWD" ] && [ -d "$cwd" ]; then
+		builtin cd -- "$cwd" || return
+	fi
+	rm -f -- "$tmp"
+}
 
 # Added by get-aspire-cli.sh
 export PATH="$HOME/.aspire/bin:$PATH"
+
+# Local test vars
+export E2E_USERNAME="super@user.com"
+export E2E_PASSWORD="superuser"
+
+# Force Ollama to use the M5's high-bandwidth MLX path
+export OLLAMA_FLASH_ATTENTION=1
+# Allow the M5 to handle 4 parallel agentic streams
+export OLLAMA_NUM_PARALLEL=4
+# Set the default context high enough for modern codebases
+export OLLAMA_CONTEXT_LENGTH=32768
+# Keep the model loaded in the M5's unified memory (-1 = forever)
+export OLLAMA_KEEP_ALIVE="-1"
+
+#compdef opencode
+###-begin-opencode-completions-###
+#
+# yargs command completion script
+#
+# Installation: opencode completion >> ~/.zshrc
+#    or opencode completion >> ~/.zprofile on OSX.
+#
+_opencode_yargs_completions()
+{
+  local reply
+  local si=$IFS
+  IFS=$'
+' reply=($(COMP_CWORD="$((CURRENT-1))" COMP_LINE="$BUFFER" COMP_POINT="$CURSOR" opencode --get-yargs-completions "${words[@]}"))
+  IFS=$si
+  if [[ ${#reply} -gt 0 ]]; then
+    _describe 'values' reply
+  else
+    _default
+  fi
+}
+if [[ "'${zsh_eval_context[-1]}" == "loadautofunc" ]]; then
+  _opencode_yargs_completions "$@"
+else
+  compdef _opencode_yargs_completions opencode
+fi
+###-end-opencode-completions-###

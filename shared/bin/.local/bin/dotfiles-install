@@ -1,0 +1,13 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+DOTFILES_DIR="${DOTFILES_DIR:-$HOME/dotfiles}"
+INSTALL_SCRIPT="$DOTFILES_DIR/install.sh"
+
+if [[ ! -x "$INSTALL_SCRIPT" ]]; then
+  echo "dotfiles-install: not found or not executable: $INSTALL_SCRIPT" >&2
+  echo "Set DOTFILES_DIR if your repo is in a different location." >&2
+  exit 1
+fi
+
+exec "$INSTALL_SCRIPT" "$@"

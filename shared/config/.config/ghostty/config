@@ -9,7 +9,9 @@ macos-titlebar-proxy-icon = "hidden"
 
 # Font
 font-size = 14
+# font-thicken = true
 font-family = "Maple Mono NF"
+# font-family = "FiraCode Nerd Font Mono"
 # font-family = "JetBrainsMono Nerd Font Mono"
 # font-family = "GeistMono Nerd Font Mono"
 # font-family = "CaskaydiaMono Nerd Font Mono"
@@ -22,6 +24,7 @@ shell-integration-features = cursor,sudo,title
 quit-after-last-window-closed = "true"
 cursor-style = bar
 cursor-style-blink = true
+desktop-notifications = true
 
 # Icon
 macos-icon = custom-style
@@ -36,8 +39,8 @@ maximize = true
 
 # Windows Padding
 window-padding-balance = true
-window-padding-x = 5 
-window-padding-y = 5 
+window-padding-x = 10 
+window-padding-y = 5
 
 # Window hide top bar
 # window-decoration = "none"

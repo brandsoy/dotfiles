@@ -1,7 +1,8 @@
 local M = {}
 
 function M.setup()
-	vim.opt.completeopt = { "menu", "menuone", "noselect" }
+	vim.opt.completeopt = { "menu", "menuone", "noselect", "popup" }
+	vim.o.autocomplete = true -- Enables the overall completion feature.
 
 	vim.api.nvim_create_autocmd("LspAttach", {
 		group = vim.api.nvim_create_augroup("NativeLspCompletion", { clear = true }),
