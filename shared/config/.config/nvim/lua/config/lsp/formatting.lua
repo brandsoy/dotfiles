@@ -15,6 +15,7 @@ function M.setup_conform()
 		end,
 		formatters_by_ft = {
 			lua = { "stylua" },
+			python = { "ruff_fix", "ruff_format" },
 			javascript = { "prettierd", "prettier", stop_after_first = true },
 			javascriptreact = { "prettierd", "prettier", stop_after_first = true },
 			typescript = { "prettierd", "prettier", stop_after_first = true },

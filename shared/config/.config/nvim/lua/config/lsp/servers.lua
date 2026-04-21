@@ -30,6 +30,21 @@ local function configure_servers()
 				},
 			},
 		},
+		ruff = {
+			cmd = { "ruff", "server" },
+			filetypes = { "python" },
+		},
+		basedpyright = {
+			settings = {
+				basedpyright = {
+					disableOrganizeImports = true,
+					analysis = {
+						typeCheckingMode = "standard",
+						autoImportCompletions = true,
+					},
+				},
+			},
+		},
 		gopls = {
 			settings = {
 				gopls = {
