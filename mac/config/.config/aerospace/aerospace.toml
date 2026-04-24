@@ -213,7 +213,7 @@ if.app-id = 'com.apple.mail'
 run = ['move-node-to-workspace comms']
 
 [[on-window-detected]]
-if.app-id = 'com.apple.Safari.WebApp.9E470AEC-626A-4AAE-AD52-D8901031A33D'
+if.app-id = 'com.brave.Browser.app.ompifgpmddkgmclendfeacglnodjjndh'
 run = ['move-node-to-workspace comms']
 
 [[on-window-detected]]
@@ -242,6 +242,13 @@ run = 'layout floating'
 if.app-id = 'dev.kdrag0n.MacVirt'
 run = ['layout floating']
 
+[[on-window-detected]]
+if.app-id = 'com.daisydiskapp.DaisyDisk'
+run = ['layout floating']
+
+[[on-window-detected]]
+if.app-id = 'com.bitwarden.desktop'
+run = ['layout floating']
 
 # ==============================================================================
 # Monitor Configuration

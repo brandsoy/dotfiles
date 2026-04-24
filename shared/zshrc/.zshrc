@@ -119,6 +119,10 @@ fi
 
 # --- Shell behaviour --------------------------------------------------------
 bindkey -e
+## Vim Motions in terminal prompt
+bindkey -v
+export KEYTIMEOUT=1
+
 bindkey '^p' history-beginning-search-backward
 bindkey '^n' history-beginning-search-forward
 bindkey '^[w' kill-region
@@ -309,3 +313,8 @@ else
   compdef _opencode_yargs_completions opencode
 fi
 ###-end-opencode-completions-###
+
+# Added by LM Studio CLI (lms)
+export PATH="$PATH:/Users/mattis/.lmstudio/bin"
+# End of LM Studio CLI section
+
