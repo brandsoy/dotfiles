@@ -172,6 +172,9 @@ alias theme-sync='$HOME/.config/theme-sync/theme-sync'
 alias v='nvim'
 alias vim='nvim'
 alias ff="fd --type f --hidden --exclude .git | fzf --preview 'bat --color=always {}'"
+alias bs='brew search'
+alias bi='brew install'
+alias bif='brew info'
 
 # Clipboard aliases
 if [[ "$OSTYPE" == "darwin"* ]]; then
