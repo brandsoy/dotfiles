@@ -1,0 +1,50 @@
+{
+  "version": 3,
+  "skills": {
+    "azure-functions": {
+      "source": "aj-geddes/useful-ai-prompts",
+      "sourceType": "github",
+      "sourceUrl": "https://github.com/aj-geddes/useful-ai-prompts.git",
+      "skillPath": "skills/azure-functions/SKILL.md",
+      "skillFolderHash": "cb5860aee86ae5d6f8dfdd01b7bca317ca6a3344",
+      "installedAt": "2026-04-02T19:57:54.208Z",
+      "updatedAt": "2026-04-02T19:57:54.208Z"
+    },
+    "vercel-react-best-practices": {
+      "source": "vercel-labs/agent-skills",
+      "sourceType": "github",
+      "sourceUrl": "https://github.com/vercel-labs/agent-skills.git",
+      "skillPath": "skills/react-best-practices/SKILL.md",
+      "skillFolderHash": "a203aee7243640ceb56ce2c6c4ab286573df5e69",
+      "installedAt": "2026-04-02T20:01:02.019Z",
+      "updatedAt": "2026-04-02T20:01:02.019Z"
+    },
+    "grill-me": {
+      "source": "mattpocock/skills",
+      "sourceType": "github",
+      "sourceUrl": "https://github.com/mattpocock/skills.git",
+      "skillPath": "grill-me/SKILL.md",
+      "skillFolderHash": "2a1ad17028306ebe45f0e49703fa28b9b2e7f499",
+      "installedAt": "2026-04-13T20:30:42.291Z",
+      "updatedAt": "2026-04-13T20:30:42.291Z"
+    }
+  },
+  "dismissed": {
+    "findSkillsPrompt": true
+  },
+  "lastSelectedAgents": [
+    "amp",
+    "antigravity",
+    "cline",
+    "codex",
+    "cursor",
+    "deepagents",
+    "firebender",
+    "gemini-cli",
+    "github-copilot",
+    "kimi-cli",
+    "opencode",
+    "warp"
+  ]
+}
+
