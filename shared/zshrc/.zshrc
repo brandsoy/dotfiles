@@ -171,10 +171,21 @@ alias lg='lazygit'
 alias theme-sync='$HOME/.config/theme-sync/theme-sync'
 alias v='nvim'
 alias vim='nvim'
-alias ff="fd --type f --hidden --exclude .git | fzf --preview 'bat --color=always {}'"
 alias bs='brew search'
 alias bi='brew install'
 alias bif='brew info'
+alias ff="fd --type f --hidden \
+  --exclude .git | fzf \
+  --preview 'bat \
+  --color=always {}'"
+alias ffh="fd --type f --hidden \
+  --exclude Library \
+  --exclude .Trash \
+  --exclude node_modules \
+  --exclude .bun \
+  --exclude .cache \
+  | fzf --preview 'bat --color=always {}'"
+
 
 # Clipboard aliases
 if [[ "$OSTYPE" == "darwin"* ]]; then

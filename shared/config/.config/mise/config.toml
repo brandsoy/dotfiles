@@ -1,5 +1,6 @@
 [settings]
 idiomatic_version_file_enable_tools = ["ruby"]
+experimental = true
 
 [settings.pipx]
 uvx = true
@@ -10,6 +11,7 @@ uv_venv_auto = true
 [settings.ruby]
 
 [tools]
+ansible = "latest"
 bun = "latest"
 dotnet = "latest"
 go = "latest"
@@ -38,3 +40,4 @@ terraform-ls = "latest"
 "npm:@fsouza/prettierd" = "latest"
 "npm:prettier" = "latest"
 "npm:basedpyright" = "latest"
+"dotnet:dotnet-ef" = "latest"

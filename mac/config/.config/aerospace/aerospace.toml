@@ -166,6 +166,10 @@ run = ['move-node-to-workspace web']
 if.app-id = 'com.brave.Browser'
 run = ['move-node-to-workspace web']
 
+[[on-window-detected]]
+if.app-id = 'net.input.helium'
+run = ['move-node-to-workspace web']
+
 # --- Terminals -> Workspace term ---
 [[on-window-detected]]
 if.app-id = 'com.mitchellh.ghostty'

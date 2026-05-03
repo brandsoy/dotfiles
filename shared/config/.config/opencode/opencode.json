@@ -1,8 +1,6 @@
 {
   "$schema": "https://opencode.ai/config.json",
-  "plugin": [
-    "@mohak34/opencode-notifier@latest"
-  ],
+  "plugin": ["@mohak34/opencode-notifier@latest"],
   "provider": {
     "ollama": {
       "models": {
@@ -23,6 +21,28 @@
       "npm": "@ai-sdk/openai-compatible",
       "options": {
         "baseURL": "http://127.0.0.1:11434/v1"
+      }
+    },
+    "omlx": {
+      "npm": "@ai-sdk/openai-compatible",
+      "name": "oMLX",
+      "options": {
+        "baseURL": "http://127.0.0.1:8000/v1",
+        "apiKey": "M1n4l30n0r4"
+      },
+      "models": {
+        "gemma-4-26b-a4b-it-4bit": {
+          "name": "gemma-4-26b-a4b-it-4bit",
+          "modalities": {
+            "input": ["text", "image"],
+            "output": ["text"]
+          },
+          "attachment": true,
+          "limit": {
+            "context": 32768,
+            "output": 32768
+          }
+        }
       }
     }
   }
