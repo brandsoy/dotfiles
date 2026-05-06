@@ -4,6 +4,10 @@
       "rev": "5f3dda4ddc40df27be848beb4cbada90e4de18da",
       "src": "https://github.com/b0o/SchemaStore.nvim"
     },
+    "barbar.nvim": {
+      "rev": "a4bef5b4fc1f064f2f673172252028eae18191c9",
+      "src": "https://github.com/romgrk/barbar.nvim"
+    },
     "conform.nvim": {
       "rev": "086a40dc7ed8242c03be9f47fbcee68699cc2395",
       "src": "https://github.com/stevearc/conform.nvim"
@@ -28,9 +32,17 @@
       "rev": "402ee6c6ec8ea44b22330446c8fb4e615fd3953e",
       "src": "https://github.com/echasnovski/mini.nvim"
     },
+    "neo-tree.nvim": {
+      "rev": "ff84e6e1608b24773f1b73cd4182e0bcf2b3d637",
+      "src": "https://github.com/nvim-neo-tree/neo-tree.nvim"
+    },
     "nightfox.nvim": {
       "rev": "ba47d4b4c5ec308718641ba7402c143836f35aa9",
       "src": "https://github.com/EdenEast/nightfox.nvim"
+    },
+    "nui.nvim": {
+      "rev": "de740991c12411b663994b2860f1a4fd0937c130",
+      "src": "https://github.com/MunifTanjim/nui.nvim"
     },
     "nvim": {
       "rev": "426dbebe06b5c69fd846ceb17b42e12f890aedf1",
@@ -39,6 +51,10 @@
     "nvim-lspconfig": {
       "rev": "11afebab7ae8953c1db8f4c223e7742132d035f3",
       "src": "https://github.com/neovim/nvim-lspconfig"
+    },
+    "nvim-tree.lua": {
+      "rev": "f9bfc0059eca24546b69a7006110463da4808f8f",
+      "src": "https://github.com/nvim-tree/nvim-tree.lua"
     },
     "nvim-treesitter": {
       "rev": "4916d6592ede8c07973490d9322f187e07dfefac",
