@@ -1,5 +1,6 @@
 [settings]
 idiomatic_version_file_enable_tools = ["ruby"]
+experimental = true
 
 [settings.pipx]
 uvx = true
@@ -10,6 +11,7 @@ uv_venv_auto = true
 [settings.ruby]
 
 [tools]
+ansible = "latest"
 bun = "latest"
 dotnet = "latest"
 go = "latest"
@@ -26,7 +28,7 @@ terraform-ls = "latest"
 "go:golang.org/x/tools/gopls" = "latest"
 "go:github.com/segmentio/golines" = "latest"
 "go:mvdan.cc/gofumpt" = "latest"
-"npm:@typescript/native-preview" = "latest"
+"npm:@typescript/native-preview" = "beta"
 "npm:@typespec/compiler" = "latest"
 "npm:vscode-langservers-extracted" = "latest"
 "npm:yaml-language-server" = "latest"
@@ -37,3 +39,5 @@ terraform-ls = "latest"
 "npm:svelte-language-server" = "latest"
 "npm:@fsouza/prettierd" = "latest"
 "npm:prettier" = "latest"
+"npm:basedpyright" = "latest"
+"dotnet:dotnet-ef" = "latest"

@@ -9,3 +9,10 @@ if node_host ~= "" then
 else
 	vim.g.loaded_node_provider = 0
 end
+
+local python3_host = vim.fn.exepath("python3")
+if python3_host ~= "" then
+	vim.g.python3_host_prog = python3_host
+else
+	vim.g.loaded_python3_provider = 0
+end

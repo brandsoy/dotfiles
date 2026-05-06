@@ -1,6 +1,6 @@
 [general]
 import = [
-    "./themes/catppuccin-mocha.toml"
+    "./themes/tokyo_night.toml",
 ]
 
 live_config_reload = true
@@ -21,12 +21,12 @@ size = 14
 
 [font.normal]
 # family = "Monaspace Neon NF"
-family = "JetBrainsMono Nerd Font"
+family = "Maple Mono NF"
 style = "Regular"
 
 [font.bold]
 # family = "Monaspace Neon NF"
-family = "JetBrainsMono Nerd Font"
+family = "Maple Mono NF"
 style = "Bold"
 
 [font.glyph_offset]
@@ -35,7 +35,7 @@ y = 0
 
 [font.italic]
 # family = "Monaspace Neon NF"
-family = "JetBrainsMono Nerd Font"
+family = "Maple Mono NF"
 
 
 [font.offset]
@@ -67,8 +67,8 @@ mouse = "Middle"
 [selection]
 semantic_escape_chars = ",│`|:\"' ()[]{}<>"
 
-[terminal.shell]
-program = "/bin/zsh"
+# [terminal.shell]
+# program = "/bin/zsh"
 
 [window]
 decorations = "buttonless"
@@ -81,5 +81,5 @@ columns = 160
 lines = 80
 
 [window.padding]
-x = 4
-y = 4
+x = 10 
+y = 10 

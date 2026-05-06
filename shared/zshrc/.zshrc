@@ -119,6 +119,10 @@ fi
 
 # --- Shell behaviour --------------------------------------------------------
 bindkey -e
+## Vim Motions in terminal prompt
+bindkey -v
+export KEYTIMEOUT=1
+
 bindkey '^p' history-beginning-search-backward
 bindkey '^n' history-beginning-search-forward
 bindkey '^[w' kill-region
@@ -167,7 +171,21 @@ alias lg='lazygit'
 alias theme-sync='$HOME/.config/theme-sync/theme-sync'
 alias v='nvim'
 alias vim='nvim'
-alias ff="fd --type f --hidden --exclude .git | fzf --preview 'bat --color=always {}'"
+alias bs='brew search'
+alias bi='brew install'
+alias bif='brew info'
+alias ff="fd --type f --hidden \
+  --exclude .git | fzf \
+  --preview 'bat \
+  --color=always {}'"
+alias ffh="fd --type f --hidden \
+  --exclude Library \
+  --exclude .Trash \
+  --exclude node_modules \
+  --exclude .bun \
+  --exclude .cache \
+  | fzf --preview 'bat --color=always {}'"
+
 
 # Clipboard aliases
 if [[ "$OSTYPE" == "darwin"* ]]; then
@@ -309,3 +327,8 @@ else
   compdef _opencode_yargs_completions opencode
 fi
 ###-end-opencode-completions-###
+
+# Added by LM Studio CLI (lms)
+export PATH="$PATH:/Users/mattis/.lmstudio/bin"
+# End of LM Studio CLI section
+
