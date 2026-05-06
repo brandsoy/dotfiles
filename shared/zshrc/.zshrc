@@ -78,8 +78,8 @@ mtime=0
 if [[ -f "$compdump" ]]; then
   mtime=$(stat -f %m "$compdump" 2>/dev/null || stat -c %Y "$compdump" 2>/dev/null || echo 0)
 fi
-now=$(date +%s)
-age=$(( now - mtime ))
+# now=$(date +%s)
+# age=$(( now - mtime ))
 
 if [[ ! -f "$compdump" || $age -gt 86400 ]]; then
   compinit
