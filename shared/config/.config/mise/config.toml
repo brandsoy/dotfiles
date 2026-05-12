@@ -40,4 +40,6 @@ terraform-ls = "latest"
 "npm:@fsouza/prettierd" = "latest"
 "npm:prettier" = "latest"
 "npm:basedpyright" = "latest"
+"npm:@prisma/language-server" = "latest"
 "dotnet:dotnet-ef" = "latest"
+
