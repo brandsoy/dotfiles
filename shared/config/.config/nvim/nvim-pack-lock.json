@@ -80,6 +80,10 @@
       "rev": "cdc07ac78467a233fd62c493de29a17e0cf2b2b6",
       "src": "https://github.com/folke/tokyonight.nvim"
     },
+    "vim": {
+      "rev": "e7b91facff94bdf3a248df9b683119b84672256a",
+      "src": "https://github.com/dracula/vim"
+    },
     "yazi.nvim": {
       "rev": "7d864fd3ccc3fc8fc88ad7765f5a7a1aca76c8ec",
       "src": "https://github.com/mikavilpas/yazi.nvim"

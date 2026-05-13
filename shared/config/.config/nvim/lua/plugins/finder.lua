@@ -28,7 +28,13 @@ function M.setup()
 			color_icons = false,
 		},
 		files = {
-			fd_opts = [[--hidden --follow --no-ignore --type f --exclude .git --exclude node_modules --exclude .venv]],
+			-- Keep fzf-lua's toggleable flags as booleans. If --no-ignore is
+			-- embedded in fd_opts, fzf-lua's default no_ignore=false removes it,
+			-- which hides ignored-but-tracked files from <leader>ff.
+			fd_opts = [[--color=never --type f --type l --exclude .git --exclude node_modules --exclude .venv]],
+			hidden = true,
+			follow = true,
+			no_ignore = true,
 			file_icons = 'mini',
 		},
 		grep = {

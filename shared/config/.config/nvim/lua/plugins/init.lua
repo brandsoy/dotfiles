@@ -11,6 +11,7 @@ function M.setup()
 		gh('catppuccin/nvim'),
 		gh('EdenEast/nightfox.nvim'),
 		gh('folke/tokyonight.nvim'),
+		gh('dracula/vim'),
 		-- Plugins
 		gh('echasnovski/mini.nvim'),
 		gh('ibhagwan/fzf-lua'),

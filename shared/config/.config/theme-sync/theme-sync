@@ -138,6 +138,18 @@ apply_theme() {
   echo "Applied theme: $theme"
 }
 
+set_theme() {
+  local theme="$1"
+
+  if [[ -z "$theme" ]]; then
+    echo "Missing theme name."
+    usage
+    exit 1
+  fi
+
+  apply_theme "$theme"
+}
+
 list_themes() {
   [[ -d "$THEMES_DIR" ]] || return 0
   for dir in "$THEMES_DIR"/*; do
@@ -186,13 +198,7 @@ main() {
       show_current
       ;;
     set)
-      local theme="${2:-}"
-      if [[ -z "$theme" ]]; then
-        echo "Missing theme name."
-        usage
-        exit 1
-      fi
-      apply_theme "$theme"
+      set_theme "${2:-}"
       ;;
     apply)
       local theme
