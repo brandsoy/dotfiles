@@ -123,6 +123,16 @@ Notes:
 - It also runs `mise outdated`, `mise upgrade --yes`, and `mise prune -y`.
 - If your repo is not at `~/dotfiles`, set `DOTFILES_DIR` before running, for example: `DOTFILES_DIR=~/src/dotfiles dotfiles-update`.
 
+## Security checks
+
+Run a quick secret scan before pushing:
+
+```bash
+./scripts/security-scan.sh
+```
+
+This uses `gitleaks` if installed.
+
 ## Uninstalling
 
 To remove symlinks:
