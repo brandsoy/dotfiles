@@ -18,7 +18,6 @@ CURRENT_FILE="$ROOT/current"
 CURRENT_ENV_FILE="$ROOT/current.env"
 MODE_ENV_FILE="$ROOT/mode.env"
 
-HIDDEN_THEMES=("pi-light" "pi-dark")
 
 TARGET_GHOSTTY="$CONFIG_HOME/ghostty/auto/theme.ghostty"
 TARGET_ALACRITTY="$CONFIG_HOME/alacritty/alacritty.toml"
@@ -29,7 +28,6 @@ TARGET_LAZYGIT="$CONFIG_HOME/lazygit/config.yml"
 TARGET_YAZI_THEME="$CONFIG_HOME/yazi/theme.toml"
 TARGET_EZA_THEME="$CONFIG_HOME/eza/theme.yml"
 TARGET_TMUX_THEME="$CONFIG_HOME/tmux/theme.conf"
-TARGET_OPENCODE_THEME="$CONFIG_HOME/opencode/theme.json"
 TARGET_NVIM_STATE="$STATE_HOME/nvim/theme.txt"
 TARGET_VSCODE_MAC="$HOME/Library/Application Support/Code/User/settings.json"
 TARGET_VSCODE_LINUX="$CONFIG_HOME/Code/User/settings.json"
@@ -47,6 +45,7 @@ Commands:
   mode-set <light|dark> <theme>     Set preferred theme for a system mode
   mode-current                      Show configured light/dark mode themes
   auto [--watch [seconds]]          Apply theme from current system light/dark mode
+                                     --watch only reapplies when mode changes
 
 Environment:
   THEME_SYNC_ROOT                   Override root path (default: ~/.config/theme-sync)
@@ -158,11 +157,29 @@ apply_system_mode_theme() {
   current="$(current_theme)"
   if [[ "$current" == "$theme" ]]; then
     echo "System mode is $mode; theme already set: $theme"
+    refresh_tmux_theme
     return 0
   fi
 
   echo "System mode is $mode; applying theme: $theme"
   apply_theme "$theme"
+}
+
+watch_system_mode_theme() {
+  local interval="${1:-5}"
+  local last_mode=""
+
+  while true; do
+    local mode
+    mode="$(detect_system_mode 2>/dev/null || true)"
+
+    if [[ -n "$mode" && "$mode" != "$last_mode" ]]; then
+      apply_system_mode_theme || true
+      last_mode="$mode"
+    fi
+
+    sleep "$interval"
+  done
 }
 
 update_line() {
@@ -209,6 +226,29 @@ refresh_tmux_theme() {
 
   [[ -f "$TARGET_TMUX_THEME" ]] && tmux source-file "$TARGET_TMUX_THEME" || true
   tmux run-shell "$HOME/dotfiles/scripts/tmux/minimal-theme/minimal.tmux" || true
+}
+
+refresh_kitty_theme() {
+  command -v kitty >/dev/null 2>&1 || return 0
+
+  local targets=()
+  local s
+
+  [[ -n "${KITTY_LISTEN_ON:-}" ]] && targets+=("$KITTY_LISTEN_ON")
+  [[ -n "${THEME_SYNC_KITTY_LISTEN_ON:-}" ]] && targets+=("$THEME_SYNC_KITTY_LISTEN_ON")
+  targets+=("unix:/tmp/kitty")
+  [[ -n "${TMPDIR:-}" ]] && targets+=("unix:${TMPDIR%/}/kitty")
+
+  for s in /tmp/kitty*; do
+    [[ -S "$s" ]] && targets+=("unix:$s")
+  done
+
+  local target
+  for target in "${targets[@]}"; do
+    kitty @ --to "$target" load-config "$TARGET_KITTY" >/dev/null 2>&1 && return 0
+  done
+
+  kitty @ load-config "$TARGET_KITTY" >/dev/null 2>&1 || true
 }
 
 ensure_bat_theme() {
@@ -339,6 +379,7 @@ apply_theme() {
   fi
 
   update_line "$TARGET_KITTY" '^include\s+.*$' "include $KITTY_INCLUDE"
+  refresh_kitty_theme
   update_line "$TARGET_BAT" '^--theme=.*$' "--theme=\"$BAT_THEME\""
   ensure_bat_theme
   update_line "$TARGET_BTOP" '^color_theme\s*=.*$' "color_theme = \"$BTOP_THEME\""
@@ -350,7 +391,7 @@ apply_theme() {
   copy_if_present "$theme_dir/yazi.theme.toml" "$TARGET_YAZI_THEME"
   copy_if_present "$theme_dir/eza.theme.yml" "$TARGET_EZA_THEME"
   copy_if_present "$theme_dir/tmux.theme.conf" "$TARGET_TMUX_THEME"
-  copy_if_present "$theme_dir/opencode.theme.json" "$TARGET_OPENCODE_THEME"
+  rm -f "$CONFIG_HOME/opencode/theme.json"
   apply_vscode_theme
   refresh_tmux_theme
 
@@ -369,21 +410,7 @@ set_theme() {
     exit 1
   fi
 
-  if is_hidden_theme "$theme"; then
-    echo "Theme '$theme' is internal and not selectable."
-    exit 1
-  fi
-
   apply_theme "$theme"
-}
-
-is_hidden_theme() {
-  local theme="$1"
-  local t
-  for t in "${HIDDEN_THEMES[@]}"; do
-    [[ "$theme" == "$t" ]] && return 0
-  done
-  return 1
 }
 
 list_themes() {
@@ -392,7 +419,6 @@ list_themes() {
     [[ -d "$dir" ]] || continue
     local theme
     theme="$(basename "$dir")"
-    is_hidden_theme "$theme" && continue
     echo "$theme"
   done
 }
@@ -552,10 +578,7 @@ main() {
     auto)
       if [[ "${2:-}" == "--watch" ]]; then
         local interval="${3:-5}"
-        while true; do
-          apply_system_mode_theme || true
-          sleep "$interval"
-        done
+        watch_system_mode_theme "$interval"
       else
         apply_system_mode_theme
       fi

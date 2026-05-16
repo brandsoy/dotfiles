@@ -38,3 +38,4 @@ shared/bin/.local/bin/pygmentize
 **/known_hosts*
 shared/config/.config/gh
 shared/config/.config/nvim/test
+/shared/bin/.local/bin/gopherhole
