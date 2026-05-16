@@ -22,7 +22,14 @@ function M.setup()
 	end
 
 	fzf.setup({
-		'default',
+		fzf_colors = true,
+		winopts = {
+			backdrop = 100,
+			preview = {
+				layout = 'vertical',
+				vertical = 'right:55%',
+			},
+		},
 		defaults = {
 			file_icons = 'mini',
 			color_icons = false,

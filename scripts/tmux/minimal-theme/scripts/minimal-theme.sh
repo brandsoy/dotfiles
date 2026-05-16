@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+# Maintainer: mattis
 
 get_tmux_option() {
     local option="$1"

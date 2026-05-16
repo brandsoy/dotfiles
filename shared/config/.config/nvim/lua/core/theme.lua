@@ -4,6 +4,7 @@ local themes = {
 	{ name = 'oc-2' },
 	{ name = 'oc-2-noir' },
 	{ name = 'catppuccin-mocha' },
+	{ name = 'catppuccin-latte' },
 	{ name = 'carbonfox' },
 	{ name = 'tokyonight-night' },
 	{ name = 'dracula' },

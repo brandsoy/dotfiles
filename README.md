@@ -6,21 +6,22 @@ Personal configuration files for macOS and Linux (Arch/Debian).
 
 ```
 dotfiles/
-├── shared/            # Cross-platform configs (stow packages)
-│   ├── bin/           # Personal scripts
-│   ├── config/        # Shared .config (nvim, alacritty, bat, etc.)
-│   ├── git/           # Git configuration
-│   ├── ssh/           # SSH keys
-│   ├── tmux/          # Tmux configuration
-│   └── zshrc/         # Zsh configuration
-├── mac/               # macOS-specific configs
-│   ├── config/        # aerospace, karabiner, raycast
-│   └── Brewfile       # Homebrew packages
-├── linux/             # Linux-specific configs
-│   ├── config/        # hypr, waybar, keyd, swaync, gtk, etc.
-│   ├── scripts/       # Linux scripts
-│   └── Archfile       # Arch Linux packages
-└── install.sh         # Auto-detecting installation script
+├── shared/                     # Cross-platform stow packages
+│   ├── bin/                    # Personal scripts in ~/.local/bin
+│   ├── blocklists/             # Hosts blocklist config
+│   ├── config/                 # Shared ~/.config (nvim, terminals, theme-sync, etc.)
+│   ├── git/                    # Git configuration
+│   ├── ssh/                    # SSH config/keys
+│   ├── tmux/                   # Tmux configuration
+│   └── zshrc/                  # Zsh configuration
+├── homebrew/
+│   └── Brewfile                # Homebrew packages (macOS)
+├── mac/
+│   └── config/                 # macOS-specific configs (aerospace, karabiner, raycast)
+├── linux/
+│   └── config/                 # Linux-specific configs (hypr, waybar, keyd, swaync, gtk, etc.)
+├── scripts/                    # Utility scripts (theme-sync, tmux helpers, etc.)
+└── install.sh                  # Auto-detecting installation script
 ```
 
 ## Quick Start
@@ -48,8 +49,8 @@ This script will:
 -   **Symlink shared configs** using GNU Stow
 -   **Symlink OS-specific configs** based on detected OS
 -   **Install packages**:
-    -   macOS: Installs from `mac/Brewfile`
-    -   Arch: Installs from `linux/Archfile` (pacman + AUR)
+    -   macOS: Installs from `homebrew/Brewfile`
+    -   Arch: Installs common tools via pacman (+ optional AUR tooling)
     -   Debian: Installs common tools via apt
 
 ## Selective Installation
@@ -71,6 +72,37 @@ This script will:
 
 # Global command (same behavior)
 dotfiles-install packages
+```
+
+## Theme management (theme-sync)
+
+Themes are centralized in:
+
+- `shared/config/.config/theme-sync/`
+- `shared/config/.config/theme-sync/themes/<theme>/`
+
+Each theme folder contains a `theme.env` mapping plus app-specific theme files (for example `alacritty.toml`, `kitty.conf`, `fzf.sh`, and optional overlays like `tmux.theme.conf`, `opencode.theme.json`, etc.).
+
+The active theme is tracked in:
+
+- `shared/config/.config/theme-sync/current`
+- `shared/config/.config/theme-sync/current.env`
+- `shared/config/.config/theme-sync/mode.env`
+
+Apply and switch themes with:
+
+```bash
+theme-sync           # interactive TUI
+theme-sync list
+theme-sync current
+theme-sync set <theme>
+theme-sync apply
+
+# Optional automatic light/dark switching
+theme-sync mode-set light <theme>
+theme-sync mode-set dark <theme>
+theme-sync auto
+theme-sync auto --watch 5
 ```
 
 ## Tool Updates (Homebrew + mise)
