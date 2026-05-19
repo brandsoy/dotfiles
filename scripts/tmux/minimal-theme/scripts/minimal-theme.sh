@@ -43,7 +43,7 @@ apply_minimal_theme() {
 
     # Status bar setup
     tmux set-option -g status on
-    tmux set-option -g status-position bottom
+    # tmux set-option -g status-position bottom
     tmux set-option -g status-interval 3
     tmux set-option -g status-justify left
 

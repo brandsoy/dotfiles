@@ -50,3 +50,43 @@ alias lg='lazygit'
 # =========================================================
 ld='lazydocker'
 
+# =========================================================
+# Searching
+# =========================================================
+function vf {
+  local file
+  file=$(fzf --preview 'bat --color=always {}') || return
+  [[ -n "$file" ]] || return
+  nvim "$file"
+}
+
+function fdnav {
+  local dir
+  dir=$(find . -maxdepth 1 -mindepth 1 -type d 2>/dev/null | sed 's|^\./||' | fzf --height 40% --reverse --preview 'tree -C {}' 2>/dev/null) || return
+  [[ -n "$dir" ]] || return
+  builtin cd "$dir" || return
+}
+
+function fh {
+  history | fzf --tac --no-sort --prompt='  ' --header='Command History'
+}
+
+function fgl {
+  git log --oneline --graph --color=always | fzf --ansi --preview 'git show --color=always {1}'
+}
+
+function fgb {
+  local branch
+  branch=$(git branch --all | fzf --header 'Switch Branch') || return
+  [[ -n "$branch" ]] || return
+  git checkout "${branch##* }"
+}
+
+function fkill {
+  local pid
+  pid=$(ps -ef | fzf --header='Kill Process' | awk '{print $2}') || return
+  [[ -n "$pid" ]] || return
+  kill "$pid"
+}
+
+
