@@ -3,12 +3,11 @@ set -e
 
 # Configuration
 DOTFILES_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
-SHARED_DIR="$DOTFILES_DIR/shared"
-MAC_DIR="$DOTFILES_DIR/mac"
-LINUX_DIR="$DOTFILES_DIR/linux"
-HOMEBREW_DIR="$DOTFILES_DIR/homebrew"
+ROLES_DIR="$DOTFILES_DIR/roles"
+HOSTS_DIR="$DOTFILES_DIR/hosts"
 TARGET_DIR="$HOME"
 OS=""
+HOSTNAME_SHORT="$(hostname -s 2>/dev/null || hostname)"
 
 # OS Detection
 detect_os() {
@@ -64,7 +63,15 @@ stow_package() {
     if [[ -d "$stow_dir/$pkg" ]]; then
         echo "  - Stowing $pkg"
         pushd "$stow_dir" >/dev/null
-        stow -R -t "$TARGET_DIR" "$pkg"
+
+        if [[ "$pkg" == "bin" ]]; then
+            # Keep ~/.local/bin as a real directory and symlink files inside it.
+            mkdir -p "$TARGET_DIR/.local/bin"
+            stow -R --no-folding -t "$TARGET_DIR" "$pkg"
+        else
+            stow -R -t "$TARGET_DIR" "$pkg"
+        fi
+
         popd >/dev/null
     else
         echo "Warning: Package '$pkg' not found in $stow_dir"
@@ -98,9 +105,9 @@ stow_all_from() {
 # Install Packages
 install_packages() {
     if [[ "$OS" == "macos" ]]; then
-        if [[ -f "$HOMEBREW_DIR/Brewfile" ]]; then
+        if [[ -f "$ROLES_DIR/packages-macos/Brewfile" ]]; then
             echo "Installing Homebrew bundle..."
-            brew bundle --file="$HOMEBREW_DIR/Brewfile"
+            brew bundle --file="$ROLES_DIR/packages-macos/Brewfile"
         fi
         # Configure git credential helper for macOS
         git config --global credential.helper osxkeychain
@@ -108,13 +115,13 @@ install_packages() {
     elif [[ "$OS" == "arch" ]]; then
         echo "Installing Arch packages from Archfile..."
 
-        if [[ -f "$LINUX_DIR/Archfile" ]]; then
+        if [[ -f "$ROLES_DIR/packages-arch/Archfile" ]]; then
             # Install pacman packages (exclude comments and AUR lines)
             local packages=()
             while IFS= read -r pkg; do
                 packages+=("$pkg")
             done < <(
-                awk '!/^#/ && !/^AUR:/ && NF { for (i=1;i<=NF;i++) print $i }' "$LINUX_DIR/Archfile"
+                awk '!/^#/ && !/^AUR:/ && NF { for (i=1;i<=NF;i++) print $i }' "$ROLES_DIR/packages-arch/Archfile"
             )
 
             if ((${#packages[@]} > 0)); then
@@ -125,7 +132,7 @@ install_packages() {
             while IFS= read -r pkg; do
                 aur_packages+=("$pkg")
             done < <(
-                awk '/^AUR:/ { sub(/^AUR:[[:space:]]*/, ""); for (i=1;i<=NF;i++) print $i }' "$LINUX_DIR/Archfile"
+                awk '/^AUR:/ { sub(/^AUR:[[:space:]]*/, ""); for (i=1;i<=NF;i++) print $i }' "$ROLES_DIR/packages-arch/Archfile"
             )
 
             # Check for AUR helper and install AUR packages
@@ -268,55 +275,138 @@ install_extra_tools() {
     fi
 }
 
+apply_host_overrides() {
+    local host_dir="$HOSTS_DIR/$HOSTNAME_SHORT"
+    [[ -d "$host_dir" ]] || { echo "No host overrides for $HOSTNAME_SHORT"; return 0; }
+
+    # Stow host packages except `config` to avoid clashes with roles/config.
+    stow_all_from "$host_dir" "^config$"
+
+    # Apply host-specific theme-sync state files by copy (not symlink).
+    local src_theme_dir="$host_dir/config/.config/theme-sync"
+    if [[ -d "$src_theme_dir" ]]; then
+        mkdir -p "$HOME/.config/theme-sync"
+        for f in current current.env mode.env; do
+            [[ -f "$src_theme_dir/$f" ]] && cp "$src_theme_dir/$f" "$HOME/.config/theme-sync/$f"
+        done
+        echo "Applied host theme-sync state for: $HOSTNAME_SHORT"
+    fi
+}
+
+run_target() {
+    local target="$1"
+
+    if [[ "$target" == "packages" || "$target" == "brew" ]]; then
+        install_packages
+    elif [[ "$target" == "tools" ]]; then
+        install_extra_tools
+    elif [[ "$target" == "roles" || "$target" == "shared" ]]; then
+        stow_all_from "$ROLES_DIR" "^(packages-macos|packages-arch|macos-config|linux-config)$"
+    elif [[ "$target" == "hosts" ]]; then
+        apply_host_overrides
+    elif [[ "$target" == "mac" ]]; then
+        stow_package "$ROLES_DIR" "macos-config"
+    elif [[ "$target" == "linux" ]]; then
+        stow_package "$ROLES_DIR" "linux-config"
+    elif [[ "$target" == "all" ]]; then
+        echo ""
+        echo "Stowing role packages..."
+        stow_all_from "$ROLES_DIR" "^(packages-macos|packages-arch|macos-config|linux-config)$"
+
+        echo ""
+        if [[ "$OS" == "macos" ]]; then
+            stow_package "$ROLES_DIR" "macos-config"
+        else
+            stow_package "$ROLES_DIR" "linux-config"
+        fi
+
+        if [[ -d "$HOSTS_DIR/$HOSTNAME_SHORT" ]]; then
+            echo ""
+            echo "Applying host overrides for: $HOSTNAME_SHORT"
+            apply_host_overrides
+        fi
+
+        install_packages
+        install_extra_tools
+    else
+        if [[ -d "$ROLES_DIR/$target" ]]; then
+            stow_package "$ROLES_DIR" "$target"
+        elif [[ -d "$HOSTS_DIR/$HOSTNAME_SHORT/$target" ]]; then
+            stow_package "$HOSTS_DIR/$HOSTNAME_SHORT" "$target"
+        else
+            echo "Warning: Package '$target' not found in roles or hosts/$HOSTNAME_SHORT"
+        fi
+    fi
+}
+
+apply_profile() {
+    local profile="$1"
+
+    case "$profile" in
+        linux-server)
+            run_target roles
+            run_target hosts
+            run_target packages
+            run_target tools
+            ;;
+        linux-desktop)
+            run_target roles
+            run_target linux
+            run_target hosts
+            run_target packages
+            run_target tools
+            ;;
+        macbook)
+            run_target roles
+            run_target mac
+            run_target hosts
+            run_target packages
+            run_target tools
+            ;;
+        *)
+            echo "Unknown profile: $profile"
+            echo "Available profiles: linux-server, linux-desktop, macbook"
+            return 1
+            ;;
+    esac
+}
+
+interactive_menu() {
+    local choice
+
+    echo ""
+    echo "Available profiles:"
+    echo "  1) linux-server"
+    echo "  2) linux-desktop"
+    echo "  3) macbook"
+    echo "  4) quit"
+
+    read -r -p "Choose machine profile [1-4]: " choice
+    case "$choice" in
+        1) apply_profile "linux-server" ;;
+        2) apply_profile "linux-desktop" ;;
+        3) apply_profile "macbook" ;;
+        4) return 0 ;;
+        *)
+            echo "Invalid selection"
+            return 1
+            ;;
+    esac
+}
+
 # Main Execution
 detect_os
 install_dependencies
 
 if [[ $# -eq 0 ]]; then
-    # No arguments: Install everything
-    echo ""
-    echo "Stowing shared dotfiles..."
-    stow_all_from "$SHARED_DIR"
-
-    echo ""
-    if [[ "$OS" == "macos" ]]; then
-        echo "Stowing macOS-specific dotfiles..."
-        stow_all_from "$MAC_DIR" "Brewfile"
-    else
-        echo "Stowing Linux-specific dotfiles..."
-        stow_all_from "$LINUX_DIR" "Archfile"
-    fi
-
-    install_packages
-    install_extra_tools
+    interactive_menu
+elif [[ "${1:-}" == "menu" ]]; then
+    interactive_menu
+elif [[ "${1:-}" == "profile" ]]; then
+    apply_profile "${2:-}"
 else
-    # Arguments provided: Install specific packages
     for target in "$@"; do
-        if [[ "$target" == "packages" || "$target" == "brew" ]]; then
-            install_packages
-        elif [[ "$target" == "tools" ]]; then
-            install_extra_tools
-        elif [[ "$target" == "shared" ]]; then
-            echo "Stowing shared dotfiles..."
-            stow_all_from "$SHARED_DIR"
-        elif [[ "$target" == "mac" ]]; then
-            echo "Stowing macOS dotfiles..."
-            stow_all_from "$MAC_DIR" "Brewfile"
-        elif [[ "$target" == "linux" ]]; then
-            echo "Stowing Linux dotfiles..."
-            stow_all_from "$LINUX_DIR" "Archfile"
-        else
-            # Try to find the package in shared, mac, or linux
-            if [[ -d "$SHARED_DIR/$target" ]]; then
-                stow_package "$SHARED_DIR" "$target"
-            elif [[ -d "$MAC_DIR/$target" ]]; then
-                stow_package "$MAC_DIR" "$target"
-            elif [[ -d "$LINUX_DIR/$target" ]]; then
-                stow_package "$LINUX_DIR" "$target"
-            else
-                echo "Warning: Package '$target' not found in shared, mac, or linux"
-            fi
-        fi
+        run_target "$target"
     done
 fi
 

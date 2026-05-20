@@ -6,20 +6,15 @@ Personal configuration files for macOS and Linux (Arch/Debian).
 
 ```
 dotfiles/
-├── shared/                     # Cross-platform stow packages
-│   ├── bin/                    # Personal scripts in ~/.local/bin
-│   ├── blocklists/             # Hosts blocklist config
+├── roles/                      # Role-based stow packages
 │   ├── config/                 # Shared ~/.config (nvim, terminals, theme-sync, etc.)
-│   ├── git/                    # Git configuration
-│   ├── ssh/                    # SSH config/keys
 │   ├── tmux/                   # Tmux configuration
-│   └── zshrc/                  # Zsh configuration
-├── homebrew/
-│   └── Brewfile                # Homebrew packages (macOS)
-├── mac/
-│   └── config/                 # macOS-specific configs (aerospace, karabiner, raycast)
-├── linux/
-│   └── config/                 # Linux-specific configs (hypr, waybar, keyd, swaync, gtk, etc.)
+│   ├── zshrc/                  # Zsh configuration
+│   ├── macos-config/           # macOS-specific configs
+│   ├── linux-config/           # Linux-specific configs
+│   ├── packages-macos/         # Brewfile
+│   └── packages-arch/          # Archfile
+├── hosts/                      # Per-host stow overrides (optional)
 ├── scripts/                    # Utility scripts (theme-sync, tmux helpers, etc.)
 └── install.sh                  # Auto-detecting installation script
 ```
@@ -46,20 +41,23 @@ dotfiles/
 This script will:
 -   **Detect OS** (macOS, Arch, Debian, or generic Linux)
 -   **Install dependencies** (stow, git, curl, zsh, etc.)
--   **Symlink shared configs** using GNU Stow
--   **Symlink OS-specific configs** based on detected OS
+-   **Symlink role-based configs** using GNU Stow
+-   **Symlink host overrides** from `hosts/<hostname>` when present
 -   **Install packages**:
-    -   macOS: Installs from `homebrew/Brewfile`
+    -   macOS: Installs from `roles/packages-macos/Brewfile`
     -   Arch: Installs common tools via pacman (+ optional AUR tooling)
     -   Debian: Installs common tools via apt
 
 ## Selective Installation
 
 ```bash
-# Install only shared configs
-./install.sh shared
+# Install only role-based configs
+./install.sh roles
 
-# Install only OS-specific configs
+# Install only host overrides
+./install.sh hosts
+
+# Install only OS-specific role
 ./install.sh mac
 ./install.sh linux
 
@@ -70,6 +68,13 @@ This script will:
 # Only install packages (no stow)
 ./install.sh packages
 
+# Simple machine profiles (recommended)
+dotfiles-install menu
+# or directly:
+dotfiles-install profile linux-server
+dotfiles-install profile linux-desktop
+dotfiles-install profile macbook
+
 # Global command (same behavior)
 dotfiles-install packages
 ```
@@ -78,16 +83,16 @@ dotfiles-install packages
 
 Themes are centralized in:
 
-- `shared/config/.config/theme-sync/`
-- `shared/config/.config/theme-sync/themes/<theme>/`
+- `roles/config/.config/theme-sync/`
+- `roles/config/.config/theme-sync/themes/<theme>/`
 
 Each theme folder contains a `theme.env` mapping plus app-specific theme files (for example `alacritty.toml`, `kitty.conf`, `fzf.sh`, and optional overlays like `tmux.theme.conf`, `opencode.theme.json`, etc.).
 
 The active theme is tracked in:
 
-- `shared/config/.config/theme-sync/current`
-- `shared/config/.config/theme-sync/current.env`
-- `shared/config/.config/theme-sync/mode.env`
+- `roles/config/.config/theme-sync/current`
+- `roles/config/.config/theme-sync/current.env`
+- `roles/config/.config/theme-sync/mode.env`
 
 Apply and switch themes with:
 
@@ -119,7 +124,7 @@ dotfiles-update
 
 Notes:
 
-- `dotfiles-update` runs `brew update`, reports outdated packages, upgrades from `homebrew/Brewfile`, syncs the Brewfile, and runs cleanup.
+- `dotfiles-update` runs `brew update`, reports outdated packages, upgrades from `roles/packages-macos/Brewfile`, syncs the Brewfile, and runs cleanup.
 - It also runs `mise outdated`, `mise upgrade --yes`, and `mise prune -y`.
 - If your repo is not at `~/dotfiles`, set `DOTFILES_DIR` before running, for example: `DOTFILES_DIR=~/src/dotfiles dotfiles-update`.
 
@@ -138,24 +143,21 @@ This uses `gitleaks` if installed.
 To remove symlinks:
 
 ```bash
-# Shared packages
-cd ~/dotfiles/shared && stow -D -t ~ <package>
+# Role packages
+cd ~/dotfiles/roles && stow -D -t ~ <package>
 
-# Mac packages
-cd ~/dotfiles/mac && stow -D -t ~ config
-
-# Linux packages
-cd ~/dotfiles/linux && stow -D -t ~ config
+# Host overrides (example)
+cd ~/dotfiles/hosts/$(hostname -s) && stow -D -t ~ <package>
 ```
 
 ## Hosts blocklist (macOS + Linux)
 
 This repo includes a cross-platform hosts blocklist workflow:
 
-- Script: `shared/bin/.local/bin/update-hosts-blocklist`
-- Config: `shared/blocklists/.config/blocklists/`
+- Script: `roles/bin/.local/bin/update-hosts-blocklist`
+- Config: `roles/blocklists/.config/blocklists/`
 
-Stow the shared packages, then run:
+Stow the role packages, then run:
 
 ```bash
 update-hosts-blocklist --dry-run

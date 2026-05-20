@@ -1,0 +1,275 @@
+# ==============================================================================
+# Core Settings
+# Startup commands, normalization, and general behavior
+# ==============================================================================
+
+start-at-login = true
+after-login-command = []
+
+# # JankyBorders: https://github.com/FelixKratz/JankyBorders
+# after-startup-command = [
+#     'exec-and-forget borders active_color=0xcc9d7cd8 inactive_color=0xcc1a1b26 width=8.0',
+# ]
+
+# Normalizations: https://nikitabobko.github.io/AeroSpace/guide#normalization
+enable-normalization-flatten-containers = true
+enable-normalization-opposite-orientation-for-nested-containers = true
+
+# Default Layout
+accordion-padding = 30
+default-root-container-layout = 'tiles'
+default-root-container-orientation = 'auto'
+automatically-unhide-macos-hidden-apps = true
+
+# Mouse Behavior
+# Mouse follows focus when focused monitor changes
+on-focused-monitor-changed = ['move-mouse monitor-lazy-center']
+
+
+# ==============================================================================
+# Key Mapping
+# ==============================================================================
+
+[key-mapping]
+preset = 'qwerty'
+
+
+# ==============================================================================
+# Gaps
+# Inner gaps between windows, outer gaps from monitor edges
+# ==============================================================================
+
+[gaps]
+inner.horizontal = 10
+inner.vertical = 10
+outer.bottom = 10
+outer.top = [{ monitor.main = 5 }, 5]
+outer.right =10
+outer.left = 10 
+
+
+# ==============================================================================
+# Main Keybindings
+# ==============================================================================
+
+[mode.main.binding]
+
+# --- App Launchers ---
+alt-enter = 'exec-and-forget open -a /Applications/kitty.app'
+
+# --- Focus Navigation (Wrap-around) ---
+alt-h = 'focus --boundaries-action wrap-around-the-workspace left'
+alt-j = 'focus --boundaries-action wrap-around-the-workspace down'
+alt-k = 'focus --boundaries-action wrap-around-the-workspace up'
+alt-l = 'focus --boundaries-action wrap-around-the-workspace right'
+
+alt-left = 'focus --boundaries-action wrap-around-the-workspace left'
+alt-down = 'focus --boundaries-action wrap-around-the-workspace down'
+alt-up = 'focus --boundaries-action wrap-around-the-workspace up'
+alt-right = 'focus --boundaries-action wrap-around-the-workspace right'
+
+# --- Move Windows ---
+alt-shift-h = 'move left'
+alt-shift-j = 'move down'
+alt-shift-k = 'move up'
+alt-shift-l = 'move right'
+
+# --- Layout Modification ---
+alt-e = 'layout tiles horizontal vertical'
+alt-comma = 'layout accordion horizontal vertical'
+alt-f = 'fullscreen'
+alt-shift-space = 'layout floating tiling'
+alt-y = ['focus right', 'join-with down', 'layout tiles horizontal'] # Join focused window with the one to the right into a horizontal tile
+alt-b = 'balance-sizes'
+alt-r = 'flatten-workspace-tree'
+
+# --- Stack/Join Windows ---
+alt-shift-left = 'join-with left'
+alt-shift-down = 'join-with down'
+alt-shift-up = 'join-with up'
+alt-shift-right = 'join-with right'
+
+# --- Resize Windows (coarse: ±100) ---
+alt-shift-minus = 'resize smart -100'
+alt-shift-equal = 'resize smart +100'
+
+# --- Workspace Navigation ---
+alt-1 = 'workspace web'
+alt-2 = 'workspace term'
+alt-3 = 'workspace code'
+alt-4 = 'workspace misc'
+alt-s = 'workspace comms'
+alt-d = 'workspace notes'
+alt-m = 'workspace media'
+alt-a = 'workspace ai'
+
+alt-tab = 'workspace-back-and-forth'
+alt-shift-tab = 'move-workspace-to-monitor --wrap-around next'
+
+# --- Move Windows to Workspaces ---
+alt-shift-1 = 'move-node-to-workspace web'
+alt-shift-2 = 'move-node-to-workspace term'
+alt-shift-3 = 'move-node-to-workspace code'
+alt-shift-4 = 'move-node-to-workspace misc'
+alt-shift-s = 'move-node-to-workspace comms'
+alt-shift-d = 'move-node-to-workspace notes'
+alt-shift-m = 'move-node-to-workspace media'
+alt-shift-6 = 'move-node-to-workspace ai'
+
+# --- Enter Sub-Modes ---
+alt-shift-semicolon = 'mode service'
+alt-shift-r = 'mode resize'
+
+
+# ==============================================================================
+# Extra Modes (Service, Resize)
+# ==============================================================================
+
+# Service Mode
+[mode.service.binding]
+esc = ['reload-config', 'mode main']
+r = ['flatten-workspace-tree', 'mode main']
+f = ['layout floating tiling', 'mode main']
+backspace = ['close-all-windows-but-current', 'mode main']
+
+# Resize Mode (fine: ±50)
+[mode.resize.binding]
+h = 'resize width -50'
+j = 'resize height +50'
+k = 'resize height -50'
+l = 'resize width +50'
+minus = 'resize smart -50'
+equal = 'resize smart +50'
+enter = 'mode main'
+esc = 'mode main'
+
+
+# ==============================================================================
+# Window Rules (Callbacks)
+# Workspace assignments and floating window overrides
+# ==============================================================================
+
+# --- Browsers -> Workspace work ---
+[[on-window-detected]]
+if.app-id = 'org.mozilla.firefox'
+run = ['move-node-to-workspace web']
+
+[[on-window-detected]]
+if.app-id = 'com.google.chrome'
+run = ['move-node-to-workspace web']
+
+[[on-window-detected]]
+if.app-id = 'com.apple.Safari'
+run = ['move-node-to-workspace web']
+
+[[on-window-detected]]
+if.app-id = 'com.brave.Browser'
+run = ['move-node-to-workspace web']
+
+[[on-window-detected]]
+if.app-id = 'net.input.helium'
+run = ['move-node-to-workspace web']
+
+# --- Terminals -> Workspace term ---
+[[on-window-detected]]
+if.app-id = 'com.mitchellh.ghostty'
+run = ['move-node-to-workspace term']
+
+[[on-window-detected]]
+if.app-id = 'net.kovidgoyal.kitty'
+run = ['move-node-to-workspace term']
+
+# --- Terminals -> Workspace term ---
+[[on-window-detected]]
+if.app-id = 'com.spotify.client'
+run = ['move-node-to-workspace media']
+
+[[on-window-detected]]
+if.app-id = 'com.apple.Safari.WebApp.10C4F224-ABFB-4CFD-891C-60616E2AE109'
+run = ['move-node-to-workspace media']
+
+
+# --- Editors -> Workspace code ---
+[[on-window-detected]]
+if.app-id = 'com.microsoft.VSCode'
+run = ['move-node-to-workspace code']
+
+[[on-window-detected]]
+if.app-id = 'dev.zed.Zed'
+run = ['move-node-to-workspace code']
+
+# --- Notes / Reference -> Workspace notes ---
+[[on-window-detected]]
+if.app-id = 'md.obsidian'
+run = ['move-node-to-workspace notes']
+
+# --- Communication -> Workspace comms ---
+[[on-window-detected]]
+if.app-id = 'com.microsoft.Outlook'
+run = ['move-node-to-workspace comms']
+
+[[on-window-detected]]
+if.app-id = 'com.microsoft.teams2'
+run = ['move-node-to-workspace comms']
+
+[[on-window-detected]]
+if.app-id = 'com.apple.mail'
+run = ['move-node-to-workspace comms']
+
+[[on-window-detected]]
+if.app-id = 'com.brave.Browser.app.ompifgpmddkgmclendfeacglnodjjndh'
+run = ['move-node-to-workspace comms']
+
+[[on-window-detected]]
+if.app-id = 'com.apple.Safari.WebApp.A34D3463-4148-430C-97AE-A15563F2327B'
+run = ['move-node-to-workspace comms']
+
+
+[[on-window-detected]]
+if.app-id = 'com.openai.codex'
+run = ['move-node-to-workspace ai']
+
+[[on-window-detected]]
+if.app-id = 'com.openai.chat'
+run = ['move-node-to-workspace ai']
+
+# --- Floating Windows ---
+[[on-window-detected]]
+if.app-id = 'com.apple.finder'
+run = 'layout floating'
+
+[[on-window-detected]]
+if.app-id = 'com.apple.Passwords'
+run = 'layout floating'
+
+[[on-window-detected]]
+if.app-id = 'dev.kdrag0n.MacVirt'
+run = ['layout floating']
+
+[[on-window-detected]]
+if.app-id = 'com.daisydiskapp.DaisyDisk'
+run = ['layout floating']
+
+[[on-window-detected]]
+if.app-id = 'com.bitwarden.desktop'
+run = ['layout floating']
+
+[[on-window-detected]]
+if.app-id = 'com.apple.AppStore'
+run = ['layout floating']
+
+
+# ==============================================================================
+# Monitor Configuration
+# Force workspace-to-monitor assignments
+# ==============================================================================
+
+[workspace-to-monitor-force-assignment]
+web = ['VZ27A', 'LS49A950U', 'main']
+term = ['VZ27A', 'LS49A950U', 'main']
+code = ['VZ27A', 'LS49A950U', 'main']
+misc = ['LS49A950U', 'built-in', 'VZ27A', 'main']
+comms = ['built-in', 'LS49A950U', 'VZ27A', 'main']
+notes = ['EV2436W', 'LS49A950U', 'main']
+ai = ['built-in',  'EV2436W', 'LS49A950U', 'main']
+media = ['built-in', 'LS49A950U', 'VZ27A', 'main']

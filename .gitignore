@@ -1,12 +1,12 @@
 # Auth tokens (CRITICAL)
-shared/config/.config/gh/hosts.yml
-shared/config/.config/github-copilot/apps.json
-shared/config/.config/github-copilot/hosts.json
+roles/config/.config/gh/hosts.yml
+roles/config/.config/github-copilot/apps.json
+roles/config/.config/github-copilot/hosts.json
 
 # Generated/runtime directories
-shared/config/.config/github-copilot/rd/
-shared/config/.config/github-copilot/go/
-mac/config/.config/raycast/
+roles/config/.config/github-copilot/rd/
+roles/config/.config/github-copilot/go/
+roles/macos-config/.config/raycast/
 
 # Runtime/cache files
 **/.cache/
@@ -16,26 +16,26 @@ mac/config/.config/raycast/
 **/.DS_Store
 **/*.bak
 **/*.old
-shared/config/.config/pgcli/history
-shared/config/.config/pgcli/log
+roles/config/.config/pgcli/history
+roles/config/.config/pgcli/log
 
 # Generated local bin shims
-shared/bin/.local/bin/debugpy
-shared/bin/.local/bin/debugpy-adapter
-shared/bin/.local/bin/ipython
-shared/bin/.local/bin/ipython3
-shared/bin/.local/bin/jupyter
-shared/bin/.local/bin/jupyter-kernel
-shared/bin/.local/bin/jupyter-kernelspec
-shared/bin/.local/bin/jupyter-migrate
-shared/bin/.local/bin/jupyter-run
-shared/bin/.local/bin/jupyter-troubleshoot
-shared/bin/.local/bin/pygmentize
+roles/bin/.local/bin/debugpy
+roles/bin/.local/bin/debugpy-adapter
+roles/bin/.local/bin/ipython
+roles/bin/.local/bin/ipython3
+roles/bin/.local/bin/jupyter
+roles/bin/.local/bin/jupyter-kernel
+roles/bin/.local/bin/jupyter-kernelspec
+roles/bin/.local/bin/jupyter-migrate
+roles/bin/.local/bin/jupyter-run
+roles/bin/.local/bin/jupyter-troubleshoot
+roles/bin/.local/bin/pygmentize
 
 # keys
 **/id_*
 **/*.pub
 **/known_hosts*
-shared/config/.config/gh
-shared/config/.config/nvim/test
-/shared/bin/.local/bin/gopherhole
+roles/config/.config/gh
+roles/config/.config/nvim/test
+/roles/bin/.local/bin/gopherhole
