@@ -6,11 +6,17 @@ function M.setup()
 		return
 	end
 
-	mason.setup()
+	mason.setup({
+		registries = {
+			"github:mason-org/mason-registry",
+			"github:Crashdummyy/mason-registry",
+		},
+	})
 
 	local mlsp_ok, mason_lspconfig = pcall(require, "mason-lspconfig")
 	if mlsp_ok then
 		mason_lspconfig.setup({
+			automatic_enable = false,
 			ensure_installed = {
 				"lua_ls",
 				"ruff",
@@ -25,6 +31,7 @@ function M.setup()
 				"svelte",
 				"terraformls",
 				"prismals",
+				"taplo",
 			},
 		})
 	end
@@ -37,8 +44,10 @@ function M.setup()
 				"prettierd",
 				"gofumpt",
 				"golines",
-				"pg_format",
-				"terraform_fmt",
+				"pgformatter",
+				"terraform",
+				"roslyn",
+				"dotenv-linter",
 			},
 			run_on_start = true,
 		})

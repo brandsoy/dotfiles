@@ -31,6 +31,7 @@ function M.setup()
 		gh('nvim-lua/plenary.nvim'),
 		gh('romgrk/barbar.nvim'),
 		gh('nvim-tree/nvim-tree.lua'),
+		gh('mfussenegger/nvim-lint'),
 	}, { confirm = false })
 
 	require('plugins.ui').setup()
@@ -45,6 +46,7 @@ function M.setup()
 	require('plugins.yazi').setup()
 	require('plugins.barbar').setup()
 	require('plugins.nvim-tree').setup()
+	require('plugins.lint').setup()
 end
 
 return M

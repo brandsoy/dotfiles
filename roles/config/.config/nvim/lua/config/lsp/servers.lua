@@ -1,9 +1,8 @@
 local M = {}
 
 local function configure_servers()
-	local lspconfig_ok, lspconfig = pcall(require, "lspconfig")
-	if not lspconfig_ok then
-		vim.notify("nvim-lspconfig is required for this LSP setup", vim.log.levels.ERROR)
+	if not (vim.lsp and vim.lsp.config and vim.lsp.enable) then
+		vim.notify("Neovim 0.11+ required for this LSP setup", vim.log.levels.ERROR)
 		return
 	end
 
@@ -96,21 +95,7 @@ local function configure_servers()
 		svelte = {},
 		terraformls = { filetypes = { "terraform", "terraform-vars" } },
 		prismals = { filetypes = { "prisma" } },
-	}
-
-	for name, cfg in pairs(servers) do
-		local server = lspconfig[name]
-		if server and server.setup then
-			local ok, err = pcall(server.setup, vim.tbl_deep_extend("force", cfg, { capabilities = capabilities }))
-			if not ok then
-				vim.notify(string.format("Failed to configure %s: %s", name, err), vim.log.levels.ERROR)
-			end
-		else
-			vim.notify(string.format("lspconfig server not found: %s", name), vim.log.levels.WARN)
-		end
-	end
-
-	local custom_servers = {
+		taplo = {},
 		tsp_server = {
 			cmd = { "tsp-server", "--stdio" },
 		},
@@ -121,36 +106,37 @@ local function configure_servers()
 		},
 	}
 
-	if vim.lsp and vim.lsp.config and vim.lsp.enable then
-		for name, cfg in pairs(custom_servers) do
-			pcall(vim.lsp.config, name, vim.tbl_deep_extend("force", cfg, { capabilities = capabilities }))
+	local ft_to_servers = {}
+	for name, cfg in pairs(servers) do
+		local ok, err = pcall(vim.lsp.config, name, vim.tbl_deep_extend("force", cfg, { capabilities = capabilities }))
+		if not ok then
+			vim.notify(string.format("Failed to configure %s: %s", name, err), vim.log.levels.ERROR)
 		end
 
-		local ft_to_servers = {}
-		for name, cfg in pairs(custom_servers) do
-			if type(cfg.filetypes) == "table" then
-				for _, ft in ipairs(cfg.filetypes) do
-					ft_to_servers[ft] = ft_to_servers[ft] or {}
-					table.insert(ft_to_servers[ft], name)
-				end
+		local resolved = vim.lsp.config[name]
+		local fts = (resolved and resolved.filetypes) or cfg.filetypes
+		if type(fts) == "table" then
+			for _, ft in ipairs(fts) do
+				ft_to_servers[ft] = ft_to_servers[ft] or {}
+				table.insert(ft_to_servers[ft], name)
 			end
 		end
-
-		vim.api.nvim_create_autocmd("FileType", {
-			group = vim.api.nvim_create_augroup("CustomLspFileTypeEnable", { clear = true }),
-			callback = function(ev)
-				if vim.b.large_file then
-					return
-				end
-
-				for _, name in ipairs(ft_to_servers[ev.match] or {}) do
-					if not vim.lsp.get_clients({ name = name, bufnr = ev.buf })[1] then
-						pcall(vim.lsp.enable, name, { bufnr = ev.buf })
-					end
-				end
-			end,
-		})
 	end
+
+	vim.api.nvim_create_autocmd("FileType", {
+		group = vim.api.nvim_create_augroup("LspFileTypeEnable", { clear = true }),
+		callback = function(ev)
+			if vim.b.large_file then
+				return
+			end
+
+			for _, name in ipairs(ft_to_servers[ev.match] or {}) do
+				if not vim.lsp.get_clients({ name = name, bufnr = ev.buf })[1] then
+					pcall(vim.lsp.enable, name, { bufnr = ev.buf })
+				end
+			end
+		end,
+	})
 end
 
 function M.setup()
