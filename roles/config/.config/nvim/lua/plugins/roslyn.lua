@@ -12,10 +12,6 @@ function M.setup()
 		lock_target = false,
 		silent = false,
 	})
-
-	vim.lsp.config("roslyn", {
-		filetypes = { "cs" },
-	})
 end
 
 return M

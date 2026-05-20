@@ -56,8 +56,10 @@ end
 
 local function lsp_label()
 	local names = {}
+	local seen = {}
 	for _, client in ipairs(vim.lsp.get_clients({ bufnr = 0 })) do
-		if client.name ~= "copilot" then
+		if client.name ~= "copilot" and not seen[client.name] then
+			seen[client.name] = true
 			names[#names + 1] = client.name
 		end
 	end
