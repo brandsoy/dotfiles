@@ -55,7 +55,7 @@ startup_command = "la"
 
 [[session]]
 name = "Sharepoint Contract Manager"
-path = "/Users/mattis/Developer/git/work/sharepoint-contract-watcher"
+path = "/Users/mattis/Developer/git/work/sharepoint-contract-manager"
 startup_command = "la"
 
 [[session]]
