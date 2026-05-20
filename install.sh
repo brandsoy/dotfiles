@@ -184,13 +184,27 @@ install_packages() {
         echo "Debian package installation complete."
 
     elif [[ "$OS" == "redhat" ]]; then
-        echo "Installing recommended Fedora/RHEL packages..."
-        local packages=(
-            tmux neovim ripgrep fzf bat jq unzip tree
-            htop btop fd-find zoxide
-        )
+        echo "Installing Fedora/RHEL packages..."
 
-        sudo dnf install -y "${packages[@]}"
+        if [[ -f "$ROLES_DIR/packages-redhat/Redhatfile" ]]; then
+            local packages=()
+            while IFS= read -r pkg; do
+                packages+=("$pkg")
+            done < <(
+                awk '!/^#/ && NF { for (i=1;i<=NF;i++) print $i }' "$ROLES_DIR/packages-redhat/Redhatfile"
+            )
+
+            if ((${#packages[@]} > 0)); then
+                sudo dnf install -y "${packages[@]}"
+            fi
+        else
+            local packages=(
+                tmux neovim ripgrep fzf bat jq unzip tree
+                htop btop fd-find zoxide
+            )
+
+            sudo dnf install -y "${packages[@]}"
+        fi
 
         # Install Starship (Shell prompt)
         if ! has_cmd starship; then
@@ -301,7 +315,7 @@ run_target() {
     elif [[ "$target" == "tools" ]]; then
         install_extra_tools
     elif [[ "$target" == "roles" || "$target" == "shared" ]]; then
-        stow_all_from "$ROLES_DIR" "^(packages-macos|packages-arch|macos-config|linux-config)$"
+        stow_all_from "$ROLES_DIR" "^(packages-macos|packages-arch|packages-redhat|macos-config|linux-config)$"
     elif [[ "$target" == "hosts" ]]; then
         apply_host_overrides
     elif [[ "$target" == "mac" ]]; then
@@ -311,7 +325,7 @@ run_target() {
     elif [[ "$target" == "all" ]]; then
         echo ""
         echo "Stowing role packages..."
-        stow_all_from "$ROLES_DIR" "^(packages-macos|packages-arch|macos-config|linux-config)$"
+        stow_all_from "$ROLES_DIR" "^(packages-macos|packages-arch|packages-redhat|macos-config|linux-config)$"
 
         echo ""
         if [[ "$OS" == "macos" ]]; then

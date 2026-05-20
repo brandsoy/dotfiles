@@ -1,0 +1,51 @@
+# Fedora/RHEL package list for install.sh
+# Parsed as whitespace-delimited package names; comments are ignored.
+
+## Core
+git
+curl
+wget
+stow
+zsh
+
+## Terminal & shell
+tmux
+starship
+zoxide
+fzf
+bash-completion
+
+## CLI tools
+neovim
+ripgrep
+fd-find
+bat
+tree
+btop
+htop
+jq
+age
+unzip
+p7zip
+tealdeer
+
+## Development
+rust
+cmake
+make
+ansible
+gh
+lazygit
+mise
+
+## Sync / networking
+rsync
+rclone
+syncthing
+openssh
+tailscale
+wireguard-tools
+
+## Containers
+docker
+docker-compose

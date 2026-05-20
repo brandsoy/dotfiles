@@ -18,6 +18,9 @@ function M.setup()
 		-- LSP
 		gh('nvim-treesitter/nvim-treesitter'),
 		gh('neovim/nvim-lspconfig'),
+		gh('williamboman/mason.nvim'),
+		gh('williamboman/mason-lspconfig.nvim'),
+		gh('WhoIsSethDaniel/mason-tool-installer.nvim'),
 		gh('stevearc/conform.nvim'),
 		gh('b0o/SchemaStore.nvim'),
 		gh('seblyng/roslyn.nvim'),
