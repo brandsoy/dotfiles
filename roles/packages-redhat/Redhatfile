@@ -35,8 +35,6 @@ cmake
 make
 ansible
 gh
-lazygit
-mise
 
 ## Sync / networking
 rsync

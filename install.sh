@@ -194,8 +194,27 @@ install_packages() {
                 awk '!/^#/ && NF { for (i=1;i<=NF;i++) print $i }' "$ROLES_DIR/packages-redhat/Redhatfile"
             )
 
-            if ((${#packages[@]} > 0)); then
-                sudo dnf install -y "${packages[@]}"
+            # Avoid common Fedora conflicts/missing packages.
+            local filtered=()
+            for pkg in "${packages[@]}"; do
+                case "$pkg" in
+                    docker|docker-compose)
+                        if rpm -q podman-docker >/dev/null 2>&1; then
+                            echo "Skipping $pkg (podman-docker is installed and conflicts with moby-engine)."
+                            continue
+                        fi
+                        if has_cmd docker; then
+                            echo "Skipping $pkg (docker command already available)."
+                            continue
+                        fi
+                        ;;
+                esac
+                filtered+=("$pkg")
+            done
+
+            if ((${#filtered[@]} > 0)); then
+                # --skip-unavailable prevents hard failure on packages not in current repos.
+                sudo dnf install -y --skip-unavailable "${filtered[@]}"
             fi
         else
             local packages=(
@@ -203,7 +222,7 @@ install_packages() {
                 htop btop fd-find zoxide
             )
 
-            sudo dnf install -y "${packages[@]}"
+            sudo dnf install -y --skip-unavailable "${packages[@]}"
         fi
 
         # Install Starship (Shell prompt)

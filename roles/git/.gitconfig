@@ -14,7 +14,7 @@
 	helper = 
 	helper = !/opt/homebrew/bin/gh auth git-credential
 [credential]
-	helper = osxkeychain
+	helper = cache
 [user]
 	name = Mattis Brandsøy
 	email = mattis.dev@icloud.com
