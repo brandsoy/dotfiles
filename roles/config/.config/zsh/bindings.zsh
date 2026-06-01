@@ -31,5 +31,9 @@ zvm_after_init() {
   bindkey '^[[A' history-substring-search-up
   bindkey '^[[B' history-substring-search-down
 
-  }
+  # Ctrl+P / Ctrl+N -> history search by current buffer prefix
+  bindkey '^P' history-substring-search-up
+  bindkey '^N' history-substring-search-down
+
+}
 

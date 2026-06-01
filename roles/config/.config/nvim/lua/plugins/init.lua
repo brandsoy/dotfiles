@@ -15,6 +15,7 @@ function M.setup()
 		-- Plugins
 		gh('echasnovski/mini.nvim'),
 		gh('ibhagwan/fzf-lua'),
+		gh('iamcco/markdown-preview.nvim'),
 		-- LSP
 		gh('nvim-treesitter/nvim-treesitter'),
 		gh('neovim/nvim-lspconfig'),

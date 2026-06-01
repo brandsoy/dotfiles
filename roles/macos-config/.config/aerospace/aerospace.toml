@@ -44,8 +44,8 @@ inner.horizontal = 10
 inner.vertical = 10
 outer.bottom = 10
 outer.top = [{ monitor.main = 5 }, 5]
-outer.right =10
-outer.left = 10 
+outer.right = 10
+outer.left = 10
 
 
 # ==============================================================================
@@ -79,7 +79,11 @@ alt-e = 'layout tiles horizontal vertical'
 alt-comma = 'layout accordion horizontal vertical'
 alt-f = 'fullscreen'
 alt-shift-space = 'layout floating tiling'
-alt-y = ['focus right', 'join-with down', 'layout tiles horizontal'] # Join focused window with the one to the right into a horizontal tile
+alt-y = [
+  'focus right',
+  'join-with down',
+  'layout tiles horizontal',
+] # Join focused window with the one to the right into a horizontal tile
 alt-b = 'balance-sizes'
 alt-r = 'flatten-workspace-tree'
 
@@ -94,8 +98,8 @@ alt-shift-minus = 'resize smart -100'
 alt-shift-equal = 'resize smart +100'
 
 # --- Workspace Navigation ---
-alt-1 = 'workspace web'
-alt-2 = 'workspace term'
+alt-1 = 'workspace term'
+alt-2 = 'workspace web'
 alt-3 = 'workspace code'
 alt-4 = 'workspace misc'
 alt-s = 'workspace comms'
@@ -107,12 +111,11 @@ alt-tab = 'workspace-back-and-forth'
 alt-shift-tab = 'move-workspace-to-monitor --wrap-around next'
 
 # --- Move Windows to Workspaces ---
-alt-shift-1 = 'move-node-to-workspace web'
-alt-shift-2 = 'move-node-to-workspace term'
+alt-shift-1 = 'move-node-to-workspace term'
+alt-shift-2 = 'move-node-to-workspace web'
 alt-shift-3 = 'move-node-to-workspace code'
 alt-shift-4 = 'move-node-to-workspace misc'
 alt-shift-s = 'move-node-to-workspace comms'
-alt-shift-d = 'move-node-to-workspace notes'
 alt-shift-m = 'move-node-to-workspace media'
 alt-shift-6 = 'move-node-to-workspace ai'
 
@@ -198,11 +201,6 @@ run = ['move-node-to-workspace code']
 if.app-id = 'dev.zed.Zed'
 run = ['move-node-to-workspace code']
 
-# --- Notes / Reference -> Workspace notes ---
-[[on-window-detected]]
-if.app-id = 'md.obsidian'
-run = ['move-node-to-workspace notes']
-
 # --- Communication -> Workspace comms ---
 [[on-window-detected]]
 if.app-id = 'com.microsoft.Outlook'
@@ -258,6 +256,14 @@ run = ['layout floating']
 if.app-id = 'com.apple.AppStore'
 run = ['layout floating']
 
+[[on-window-detected]]
+if.app-id = 'com.apple.MobileSMS'
+run = ['layout floating']
+
+[[on-window-detected]]
+if.app-id = 'com.apple.iCal'
+run = ['layout floating']
+
 
 # ==============================================================================
 # Monitor Configuration
@@ -265,11 +271,11 @@ run = ['layout floating']
 # ==============================================================================
 
 [workspace-to-monitor-force-assignment]
-web = ['VZ27A', 'LS49A950U', 'main']
 term = ['VZ27A', 'LS49A950U', 'main']
+web = ['VZ27A', 'LS49A950U', 'main']
 code = ['VZ27A', 'LS49A950U', 'main']
 misc = ['LS49A950U', 'built-in', 'VZ27A', 'main']
 comms = ['built-in', 'LS49A950U', 'VZ27A', 'main']
 notes = ['EV2436W', 'LS49A950U', 'main']
-ai = ['built-in',  'EV2436W', 'LS49A950U', 'main']
+ai = ['built-in', 'EV2436W', 'LS49A950U', 'main']
 media = ['built-in', 'LS49A950U', 'VZ27A', 'main']

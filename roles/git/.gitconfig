@@ -17,8 +17,13 @@
 	helper = osxkeychain
 [user]
 	name = Mattis Brandsøy
-	email = mattis.brandsoy@icloud.com
+	email = mattis.dev@icloud.com
 [rebase]
 	autoStash = true
 [branch]
 	autosetuprebase = always
+[filter "lfs"]
+	smudge = git-lfs smudge -- %f
+	process = git-lfs filter-process
+	required = true
+	clean = git-lfs clean -- %f

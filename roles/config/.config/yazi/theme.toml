@@ -1,2 +1,3 @@
 [flavor]
-dark = "nord"
+use = "dracula"
+dark = "dracula"
