@@ -39,3 +39,4 @@ roles/bin/.local/bin/pygmentize
 roles/config/.config/gh
 roles/config/.config/nvim/test
 /roles/bin/.local/bin/gopherhole
+roles/config/.pi/agent/auth.json

@@ -17,14 +17,17 @@ async function getSystemTheme(): Promise<"dark" | "light"> {
 
 export default function (pi: ExtensionAPI) {
   let intervalId: ReturnType<typeof setInterval> | null = null;
-  let currentTheme: "dark" | "light" | null = null;
+  let currentTheme: "dracula" | "light" | null = null;
+
+  const resolveTheme = (theme: "dark" | "light"): "dracula" | "light" =>
+    theme === "dark" ? "dracula" : "light";
 
   pi.on("session_start", async (_event, ctx) => {
-    currentTheme = await getSystemTheme();
+    currentTheme = resolveTheme(await getSystemTheme());
     ctx.ui.setTheme(currentTheme);
 
     intervalId = setInterval(async () => {
-      const nextTheme = await getSystemTheme();
+      const nextTheme = resolveTheme(await getSystemTheme());
       if (nextTheme !== currentTheme) {
         currentTheme = nextTheme;
         ctx.ui.setTheme(nextTheme);
