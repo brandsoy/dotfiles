@@ -23,6 +23,12 @@ function M.setup()
 
 	fzf.setup({
 		fzf_colors = true,
+		fzf_opts = {
+			['--color'] = 'bg+:#44475a,fg+:#ff79c6,hl+:#50fa7b',
+		},
+		-- hls = {
+		-- 	selection = 'CursorLine', -- Links the active line color to your theme's visual selection
+		-- },
 		winopts = {
 			backdrop = 100,
 			preview = {
@@ -32,7 +38,7 @@ function M.setup()
 		},
 		defaults = {
 			file_icons = 'mini',
-			color_icons = false,
+			color_icons = true,
 		},
 		files = {
 			-- Keep fzf-lua's toggleable flags as booleans. If --no-ignore is
