@@ -1,5 +1,7 @@
 local M = {}
 
+local project_config = require("config.lsp.project_config")
+
 local function configure_servers()
 	if not (vim.lsp and vim.lsp.config and vim.lsp.enable) then
 		vim.notify("Neovim 0.11+ required for this LSP setup", vim.log.levels.ERROR)
@@ -91,7 +93,12 @@ local function configure_servers()
 			},
 		},
 		bashls = {},
-		biome = {},
+		biome = {
+			root_dir = project_config.root_with_config(project_config.biome_files),
+		},
+		eslint = {
+			root_dir = project_config.root_with_config(project_config.eslint_files, "eslintConfig"),
+		},
 		svelte = {},
 		terraformls = { filetypes = { "terraform", "terraform-vars" } },
 		prismals = { filetypes = { "prisma" } },

@@ -30,7 +30,7 @@ function M.setup()
 			map("n", "<leader>lf", function()
 				local ok_conform, conform = pcall(require, "conform")
 				if ok_conform then
-					conform.format({ async = true, lsp_fallback = true })
+					conform.format({ async = true, lsp_format = "fallback" })
 					return
 				end
 				vim.lsp.buf.format({ async = true })

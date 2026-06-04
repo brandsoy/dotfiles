@@ -28,6 +28,7 @@ function M.setup()
 				"tailwindcss",
 				"bashls",
 				"biome",
+				"eslint",
 				"svelte",
 				"terraformls",
 				"prismals",
