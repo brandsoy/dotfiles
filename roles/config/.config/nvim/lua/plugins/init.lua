@@ -30,7 +30,7 @@ function M.setup()
 		gh('b0o/SchemaStore.nvim'),
 		gh('seblyng/roslyn.nvim'),
 		gh('zbirenbaum/copilot.lua'),
-		gh('MeanderingProgrammer/render-markdown.nvim'),
+		-- gh('MeanderingProgrammer/render-markdown.nvim'),
 		gh('mikavilpas/yazi.nvim'),
 		gh('nvim-lua/plenary.nvim'),
 		gh('nvim-tree/nvim-tree.lua'),
