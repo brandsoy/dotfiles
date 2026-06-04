@@ -106,6 +106,9 @@ function M.setup()
 			},
 		})
 	end)
+	pcall(function()
+		require('colorizer').setup()
+	end)
 end
 
 return M

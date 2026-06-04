@@ -54,13 +54,13 @@ path = "/Users/mattis/Developer/git/personal"
 startup_command = "la"
 
 [[session]]
-name = "Sharepoint Contract Manager"
-path = "/Users/mattis/Developer/git/work/sharepoint-contract-manager"
+name = "Sharepoint Contract Management"
+path = "/Users/mattis/Developer/git/work/sharepoint-contract-management"
 startup_command = "la"
 
 [[session]]
-name = "Sharepoint Project Manager"
-path = "/Users/mattis/Developer/git/work/sharepoint-project-manager"
+name = "Sharepoint Project Management"
+path = "/Users/mattis/Developer/git/work/sharepoint-project-management"
 startup_command = "la"
 
 # Home Projects
@@ -68,4 +68,3 @@ startup_command = "la"
 name = "Homelab"
 path = "/Users/mattis/Developer/git/personal/homelab"
 startup_command = "la"
-

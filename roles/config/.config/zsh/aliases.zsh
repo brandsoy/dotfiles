@@ -53,7 +53,7 @@ ld='lazydocker'
 # =========================================================
 # Searching
 # =========================================================
-function vf {
+function fv {
   local file
   file=$(fzf --preview 'bat --color=always {}') || return
   [[ -n "$file" ]] || return

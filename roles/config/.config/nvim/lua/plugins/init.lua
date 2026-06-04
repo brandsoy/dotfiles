@@ -12,10 +12,14 @@ function M.setup()
 		gh('EdenEast/nightfox.nvim'),
 		gh('folke/tokyonight.nvim'),
 		gh('dracula/vim'),
+		gh('navarasu/onedark.nvim'),
 		-- Plugins
 		gh('echasnovski/mini.nvim'),
 		gh('ibhagwan/fzf-lua'),
 		gh('iamcco/markdown-preview.nvim'),
+		gh('romgrk/barbar.nvim'),
+		gh('lewis6991/gitsigns.nvim'),
+		gh('norcalli/nvim-colorizer.lua'),
 		-- LSP
 		gh('nvim-treesitter/nvim-treesitter'),
 		gh('neovim/nvim-lspconfig'),
@@ -27,10 +31,8 @@ function M.setup()
 		gh('seblyng/roslyn.nvim'),
 		gh('zbirenbaum/copilot.lua'),
 		gh('MeanderingProgrammer/render-markdown.nvim'),
-		gh('lewis6991/gitsigns.nvim'),
 		gh('mikavilpas/yazi.nvim'),
 		gh('nvim-lua/plenary.nvim'),
-		gh('romgrk/barbar.nvim'),
 		gh('nvim-tree/nvim-tree.lua'),
 		gh('mfussenegger/nvim-lint'),
 	}, { confirm = false })

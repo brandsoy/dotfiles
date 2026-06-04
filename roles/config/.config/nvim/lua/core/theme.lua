@@ -8,6 +8,7 @@ local themes = {
 	{ name = 'carbonfox' },
 	{ name = 'tokyonight-night' },
 	{ name = 'dracula' },
+	{ name = 'onedark' },
 }
 
 local theme_names = {}

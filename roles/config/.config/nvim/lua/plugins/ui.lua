@@ -17,6 +17,10 @@ function M.setup()
 		require("nightfox").setup()
 	end)
 
+	pcall(function()
+		require("onedark").setup({ style = "dark" })
+	end)
+
 	require("core.theme").startup("catppuccin-mocha")
 end
 

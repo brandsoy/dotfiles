@@ -373,6 +373,10 @@ map('n', '<leader>mp', function()
 	vim.notify('Pasted image: ' .. filename, vim.log.levels.INFO)
 end, 'Paste clipboard image to attachments')
 
+-- Delete inner without yanking
+map('n', '<Leader>di"', '"_di"', 'Delete inner without yanking')
+-- Change inner without yanking
+map('n', '<Leader>ci"', '"_ci"', 'Change inner without yanking')
 --------------------------------------------------------------------------
 --- Interactive Mode
 --------------------------------------------------------------------------

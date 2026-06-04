@@ -28,12 +28,12 @@ apply_minimal_theme() {
     local icon_clock
     local icon_battery
 
-    bg_color=$(get_tmux_option "@minimal_theme_bg_color" "#1A1D23")
-    active_color=$(get_tmux_option "@minimal_theme_active_color" "#b4befe")
-    inactive_color=$(get_tmux_option "@minimal_theme_inactive_color" "#6c7086")
-    text_color=$(get_tmux_option "@minimal_theme_text_color" "#cdd6f4")
-    accent_color=$(get_tmux_option "@minimal_theme_accent_color" "#b4befe")
-    border_color=$(get_tmux_option "@minimal_theme_border_color" "#44475a")
+    bg_color=$(get_tmux_option "@minimal_theme_bg_color" "#282c34")
+    active_color=$(get_tmux_option "@minimal_theme_active_color" "#98C379")
+    inactive_color=$(get_tmux_option "@minimal_theme_inactive_color" "#5c6370")
+    text_color=$(get_tmux_option "@minimal_theme_text_color" "#abb2bf")
+    accent_color=$(get_tmux_option "@minimal_theme_accent_color" "#E86671")
+    border_color=$(get_tmux_option "@minimal_theme_border_color" "#3e4452")
     icon_session=$(get_tmux_option "@minimal_theme_session_icon" "")
     icon_dir=$(get_tmux_option "@minimal_theme_dir_icon" "")
     icon_memory=$(get_tmux_option "@minimal_theme_memory_icon" "")
@@ -57,28 +57,24 @@ apply_minimal_theme() {
     tmux set-option -g pane-active-border-style "fg=$active_color"
 
     # Message style
-    tmux set-option -g message-style "bg=$bg_color,fg=$text_color,bold"
-    tmux set-option -g message-command-style "bg=$bg_color,fg=$text_color,bold"
+    tmux set-option -g message-style "bg=$border_color,fg=$text_color,bold"
+    tmux set-option -g message-command-style "bg=$border_color,fg=$text_color,bold"
 
     # Window status format
-    tmux set-option -g window-status-format "#[fg=$inactive_color,bg=$bg_color] #I:#W "
-    tmux set-option -g window-status-current-format "#[fg=$active_color,bg=$bg_color,bold] #I:#W "
+    tmux set-option -g window-status-format "#[fg=$inactive_color,bg=$bg_color]  #I #W  "
+    tmux set-option -g window-status-current-format "#[fg=$bg_color,bg=$active_color,bold]  #I #W  "
     tmux set-option -g window-status-separator ""
 
     # Status left (session name)
-    tmux set-option -g status-left "#[fg=$accent_color,bold]$icon_session  #S #[fg=$inactive_color]│ "
+    tmux set-option -g status-left "#[fg=$bg_color,bg=$accent_color,bold] $icon_session #S #[fg=$accent_color,bg=$bg_color]#[fg=$inactive_color,bg=$bg_color] "
 
     # Status right with macOS-safe system info
     local status_right="\
-#[fg=$accent_color]$icon_dir #[fg=$text_color]#([ #{pane_current_path} = \$HOME ] && echo '~' || basename #{pane_current_path}) \
-#[fg=$inactive_color]│ \
-#[fg=$accent_color]$icon_memory #[fg=$text_color]#(memory_pressure 2>/dev/null | awk -F': ' '/System-wide memory free percentage/ { print \$2 }' | tr -d '%' | awk 'NF {print; found=1} END {if (!found) print \"N/A\"}')% \
-#[fg=$inactive_color]│ \
-#[fg=$accent_color]$icon_date #[fg=$text_color]#(date +%d) \
-#[fg=$inactive_color]│ \
-#[fg=$accent_color]$icon_clock #[fg=$text_color]#(date +%H:%M) \
-#[fg=$inactive_color]│ \
-#[fg=$accent_color]$icon_battery #[fg=$text_color]#(pmset -g batt 2>/dev/null | awk 'NR==2 { match(\$0, /([0-9]+)%/, m); print m[1] ? m[1] : \"N/A\" }')% "
+#[fg=$inactive_color,bg=$bg_color]#[fg=$border_color]#[fg=$text_color,bg=$border_color] $icon_dir #([ #{pane_current_path} = \$HOME ] && echo '~' || basename #{pane_current_path}) \
+#[fg=$bg_color,bg=$border_color]#[fg=$border_color]#[fg=$text_color,bg=$border_color] $icon_memory #(memory_pressure 2>/dev/null | awk -F': ' '/System-wide memory free percentage/ { print \$2 }' | tr -d '%' | awk 'NF {print; found=1} END {if (!found) print \"N/A\"}')% \
+#[fg=$bg_color,bg=$border_color]#[fg=$border_color]#[fg=$text_color,bg=$border_color] $icon_date #(date +%d) \
+#[fg=$bg_color,bg=$border_color]#[fg=$border_color]#[fg=$text_color,bg=$border_color] $icon_clock #(date +%H:%M) \
+#[fg=$bg_color,bg=$border_color]#[fg=$border_color]#[fg=$text_color,bg=$border_color] $icon_battery #(pmset -g batt 2>/dev/null | awk 'NR==2 { match(\$0, /([0-9]+)%/, m); print m[1] ? m[1] : \"N/A\" }')% #[fg=$border_color,bg=$bg_color] "
 
     tmux set-option -g status-right "$status_right"
 
