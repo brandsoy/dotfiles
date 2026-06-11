@@ -22,7 +22,6 @@ function M.setup()
 		gh('lewis6991/gitsigns.nvim'),
 		gh('norcalli/nvim-colorizer.lua'),
 		gh('mikavilpas/yazi.nvim'),
-		gh('mikinovation/nvim-gitui'),
 		-- Obsidian
 		gh('obsidian-nvim/obsidian.nvim'),
 		gh('folke/snacks.nvim'),
