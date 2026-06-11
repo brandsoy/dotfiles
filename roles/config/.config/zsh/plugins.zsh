@@ -64,4 +64,26 @@ zplugin-update() {
 _zplugin_load zsh-users zsh-autosuggestions
 _zplugin_load zsh-users zsh-history-substring-search
 _zplugin_load jeffreytse zsh-vi-mode
-_zplugin_load zdharma-continuum fast-syntax-highlighting
+
+# Syntax highlighting (installed as a binary; see zsh-patina/config.toml).
+# Keep this after other ZLE plugins.
+_zsh_patina_activate() {
+  local patina="${commands[zsh-patina]:-}"
+  local candidate
+
+  if [[ -z "$patina" ]]; then
+    for candidate in \
+      /opt/homebrew/bin/zsh-patina \
+      /usr/local/bin/zsh-patina \
+      "$HOME/.cargo/bin/zsh-patina"; do
+      [[ -x "$candidate" ]] || continue
+      patina="$candidate"
+      break
+    done
+  fi
+
+  [[ -x "$patina" ]] || return 0
+  eval "$("$patina" activate)"
+}
+_zsh_patina_activate
+unfunction _zsh_patina_activate

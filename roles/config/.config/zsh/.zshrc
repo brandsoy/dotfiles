@@ -1,5 +1,5 @@
 # Uses:
-#   Plugins:      fast-syntax-highlighting, zsh-autosuggestions,
+#   Plugins:      zsh-patina, zsh-autosuggestions,
 #                 zsh-history-substring-search, zsh-vi-mode
 #   Prompt:       starship
 #   Navigation:   zoxide, fzf, fd
@@ -102,3 +102,5 @@ source "$ZDOTDIR/prompt.zsh"
 # Hooks
 source "$ZDOTDIR/hooks.zsh"
 eval "$(mise activate zsh)"
+
+. "$HOME/.local/share/../bin/env"

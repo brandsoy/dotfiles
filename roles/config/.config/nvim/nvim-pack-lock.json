@@ -28,6 +28,10 @@
       "rev": "306a05526ada86a7b30af95c5cc81ffba93fef97",
       "src": "https://github.com/folke/lazy.nvim"
     },
+    "lspeek.nvim": {
+      "rev": "1d01add3c65d6dee9d7321196849fe7291fd74de",
+      "src": "https://github.com/r4ppz/lspeek.nvim"
+    },
     "markdown-preview.nvim": {
       "rev": "a923f5fc5ba36a3b17e289dc35dc17f66d0548ee",
       "src": "https://github.com/iamcco/markdown-preview.nvim"
@@ -68,6 +72,10 @@
       "rev": "a065833f35a3a7cc3ef137ac88b5381da2ba302e",
       "src": "https://github.com/norcalli/nvim-colorizer.lua"
     },
+    "nvim-gitui": {
+      "rev": "019446578e7158742428ff560c4a3adb3ccffbe5",
+      "src": "https://github.com/mikinovation/nvim-gitui"
+    },
     "nvim-lint": {
       "rev": "d48f3a76189d03b2239f6df1b2f7e3fa8353743b",
       "src": "https://github.com/mfussenegger/nvim-lint"
@@ -83,6 +91,10 @@
     "nvim-treesitter": {
       "rev": "4916d6592ede8c07973490d9322f187e07dfefac",
       "src": "https://github.com/nvim-treesitter/nvim-treesitter"
+    },
+    "obsidian.nvim": {
+      "rev": "95c2c7b1d6b51dc09960d63f7d4dcf33bd378fb1",
+      "src": "https://github.com/obsidian-nvim/obsidian.nvim"
     },
     "oc-2.nvim": {
       "rev": "cfdd1778512189f3180f5385f88d7f22c9bb5436",
@@ -103,6 +115,10 @@
     "roslyn.nvim": {
       "rev": "ff43201090361b8936e008a006473b59ef2c0ca6",
       "src": "https://github.com/seblyng/roslyn.nvim"
+    },
+    "snacks.nvim": {
+      "rev": "882c996cf28183f4d63640de0b4c02ec886d01f2",
+      "src": "https://github.com/folke/snacks.nvim"
     },
     "tokyonight.nvim": {
       "rev": "cdc07ac78467a233fd62c493de29a17e0cf2b2b6",

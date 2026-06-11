@@ -20,6 +20,11 @@ function M.setup()
 		gh('romgrk/barbar.nvim'),
 		gh('lewis6991/gitsigns.nvim'),
 		gh('norcalli/nvim-colorizer.lua'),
+		gh('mikavilpas/yazi.nvim'),
+		gh('mikinovation/nvim-gitui'),
+		-- Obsidian
+		gh('obsidian-nvim/obsidian.nvim'),
+		gh('folke/snacks.nvim'),
 		-- LSP
 		gh('nvim-treesitter/nvim-treesitter'),
 		gh('neovim/nvim-lspconfig'),
@@ -29,11 +34,11 @@ function M.setup()
 		gh('stevearc/conform.nvim'),
 		gh('b0o/SchemaStore.nvim'),
 		gh('seblyng/roslyn.nvim'),
+		-- AI
 		gh('zbirenbaum/copilot.lua'),
-		-- gh('MeanderingProgrammer/render-markdown.nvim'),
-		gh('mikavilpas/yazi.nvim'),
 		gh('nvim-lua/plenary.nvim'),
-		gh('nvim-tree/nvim-tree.lua'),
+		gh('nvim-neo-tree/neo-tree.nvim'),
+		gh('MunifTanjim/nui.nvim'),
 		gh('mfussenegger/nvim-lint'),
 	}, { confirm = false })
 
@@ -46,10 +51,12 @@ function M.setup()
 	require('plugins.lsp').setup()
 	require('plugins.markdown').setup()
 	require('plugins.git').setup()
+	require('plugins.gitui').setup()
 	require('plugins.yazi').setup()
 	require('plugins.barbar').setup()
-	require('plugins.nvim-tree').setup()
+	require('plugins.neo-tree').setup()
 	require('plugins.lint').setup()
+	require('plugins.obsidian').setup()
 end
 
 return M

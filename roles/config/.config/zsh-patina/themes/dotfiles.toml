@@ -1,0 +1,35 @@
+# zsh-patina custom theme for these dotfiles.
+# Scope/style format: https://github.com/michel-kraemer/zsh-patina#creating-a-custom-theme
+
+# Comments and muted punctuation
+"comment" = "#5c6370"
+"punctuation.separator" = "#abb2bf"
+
+# Strings and character escapes
+"string" = "#98c379"
+"constant.character.escape" = "#56b6c2"
+
+# Numbers, constants, and booleans
+"constant.numeric" = "#d19a66"
+"constant.language" = "#d19a66"
+
+# Variables and substitutions
+"variable.other" = "#e06c75"
+"punctuation.definition.variable" = "#e06c75"
+
+# Commands/functions and shell keywords
+"variable.function" = "#61afef"
+"keyword" = "#c678dd"
+"keyword.operator" = "#56b6c2"
+
+# Options/flags
+"variable.parameter.option" = "#d19a66"
+
+# Dynamic zsh-patina scopes
+"dynamic.callable" = "#61afef"
+"dynamic.callable.missing" = { foreground = "#e06c75", bold = true }
+"dynamic.path" = { foreground = "#98c379", underline = true }
+
+[metadata]
+# Start with a complete built-in theme, then override the scopes above.
+extends = "patina"

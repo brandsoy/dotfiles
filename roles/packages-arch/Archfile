@@ -16,6 +16,7 @@ starship
 zoxide
 fzf
 bash-completion
+AUR: zsh-patina-git
 
 ## CLI Tools
 neovim

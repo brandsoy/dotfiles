@@ -102,6 +102,7 @@ alt-1 = 'workspace term'
 alt-2 = 'workspace web'
 alt-3 = 'workspace code'
 alt-4 = 'workspace misc'
+alt-w = 'workspace web2'
 alt-s = 'workspace comms'
 alt-d = 'workspace notes'
 alt-m = 'workspace media'
@@ -110,14 +111,22 @@ alt-a = 'workspace ai'
 alt-tab = 'workspace-back-and-forth'
 alt-shift-tab = 'move-workspace-to-monitor --wrap-around next'
 
+# --- Monitor Navigation ---
+alt-leftSquareBracket = 'focus-monitor --wrap-around prev'
+alt-rightSquareBracket = 'focus-monitor --wrap-around next'
+alt-shift-leftSquareBracket = 'move-workspace-to-monitor --wrap-around prev'
+alt-shift-rightSquareBracket = 'move-workspace-to-monitor --wrap-around next'
+
 # --- Move Windows to Workspaces ---
 alt-shift-1 = 'move-node-to-workspace term'
 alt-shift-2 = 'move-node-to-workspace web'
 alt-shift-3 = 'move-node-to-workspace code'
 alt-shift-4 = 'move-node-to-workspace misc'
+alt-shift-w = 'move-node-to-workspace web2'
 alt-shift-s = 'move-node-to-workspace comms'
+alt-shift-d = 'move-node-to-workspace notes'
 alt-shift-m = 'move-node-to-workspace media'
-alt-shift-6 = 'move-node-to-workspace ai'
+alt-shift-a = 'move-node-to-workspace ai'
 
 # --- Enter Sub-Modes ---
 alt-shift-semicolon = 'mode service'
@@ -152,7 +161,16 @@ esc = 'mode main'
 # Workspace assignments and floating window overrides
 # ==============================================================================
 
-# --- Browsers -> Workspace work ---
+# --- Notes -> Workspace notes ---
+[[on-window-detected]]
+if.app-id = 'com.apple.Notes'
+run = ['move-node-to-workspace notes']
+
+[[on-window-detected]]
+if.app-id = 'md.obsidian'
+run = ['move-node-to-workspace notes']
+
+# --- Browsers -> Workspace web ---
 [[on-window-detected]]
 if.app-id = 'org.mozilla.firefox'
 run = ['move-node-to-workspace web']
@@ -182,7 +200,7 @@ run = ['move-node-to-workspace term']
 if.app-id = 'net.kovidgoyal.kitty'
 run = ['move-node-to-workspace term']
 
-# --- Terminals -> Workspace term ---
+# --- Terminals -> Workspace media ---
 [[on-window-detected]]
 if.app-id = 'com.spotify.client'
 run = ['move-node-to-workspace media']
@@ -191,6 +209,9 @@ run = ['move-node-to-workspace media']
 if.app-id = 'com.apple.Safari.WebApp.10C4F224-ABFB-4CFD-891C-60616E2AE109'
 run = ['move-node-to-workspace media']
 
+[[on-window-detected]]
+if.app-id = 'net.imput.helium.app.agimnkijcaahngcdmfeangaknmldooml'
+run = ['move-node-to-workspace media']
 
 # --- Editors -> Workspace code ---
 [[on-window-detected]]
@@ -222,7 +243,15 @@ run = ['move-node-to-workspace comms']
 if.app-id = 'com.apple.Safari.WebApp.A34D3463-4148-430C-97AE-A15563F2327B'
 run = ['move-node-to-workspace comms']
 
+[[on-window-detected]]
+if.app-id = 'net.imput.helium.app.faolnafnngnfdaknnbpnkhgohbobgegn'
+run = ['move-node-to-workspace comms']
 
+[[on-window-detected]]
+if.app-id = 'net.imput.helium.app.ompifgpmddkgmclendfeacglnodjjndh'
+run = ['move-node-to-workspace comms']
+
+# --- Communication -> Workspace AI ---
 [[on-window-detected]]
 if.app-id = 'com.openai.codex'
 run = ['move-node-to-workspace ai']
@@ -264,6 +293,14 @@ run = ['layout floating']
 if.app-id = 'com.apple.iCal'
 run = ['layout floating']
 
+[[on-window-detected]]
+if.app-id = 'com.apple.reminders'
+run = ['layout floating']
+
+[[on-window-detected]]
+if.app-id = 'com.bitwarden.desktop'
+run = ['layout floating']
+
 
 # ==============================================================================
 # Monitor Configuration
@@ -272,10 +309,13 @@ run = ['layout floating']
 
 [workspace-to-monitor-force-assignment]
 term = ['VZ27A', 'LS49A950U', 'main']
-web = ['VZ27A', 'LS49A950U', 'main']
 code = ['VZ27A', 'LS49A950U', 'main']
-misc = ['LS49A950U', 'built-in', 'VZ27A', 'main']
-comms = ['built-in', 'LS49A950U', 'VZ27A', 'main']
-notes = ['EV2436W', 'LS49A950U', 'main']
-ai = ['built-in', 'EV2436W', 'LS49A950U', 'main']
+web = ['VZ27A', 'LS49A950U', 'main']
+misc = ['VZ27A', 'LS49A950U', 'main']
+
+web2 = ['EV2436W', 'LS49A950U', 'VZ27A', 'built-in', 'main']
+notes = ['EV2436W', 'built-in', 'LS49A950U', 'VZ27A', 'main']
+ai = ['EV2436W', 'built-in', 'LS49A950U', 'VZ27A', 'main']
+
+comms = ['built-in', 'EV2436W', 'LS49A950U', 'VZ27A', 'main']
 media = ['built-in', 'LS49A950U', 'VZ27A', 'main']

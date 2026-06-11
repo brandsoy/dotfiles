@@ -1,0 +1,9 @@
+[highlighting]
+# Custom theme in ~/.config/zsh-patina/themes/dotfiles.toml.
+theme = "file:~/.config/zsh-patina/themes/dotfiles.toml"
+
+# Dynamic highlighting marks missing commands and existing paths.
+dynamic = { callables = true, paths = "complete" }
+
+max_line_length = 20000
+timeout_ms = 500
