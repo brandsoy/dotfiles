@@ -61,9 +61,8 @@ vim.opt.diffopt:append('algorithm:patience') -- Better diff algorithm
 vim.opt.diffopt:append('linematch:60') -- Better diff highlighting (smart line matching)
 
 -- Set undo directory and ensure it exists
-local undodir = '~/.local/share/nvim/undodir' -- Undo directory path
-vim.opt.undodir = vim.fn.expand(undodir) -- Expand to full path
-local undodir_path = vim.fn.expand(undodir)
+local undodir_path = vim.fn.stdpath('state') .. '/undo'
+vim.opt.undodir = undodir_path
 if vim.fn.isdirectory(undodir_path) == 0 then
 	vim.fn.mkdir(undodir_path, 'p') -- Create if not exists
 end
@@ -103,23 +102,3 @@ vim.opt.fillchars = {
 	foldclose = '▸',
 }
 
--- Force Neovim to use terminal colors
-vim.opt.termguicolors = true
-
--- Function to clear backgrounds
-local function clear_bg()
-	local groups = {
-		'Normal',
-		'NormalNC',
-		'SignColumn',
-		'StatusLine',
-		'StatusLineNC',
-		'EndOfBuffer',
-	}
-	for _, group in ipairs(groups) do
-		vim.api.nvim_set_hl(0, group, { bg = 'NONE', ctermbg = 'NONE' })
-	end
-end
-
--- Apply the transparency
-clear_bg()

@@ -8,6 +8,9 @@ roles/config/.config/github-copilot/rd/
 roles/config/.config/github-copilot/go/
 roles/macos-config/.config/raycast/
 
+# ZSH plugin git repositories
+roles/config/.config/zsh/plugins/
+
 # Runtime/cache files
 **/.cache/
 **/.state/

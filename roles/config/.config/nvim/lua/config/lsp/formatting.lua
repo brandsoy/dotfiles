@@ -2,28 +2,26 @@ local M = {}
 
 local project_config = require("config.lsp.project_config")
 
-local function project_web_formatter(bufnr)
-	if project_config.has_biome(bufnr) then
-		return { "biome", stop_after_first = true }
+local function project_formatter(bufnr, opts)
+	opts = opts or {}
+
+	if opts.allow_biome ~= false and project_config.has_biome(bufnr) then
+		return opts.biome or { "biome", stop_after_first = true }
 	end
 
 	if project_config.has_prettier(bufnr) then
-		return { "prettierd", "prettier", stop_after_first = true }
+		return opts.prettier or { "prettierd", "prettier", stop_after_first = true }
 	end
 
 	return {}
 end
 
+local function project_web_formatter(bufnr)
+	return project_formatter(bufnr)
+end
+
 local function project_prettier_formatter(bufnr)
-	if project_config.has_biome(bufnr) then
-		return {}
-	end
-
-	if project_config.has_prettier(bufnr) then
-		return { "prettierd", "prettier", stop_after_first = true }
-	end
-
-	return {}
+	return project_formatter(bufnr, { allow_biome = false })
 end
 
 function M.setup_conform()

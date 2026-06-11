@@ -7,9 +7,7 @@ function M.setup()
 	end
 
 	pcall(function()
-		local mini_icons = require('mini.icons')
-		mini_icons.setup()
-		mini_icons.mock_nvim_web_devicons()
+		require('mini.icons').setup()
 	end)
 
 	local actions = require('fzf-lua.actions')
@@ -93,18 +91,6 @@ function M.setup()
 		fzf.lgrep_curbuf()
 	end
 
-	local function file_ignore_patterns()
-		return {
-			'%.git/',
-			'node_modules/',
-			'%.venv/',
-			'bin/',
-			'obj/',
-			'dist/',
-			'build/',
-		}
-	end
-
 	local function file_actions()
 		return {
 			['ctrl-q'] = actions.file_sel_to_qf,
@@ -120,14 +106,8 @@ function M.setup()
 	fzf.setup({
 		ui_select = true,
 		fzf_colors = true,
-		fzf_opts = {
-			['--color'] = 'bg+:#44475a,fg+:#ff79c6,hl+:#50fa7b',
-		},
-		-- hls = {
-		-- 	selection = 'CursorLine', -- Links the active line color to your theme's visual selection
-		-- },
 		winopts = {
-			backdrop = 100,
+			backdrop = 60,
 			preview = {
 				layout = 'vertical',
 				vertical = 'right:55%',
@@ -136,12 +116,9 @@ function M.setup()
 		defaults = {
 			file_icons = 'mini',
 			color_icons = true,
-			file_ignore_patterns = file_ignore_patterns(),
 		},
 		files = {
-			fd_opts = [[--color=never --type f --type l --exclude .git --exclude .jj --exclude node_modules --exclude .venv]],
-			hidden = true,
-			follow = true,
+			fd_opts = [[--color=never --type f --type l --hidden --follow --exclude .git --exclude .jj --exclude node_modules --exclude .venv --exclude dist --exclude build]],
 			file_icons = 'mini',
 			actions = file_actions(),
 		},
@@ -160,7 +137,7 @@ function M.setup()
 			ignore_current_buffer = true,
 		},
 		grep = {
-			rg_opts = "--column --line-number --no-heading --color=always --smart-case --max-columns=4096 --glob '!.git' --glob '!node_modules' --glob '!.venv'",
+			rg_opts = "--column --line-number --no-heading --color=always --smart-case --max-columns=4096 --glob '!.git' --glob '!node_modules' --glob '!.venv' --glob '!dist' --glob '!build' -e",
 			actions = grep_actions(),
 			file_icons = 'mini',
 		},

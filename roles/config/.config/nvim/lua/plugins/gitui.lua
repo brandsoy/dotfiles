@@ -1,12 +1,23 @@
 local M = {}
 
 function M.setup()
-	local ok, render = pcall(require, 'barbar')
+	local ok, gitui = pcall(require, 'nvim-gitui')
 	if not ok then
 		return
 	end
 
-	render.setup()
+	gitui.setup({
+		keymaps = {
+			n = '<leader>gu',
+		},
+		window = {
+			width = 0.9,
+			height = 0.9,
+			border = 'rounded',
+		},
+	})
+
+	vim.keymap.set('n', '<leader>gu', gitui.open_gitui, { desc = 'GitUI' })
 end
 
 return M

@@ -56,6 +56,20 @@ local function current_index()
 	return 1
 end
 
+local function clear_bg()
+	local groups = {
+		'Normal',
+		'NormalNC',
+		'SignColumn',
+		'StatusLine',
+		'StatusLineNC',
+		'EndOfBuffer',
+	}
+	for _, group in ipairs(groups) do
+		vim.api.nvim_set_hl(0, group, { bg = 'NONE', ctermbg = 'NONE' })
+	end
+end
+
 function M.list()
 	return vim.deepcopy(theme_names)
 end
@@ -85,6 +99,8 @@ function M.apply(name, opts)
 		)
 		return false
 	end
+
+	clear_bg()
 
 	if not opts.silent then
 		notify(string.format('Switched to %s', name))
@@ -151,6 +167,11 @@ function M.startup(default_name)
 		silent = true,
 		persist = false,
 	})
+end
+
+function M.init(default_name)
+	M.setup()
+	return M.startup(default_name)
 end
 
 return M

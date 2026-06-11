@@ -15,6 +15,7 @@ function M.setup()
 		gh('navarasu/onedark.nvim'),
 		-- Plugins
 		gh('echasnovski/mini.nvim'),
+		gh('nvim-tree/nvim-web-devicons'),
 		gh('ibhagwan/fzf-lua'),
 		gh('iamcco/markdown-preview.nvim'),
 		gh('romgrk/barbar.nvim'),

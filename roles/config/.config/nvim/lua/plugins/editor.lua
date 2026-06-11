@@ -75,7 +75,7 @@ function M.setup()
 		mini_notify.setup()
 		vim.notify = mini_notify.make_notify()
 		vim.keymap.set('n', '<leader>nh', function()
-			MiniNotify.show_history()
+			mini_notify.show_history()
 		end, { desc = 'Notification history' })
 	end)
 	pcall(function()
@@ -88,7 +88,11 @@ function M.setup()
 		require('mini.surround').setup()
 	end)
 	pcall(function()
+		local anchor = 'NE' -- top-right
 		require('mini.clue').setup({
+			window = {
+				config = { anchor = anchor, row = 'auto', col = 'auto', width = 'auto' },
+			},
 			triggers = {
 				{ mode = 'n', keys = '<leader>' },
 				{ mode = 'x', keys = '<leader>' },

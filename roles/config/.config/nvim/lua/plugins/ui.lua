@@ -21,7 +21,7 @@ function M.setup()
 		require("onedark").setup({ style = "dark" })
 	end)
 
-	require("core.theme").startup("catppuccin-mocha")
+	require("core.theme").init("catppuccin-mocha")
 end
 
 return M
