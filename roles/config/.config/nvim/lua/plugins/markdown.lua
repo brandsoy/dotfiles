@@ -11,13 +11,6 @@ function M.setup()
 	-- vim.g.mkdp_echo_preview_url = 1
 	vim.g.mkdp_filetypes = { 'markdown' }
 
-	vim.keymap.set(
-		'n',
-		'<leader>mp',
-		'<cmd>MarkdownPreviewToggle<cr>',
-		{ desc = 'Markdown preview' }
-	)
-
 	-- local ok, render = pcall(require, "render-markdown")
 	-- if ok then
 	-- 	render.setup({

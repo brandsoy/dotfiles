@@ -1,5 +1,6 @@
 -- Load core configuration modules
 require("core.globals")
+require('core.filetypes').setup()
 
 -- Local shim to silence deprecation notice for vim.tbl_flatten (Neovim 0.11+) used by some plugins.
 -- Re-implements flattening in Lua so the deprecated builtin isn't invoked.
@@ -20,7 +21,7 @@ if vim.tbl_flatten then
 	end
 end
 
-require("core.options")
+require("core.options").setup()
 
 pcall(function()
 	if vim.fn.has("nvim-0.12") == 1 then
@@ -32,5 +33,5 @@ pcall(function()
 end)
 
 require("core.statusline").setup()
-require("core.keymaps")
-require("core.autocmds")
+require("core.keymaps").setup()
+require("core.autocmds").setup()

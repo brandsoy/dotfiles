@@ -1,55 +1,27 @@
 local M = {}
 
 function M.setup()
-	local mason_ok, mason = pcall(require, "mason")
+	local mason_ok, mason = pcall(require, 'mason')
 	if not mason_ok then
 		return
 	end
 
 	mason.setup({
-		registries = {
-			"github:mason-org/mason-registry",
-			"github:Crashdummyy/mason-registry",
-		},
+		registries = require('config.lsp.mason_registries').get(),
 	})
 
-	local mlsp_ok, mason_lspconfig = pcall(require, "mason-lspconfig")
+	local mlsp_ok, mason_lspconfig = pcall(require, 'mason-lspconfig')
 	if mlsp_ok then
 		mason_lspconfig.setup({
 			automatic_enable = false,
-			ensure_installed = {
-				"lua_ls",
-				"ruff",
-				"basedpyright",
-				"gopls",
-				"jsonls",
-				"yamlls",
-				"dockerls",
-				"tailwindcss",
-				"bashls",
-				"biome",
-				"eslint",
-				"svelte",
-				"terraformls",
-				"prismals",
-				"taplo",
-			},
+			ensure_installed = require('config.lsp.mason_servers').get(),
 		})
 	end
 
-	local mti_ok, mason_tool_installer = pcall(require, "mason-tool-installer")
+	local mti_ok, mason_tool_installer = pcall(require, 'mason-tool-installer')
 	if mti_ok then
 		mason_tool_installer.setup({
-			ensure_installed = {
-				"stylua",
-				"prettierd",
-				"gofumpt",
-				"golines",
-				"pgformatter",
-				"terraform",
-				"roslyn",
-				"dotenv-linter",
-			},
+			ensure_installed = require('config.lsp.mason_tools').get(),
 			run_on_start = true,
 		})
 	end

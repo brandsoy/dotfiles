@@ -22,9 +22,10 @@ function M.setup()
 		gh('lewis6991/gitsigns.nvim'),
 		gh('norcalli/nvim-colorizer.lua'),
 		gh('mikavilpas/yazi.nvim'),
+		gh('3rd/image.nvim'),
+		gh('joerdav/templ.vim'),
 		-- Obsidian
 		gh('obsidian-nvim/obsidian.nvim'),
-		gh('folke/snacks.nvim'),
 		-- LSP
 		gh('nvim-treesitter/nvim-treesitter'),
 		gh('neovim/nvim-lspconfig'),
@@ -43,7 +44,10 @@ function M.setup()
 	}, { confirm = false })
 
 	require('plugins.ui').setup()
-	require('plugins.editor').setup()
+	require('plugins.editor_notify').setup()
+	require('plugins.editor_lazygit').setup()
+	require('plugins.editor_buffers').setup()
+	require('plugins.editor_mini').setup()
 	require('plugins.finder').setup()
 	require('plugins.treesitter').setup()
 	require('plugins.roslyn').setup()
@@ -51,8 +55,8 @@ function M.setup()
 	require('plugins.lsp').setup()
 	require('plugins.markdown').setup()
 	require('plugins.git').setup()
-	require('plugins.gitui').setup()
 	require('plugins.yazi').setup()
+	require('plugins.image').setup()
 	require('plugins.barbar').setup()
 	require('plugins.neo-tree').setup()
 	require('plugins.lint').setup()
