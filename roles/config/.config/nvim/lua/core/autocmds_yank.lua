@@ -1,4 +1,5 @@
 local M = {}
+local yank_history = require('core.yank_history')
 
 function M.setup()
 	local group = vim.api.nvim_create_augroup('HighlightYank', {})
@@ -10,6 +11,8 @@ function M.setup()
 				higroup = 'IncSearch',
 				timeout = 200,
 			})
+
+			yank_history.record()
 		end,
 	})
 end

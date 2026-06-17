@@ -19,6 +19,8 @@ function M.setup()
 	vim.opt.selection = 'inclusive'
 	vim.opt.mouse = 'a'
 	vim.opt.clipboard:append('unnamedplus')
+	vim.opt.wildmenu = true
+	vim.opt.wildoptions = { 'pum' }
 	vim.opt.wildmode = 'longest:full,full'
 	vim.opt.wildignorecase = true
 end

@@ -298,9 +298,17 @@ if.app-id = 'com.apple.reminders'
 run = ['layout floating']
 
 [[on-window-detected]]
+if.app-id = 'com.apple.stocks'
+run = ['layout floating']
+
+
+[[on-window-detected]]
 if.app-id = 'com.bitwarden.desktop'
 run = ['layout floating']
 
+[[on-window-detected]]
+if.app-id = 'com.objective-see.lulu.app'
+run = ['layout floating']
 
 # ==============================================================================
 # Monitor Configuration

@@ -71,6 +71,9 @@ function M.setup()
 	map({ 'n', 'v' }, '<leader>y', '"+y', 'Yank to system clipboard')
 	map('n', '<leader>Y', '"+Y', 'Yank line to system clipboard')
 	map({ 'n', 'v' }, '<leader>p', '"+p', 'Paste from system clipboard')
+	map('n', '<leader>fy', function()
+		require('core.yank_history').pick()
+	end, 'Pick from yank history')
 
 	map('n', '<leader>un', function()
 		vim.wo.relativenumber = not vim.wo.relativenumber

@@ -9,6 +9,7 @@ local ensure_installed = {
 	'c_sharp',
 	'hcl',
 	'html',
+	'css',
 	'javascript',
 	'json',
 	'lua',
