@@ -2,7 +2,11 @@
 set -euo pipefail
 
 DOTFILES_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
-BREWFILE="$DOTFILES_DIR/homebrew/Brewfile"
+BREWFILE="$DOTFILES_DIR/roles/packages-macos/Brewfile"
+LEGACY_BREWFILE="$DOTFILES_DIR/homebrew/Brewfile"
+if [[ ! -f "$BREWFILE" && -f "$LEGACY_BREWFILE" ]]; then
+  BREWFILE="$LEGACY_BREWFILE"
+fi
 
 MODE="upgrade"
 if [[ "${1:-}" == "--check" ]]; then

@@ -1,0 +1,98 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+COPY=0
+if [[ "${1:-}" == "--copy" || "${1:-}" == "-c" ]]; then
+  COPY=1
+fi
+
+repo_root() {
+  local dir="${DOTFILES_DIR:-$HOME/dotfiles}"
+  if [[ -d "$dir" ]]; then
+    printf '%s\n' "$dir"
+  else
+    printf '%s\n' "$HOME/dotfiles"
+  fi
+}
+
+human_key() {
+  case "$1" in
+    '^F') printf 'Ctrl+F' ;;
+    '^P') printf 'Ctrl+P' ;;
+    '^N') printf 'Ctrl+N' ;;
+    '^\\') printf 'Ctrl+\\' ;;
+    '^\') printf 'Ctrl+\\' ;;
+    '^[[1;5C') printf 'Ctrl+Right' ;;
+    '^[[1;5D') printf 'Ctrl+Left' ;;
+    '^[[A') printf 'Up' ;;
+    '^[[B') printf 'Down' ;;
+    *) printf '%s' "$1" ;;
+  esac
+}
+
+human_action() {
+  case "$1" in
+    forward-word) printf 'move forward one word' ;;
+    backward-word) printf 'move backward one word' ;;
+    _fzf_file_no_hidden) printf 'fzf file picker (no hidden files)' ;;
+    autosuggest-toggle) printf 'toggle autosuggestions' ;;
+    history-substring-search-up) printf 'history search up' ;;
+    history-substring-search-down) printf 'history search down' ;;
+    *) printf '%s' "$1" ;;
+  esac
+}
+
+print_bindings() {
+  local root file
+  root="$(repo_root)"
+  file="$root/roles/config/.config/zsh/bindings.zsh"
+
+  printf 'Zsh keybinds\n\n'
+
+  if [[ ! -f "$file" ]]; then
+    printf 'No bindings file found: %s\n' "${file#$root/}"
+    return 1
+  fi
+
+  printf 'Source: %s\n' "${file#$root/}"
+
+  local line parsed key action seen_keys="|"
+  while IFS= read -r line; do
+    case "$line" in
+      *bindkey*)
+        parsed=$(printf '%s\n' "$line" | sed -E "s/.*bindkey[[:space:]]+'([^']+)'.*[[:space:]]+([^[:space:]]+).*/\\1|\\2/")
+        if [[ "$parsed" == *'|'* ]]; then
+          key="${parsed%%|*}"
+          action="${parsed#*|}"
+          case "$seen_keys" in
+            *"|$key|"*) continue ;;
+          esac
+          seen_keys+="$key|"
+          printf '  %-11s %-28s %s\n' "$(human_key "$key")" "$action" "$(human_action "$action")"
+        fi
+        ;;
+    esac
+  done < "$file"
+  printf '\n'
+}
+
+copy_output() {
+  if command -v pbcopy >/dev/null 2>&1; then
+    pbcopy
+  elif command -v wl-copy >/dev/null 2>&1; then
+    wl-copy
+  elif command -v xclip >/dev/null 2>&1; then
+    xclip -selection clipboard
+  elif command -v xsel >/dev/null 2>&1; then
+    xsel --clipboard --input
+  else
+    printf 'No clipboard tool found (pbcopy/wl-copy/xclip/xsel).\n' >&2
+    return 1
+  fi
+}
+
+if [[ "$COPY" -eq 1 ]]; then
+  print_bindings | tee /dev/stderr | copy_output >/dev/null
+else
+  print_bindings
+fi

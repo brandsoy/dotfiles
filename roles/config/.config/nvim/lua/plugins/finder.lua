@@ -36,6 +36,10 @@ function M.setup()
 		fzf.files({ cwd = project_root_or_cwd() })
 	end
 
+	local function current_dir_files()
+		fzf.files({ cwd = buffer_dir() })
+	end
+
 	local function vcs_files()
 		local dir = buffer_dir()
 		local root = git_root(dir)
@@ -145,6 +149,7 @@ function M.setup()
 
 	local map = vim.keymap.set
 	map('n', '<leader>ff', project_files, { desc = 'Find files' })
+	map('n', '<leader>fc', current_dir_files, { desc = 'Find files in current dir' })
 	map('n', '<leader>fF', vcs_files, { desc = 'Find tracked files' })
 	map('n', '<leader>fr', oldfiles_project, { desc = 'Open recent files' })
 	map('n', '<leader>fR', resume, { desc = 'Resume last picker' })
