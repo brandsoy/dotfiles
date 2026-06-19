@@ -35,11 +35,11 @@ brew() {
     esac
 
     command brew "$@"
-    local status=$?
+    local exit_status=$?
 
-    if [[ $status -eq 0 && $sync_needed -eq 1 ]]; then
+    if [[ $exit_status -eq 0 && $sync_needed -eq 1 ]]; then
         brew_sync_brewfile
     fi
 
-    return $status
+    return $exit_status
 }

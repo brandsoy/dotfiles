@@ -104,3 +104,11 @@ source "$ZDOTDIR/hooks.zsh"
 eval "$(mise activate zsh)"
 
 . "$HOME/.local/share/../bin/env"
+
+# pnpm
+export PNPM_HOME="/Users/mattis/Library/pnpm"
+case ":$PATH:" in
+  *":$PNPM_HOME/bin:"*) ;;
+  *) export PATH="$PNPM_HOME/bin:$PATH" ;;
+esac
+# pnpm end

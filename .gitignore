@@ -19,6 +19,11 @@ roles/config/.config/zsh/plugins/
 **/.DS_Store
 **/*.bak
 **/*.old
+
+# VS Code
+.vscode/
+**/.vscode/
+*.code-workspace
 roles/config/.config/pgcli/history
 roles/config/.config/pgcli/log
 
