@@ -22,7 +22,12 @@ function M.get()
 		yaml = project_formatters.prettier_only,
 		markdown = project_formatters.prettier_only,
 		go = { 'golines', 'gofumpt' },
-		sql = { 'pg_format' },
+		sql = function(bufnr)
+			if require('config.lsp.project_config').sql_dialect(bufnr) == 'tsql' then
+				return { 'sqlfluff_tsql' }
+			end
+			return { 'pg_format' }
+		end,
 		terraform = { 'terraform_fmt' },
 		hcl = { 'terraform_fmt' },
 		templ = { 'templ' },

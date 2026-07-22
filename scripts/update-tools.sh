@@ -10,7 +10,6 @@ fi
 
 MODE="upgrade"
 DO_CLEANUP=0
-DO_SYNC_BREWFILE=0
 
 while [[ $# -gt 0 ]]; do
   case "$1" in
@@ -20,24 +19,19 @@ while [[ $# -gt 0 ]]; do
     --cleanup)
       DO_CLEANUP=1
       ;;
-    --sync-brewfile)
-      DO_SYNC_BREWFILE=1
-      ;;
-    --maintenance)
-      DO_CLEANUP=1
-      DO_SYNC_BREWFILE=1
+    --sync-brewfile|--maintenance)
+      printf 'WARN: %s was removed: keep the Brewfile hand-maintained; do not use brew bundle dump as an automatic sync\n' "$1" >&2
+      exit 2
       ;;
     -h|--help)
       cat <<'EOF'
-Usage: update-tools.sh [--check] [--cleanup] [--sync-brewfile] [--maintenance]
+Usage: update-tools.sh [--check] [--cleanup]
 
-Check or upgrade Homebrew + mise managed tooling.
+Check or upgrade the tools declared in Homebrew and mise manifests.
 
 Options:
-  --check          Check only; do not upgrade
+  --check          Report available updates; does not run brew update or upgrade tools
   --cleanup        Run brew cleanup and mise prune after upgrading
-  --sync-brewfile  Dump current Homebrew state back to Brewfile after upgrading
-  --maintenance    Run both cleanup and Brewfile sync
   -h, --help       Show help
 EOF
       exit 0
@@ -58,22 +52,31 @@ warn() {
   printf "WARN: %s\n" "$*" >&2
 }
 
+# GitHub-backed mise backends otherwise share the unauthenticated API rate
+# limit. Keep the token scoped to each mise command rather than exporting it
+# for the entire updater process.
+run_mise() {
+  local github_token
+  if [[ -n "${GITHUB_TOKEN:-}" ]]; then
+    mise "$@"
+  elif command -v gh >/dev/null 2>&1 && github_token="$(gh auth token 2>/dev/null)"; then
+    GITHUB_TOKEN="$github_token" mise "$@"
+  else
+    mise "$@"
+  fi
+}
+
 if command -v brew >/dev/null 2>&1; then
-  log "Homebrew: updating metadata"
-  brew update
+  if [[ "$MODE" == "check" ]]; then
+    log "Homebrew: outdated packages"
+    brew outdated --greedy || true
+  else
+    log "Homebrew: updating metadata"
+    brew update
 
-  log "Homebrew: outdated packages"
-  brew outdated --greedy || true
-
-  if [[ "$MODE" == "upgrade" ]]; then
     if [[ -f "$BREWFILE" ]]; then
       log "Homebrew: upgrading from Brewfile"
       brew bundle upgrade --file="$BREWFILE"
-
-      if [[ "$DO_SYNC_BREWFILE" -eq 1 ]]; then
-        log "Homebrew: syncing Brewfile"
-        brew bundle dump --force --file="$BREWFILE"
-      fi
     else
       warn "Brewfile not found at $BREWFILE; running brew upgrade instead"
       brew upgrade --greedy
@@ -90,15 +93,15 @@ fi
 
 if command -v mise >/dev/null 2>&1; then
   log "mise: outdated tools"
-  mise outdated || true
+  run_mise outdated || true
 
   if [[ "$MODE" == "upgrade" ]]; then
     log "mise: upgrading tools"
-    mise upgrade --yes
+    run_mise upgrade --yes
 
     if [[ "$DO_CLEANUP" -eq 1 ]]; then
       log "mise: pruning unused versions"
-      mise prune -y
+      run_mise prune -y
     fi
   fi
 else

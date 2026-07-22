@@ -2,6 +2,7 @@
 roles/config/.config/gh/hosts.yml
 roles/config/.config/github-copilot/apps.json
 roles/config/.config/github-copilot/hosts.json
+roles/config/.config/zsh/secrets.zsh
 
 # Generated/runtime directories
 roles/config/.config/github-copilot/rd/

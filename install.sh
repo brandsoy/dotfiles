@@ -238,6 +238,13 @@ install_packages() {
 
 # Install extra tools (lazydocker, lazygit, gh)
 install_extra_tools() {
+    # On macOS these tools, including mise, are declared in the Brewfile.
+    # Installing them here as well would let this imperative code drift from it.
+    if [[ "$OS" == "macos" ]]; then
+        echo "macOS extra tools are managed by roles/packages-macos/Brewfile."
+        return 0
+    fi
+
     echo ""
     echo "Checking extra tools (lazydocker, lazygit, gh)..."
 

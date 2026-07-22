@@ -118,17 +118,17 @@ Use the updater script to check/upgrade Homebrew and mise-managed tools:
 # Check for available updates only
 dotfiles-update --check
 
-# Upgrade everything managed by brew/mise
+# Upgrade the tools declared in the Brewfile and mise config
 dotfiles-update
 ```
 
 Notes:
 
-- `dotfiles-update` runs `brew update`, reports outdated packages, upgrades from `roles/packages-macos/Brewfile`, then runs `mise outdated` and `mise upgrade --yes`.
+- `dotfiles-update --check` reports Homebrew and mise updates without running `brew update` or upgrading anything.
+- `dotfiles-update` runs `brew update`, upgrades packages declared in `roles/packages-macos/Brewfile`, then runs `mise upgrade --yes`.
 - Use `dotfiles-update --cleanup` to also run `brew cleanup -s` and `mise prune -y`.
-- Use `dotfiles-update --sync-brewfile` to dump current Homebrew state back to `roles/packages-macos/Brewfile`.
-- Use `dotfiles-update --maintenance` to do both cleanup and Brewfile sync.
-- `brew install/uninstall/remove/tap/untap` auto-dump the Brewfile via the `~/.local/bin/brew` shim, so sync also works outside interactive zsh as long as `~/.local/bin` comes first in `PATH`.
+- The Brewfile is a hand-maintained macOS manifest. Do **not** run `brew bundle dump --force` over it or auto-sync it after package commands.
+- Homebrew owns macOS apps, fonts, native utilities, and mise itself. Mise owns runtimes and language-distributed developer tools; run `mise install` after changing `roles/config/.config/mise/config.toml`.
 - If your repo is not at `~/dotfiles`, set `DOTFILES_DIR` before running, for example: `DOTFILES_DIR=~/src/dotfiles dotfiles-update`.
 
 ## Security checks
@@ -215,7 +215,7 @@ Optional checks:
 
 ```bash
 mise ls
-for bin in lua-language-server stylua terraform-ls gopls golines gofumpt tsgo vscode-json-language-server yaml-language-server docker-langserver tailwindcss-language-server bash-language-server biome svelteserver prettierd prettier; do mise which "$bin"; done
+for bin in lua-language-server stylua terraform-ls gopls golines gofumpt typescript-language-server tsc vscode-json-language-server yaml-language-server docker-langserver tailwindcss-language-server bash-language-server biome svelteserver prettierd prettier; do mise which "$bin"; done
 ```
 
 ### Svelte / SvelteKit
@@ -245,7 +245,7 @@ Then add it to `tsconfig.json`/`jsconfig.json`:
 
 ### Notes
 
-- `tsgo` comes from `@typescript/native-preview`.
+- `typescript-language-server` uses the stable `typescript` package.
 - `jsonls` comes from `vscode-langservers-extracted`.
 - `yamlls` comes from `yaml-language-server`.
 
@@ -253,5 +253,5 @@ Then add it to `tsconfig.json`/`jsconfig.json`:
 
 Inside Neovim:
 
-- `:LspInfo` (open a `.ts` file and confirm `tsgo` is attached)
+- `:LspInfo` (open a `.ts` file and confirm `ts_ls` is attached)
 - `:checkhealth vim.lsp`

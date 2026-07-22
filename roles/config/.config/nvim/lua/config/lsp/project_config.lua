@@ -93,6 +93,36 @@ function M.has_eslint(bufnr)
 		or M.find_package_field(bufnr, "eslintConfig") ~= nil
 end
 
+-- A .sqlproj identifies a SQL Server database project.  Search upward so SQL
+-- files anywhere below its database/ directory get the T-SQL toolchain.
+function M.find_sqlproj(bufnr)
+	local dir = buf_dir(bufnr)
+	while dir do
+		local handle = vim.uv.fs_scandir(dir)
+		if handle then
+			while true do
+				local name, file_type = vim.uv.fs_scandir_next(handle)
+				if not name then
+					break
+				end
+				if file_type == "file" and name:sub(-8) == ".sqlproj" then
+					return vim.fs.joinpath(dir, name)
+				end
+			end
+		end
+
+		local parent = vim.fs.dirname(dir)
+		if parent == dir then
+			break
+		end
+		dir = parent
+	end
+end
+
+function M.sql_dialect(bufnr)
+	return M.find_sqlproj(bufnr) and "tsql" or "postgres"
+end
+
 function M.root_with_config(files, package_field)
 	return function(bufnr, on_dir)
 		local file = M.find_file(bufnr, files)

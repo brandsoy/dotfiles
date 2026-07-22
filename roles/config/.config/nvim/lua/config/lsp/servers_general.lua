@@ -59,6 +59,12 @@ function M.get()
 			filetypes = { 'sql' },
 			workspace_required = false,
 			cmd = { 'postgres-language-server', 'lsp-proxy' },
+			-- Do not attach the PostgreSQL server to a SQL Server database project.
+			root_dir = function(bufnr, on_dir)
+				if project_config.sql_dialect(bufnr) ~= 'tsql' then
+					on_dir(vim.fs.root(bufnr, { '.git' }) or vim.uv.cwd())
+				end
+			end,
 		},
 	}
 end

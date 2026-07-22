@@ -101,17 +101,18 @@ source "$ZDOTDIR/prompt.zsh"
 
 # Hooks
 source "$ZDOTDIR/hooks.zsh"
-eval "$(mise activate zsh)"
-
-. "$HOME/.local/share/../bin/env"
-
-# pnpm
-export PNPM_HOME="/Users/mattis/Library/pnpm"
-case ":$PATH:" in
-  *":$PNPM_HOME/bin:"*) ;;
-  *) export PATH="$PNPM_HOME/bin:$PATH" ;;
-esac
-# pnpm end
 
 # Pi
-export PATH="/Users/mattis/.hermes/node/bin:$PATH"
+export PATH="$HOME/.hermes/node/bin:$PATH"
+
+# Machine-local credentials are intentionally untracked. Load them before mise
+# so its GitHub-backed tool backends can use an authenticated API request.
+[[ -r "$ZDOTDIR/secrets.zsh" ]] && source "$ZDOTDIR/secrets.zsh"
+
+# mise owns language runtimes and their shims. A terminal can inherit an
+# existing mise activation; reset it so this final activation puts mise tools
+# ahead of all earlier PATH entries.
+if command -v mise >/dev/null 2>&1; then
+  [[ -n "${MISE_SHELL:-}" ]] && eval "$(mise deactivate)"
+  eval "$(mise activate zsh)"
+fi

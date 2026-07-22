@@ -7,6 +7,7 @@ function M.get()
 		'gofumpt',
 		'golines',
 		'pgformatter',
+		'sqlfluff',
 		'terraform',
 		'roslyn',
 		'dotenv-linter',
