@@ -124,9 +124,11 @@ dotfiles-update
 
 Notes:
 
-- `dotfiles-update` runs `brew update`, reports outdated packages, upgrades from `roles/packages-macos/Brewfile`, syncs that Brewfile, and runs cleanup.
-- In zsh, `brew install/uninstall/tap/untap` also auto-dumps the Brewfile.
-- It also runs `mise outdated`, `mise upgrade --yes`, and `mise prune -y`.
+- `dotfiles-update` runs `brew update`, reports outdated packages, upgrades from `roles/packages-macos/Brewfile`, then runs `mise outdated` and `mise upgrade --yes`.
+- Use `dotfiles-update --cleanup` to also run `brew cleanup -s` and `mise prune -y`.
+- Use `dotfiles-update --sync-brewfile` to dump current Homebrew state back to `roles/packages-macos/Brewfile`.
+- Use `dotfiles-update --maintenance` to do both cleanup and Brewfile sync.
+- `brew install/uninstall/remove/tap/untap` auto-dump the Brewfile via the `~/.local/bin/brew` shim, so sync also works outside interactive zsh as long as `~/.local/bin` comes first in `PATH`.
 - If your repo is not at `~/dotfiles`, set `DOTFILES_DIR` before running, for example: `DOTFILES_DIR=~/src/dotfiles dotfiles-update`.
 
 ## Security checks

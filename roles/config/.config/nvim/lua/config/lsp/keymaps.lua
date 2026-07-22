@@ -22,8 +22,30 @@ function M.setup()
 			map("n", "gD", vim.lsp.buf.declaration, "Go to Declaration")
 			map("n", "gi", vim.lsp.buf.implementation, "Go to Implementation")
 			map("n", "gr", vim.lsp.buf.references, "List References")
-			map("n", "K", vim.lsp.buf.hover, "Hover Documentation")
+			map("n", "K", function()
+				local supports_hover = false
+				for _, attached in ipairs(vim.lsp.get_clients({ bufnr = bufnr })) do
+					if attached:supports_method(vim.lsp.protocol.Methods.textDocument_hover, bufnr) then
+						supports_hover = true
+						break
+					end
+				end
+
+				if supports_hover then
+					vim.lsp.buf.hover()
+				else
+					vim.notify("No LSP hover available for this buffer", vim.log.levels.INFO)
+				end
+			end, "Hover Documentation")
 			map("n", "<leader>lk", vim.lsp.buf.signature_help, "Signature Help")
+			map("n", "<leader>lt", function()
+				local ok_fzf, fzf = pcall(require, "fzf-lua")
+				if ok_fzf then
+					fzf.lsp_typedefs()
+					return
+				end
+				vim.lsp.buf.type_definition()
+			end, "Type Definition")
 
 			map("n", "<leader>lr", vim.lsp.buf.rename, "Rename Symbol")
 			map("n", "<leader>la", vim.lsp.buf.code_action, "Code Action")

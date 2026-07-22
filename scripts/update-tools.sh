@@ -9,20 +9,46 @@ if [[ ! -f "$BREWFILE" && -f "$LEGACY_BREWFILE" ]]; then
 fi
 
 MODE="upgrade"
-if [[ "${1:-}" == "--check" ]]; then
-  MODE="check"
-elif [[ "${1:-}" == "--help" || "${1:-}" == "-h" ]]; then
-  cat <<'EOF'
-Usage: update-tools.sh [--check]
+DO_CLEANUP=0
+DO_SYNC_BREWFILE=0
+
+while [[ $# -gt 0 ]]; do
+  case "$1" in
+    --check)
+      MODE="check"
+      ;;
+    --cleanup)
+      DO_CLEANUP=1
+      ;;
+    --sync-brewfile)
+      DO_SYNC_BREWFILE=1
+      ;;
+    --maintenance)
+      DO_CLEANUP=1
+      DO_SYNC_BREWFILE=1
+      ;;
+    -h|--help)
+      cat <<'EOF'
+Usage: update-tools.sh [--check] [--cleanup] [--sync-brewfile] [--maintenance]
 
 Check or upgrade Homebrew + mise managed tooling.
 
 Options:
-  --check    Check only; do not upgrade
-  -h, --help Show help
+  --check          Check only; do not upgrade
+  --cleanup        Run brew cleanup and mise prune after upgrading
+  --sync-brewfile  Dump current Homebrew state back to Brewfile after upgrading
+  --maintenance    Run both cleanup and Brewfile sync
+  -h, --help       Show help
 EOF
-  exit 0
-fi
+      exit 0
+      ;;
+    *)
+      printf 'WARN: unknown argument: %s\n' "$1" >&2
+      exit 1
+      ;;
+  esac
+  shift
+done
 
 log() {
   printf "\n==> %s\n" "$*"
@@ -44,15 +70,19 @@ if command -v brew >/dev/null 2>&1; then
       log "Homebrew: upgrading from Brewfile"
       brew bundle upgrade --file="$BREWFILE"
 
-      log "Homebrew: syncing Brewfile"
-      brew bundle dump --force --file="$BREWFILE"
+      if [[ "$DO_SYNC_BREWFILE" -eq 1 ]]; then
+        log "Homebrew: syncing Brewfile"
+        brew bundle dump --force --file="$BREWFILE"
+      fi
     else
       warn "Brewfile not found at $BREWFILE; running brew upgrade instead"
       brew upgrade --greedy
     fi
 
-    log "Homebrew: cleaning old versions"
-    brew cleanup -s
+    if [[ "$DO_CLEANUP" -eq 1 ]]; then
+      log "Homebrew: cleaning old versions"
+      brew cleanup -s
+    fi
   fi
 else
   warn "brew not found; skipping Homebrew"
@@ -66,8 +96,10 @@ if command -v mise >/dev/null 2>&1; then
     log "mise: upgrading tools"
     mise upgrade --yes
 
-    log "mise: pruning unused versions"
-    mise prune -y
+    if [[ "$DO_CLEANUP" -eq 1 ]]; then
+      log "mise: pruning unused versions"
+      mise prune -y
+    fi
   fi
 else
   warn "mise not found; skipping mise"

@@ -112,3 +112,6 @@ case ":$PATH:" in
   *) export PATH="$PNPM_HOME/bin:$PATH" ;;
 esac
 # pnpm end
+
+# Pi
+export PATH="/Users/mattis/.hermes/node/bin:$PATH"

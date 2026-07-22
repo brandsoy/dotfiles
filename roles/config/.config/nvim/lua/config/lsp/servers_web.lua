@@ -28,8 +28,6 @@ function M.get()
 		'html-eex',
 		'heex',
 		'jade',
-		'javascript',
-		'javascriptreact',
 		'leaf',
 		'liquid',
 		'markdown',
@@ -45,8 +43,6 @@ function M.get()
 		'svelte',
 		'templ',
 		'twig',
-		'typescript',
-		'typescriptreact',
 		'vue',
 	}
 
