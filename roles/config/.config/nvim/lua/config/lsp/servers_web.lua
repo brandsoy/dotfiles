@@ -50,18 +50,7 @@ function M.get()
 		htmx = {
 			filetypes = htmx_filetypes,
 		},
-		ts_ls = {
-			cmd = { 'typescript-language-server', '--stdio' },
-			filetypes = {
-				'javascript',
-				'javascriptreact',
-				'javascript.jsx',
-				'typescript',
-				'typescriptreact',
-				'typescript.tsx',
-			},
-			root_markers = { 'tsconfig.json', 'jsconfig.json', 'package.json', '.git' },
-		},
+		tsgo = {},
 		templ = {},
 		jsonls = schemastore_ok and {
 			settings = {
@@ -81,7 +70,18 @@ function M.get()
 			},
 		} or {},
 		tailwindcss = {
-			filetypes = { 'html', 'javascriptreact', 'typescriptreact', 'vue', 'svelte', 'astro' },
+			filetypes = {
+				'html',
+				'css',
+				'javascript',
+				'javascriptreact',
+				'typescript',
+				'typescriptreact',
+				'vue',
+				'svelte',
+				'astro',
+				'templ',
+			},
 		},
 		svelte = {},
 	}

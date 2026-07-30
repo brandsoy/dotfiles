@@ -13,6 +13,7 @@ function M.get()
 		'bashls',
 		'biome',
 		'eslint',
+		'tsgo',
 		'svelte',
 		'terraformls',
 		'prismals',

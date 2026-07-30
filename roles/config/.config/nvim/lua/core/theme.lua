@@ -52,7 +52,10 @@ function M.apply(name, opts)
 	end
 
 	if opts.persist ~= false then
-		storage.save_theme(name)
+		local saved, err = storage.save_theme(name)
+		if not saved then
+			notify(string.format('Switched to %s, but could not save the selection: %s', name, err), vim.log.levels.WARN)
+		end
 	end
 
 	return true
