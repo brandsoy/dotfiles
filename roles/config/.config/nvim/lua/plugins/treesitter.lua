@@ -49,6 +49,19 @@ end
 function M.setup()
 	vim.treesitter.language.register('html', 'htmx')
 
+	-- nvim-treesitter no longer enables highlighting automatically.  Start the
+	-- templ parser explicitly so its HTML/CSS/JS injections are highlighted in
+	-- .templ buffers as well as the templ expressions themselves.
+	vim.api.nvim_create_autocmd('FileType', {
+		group = vim.api.nvim_create_augroup('user_treesitter_highlighting', {
+			clear = true,
+		}),
+		pattern = 'templ',
+		callback = function(args)
+			pcall(vim.treesitter.start, args.buf, 'templ')
+		end,
+	})
+
 	local ok_ts, ts = pcall(require, 'nvim-treesitter')
 	if not ok_ts then
 		return
