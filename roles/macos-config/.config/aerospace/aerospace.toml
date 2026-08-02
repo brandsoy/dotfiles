@@ -207,6 +207,11 @@ if.app-id = 'com.spotify.client'
 run = ['move-node-to-workspace media']
 
 [[on-window-detected]]
+if.app-id = 'com.spotify.podcasts'
+run = ['move-node-to-workspace media']
+
+
+[[on-window-detected]]
 if.app-id = 'com.apple.Safari.WebApp.10C4F224-ABFB-4CFD-891C-60616E2AE109'
 run = ['move-node-to-workspace media']
 

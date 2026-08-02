@@ -63,6 +63,13 @@ function M.setup()
 	end)
 
 	pcall(function()
+		require('mini.indentscope').setup({
+			symbol = '│',
+			options = { try_as_border = true },
+		})
+	end)
+
+	pcall(function()
 		require('colorizer').setup()
 	end)
 end
