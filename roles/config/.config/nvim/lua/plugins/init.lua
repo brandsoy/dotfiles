@@ -13,6 +13,7 @@ function M.setup()
 		gh('folke/tokyonight.nvim'),
 		gh('dracula/vim'),
 		gh('navarasu/onedark.nvim'),
+		gh('idr4n/github-monochrome.nvim'),
 		-- Plugins
 		gh('echasnovski/mini.nvim'),
 		gh('nvim-tree/nvim-web-devicons'),

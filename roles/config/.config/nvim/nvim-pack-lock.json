@@ -20,6 +20,10 @@
       "rev": "3f194300c92e3ec2de8f9307d6a7ce988b7b6d0c",
       "src": "https://github.com/ibhagwan/fzf-lua"
     },
+    "github-monochrome.nvim": {
+      "rev": "e77321ecd5a68f020d9c543592e222d7786169bf",
+      "src": "https://github.com/idr4n/github-monochrome.nvim"
+    },
     "gitsigns.nvim": {
       "rev": "944ef13cc8d8fe8b846c91f36041c8dfb85ca000",
       "src": "https://github.com/lewis6991/gitsigns.nvim"
@@ -131,6 +135,10 @@
     "templ.vim": {
       "rev": "d482ee0bcf0606530725af27edaa320e5aaa4808",
       "src": "https://github.com/joerdav/templ.vim"
+    },
+    "toggleterm.nvim": {
+      "rev": "9a88eae817ef395952e08650b3283726786fb5fb",
+      "src": "https://github.com/akinsho/toggleterm.nvim"
     },
     "tokyonight.nvim": {
       "rev": "cdc07ac78467a233fd62c493de29a17e0cf2b2b6",

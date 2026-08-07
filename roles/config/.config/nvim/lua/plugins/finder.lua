@@ -114,7 +114,9 @@ function M.setup()
 			backdrop = 60,
 			preview = {
 				layout = 'vertical',
-				vertical = 'right:55%',
+				vertical = 'down:65%',
+				-- layout = 'horizontal',
+				-- horizontal = 'right:40%',
 			},
 		},
 		defaults = {
@@ -149,7 +151,12 @@ function M.setup()
 
 	local map = vim.keymap.set
 	map('n', '<leader>ff', project_files, { desc = 'Find files' })
-	map('n', '<leader>fc', current_dir_files, { desc = 'Find files in current dir' })
+	map(
+		'n',
+		'<leader>fc',
+		current_dir_files,
+		{ desc = 'Find files in current dir' }
+	)
 	map('n', '<leader>fF', vcs_files, { desc = 'Find tracked files' })
 	map('n', '<leader>fr', oldfiles_project, { desc = 'Open recent files' })
 	map('n', '<leader>fR', resume, { desc = 'Resume last picker' })

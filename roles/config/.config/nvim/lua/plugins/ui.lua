@@ -21,6 +21,10 @@ function M.setup()
 		require("onedark").setup({ style = "dark" })
 	end)
 
+	pcall(function()
+		require("github-monochrome").setup({})
+	end)
+
 	require("core.theme").init("catppuccin-mocha")
 end
 

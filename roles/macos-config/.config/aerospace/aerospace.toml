@@ -323,13 +323,13 @@ run = ['layout floating']
 
 [workspace-to-monitor-force-assignment]
 term = ['VZ27A', 'LS49A950U', 'main']
-code = ['VZ27A', 'LS49A950U', 'main']
 web = ['VZ27A', 'LS49A950U', 'main']
+code = ['VZ27A', 'LS49A950U', 'main']
 misc = ['VZ27A', 'LS49A950U', 'main']
 
 web2 = ['EV2436W', 'LS49A950U', 'VZ27A', 'built-in', 'main']
 notes = ['EV2436W', 'built-in', 'LS49A950U', 'VZ27A', 'main']
-ai = ['EV2436W', 'built-in', 'LS49A950U', 'VZ27A', 'main']
+ai = ['built-in', 'LS49A950U', 'VZ27A', 'main']
 
 comms = ['built-in', 'EV2436W', 'LS49A950U', 'VZ27A', 'main']
 media = ['built-in', 'LS49A950U', 'VZ27A', 'main']

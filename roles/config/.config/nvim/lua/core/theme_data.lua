@@ -9,6 +9,13 @@ M.themes = {
 	{ name = 'tokyonight-night' },
 	{ name = 'dracula' },
 	{ name = 'onedark' },
+	{ name = 'github-monochrome-light' },
+	{ name = 'github-monochrome-dark' },
+	{ name = 'github-monochrome-solarized' },
+	{ name = 'github-monochrome-tokyonight' },
+	{ name = 'github-monochrome-rosepine' },
+	{ name = 'github-monochrome-rosepine-dawn' },
+	{ name = 'github-monochrome-zenbones' },
 }
 
 M.theme_names = {}
