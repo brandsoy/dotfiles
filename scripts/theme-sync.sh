@@ -66,6 +66,10 @@ export TERMINAL_THEME="$theme"
 export BAT_THEME="${BAT_THEME:-}"
 export FZF_THEME_FILE="${FZF_THEME_FILE:-}"
 EOF
+
+  if [[ -f "$ROOT/themes/$theme/starship.toml" ]]; then
+    printf 'export STARSHIP_CONFIG="%s"\n' "$ROOT/themes/$theme/starship.toml" >> "$CURRENT_ENV_FILE"
+  fi
 }
 
 load_mode_config() {
