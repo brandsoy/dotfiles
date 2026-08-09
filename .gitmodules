@@ -1,0 +1,3 @@
+[submodule "roles/config/.config/theme-sync/themes/SupaTheme"]
+	path = roles/config/.config/theme-sync/themes/SupaTheme
+	url = git@github.com:brandsoy/SupaTheme.git
