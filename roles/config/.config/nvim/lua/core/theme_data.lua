@@ -3,6 +3,7 @@ local M = {}
 M.themes = {
 	{ name = 'oc-2' },
 	{ name = 'oc-2-noir' },
+	{ name = 'SupaTheme' },
 	{ name = 'catppuccin-mocha' },
 	{ name = 'catppuccin-latte' },
 	{ name = 'carbonfox' },

@@ -56,6 +56,10 @@ zstyle ':completion:*' matcher-list 'm:{a-z}={A-Za-z}'  # lowercase input matche
 # Fuzzy finder
 # =========================================================
 
+# Load the theme-selected fzf options before the key bindings.
+[[ -r "$HOME/.config/theme-sync/current.env" ]] && source "$HOME/.config/theme-sync/current.env"
+[[ -n "${FZF_THEME_FILE:-}" && -r "$FZF_THEME_FILE" ]] && source "$FZF_THEME_FILE"
+
 # macOS / Homebrew (Apple Silicon)
 if [[ -f /opt/homebrew/opt/fzf/shell/key-bindings.zsh ]]; then
   source /opt/homebrew/opt/fzf/shell/key-bindings.zsh

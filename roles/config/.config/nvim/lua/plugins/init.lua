@@ -14,6 +14,7 @@ function M.setup()
 		gh('dracula/vim'),
 		gh('navarasu/onedark.nvim'),
 		gh('idr4n/github-monochrome.nvim'),
+		gh('brandsoy/SupaTheme'),
 		-- Plugins
 		gh('echasnovski/mini.nvim'),
 		gh('nvim-tree/nvim-web-devicons'),

@@ -28,6 +28,8 @@ TARGET_LAZYGIT="$CONFIG_HOME/lazygit/config.yml"
 TARGET_YAZI_THEME="$CONFIG_HOME/yazi/theme.toml"
 TARGET_EZA_THEME="$CONFIG_HOME/eza/theme.yml"
 TARGET_TMUX_THEME="$CONFIG_HOME/tmux/theme.conf"
+TARGET_OPENCODE_THEME="$CONFIG_HOME/opencode/theme.json"
+TARGET_BAT_THEMES="$CONFIG_HOME/bat/themes"
 TARGET_NVIM_STATE="$STATE_HOME/nvim/theme.txt"
 TARGET_VSCODE_MAC="$HOME/Library/Application Support/Code/User/settings.json"
 TARGET_VSCODE_LINUX="$CONFIG_HOME/Code/User/settings.json"
@@ -67,7 +69,9 @@ export BAT_THEME="${BAT_THEME:-}"
 export FZF_THEME_FILE="${FZF_THEME_FILE:-}"
 EOF
 
-  if [[ -f "$ROOT/themes/$theme/starship.toml" ]]; then
+  if [[ -n "${STARSHIP_CONFIG:-}" ]]; then
+    printf 'export STARSHIP_CONFIG="%s"\n' "$STARSHIP_CONFIG" >> "$CURRENT_ENV_FILE"
+  elif [[ -f "$ROOT/themes/$theme/starship.toml" ]]; then
     printf 'export STARSHIP_CONFIG="%s"\n' "$ROOT/themes/$theme/starship.toml" >> "$CURRENT_ENV_FILE"
   fi
 }
@@ -376,7 +380,11 @@ apply_theme() {
   load_theme "$theme"
 
   mkdir -p "$(dirname "$TARGET_GHOSTTY")"
-  printf 'theme = %s\n' "$GHOSTTY_THEME" > "$TARGET_GHOSTTY"
+  if [[ -n "${GHOSTTY_THEME_FILE:-}" && -f "$GHOSTTY_THEME_FILE" ]]; then
+    cp "$GHOSTTY_THEME_FILE" "$TARGET_GHOSTTY"
+  else
+    printf 'theme = %s\n' "$GHOSTTY_THEME" > "$TARGET_GHOSTTY"
+  fi
 
   if [[ -f "$TARGET_ALACRITTY" ]]; then
     perl -0pi -e 's~(\[general\]\s*import\s*=\s*\[\s*\n\s*")([^"]+)("\s*\n\s*\])~$1'"$ALACRITTY_IMPORT"'$3~m' "$TARGET_ALACRITTY"
@@ -384,6 +392,11 @@ apply_theme() {
 
   update_line "$TARGET_KITTY" '^include\s+.*$' "include $KITTY_INCLUDE"
   refresh_kitty_theme
+  if [[ -n "${BAT_THEME_FILE:-}" && -f "$BAT_THEME_FILE" ]]; then
+    mkdir -p "$TARGET_BAT_THEMES"
+    cp "$BAT_THEME_FILE" "$TARGET_BAT_THEMES/$(basename "$BAT_THEME_FILE")"
+    bat cache --build >/dev/null 2>&1 || true
+  fi
   update_line "$TARGET_BAT" '^--theme=.*$' "--theme=\"$BAT_THEME\""
   ensure_bat_theme
   update_line "$TARGET_BTOP" '^color_theme\s*=.*$' "color_theme = \"$BTOP_THEME\""
@@ -395,7 +408,11 @@ apply_theme() {
   copy_if_present "$theme_dir/yazi.theme.toml" "$TARGET_YAZI_THEME"
   copy_if_present "$theme_dir/eza.theme.yml" "$TARGET_EZA_THEME"
   copy_if_present "$theme_dir/tmux.theme.conf" "$TARGET_TMUX_THEME"
-  rm -f "$CONFIG_HOME/opencode/theme.json"
+  if [[ -n "${OPENCODE_THEME_FILE:-}" ]]; then
+    copy_if_present "$OPENCODE_THEME_FILE" "$TARGET_OPENCODE_THEME"
+  else
+    rm -f "$TARGET_OPENCODE_THEME"
+  fi
   apply_vscode_theme
   refresh_tmux_theme
 
