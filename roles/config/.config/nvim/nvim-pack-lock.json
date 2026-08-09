@@ -4,6 +4,10 @@
       "rev": "5f3dda4ddc40df27be848beb4cbada90e4de18da",
       "src": "https://github.com/b0o/SchemaStore.nvim"
     },
+    "SupaTheme": {
+      "rev": "d7d4c32714770531be36d4dc56f49f5efc4a2ed9",
+      "src": "https://github.com/brandsoy/SupaTheme"
+    },
     "barbar.nvim": {
       "rev": "a4bef5b4fc1f064f2f673172252028eae18191c9",
       "src": "https://github.com/romgrk/barbar.nvim"
