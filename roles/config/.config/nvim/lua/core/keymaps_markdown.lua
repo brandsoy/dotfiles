@@ -27,6 +27,7 @@ function M.setup()
 		require('core.clipboard').paste_image()
 	end, 'Paste clipboard image to attachments')
 	map('n', '<leader>mp', '<cmd>MarkdownPreviewToggle<cr>', 'Markdown preview')
+	map('n', '<leader>mr', '<cmd>RenderMarkdown toggle<cr>', 'Toggle markdown rendering')
 end
 
 return M

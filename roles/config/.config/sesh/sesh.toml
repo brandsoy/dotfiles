@@ -4,28 +4,28 @@
 cache = false
 
 # Configs
-[[session]]
-name = "Tmux Config"
-path = "~"
-startup_command = "nvim .tmux.conf"
-preview_command = "bat --color=always ~/.tmux.conf"
+# [[session]]
+# name = "Tmux Config"
+# path = "~"
+# startup_command = "nvim .tmux.conf"
+# preview_command = "bat --color=always ~/.tmux.conf"
 
 [[session]]
 name = "Nvim Config"
 path = "~/.config/nvim"
 startup_command = "la"
 
-[[session]]
-name = "Aerospace Config"
-path = "~/.config/aerospace"
-startup_command = "nvim aerospace.toml"
-preview_command = "bat --color=always ~/.config/aerospace/aerospace.toml"
+# [[session]]
+# name = "Aerospace Config"
+# path = "~/.config/aerospace"
+# startup_command = "nvim aerospace.toml"
+# preview_command = "bat --color=always ~/.config/aerospace/aerospace.toml"
 
-[[session]]
-name = "Sesh Config"
-path = "~/.config/sesh"
-startup_command = "nvim sesh.toml"
-preview_command = "bat --color=always ~/.config/sesh/sesh.toml"
+# [[session]]
+# name = "Sesh Config"
+# path = "~/.config/sesh"
+# startup_command = "nvim sesh.toml"
+# preview_command = "bat --color=always ~/.config/sesh/sesh.toml"
 
 [[session]]
 name = "Dotfiles"
@@ -43,15 +43,15 @@ name = "Insight"
 path = "/Users/mattis/Developer/git/work/FBH-Insigth/FBH-Insight"
 startup_command = "la"
 
-[[session]]
-name = "Dev Work"
-path = "/Users/mattis/Developer/git/work"
-startup_command = "la"
+# [[session]]
+# name = "Dev Work"
+# path = "/Users/mattis/Developer/git/work"
+# startup_command = "la"
 
-[[session]]
-name = "Dev Personal"
-path = "/Users/mattis/Developer/git/personal"
-startup_command = "la"
+# [[session]]
+# name = "Dev Personal"
+# path = "/Users/mattis/Developer/git/personal"
+# startup_command = "la"
 
 [[session]]
 name = "Sharepoint Contract Management"

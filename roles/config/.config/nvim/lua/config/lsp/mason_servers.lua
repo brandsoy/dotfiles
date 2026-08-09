@@ -8,6 +8,7 @@ function M.get()
 		'gopls',
 		'jsonls',
 		'yamlls',
+		'html',
 		'dockerls',
 		'tailwindcss',
 		'bashls',

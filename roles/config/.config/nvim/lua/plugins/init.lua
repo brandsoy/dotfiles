@@ -19,6 +19,7 @@ function M.setup()
 		gh('nvim-tree/nvim-web-devicons'),
 		gh('ibhagwan/fzf-lua'),
 		gh('iamcco/markdown-preview.nvim'),
+		gh('MeanderingProgrammer/render-markdown.nvim'),
 		gh('romgrk/barbar.nvim'),
 		gh('lewis6991/gitsigns.nvim'),
 		gh('norcalli/nvim-colorizer.lua'),

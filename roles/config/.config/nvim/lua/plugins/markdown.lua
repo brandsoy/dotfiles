@@ -11,13 +11,12 @@ function M.setup()
 	-- vim.g.mkdp_echo_preview_url = 1
 	vim.g.mkdp_filetypes = { 'markdown' }
 
-	-- local ok, render = pcall(require, "render-markdown")
-	-- if ok then
-	-- 	render.setup({
-	-- 		completions = { lsp = { enabled = true } },
-	-- 		latex = { enabled = false },
-	-- 	})
-	-- end
+	require('render-markdown').setup({
+		enabled = false,
+		file_types = { 'markdown' },
+		completions = { lsp = { enabled = true } },
+		latex = { enabled = false },
+	})
 end
 
 return M

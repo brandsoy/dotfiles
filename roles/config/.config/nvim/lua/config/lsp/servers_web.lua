@@ -23,14 +23,12 @@ function M.get()
 		'hbs',
 		'htmx',
 		'htmldjango',
-		'html',
 		'htmlangular',
 		'html-eex',
 		'heex',
 		'jade',
 		'leaf',
 		'liquid',
-		'markdown',
 		'mdx',
 		'mustache',
 		'njk',
@@ -47,6 +45,7 @@ function M.get()
 	}
 
 	return {
+		html = {},
 		htmx = {
 			filetypes = htmx_filetypes,
 		},
