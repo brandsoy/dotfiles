@@ -12,6 +12,10 @@ function M.setup()
 
 	neo_tree.setup({
 		filesystem = {
+			follow_current_file = {
+				enabled = true,
+				leave_dirs_open = false,
+			},
 			window = {
 				mappings = {
 					['P'] = function(state)
@@ -31,7 +35,7 @@ function M.setup()
 		},
 	})
 
-	map('<leader>e', '<cmd>Neotree toggle<cr>', 'Neo-tree toggle')
+	map('<leader>e', '<cmd>Neotree filesystem reveal toggle<cr>', 'Neo-tree toggle and reveal current file')
 	map('<leader>E', '<cmd>Neotree focus<cr>', 'Neo-tree focus')
 	map('<leader>fe', '<cmd>Neotree reveal<cr>', 'Neo-tree reveal current file')
 	map('<leader>be', '<cmd>Neotree buffers toggle<cr>', 'Neo-tree buffers')

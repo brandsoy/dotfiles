@@ -44,6 +44,7 @@ function M.setup()
 		gh('nvim-neo-tree/neo-tree.nvim'),
 		gh('MunifTanjim/nui.nvim'),
 		gh('mfussenegger/nvim-lint'),
+		gh('atiladefreitas/dooing'),
 	}, { confirm = false })
 
 	require('plugins.ui').setup()
@@ -64,6 +65,7 @@ function M.setup()
 	require('plugins.neo-tree').setup()
 	require('plugins.lint').setup()
 	require('plugins.obsidian').setup()
+	require('plugins.dooing').setup()
 end
 
 return M

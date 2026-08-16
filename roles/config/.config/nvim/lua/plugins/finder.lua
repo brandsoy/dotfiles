@@ -108,7 +108,7 @@ function M.setup()
 	end
 
 	fzf.setup({
-		ui_select = true,
+		ui_select = {},
 		fzf_colors = true,
 		winopts = {
 			backdrop = 60,
