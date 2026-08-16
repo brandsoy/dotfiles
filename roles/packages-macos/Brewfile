@@ -212,8 +212,9 @@ cask "lulu"
 cask "miro"
 # Knowledge base that works on top of a local folder of plain text Markdown files
 cask "obsidian"
-# Verify system files structure, run miscellaneous maintenance and more
-cask "onyx"
+# OnyX currently has no Homebrew cask support for macOS 27 (Tahoe+).
+# Install it manually after a compatible release is published.
+# cask "onyx"
 # Replacement for Docker Desktop
 cask "orbstack"
 # GUI client for PostgreSQL databases
