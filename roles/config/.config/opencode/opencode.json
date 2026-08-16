@@ -1,20 +1,13 @@
 {
   "$schema": "https://opencode.ai/config.json",
-  "plugin": ["@mohak34/opencode-notifier@latest"],
+  "plugin": [
+    "@mohak34/opencode-notifier@latest"
+  ],
   "provider": {
     "ollama": {
       "models": {
         "gemma4-coding": {
-          "_launch": true,
-          "name": "gemma4-coding",
-          "parameters": {
-            "num_ctx": 32768,
-            "num_gpu": 99,
-            "reasoning_effort": "none",
-            "repeat_penalty": 1,
-            "temperature": 0.2
-          },
-          "tools": true
+          "name": "gemma4-coding"
         }
       },
       "name": "Ollama",
@@ -34,8 +27,13 @@
         "gemma-4-26b-a4b-it-4bit": {
           "name": "gemma-4-26b-a4b-it-4bit",
           "modalities": {
-            "input": ["text", "image"],
-            "output": ["text"]
+            "input": [
+              "text",
+              "image"
+            ],
+            "output": [
+              "text"
+            ]
           },
           "attachment": true,
           "limit": {
@@ -45,5 +43,6 @@
         }
       }
     }
-  }
+  },
+  "shell": "zsh"
 }

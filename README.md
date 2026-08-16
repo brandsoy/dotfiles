@@ -110,6 +110,44 @@ theme-sync auto
 theme-sync auto --watch 5
 ```
 
+## AI model storage (Hugging Face, MLX, Ollama, Unsloth)
+
+The model source of truth is `~/Models` (override with `AI_MODELS_HOME`). The
+shell environment configures Hugging Face/Transformers and Ollama to use their
+native subdirectories there:
+
+```text
+~/Models/
+├── huggingface/   # HF hub cache; MLX loads HF models from here
+├── ollama/        # Ollama's content-addressed GGUF blobs
+├── mlx/           # optional local MLX exports
+├── unsloth/       # optional training/import workspace
+├── exports/       # intentional format conversions
+└── inbox/         # downloads awaiting verification/import
+```
+
+After stowing the `bin` and `zshenv` roles, initialize it with:
+
+```bash
+ai-models init
+ai-models status
+ai-models link   # compatibility links for apps that ignore environment vars
+```
+
+Recommended workflow: download from Hugging Face with `huggingface-cli` or
+Unsloth, then load the same HF snapshot directly with `mlx_lm.generate --model
+<repo-or-local-path>`. Use Ollama for GGUF models and its own runtime. Do not
+symlink Ollama blobs into the HF/MLX cache: Ollama stores GGUF layers with a
+different manifest/content-addressing scheme, while MLX uses safetensors and
+HF metadata. The framework directories share one disk location, not file
+blobs. Unsloth Desktop may not inherit shell variables; configure its model
+folder in the app or use the `~/Models/inbox`/`exports` folders explicitly.
+
+For maximum performance on Apple Silicon, prefer MLX-native models (or a
+verified MLX conversion), keep the model store on a local APFS SSD, and avoid
+running inference from an iCloud/network-synced directory. Pin model revisions
+and keep quantization/conversion metadata alongside exports.
+
 ## Tool Updates (Homebrew + mise)
 
 Use the updater script to check/upgrade Homebrew and mise-managed tools:
