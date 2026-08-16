@@ -228,6 +228,24 @@ copy_if_present() {
   fi
 }
 
+copy_tmux_theme() {
+  local source_file="$1"
+  local target_file="$2"
+
+  [[ -f "$source_file" ]] || return 0
+  mkdir -p "$(dirname "$target_file")"
+  cp "$source_file" "$target_file"
+
+  # Keep the bar background tied to the selected theme's canonical value,
+  # rather than relying on a duplicated value in tmux.theme.conf.
+  if [[ -n "${TMUX_BACKGROUND:-}" ]]; then
+    sed -E -i.bak \
+      "s|^set -g @minimal_theme_bg_color .*|set -g @minimal_theme_bg_color \"$TMUX_BACKGROUND\"|" \
+      "$target_file"
+    rm -f "$target_file.bak"
+  fi
+}
+
 refresh_tmux_theme() {
   command -v tmux >/dev/null 2>&1 || return 0
   tmux ls >/dev/null 2>&1 || return 0
@@ -399,15 +417,21 @@ apply_theme() {
   fi
   update_line "$TARGET_BAT" '^--theme=.*$' "--theme=\"$BAT_THEME\""
   ensure_bat_theme
-  update_line "$TARGET_BTOP" '^color_theme\s*=.*$' "color_theme = \"$BTOP_THEME\""
+  if [[ -n "${BTOP_THEME:-}" ]]; then
+    update_line "$TARGET_BTOP" '^color_theme\s*=.*$' "color_theme = \"$BTOP_THEME\""
+  fi
 
   mkdir -p "$(dirname "$TARGET_NVIM_STATE")"
   printf '%s\n' "$NVIM_THEME" > "$TARGET_NVIM_STATE"
 
-  copy_if_present "$theme_dir/lazygit.yml" "$TARGET_LAZYGIT"
+  if [[ -n "${LAZYGIT_THEME_FILE:-}" ]]; then
+    copy_if_present "$LAZYGIT_THEME_FILE" "$TARGET_LAZYGIT"
+  else
+    copy_if_present "$theme_dir/lazygit.yml" "$TARGET_LAZYGIT"
+  fi
   copy_if_present "$theme_dir/yazi.theme.toml" "$TARGET_YAZI_THEME"
   copy_if_present "$theme_dir/eza.theme.yml" "$TARGET_EZA_THEME"
-  copy_if_present "$theme_dir/tmux.theme.conf" "$TARGET_TMUX_THEME"
+  copy_tmux_theme "$theme_dir/tmux.theme.conf" "$TARGET_TMUX_THEME"
   if [[ -n "${OPENCODE_THEME_FILE:-}" ]]; then
     copy_if_present "$OPENCODE_THEME_FILE" "$TARGET_OPENCODE_THEME"
   else
