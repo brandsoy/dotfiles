@@ -83,6 +83,8 @@ brew "kubernetes-cli"
 brew "lazydocker"
 # Simple terminal UI for git commands
 brew "lazygit"
+# Lua interpreter and compiler (provides lua and luac)
+brew "lua"
 # Language Server for the Lua language
 brew "lua-language-server"
 # Utility for directing compilation

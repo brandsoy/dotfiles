@@ -15,13 +15,14 @@ function M.setup()
 		gh('navarasu/onedark.nvim'),
 		gh('idr4n/github-monochrome.nvim'),
 		gh('brandsoy/SupaTheme'),
+		gh('mryodo/rwth.nvim'),
 		-- Plugins
 		gh('echasnovski/mini.nvim'),
 		gh('nvim-tree/nvim-web-devicons'),
 		gh('ibhagwan/fzf-lua'),
 		gh('iamcco/markdown-preview.nvim'),
 		gh('MeanderingProgrammer/render-markdown.nvim'),
-		gh('romgrk/barbar.nvim'),
+		-- gh('romgrk/barbar.nvim'),
 		gh('lewis6991/gitsigns.nvim'),
 		gh('norcalli/nvim-colorizer.lua'),
 		gh('mikavilpas/yazi.nvim'),
@@ -61,7 +62,7 @@ function M.setup()
 	require('plugins.git').setup()
 	require('plugins.yazi').setup()
 	require('plugins.image').setup()
-	require('plugins.barbar').setup()
+	-- require('plugins.barbar').setup()
 	require('plugins.neo-tree').setup()
 	require('plugins.lint').setup()
 	require('plugins.obsidian').setup()

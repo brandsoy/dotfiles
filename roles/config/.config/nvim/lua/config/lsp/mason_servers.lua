@@ -14,7 +14,7 @@ function M.get()
 		'bashls',
 		'biome',
 		'eslint',
-		'tsgo',
+		'tsc',
 		'svelte',
 		'terraformls',
 		'prismals',

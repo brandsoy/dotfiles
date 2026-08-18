@@ -1,11 +1,11 @@
 {
   "plugins": {
     "SchemaStore.nvim": {
-      "rev": "7e3f6dd6ef6da93f74974521c81d8d5bff0443c5",
+      "rev": "cef8d093b63c9be7e8b49f7dc341e8447fc4c300",
       "src": "https://github.com/b0o/SchemaStore.nvim"
     },
     "SupaTheme": {
-      "rev": "18ffa8a48919349b07f612a903d4c48df3f2d013",
+      "rev": "e5d49c5ba172ddf2bfff1c4f81217682cf2b7b75",
       "src": "https://github.com/brandsoy/SupaTheme"
     },
     "barbar.nvim": {
@@ -21,7 +21,7 @@
       "src": "https://github.com/zbirenbaum/copilot.lua"
     },
     "dooing": {
-      "rev": "4c4ac78088cf462398a0206e79669936a184175f",
+      "rev": "8134f408bfff0e0ff7c5cf7f424b67b6cf429717",
       "src": "https://github.com/atiladefreitas/dooing"
     },
     "fzf-lua": {
@@ -69,7 +69,7 @@
       "src": "https://github.com/echasnovski/mini.nvim"
     },
     "neo-tree.nvim": {
-      "rev": "0bd0eea2e445bcb110fd202526ccb14d04c74e15",
+      "rev": "662f26883831f269d3cd6b3b87a2460517310b58",
       "src": "https://github.com/nvim-neo-tree/neo-tree.nvim"
     },
     "nightfox.nvim": {
@@ -93,11 +93,11 @@
       "src": "https://github.com/mikinovation/nvim-gitui"
     },
     "nvim-lint": {
-      "rev": "9b99aad869102ac01775187abd8d49017b148612",
+      "rev": "5b5b794458b5ff0b17d26c9d7400faaebd00b32d",
       "src": "https://github.com/mfussenegger/nvim-lint"
     },
     "nvim-lspconfig": {
-      "rev": "51dbf5359da86721662c87ca10eb73add973737b",
+      "rev": "c8a582abc20a3121a768073df569d088cb5604b5",
       "src": "https://github.com/neovim/nvim-lspconfig"
     },
     "nvim-tree.lua": {
@@ -136,6 +136,10 @@
       "rev": "de9a98d61ed3fd01b5016eea5fe9e32f1a4c7cfb",
       "src": "https://github.com/seblyng/roslyn.nvim"
     },
+    "rwth.nvim": {
+      "rev": "55244f158daecdecd1498226bcd511a2568f06e8",
+      "src": "https://github.com/mryodo/rwth.nvim"
+    },
     "snacks.nvim": {
       "rev": "882c996cf28183f4d63640de0b4c02ec886d01f2",
       "src": "https://github.com/folke/snacks.nvim"
@@ -157,7 +161,7 @@
       "src": "https://github.com/dracula/vim"
     },
     "yazi.nvim": {
-      "rev": "2508e758d9057da9a3ec3f8c53e9f33a46a66e2d",
+      "rev": "f1e68855509619ea5736e142dfa2faecccdf0149",
       "src": "https://github.com/mikavilpas/yazi.nvim"
     }
   }

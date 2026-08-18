@@ -49,7 +49,18 @@ function M.get()
 		htmx = {
 			filetypes = htmx_filetypes,
 		},
-		tsgo = {},
+		tsc = {
+			cmd = { 'tsc', '--lsp', '--stdio' },
+			filetypes = {
+				'javascript',
+				'javascriptreact',
+				'javascript.jsx',
+				'typescript',
+				'typescriptreact',
+				'typescript.tsx',
+			},
+			root_markers = { 'tsconfig.json', 'jsconfig.json', 'package.json', '.git' },
+		},
 		templ = {},
 		jsonls = schemastore_ok and {
 			settings = {

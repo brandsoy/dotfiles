@@ -1,0 +1,32 @@
+# RWTH dark palette — https://github.com/mryodo/rwth.nvim
+[colors.primary]
+background = '#00182D'
+foreground = '#E8F1FA'
+
+[colors.cursor]
+text = '#00182D'
+cursor = '#E8F1FA'
+
+[colors.selection]
+text = '#E8F1FA'
+background = '#407FB7'
+
+[colors.normal]
+black = '#646567'
+red = '#E69679'
+green = '#B8D698'
+yellow = '#FDD48F'
+blue = '#8EBAE5'
+magenta = '#F19EB1'
+cyan = '#89CCCF'
+white = '#E8F1FA'
+
+[colors.bright]
+black = '#000C17'
+red = '#CC071E'
+green = '#57AB27'
+yellow = '#F6A800'
+blue = '#00549F'
+magenta = '#E30066'
+cyan = '#0098A1'
+white = '#CFD1D2'

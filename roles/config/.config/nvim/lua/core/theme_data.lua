@@ -5,6 +5,7 @@ M.themes = {
 	{ name = 'oc-2-noir' },
 	{ name = 'SupaTheme' },
 	{ name = 'catppuccin-mocha' },
+	{ name = 'rwth-dark' },
 	{ name = 'catppuccin-latte' },
 	{ name = 'carbonfox' },
 	{ name = 'tokyonight-night' },

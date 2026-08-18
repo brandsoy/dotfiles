@@ -1,0 +1,64 @@
+# RWTH dark theme — https://github.com/mryodo/rwth.nvim
+"$schema" = 'https://starship.rs/config-schema.json'
+
+add_newline = false
+format = "$all"
+palette = "rwth-dark"
+
+[palettes.rwth-dark]
+rwth_bg = "#00182D"
+rwth_fg = "#E8F1FA"
+rwth_muted = "#646567"
+rwth_blue = "#8EBAE5"
+rwth_blue_bright = "#00549F"
+rwth_cyan = "#89CCCF"
+rwth_green = "#B8D698"
+rwth_green_bright = "#57AB27"
+rwth_yellow = "#FDD48F"
+rwth_orange = "#E69679"
+rwth_red = "#CC071E"
+rwth_magenta = "#F19EB1"
+rwth_pink = "#E30066"
+
+[directory]
+style = "bold rwth_blue"
+truncation_length = 4
+truncate_to_repo = true
+
+[git_branch]
+symbol = " "
+style = "bold rwth_magenta"
+
+[git_status]
+format = "($ahead_behind$staged$modified$untracked$deleted$conflicted)"
+ahead = "[⇡$count ](bold rwth_blue)"
+behind = "[⇣$count ](bold rwth_blue)"
+diverged = "[⇡$ahead_count⇣$behind_count ](bold rwth_blue)"
+staged = "[+$count ](bold rwth_green_bright)"
+modified = "[●$count ](bold rwth_yellow)"
+untracked = "[?$count ](bold rwth_cyan)"
+deleted = "[✘$count ](bold rwth_orange)"
+conflicted = "[⚡$count ](bold rwth_red)"
+
+[cmd_duration]
+style = "rwth_yellow"
+
+[character]
+success_symbol = "[❯](bold rwth_green)"
+error_symbol = "[❯](bold rwth_red)"
+vimcmd_symbol = "[❮](bold rwth_blue)"
+
+[nodejs]
+style = "rwth_green"
+
+[rust]
+style = "rwth_orange"
+
+[golang]
+style = "rwth_cyan"
+
+[python]
+style = "rwth_yellow"
+
+[package]
+style = "rwth_magenta"
