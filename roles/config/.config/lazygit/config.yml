@@ -1,24 +1,25 @@
-# RWTH dark — https://github.com/mryodo/rwth.nvim/blob/main/extras/lazygit/config.yml
 gui:
+  nerdFontsVersion: "3"
   theme:
     activeBorderColor:
-      - "#fabe50"
+      - "#75a1c7"
       - bold
     inactiveBorderColor:
-      - "#646567"
+      - "#404040"
     optionsTextColor:
-      - "#8ebae5"
+      - "#75a1c7"
     selectedLineBgColor:
-      - "#00549f"
+      - "#212121"
+    selectedRangeBgColor:
+      - "#212121"
     cherryPickedCommitBgColor:
-      - "#00549f"
+      - "#c4a8d6"
     cherryPickedCommitFgColor:
-      - "#f19eb1"
+      - "#75a1c7"
     unstagedChangesColor:
-      - "#b65256"
+      - "#e08585"
     defaultFgColor:
-      - "#eceded"
+      - "#e4e4e8"
     searchingActiveBorderColor:
-      - "#d85c41"
-  authorColors:
-    "*": "#ffffff"
+      - "#d9a35a"
+      - bold

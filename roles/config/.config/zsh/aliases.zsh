@@ -20,6 +20,9 @@ alias cat='bat'
 # Core utilities
 # =========================================================
 
+# Apple Silicon-aware system summary (configured in ~/.config/fastfetch)
+alias ff='fastfetch'
+
 alias grep='rg --color=auto'
 alias diff='diff --color=auto'
 alias df='df -h'

@@ -3,7 +3,7 @@
 #                 zsh-history-substring-search, zsh-vi-mode
 #   Prompt:       starship
 #   Navigation:   zoxide, fzf, fd
-#   CLI tools:    eza, bat, nvim, ripgrep
+#   CLI tools:    eza, bat, fastfetch, nvim, ripgrep
 
 # =========================================================
 # History

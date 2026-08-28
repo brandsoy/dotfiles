@@ -3,7 +3,6 @@
 tap "amar1729/formulae", trusted: true
 tap "anomalyco/tap", trusted: true
 tap "felixkratz/formulae", trusted: true
-tap "go-task/tap", trusted: true
 tap "gurgeous/tap", trusted: true
 tap "hashicorp/tap", trusted: true
 tap "jstkdng/programs", trusted: true
@@ -49,6 +48,8 @@ brew "duckdb"
 brew "eza"
 # Simple, fast and user-friendly alternative to find
 brew "fd"
+# Fast, native system information display for terminal startup and diagnostics
+brew "fastfetch"
 # Play, record, convert, and stream many audio and video codecs
 brew "ffmpeg-full", link: true
 # CLI tool for interacting with Forgejo
@@ -157,8 +158,6 @@ brew "zsh"
 brew "anomalyco/tap/opencode"
 # A window border system for macOS
 brew "felixkratz/formulae/borders"
-# A fast, cross-platform build tool inspired by Make, designed for modern workflows.
-brew "go-task/tap/go-task"
 # Drop in replacement for ueberzug written in C++
 brew "jstkdng/programs/ueberzugpp"
 # $ A blazingly fast Zsh syntax highlighter
@@ -225,8 +224,6 @@ cask "postico"
 cask "raycast"
 # Instant messaging application focusing on security
 cask "signal"
-# Music streaming service
-cask "spotify"
 # Real time file synchronisation software
 cask "syncthing-app"
 # Mesh VPN based on WireGuard

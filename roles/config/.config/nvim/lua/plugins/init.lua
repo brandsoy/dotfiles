@@ -22,14 +22,12 @@ function M.setup()
 		gh('ibhagwan/fzf-lua'),
 		gh('iamcco/markdown-preview.nvim'),
 		gh('MeanderingProgrammer/render-markdown.nvim'),
-		-- gh('romgrk/barbar.nvim'),
 		gh('lewis6991/gitsigns.nvim'),
+		gh('sindrets/diffview.nvim'),
 		gh('norcalli/nvim-colorizer.lua'),
 		gh('mikavilpas/yazi.nvim'),
 		gh('3rd/image.nvim'),
 		gh('joerdav/templ.vim'),
-		-- Obsidian
-		gh('obsidian-nvim/obsidian.nvim'),
 		-- LSP
 		gh('nvim-treesitter/nvim-treesitter'),
 		gh('neovim/nvim-lspconfig'),
@@ -62,10 +60,8 @@ function M.setup()
 	require('plugins.git').setup()
 	require('plugins.yazi').setup()
 	require('plugins.image').setup()
-	-- require('plugins.barbar').setup()
 	require('plugins.neo-tree').setup()
 	require('plugins.lint').setup()
-	require('plugins.obsidian').setup()
 	require('plugins.dooing').setup()
 end
 
