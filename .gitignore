@@ -9,8 +9,25 @@ roles/config/.config/github-copilot/rd/
 roles/config/.config/github-copilot/go/
 roles/macos-config/.config/raycast/
 
-# ZSH plugin git repositories
-roles/config/.config/zsh/plugins/
+# Local state retained on existing machines, never deployed by Stow.
+roles/config/.config/zsh/.zcompcache/
+roles/config/.config/zsh/.zsh_sessions/
+roles/config/.config/zsh/.zshrc_old
+roles/macos-config/.config/karabiner/automatic_backups/
+roles/config/.config/opencode/opencode-notifier-state.json
+roles/config/.config/opencode/theme.json
+roles/config/.config/theme-sync/current
+roles/config/.config/theme-sync/current.env
+roles/config/.config/theme-sync/mode.env
+roles/config/.config/ghostty/auto/
+roles/config/.config/kitty/auto/
+roles/config/.config/alacritty/auto/
+roles/config/.config/btop/themes/dotfiles.theme
+roles/config/.config/bat/themes/SupaTheme.tmTheme
+roles/config/.config/tmux/theme.conf
+roles/config/.config/yazi/theme.toml
+roles/config/.config/eza/theme.yml
+hosts/
 
 # Runtime/cache files
 **/.cache/

@@ -16,26 +16,26 @@ startup_command = "la"
 #Work  Projects
 [[session]]
 name = "Saga Connect"
-path = "/Users/mattis/Developer/git/work/SagaConnect/saga-connect"
+path = "~/Developer/git/work/SagaConnect/saga-connect"
 startup_command = "la"
 
 [[session]]
 name = "Insight"
-path = "/Users/mattis/Developer/git/work/FBH-Insigth/FBH-Insight"
+path = "~/Developer/git/work/FBH-Insigth/FBH-Insight"
 startup_command = "la"
 
 [[session]]
 name = "Sharepoint Contract Management"
-path = "/Users/mattis/Developer/git/work/sharepoint-contract-management"
+path = "~/Developer/git/work/sharepoint-contract-management"
 startup_command = "la"
 
 [[session]]
 name = "Sharepoint Project Management"
-path = "/Users/mattis/Developer/git/work/sharepoint-project-management"
+path = "~/Developer/git/work/sharepoint-project-management"
 startup_command = "la"
 
 # Home Projects
 [[session]]
 name = "Homelab"
-path = "/Users/mattis/Developer/git/personal/homelab"
+path = "~/Developer/git/personal/homelab"
 startup_command = "la"

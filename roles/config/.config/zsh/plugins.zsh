@@ -1,89 +1,13 @@
-# =========================================================
-# Plugins
-# =========================================================
+# Pinned submodules; install/update them explicitly with dotfiles-install plugins.
+# Shell startup never downloads, updates, or removes plugins.
+ZPLUGINDIR="$ZDOTDIR/plugins"
+for plugin in zsh-autosuggestions zsh-history-substring-search zsh-vi-mode; do
+  entry="$ZPLUGINDIR/$plugin/$plugin.zsh"
+  [[ -r "$entry" ]] && source "$entry"
+done
+unset plugin entry
 
-ZPLUGINDIR="${ZDOTDIR:-$HOME/.config/zsh}/plugins"
-
-_zplugin_load() {
-  setopt local_options null_glob
-
-  local owner="$1"
-  local repo="$2"
-  local plugin_path="${ZPLUGINDIR}/${repo}"
-
-  mkdir -p "$ZPLUGINDIR"
-
-  if [[ ! -d "$plugin_path" ]]; then
-    echo "Installing ${repo}..."
-    git clone --depth=1 "https://github.com/${owner}/${repo}" "$plugin_path" \
-      || { echo "ERROR: failed to install ${repo}" >&2; return 1; }
-  fi
-
-  # Support common entrypoint naming conventions used by zsh plugins.
-  local entry
-  for entry in \
-    "${plugin_path}/${repo}.plugin.zsh" \
-    "${plugin_path}/${repo}.zsh" \
-    "${plugin_path}/${repo}.sh" \
-    "${plugin_path}"/*.plugin.zsh \
-    "${plugin_path}"/*.zsh; do
-    [[ -f "$entry" ]] || continue
-    source "$entry"
-    return 0
-  done
-
-  # Self-heal broken/empty plugin dirs (common after interrupted clone).
-  echo "Reinstalling ${repo} (missing loadable script)..."
-  rm -rf "$plugin_path"
-  git clone --depth=1 "https://github.com/${owner}/${repo}" "$plugin_path" \
-    || { echo "ERROR: failed to reinstall ${repo}" >&2; return 1; }
-
-  for entry in \
-    "${plugin_path}/${repo}.plugin.zsh" \
-    "${plugin_path}/${repo}.zsh" \
-    "${plugin_path}/${repo}.sh" \
-    "${plugin_path}"/*.plugin.zsh \
-    "${plugin_path}"/*.zsh; do
-    [[ -f "$entry" ]] || continue
-    source "$entry"
-    return 0
-  done
-
-  echo "ERROR: no loadable script found for ${repo} in ${plugin_path}" >&2
-  return 1
-}
-
-zplugin-update() {
-  local dir
-  for dir in "${ZPLUGINDIR}"/*/; do
-    echo "Updating ${dir:t}..."
-    git -C "$dir" pull --ff-only
-  done
-}
-
-_zplugin_load zsh-users zsh-autosuggestions
-_zplugin_load zsh-users zsh-history-substring-search
-_zplugin_load jeffreytse zsh-vi-mode
-
-# Syntax highlighting (installed as a binary; see zsh-patina/config.toml).
-# Keep this after other ZLE plugins.
-_zsh_patina_activate() {
-  local patina="${commands[zsh-patina]:-}"
-  local candidate
-
-  if [[ -z "$patina" ]]; then
-    for candidate in \
-      /opt/homebrew/bin/zsh-patina \
-      /usr/local/bin/zsh-patina \
-      "$HOME/.cargo/bin/zsh-patina"; do
-      [[ -x "$candidate" ]] || continue
-      patina="$candidate"
-      break
-    done
-  fi
-
-  [[ -x "$patina" ]] || return 0
-  eval "$("$patina" activate)"
-}
-_zsh_patina_activate
-unfunction _zsh_patina_activate
+# Keep syntax highlighting after other ZLE plugins.
+if (( $+commands[zsh-patina] )); then
+  eval "$(zsh-patina activate)"
+fi

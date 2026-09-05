@@ -1,3 +1,12 @@
 [submodule "roles/config/.config/theme-sync/themes/SupaTheme"]
 	path = roles/config/.config/theme-sync/themes/SupaTheme
-	url = git@github.com:brandsoy/SupaTheme.git
+	url = https://github.com/brandsoy/SupaTheme.git
+[submodule "roles/config/.config/zsh/plugins/zsh-autosuggestions"]
+	path = roles/config/.config/zsh/plugins/zsh-autosuggestions
+	url = https://github.com/zsh-users/zsh-autosuggestions.git
+[submodule "roles/config/.config/zsh/plugins/zsh-history-substring-search"]
+	path = roles/config/.config/zsh/plugins/zsh-history-substring-search
+	url = https://github.com/zsh-users/zsh-history-substring-search.git
+[submodule "roles/config/.config/zsh/plugins/zsh-vi-mode"]
+	path = roles/config/.config/zsh/plugins/zsh-vi-mode
+	url = https://github.com/jeffreytse/zsh-vi-mode.git

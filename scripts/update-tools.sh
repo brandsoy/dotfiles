@@ -3,10 +3,6 @@ set -euo pipefail
 
 DOTFILES_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 BREWFILE="$DOTFILES_DIR/roles/packages-macos/Brewfile"
-LEGACY_BREWFILE="$DOTFILES_DIR/homebrew/Brewfile"
-if [[ ! -f "$BREWFILE" && -f "$LEGACY_BREWFILE" ]]; then
-  BREWFILE="$LEGACY_BREWFILE"
-fi
 
 MODE="upgrade"
 DO_CLEANUP=0
@@ -78,8 +74,8 @@ if command -v brew >/dev/null 2>&1; then
       log "Homebrew: upgrading from Brewfile"
       brew bundle upgrade --file="$BREWFILE"
     else
-      warn "Brewfile not found at $BREWFILE; running brew upgrade instead"
-      brew upgrade --greedy
+      warn "Brewfile not found at $BREWFILE; refusing to upgrade unrelated packages"
+      exit 1
     fi
 
     if [[ "$DO_CLEANUP" -eq 1 ]]; then

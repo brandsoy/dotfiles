@@ -1,83 +1,58 @@
 # Dotfiles
 
-Personal configuration files for macOS and Linux (Arch/Debian).
+Personal configuration for macOS first, plus Arch and Fedora desktops.
+Debian, RHEL, and the Linux server profile are no longer supported.
 
 ## Structure
 
-```
-dotfiles/
-├── roles/                      # Role-based stow packages
-│   ├── config/                 # Shared ~/.config (nvim, terminals, theme-sync, etc.)
-│   ├── tmux/                   # Tmux configuration
-│   ├── zshrc/                  # Zsh configuration
-│   ├── macos-config/           # macOS-specific configs
-│   ├── linux-config/           # Linux-specific configs
-│   ├── packages-macos/         # Brewfile
-│   └── packages-arch/          # Archfile
-├── hosts/                      # Per-host stow overrides (optional)
-├── scripts/                    # Utility scripts (theme-sync, tmux helpers, etc.)
-└── install.sh                  # Auto-detecting installation script
-```
+- `roles/config/`: shared `~/.config`, including Zsh, Neovim, and terminals
+- `roles/zshenv/`, `roles/git/`, `roles/tmux/`, `roles/bin/`: shared home files and commands
+- `roles/agents/`: agent configuration and skills
+- `roles/macos-config/`, `roles/linux-config/`: platform configs and Git credential helpers
+- `roles/packages-macos/Brewfile`, `roles/packages-arch/Archfile`, `roles/packages-redhat/Redhatfile`: package manifests (the latter is Fedora-only)
+- `scripts/`: installation helpers, theme-sync, and updates
 
-## Quick Start
+## Installation
 
-1.  Clone the repository:
-    ```bash
-    git clone <your-repo-url> ~/dotfiles
-    cd ~/dotfiles
-    ```
-
-2.  Run the installation script:
-    ```bash
-    ./install.sh
-    ```
-
-    Or from anywhere after your first install:
-
-    ```bash
-    dotfiles-install
-    ```
-
-This script will:
--   **Detect OS** (macOS, Arch, Debian, or generic Linux)
--   **Install dependencies** (stow, git, curl, zsh, etc.)
--   **Symlink role-based configs** using GNU Stow
--   **Symlink host overrides** from `hosts/<hostname>` when present
--   **Install packages**:
-    -   macOS: Installs from `roles/packages-macos/Brewfile`
-    -   Arch: Installs common tools via pacman (+ optional AUR tooling)
-    -   Debian: Installs common tools via apt
-
-## Selective Installation
+Clone into `~/dotfiles`, then choose an explicit action:
 
 ```bash
-# Install only role-based configs
-./install.sh roles
-
-# Install only host overrides
-./install.sh hosts
-
-# Install only OS-specific role
-./install.sh mac
-./install.sh linux
-
-# Install a specific package
-./install.sh config
-./install.sh nvim
-
-# Only install packages (no stow)
-./install.sh packages
-
-# Simple machine profiles (recommended)
-dotfiles-install menu
-# or directly:
-dotfiles-install profile linux-server
-dotfiles-install profile linux-desktop
-dotfiles-install profile macbook
-
-# Global command (same behavior)
-dotfiles-install packages
+./install.sh                    # help only; no changes
+./install.sh links              # shared + detected platform; requires Stow
+./install.sh links config tmux  # selected roles only
+./install.sh packages           # package installation only
+./install.sh plugins            # pinned submodules + TPM; network access
+./install.sh all                # packages, plugins, then links
 ```
+
+After installation, `dotfiles-install` exposes the same commands. Set
+`DOTFILES_DIR` if the repository is somewhere other than `~/dotfiles`.
+
+- Linking never installs packages, downloads plugins, or changes your login shell.
+- `plugins` preserves legacy plugin directories without Git metadata under `${XDG_STATE_HOME:-~/.local/state}/dotfiles/plugin-backup.*` before initializing submodules. It prints each backup location; existing Git checkouts are left in place.
+- Stow uses file-level links, with explicit ignores for runtime files and credentials.
+- macOS bootstraps Homebrew if needed, then installs the Brewfile.
+- Arch performs a full package upgrade. Install `paru` or `yay` first for AUR packages; missing AUR support is reported as an error.
+- Fedora keeps your existing desktop/session. Package availability depends on Fedora version and enabled repositories; inspect DNF's skipped-package warnings. Hyprland configs remain available, but Fedora does not install a complete Hyprland desktop automatically.
+- No installer command runs `chsh`. If desired, choose a Zsh path listed in `/etc/shells` and change it yourself.
+- Existing conflicting files are not adopted or overwritten by Stow; back them up before resolving conflicts.
+
+Then open a new login shell and install mise tools:
+
+```bash
+mise install
+```
+
+Homebrew owns macOS applications and native CLI utilities. Native Linux package
+managers own desktop/system utilities; mise owns runtimes and, on Linux, lazygit
+and lazydocker to avoid distro-specific binary-download scripts. Mason owns
+Neovim-local tooling. Zsh plugins are pinned submodules, loaded without network
+access during shell startup. Use `git submodule update --remote <path>` only when
+you deliberately want to update a pin, then commit the changed gitlink.
+
+Git identity roots are `~/Developer/git/work/` and `~/Developer/git/personal/`.
+GitHub credentials use `gh auth login`; other hosts use macOS Keychain or Linux's
+in-memory credential cache.
 
 ## Theme management (theme-sync)
 
@@ -88,11 +63,10 @@ Themes are centralized in:
 
 Each theme folder contains a `theme.env` mapping plus app-specific theme files (for example `alacritty.toml`, `kitty.conf`, `fzf.sh`, and optional overlays like `tmux.theme.conf`, `opencode.theme.json`, etc.).
 
-The active theme is tracked in:
-
-- `roles/config/.config/theme-sync/current`
-- `roles/config/.config/theme-sync/current.env`
-- `roles/config/.config/theme-sync/mode.env`
+Active theme state is local, under `${XDG_STATE_HOME:-~/.local/state}/theme-sync/`:
+`current`, `current.env`, and `mode.env`. Legacy state under `~/.config/theme-sync/`
+is imported once, without overwriting newer choices. Hostname-specific theme overrides
+are no longer applied. Generated theme files are ignored by both Git and Stow.
 
 Apply and switch themes with:
 
@@ -109,6 +83,20 @@ theme-sync mode-set dark <theme>
 theme-sync auto
 theme-sync auto --watch 5
 ```
+
+On a fresh install, choose a theme with `theme-sync set <theme>`; on an existing
+install, run `theme-sync apply` to generate the new includes. Open a new shell to
+load the updated Bat, FZF, Starship, and lazygit environment.
+
+VS Code settings are **never rewritten**. Set these in VS Code's Settings UI:
+
+- `window.autoDetectColorScheme`: enabled
+- `workbench.preferredLightColorTheme`: your light theme
+- `workbench.preferredDarkColorTheme`: your dark theme
+
+Before pulling this cleanup onto another machine, preserve its old `current` and
+`mode.env` files in `~/.local/state/theme-sync/` if you want to retain its choices.
+The generated `current.env` will be rebuilt; do not copy machine-specific exports.
 
 ## AI model storage (Hugging Face, MLX, Ollama, Unsloth)
 
@@ -165,6 +153,7 @@ Notes:
 - `dotfiles-update --check` reports Homebrew and mise updates without running `brew update` or upgrading anything.
 - `dotfiles-update` runs `brew update`, upgrades packages declared in `roles/packages-macos/Brewfile`, then runs `mise upgrade --yes`.
 - Use `dotfiles-update --cleanup` to also run `brew cleanup -s` and `mise prune -y`.
+- Native Linux packages are updated separately with pacman/your AUR helper or DNF; `dotfiles-update` handles Homebrew and mise only.
 - The Brewfile is a hand-maintained macOS manifest. Do **not** run `brew bundle dump --force` over it or auto-sync it after package commands.
 - Homebrew owns macOS apps, fonts, and shared native utilities; mise owns runtimes and project tools; Mason owns Neovim-local servers and tools. Run `mise install` after changing `roles/config/.config/mise/config.toml`.
 - If your repo is not at `~/dotfiles`, set `DOTFILES_DIR` before running, for example: `DOTFILES_DIR=~/src/dotfiles dotfiles-update`.
@@ -179,62 +168,28 @@ Run a quick secret scan before pushing:
 
 This uses `gitleaks` if installed.
 
+Run offline regression checks (Bash, Zsh, Git, Stow, and Python 3 required):
+
+```bash
+python3 tests/test_dotfiles.py
+shellcheck install.sh scripts/theme-sync.sh scripts/update-tools.sh
+```
+
+Tests use disposable homes/repositories and mock package managers and desktop integrations.
+
 ## Uninstalling
 
 To remove symlinks:
 
 ```bash
-# Role packages
-cd ~/dotfiles/roles && stow -D -t ~ <package>
-
-# Host overrides (example)
-cd ~/dotfiles/hosts/$(hostname -s) && stow -D -t ~ <package>
+cd ~/dotfiles
+stow --dir=roles --delete --target="$HOME" <role>
 ```
 
-## Hosts blocklist (macOS + Linux)
+## Blocklists
 
-This repo includes a cross-platform hosts blocklist workflow:
-
-- Script: `roles/bin/.local/bin/update-hosts-blocklist`
-- Config: `roles/blocklists/.config/blocklists/`
-
-Stow the role packages, then run:
-
-```bash
-update-hosts-blocklist --dry-run
-update-hosts-blocklist
-```
-
-Default source list includes:
-
-- StevenBlack hosts
-- AdAway hosts
-- someonewhocares hosts
-
-Tune behavior with:
-
-- `~/.config/blocklists/allowlist.txt` (always allow)
-- `~/.config/blocklists/denylist.txt` (always block)
-- `~/.config/blocklists/false-positive-patterns.txt` (regex drop rules)
-
-Set up weekly automatic updates:
-
-```bash
-# Install weekly scheduler (root-level, works on macOS + Linux)
-hosts-blocklist-schedule install
-
-# Check scheduler status
-hosts-blocklist-schedule status
-
-# Remove scheduler
-hosts-blocklist-schedule uninstall
-```
-
-Notes:
-
-- macOS uses a LaunchDaemon (`/Library/LaunchDaemons/com.dotfiles.hosts-blocklist.plist`) every Sunday at 04:17
-- Linux uses a systemd timer (`com.dotfiles.hosts-blocklist.timer`) with default `OnCalendar=Sun *-*-* 04:17:00`
-- Linux schedule can be overridden at install time, for example: `hosts-blocklist-schedule install --schedule 'Mon *-*-* 03:30:00'`
+`roles/blocklists/` retains source, allowlist, and denylist data only. This repository
+does not currently include a hosts-file updater or scheduler.
 
 ## Neovim LSP Setup (0.12+)
 

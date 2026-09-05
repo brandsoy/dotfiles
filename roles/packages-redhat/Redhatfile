@@ -1,8 +1,9 @@
-# Fedora/RHEL package list for install.sh
+# Fedora desktop package list for install.sh
 # Parsed as whitespace-delimited package names; comments are ignored.
 
 ## Core
 git
+git-lfs
 curl
 wget
 stow
@@ -19,6 +20,8 @@ bash-completion
 neovim
 ripgrep
 fd-find
+eza
+fastfetch
 bat
 tree
 btop
@@ -30,11 +33,10 @@ p7zip
 tealdeer
 
 ## Development
-rust
 cmake
 make
-ansible
 gh
+# Runtimes, lazygit, and lazydocker are managed by mise on Linux.
 
 ## Sync / networking
 rsync
@@ -43,6 +45,10 @@ syncthing
 openssh
 tailscale
 wireguard-tools
+
+## Desktop essentials (keep your existing Fedora desktop/session)
+kitty
+wl-clipboard
 
 ## Containers
 docker

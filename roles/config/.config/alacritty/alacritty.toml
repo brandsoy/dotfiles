@@ -1,6 +1,7 @@
 [general]
 import = [
     "./themes/tokyo_night.toml",
+    "./auto/theme.toml",
 ]
 
 live_config_reload = true

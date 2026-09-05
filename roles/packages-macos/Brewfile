@@ -60,6 +60,8 @@ brew "gh"
 brew "ghostscript"
 # Distributed revision control system
 brew "git"
+# Required by the shared Git LFS filters
+brew "git-lfs"
 # Quickly rewrite git repository history
 brew "git-filter-repo"
 # Audit git repos for secrets

@@ -1,75 +1,29 @@
-# ~/.zprofile
-# shellcheck shell=bash
-# Sourced once at login shell startup (before .zshrc)
-# Path helpers are available from .zshenv
-
-# Custom helper functions for path manipulation
-path_prepend() {
-    if [ -d "$1" ] && [[ ":$PATH:" != *":$1:"* ]]; then
-        export PATH="$1:$PATH"
-    fi
-}
-
-path_append() {
-    if [ -d "$1" ] && [[ ":$PATH:" != *":$1:"* ]]; then
-        export PATH="$PATH:$1"
-    fi
-}
-
-# --- Homebrew & Paths -------------------------------------------------------
-# Try Apple Silicon path first, then Intel
-if [[ -x "/opt/homebrew/bin/brew" ]]; then
+# Login-only integrations. Common environment and unique PATH live in .zshenv.
+if [[ -x /opt/homebrew/bin/brew ]]; then
   eval "$(/opt/homebrew/bin/brew shellenv)"
-elif [[ -x "/usr/local/bin/brew" ]]; then
+elif [[ -x /usr/local/bin/brew ]]; then
   eval "$(/usr/local/bin/brew shellenv)"
 fi
 
-# LibPQ
-if command -v brew &>/dev/null; then
-  LIBPQ_BIN="$(brew --prefix libpq 2>/dev/null)/bin"
-  [[ -d "$LIBPQ_BIN" ]] && path_prepend "$LIBPQ_BIN"
-  unset LIBPQ_BIN
-elif [[ -d "/usr/local/opt/libpq/bin" ]]; then
-  path_prepend "/usr/local/opt/libpq/bin"
+if [[ -n "${HOMEBREW_PREFIX:-}" && -d "$HOMEBREW_PREFIX/opt/libpq/bin" ]]; then
+  path=("$HOMEBREW_PREFIX/opt/libpq/bin" $path)
 fi
 
-# --- Local tool paths -------------------------------------------------------
-path_prepend "$HOME/.local/bin"
-path_prepend "$HOME/.tsp/bin"
-path_prepend "$HOME/.opencode/bin"
-path_prepend "$HOME/.aspire/bin"
+for dir in "$HOME/.tsp/bin" "$HOME/.opencode/bin" "$HOME/.aspire/bin" \
+  "$HOME/.omlx/bin" "$HOME/.hermes/node/bin"; do
+  [[ -d "$dir" ]] && path=("$dir" $path)
+done
+unset dir
 
-# --- pnpm -------------------------------------------------------------------
-if [[ "$OSTYPE" == "darwin"* ]]; then
-  export PNPM_HOME="$HOME/Library/pnpm"
-else
-  export PNPM_HOME="$HOME/.local/share/pnpm"
-fi
-path_prepend "$PNPM_HOME"
-
-# --- OS-specific (Linux only) -----------------------------------------------
 if [[ "$OSTYPE" == linux* ]]; then
-  path_prepend "$HOME/.opencode/bin"
-  path_prepend "$HOME/.cargo/bin"
-  export XDG_DATA_DIRS="$XDG_DATA_DIRS:/var/lib/flatpak/exports/share:$HOME/.local/share/flatpak/exports/share"
+  [[ -d "$HOME/.cargo/bin" ]] && path=("$HOME/.cargo/bin" $path)
+  export XDG_DATA_DIRS="${XDG_DATA_DIRS:-/usr/local/share:/usr/share}:/var/lib/flatpak/exports/share:$XDG_DATA_HOME/flatpak/exports/share"
   export MESA_LOG_LEVEL=error
   export QT_QPA_PLATFORMTHEME=qt5ct
+else
+  [[ -d /Applications/Obsidian.app/Contents/MacOS ]] && path+=(/Applications/Obsidian.app/Contents/MacOS)
+  [[ -r "$HOME/.orbstack/shell/init.zsh" ]] && source "$HOME/.orbstack/shell/init.zsh"
 fi
 
-# Added by Obsidian
-path_append "/Applications/Obsidian.app/Contents/MacOS"
-
-# Added by OrbStack: command-line tools and integration
-# This won't be added again if you remove it.
-source ~/.orbstack/shell/init.zsh 2>/dev/null || :
-
-# oMLX: CLI shim path begin
-case ":$PATH:" in
-  *":$HOME/.omlx/bin:"*) ;;
-  *) export PATH="$HOME/.omlx/bin:$PATH" ;;
-esac
-# oMLX: CLI shim path end
-
-# Hermes Agent — ensure ~/.local/bin is on PATH
-export PATH="$HOME/.local/bin:$PATH"
-export PATH="$HOME/.local/share/pnpm/bin:$PATH"
+# Keep user binaries and mise-managed tools ahead of Homebrew dependencies.
+path=("$HOME/.local/bin" "$XDG_DATA_HOME/mise/shims" "$PNPM_HOME" "$PNPM_HOME/bin" $path)

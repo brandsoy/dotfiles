@@ -10,29 +10,27 @@ if [[ -n "${THEME_SYNC_ROOT:-}" ]]; then
 elif [[ -d "$CONFIG_HOME/theme-sync/themes" ]]; then
   ROOT="$CONFIG_HOME/theme-sync"
 else
-  ROOT="$SCRIPT_DIR"
+  ROOT="$SCRIPT_DIR/../roles/config/.config/theme-sync"
 fi
 
 THEMES_DIR="$ROOT/themes"
-CURRENT_FILE="$ROOT/current"
-CURRENT_ENV_FILE="$ROOT/current.env"
-MODE_ENV_FILE="$ROOT/mode.env"
+STATE_DIR="$STATE_HOME/theme-sync"
+CURRENT_FILE="$STATE_DIR/current"
+CURRENT_ENV_FILE="$STATE_DIR/current.env"
+MODE_ENV_FILE="$STATE_DIR/mode.env"
 
 
 TARGET_GHOSTTY="$CONFIG_HOME/ghostty/auto/theme.ghostty"
-TARGET_ALACRITTY="$CONFIG_HOME/alacritty/alacritty.toml"
-TARGET_KITTY="$CONFIG_HOME/kitty/kitty.conf"
-TARGET_BAT="$CONFIG_HOME/bat/config"
-TARGET_BTOP="$CONFIG_HOME/btop/btop.conf"
-TARGET_LAZYGIT="$CONFIG_HOME/lazygit/config.yml"
+TARGET_ALACRITTY="$CONFIG_HOME/alacritty/auto/theme.toml"
+TARGET_KITTY="$CONFIG_HOME/kitty/auto/theme.conf"
+TARGET_BTOP="$CONFIG_HOME/btop/themes/dotfiles.theme"
+TARGET_LAZYGIT="$STATE_DIR/lazygit.yml"
 TARGET_YAZI_THEME="$CONFIG_HOME/yazi/theme.toml"
 TARGET_EZA_THEME="$CONFIG_HOME/eza/theme.yml"
 TARGET_TMUX_THEME="$CONFIG_HOME/tmux/theme.conf"
 TARGET_OPENCODE_THEME="$CONFIG_HOME/opencode/theme.json"
 TARGET_BAT_THEMES="$CONFIG_HOME/bat/themes"
 TARGET_NVIM_STATE="$STATE_HOME/nvim/theme.txt"
-TARGET_VSCODE_MAC="$HOME/Library/Application Support/Code/User/settings.json"
-TARGET_VSCODE_LINUX="$CONFIG_HOME/Code/User/settings.json"
 
 usage() {
   cat <<'EOF'
@@ -57,23 +55,35 @@ EOF
 }
 
 ensure_dirs() {
-  mkdir -p "$ROOT"
+  mkdir -p "$STATE_DIR"
+  # One-time migration: retain local choices, never overwrite newer state.
+  # Regenerate exports rather than copying machine-specific absolute paths.
+  local f theme
+  for f in current mode.env; do
+    if [[ ! -e "$STATE_DIR/$f" && -f "$ROOT/$f" ]]; then
+      cp "$ROOT/$f" "$STATE_DIR/$f"
+    fi
+  done
+  if [[ ! -e "$CURRENT_ENV_FILE" && -f "$CURRENT_FILE" ]]; then
+    theme="$(current_theme)"
+    if [[ -f "$THEMES_DIR/$theme/theme.env" ]]; then
+      load_theme "$theme"
+      write_current_env "$theme"
+    fi
+  fi
 }
 
 write_current_env() {
   local theme="$1"
-  mkdir -p "$ROOT"
-  cat > "$CURRENT_ENV_FILE" <<EOF
-export TERMINAL_THEME="$theme"
-export BAT_THEME="${BAT_THEME:-}"
-export FZF_THEME_FILE="${FZF_THEME_FILE:-}"
-EOF
-
-  if [[ -n "${STARSHIP_CONFIG:-}" ]]; then
-    printf 'export STARSHIP_CONFIG="%s"\n' "$STARSHIP_CONFIG" >> "$CURRENT_ENV_FILE"
-  elif [[ -f "$ROOT/themes/$theme/starship.toml" ]]; then
-    printf 'export STARSHIP_CONFIG="%s"\n' "$ROOT/themes/$theme/starship.toml" >> "$CURRENT_ENV_FILE"
-  fi
+  {
+    printf 'export TERMINAL_THEME=%q\n' "$theme"
+    printf 'export BAT_THEME=%q\n' "${BAT_THEME:-}"
+    printf 'export FZF_THEME_FILE=%q\n' "${FZF_THEME_FILE:-}"
+    printf 'export STARSHIP_CONFIG=%q\n' "$STARSHIP_CONFIG"
+    local lazygit_config="$CONFIG_HOME/lazygit/config.yml"
+    [[ ! -f "$TARGET_LAZYGIT" ]] || lazygit_config+=",$TARGET_LAZYGIT"
+    printf 'export LG_CONFIG_FILE=%q\n' "$lazygit_config"
+  } > "$CURRENT_ENV_FILE"
 }
 
 load_mode_config() {
@@ -90,7 +100,7 @@ load_mode_config() {
 }
 
 save_mode_config() {
-  mkdir -p "$ROOT"
+  mkdir -p "$STATE_DIR"
   cat > "$MODE_ENV_FILE" <<EOF
 THEME_LIGHT="${THEME_LIGHT:-}"
 THEME_DARK="${THEME_DARK:-}"
@@ -117,7 +127,6 @@ set_mode_theme() {
   esac
 
   save_mode_config
-  apply_vscode_preferred_themes
   echo "Saved $mode mode theme: $theme"
 }
 
@@ -190,20 +199,6 @@ watch_system_mode_theme() {
   done
 }
 
-update_line() {
-  local file="$1"
-  local pattern="$2"
-  local replacement="$3"
-
-  [[ -f "$file" ]] || return 0
-
-  if grep -qE "$pattern" "$file"; then
-    perl -0pi -e "s~$pattern~$replacement~m" "$file"
-  else
-    printf '%s\n' "$replacement" >> "$file"
-  fi
-}
-
 load_theme() {
   local theme="$1"
   local theme_file="$THEMES_DIR/$theme/theme.env"
@@ -214,8 +209,20 @@ load_theme() {
     exit 1
   fi
 
+  # Do not inherit optional mappings from the previous theme or parent shell.
+  unset GHOSTTY_THEME_FILE BAT_THEME_FILE BTOP_THEME LAZYGIT_THEME_FILE OPENCODE_THEME_FILE VSCODE_THEME TMUX_BACKGROUND
+  STARSHIP_CONFIG="$CONFIG_HOME/starship.toml"
+  [[ ! -f "$THEMES_DIR/$theme/starship.toml" ]] || STARSHIP_CONFIG="$THEMES_DIR/$theme/starship.toml"
   # shellcheck disable=SC1090
   source "$theme_file"
+}
+
+prepare_output() {
+  local file="$1"
+  mkdir -p "$(dirname "$file")"
+  # Detach old Stow links without touching their former targets (including
+  # dangling links left after pulling the removal of generated files).
+  [[ ! -L "$file" ]] || rm "$file"
 }
 
 copy_if_present() {
@@ -223,7 +230,7 @@ copy_if_present() {
   local target_file="$2"
 
   if [[ -f "$source_file" ]]; then
-    mkdir -p "$(dirname "$target_file")"
+    prepare_output "$target_file"
     cp "$source_file" "$target_file"
   fi
 }
@@ -233,7 +240,7 @@ copy_tmux_theme() {
   local target_file="$2"
 
   [[ -f "$source_file" ]] || return 0
-  mkdir -p "$(dirname "$target_file")"
+  prepare_output "$target_file"
   cp "$source_file" "$target_file"
 
   # Keep the bar background tied to the selected theme's canonical value,
@@ -250,8 +257,12 @@ refresh_tmux_theme() {
   command -v tmux >/dev/null 2>&1 || return 0
   tmux ls >/dev/null 2>&1 || return 0
 
+  local color
+  for color in bg active inactive text accent border; do
+    tmux set-option -gu "@minimal_theme_${color}_color" || true
+  done
   [[ -f "$TARGET_TMUX_THEME" ]] && tmux source-file "$TARGET_TMUX_THEME" || true
-  tmux run-shell "$HOME/dotfiles/scripts/tmux/minimal-theme/minimal.tmux" || true
+  tmux run-shell "${DOTFILES_DIR:-$HOME/dotfiles}/scripts/tmux/minimal-theme/minimal.tmux" || true
 }
 
 refresh_kitty_theme() {
@@ -271,10 +282,10 @@ refresh_kitty_theme() {
 
   local target
   for target in "${targets[@]}"; do
-    kitty @ --to "$target" load-config "$TARGET_KITTY" >/dev/null 2>&1 && return 0
+    kitty @ --to "$target" load-config "$CONFIG_HOME/kitty/kitty.conf" >/dev/null 2>&1 && return 0
   done
 
-  kitty @ load-config "$TARGET_KITTY" >/dev/null 2>&1 || true
+  kitty @ load-config "$CONFIG_HOME/kitty/kitty.conf" >/dev/null 2>&1 || true
 }
 
 ensure_bat_theme() {
@@ -290,140 +301,45 @@ ensure_bat_theme() {
   fi
 }
 
-vscode_settings_file() {
-  case "$(uname -s)" in
-    Darwin) echo "$TARGET_VSCODE_MAC" ;;
-    Linux) echo "$TARGET_VSCODE_LINUX" ;;
-    *) echo "" ;;
-  esac
-}
-
-get_theme_var() {
-  local theme="$1"
-  local var_name="$2"
-  local theme_file="$THEMES_DIR/$theme/theme.env"
-  [[ -f "$theme_file" ]] || return 1
-
-  (
-    # shellcheck disable=SC1090
-    source "$theme_file"
-    eval "printf '%s' \"\${$var_name:-}\""
-  )
-}
-
-apply_vscode_preferred_themes() {
-  local settings_file
-  settings_file="$(vscode_settings_file)"
-  [[ -n "$settings_file" ]] || return 0
-
-  load_mode_config
-
-  local light_vscode_theme=""
-  local dark_vscode_theme=""
-
-  if [[ -n "${THEME_LIGHT:-}" ]]; then
-    light_vscode_theme="$(get_theme_var "$THEME_LIGHT" VSCODE_THEME || true)"
-  fi
-
-  if [[ -n "${THEME_DARK:-}" ]]; then
-    dark_vscode_theme="$(get_theme_var "$THEME_DARK" VSCODE_THEME || true)"
-  fi
-
-  mkdir -p "$(dirname "$settings_file")"
-
-  python3 - "$settings_file" "$light_vscode_theme" "$dark_vscode_theme" <<'PY'
-import json
-import sys
-from pathlib import Path
-
-settings_path = Path(sys.argv[1])
-light = sys.argv[2]
-dark = sys.argv[3]
-
-data = {}
-if settings_path.exists():
-    try:
-        data = json.loads(settings_path.read_text())
-        if not isinstance(data, dict):
-            data = {}
-    except Exception:
-        data = {}
-
-if light:
-    data["workbench.preferredLightColorTheme"] = light
-if dark:
-    data["workbench.preferredDarkColorTheme"] = dark
-
-settings_path.write_text(json.dumps(data, indent=2) + "\n")
-PY
-}
-
-apply_vscode_theme() {
-  [[ -n "${VSCODE_THEME:-}" ]] || return 0
-
-  local settings_file
-  settings_file="$(vscode_settings_file)"
-  [[ -n "$settings_file" ]] || return 0
-
-  mkdir -p "$(dirname "$settings_file")"
-
-  python3 - "$settings_file" "$VSCODE_THEME" <<'PY'
-import json
-import sys
-from pathlib import Path
-
-settings_path = Path(sys.argv[1])
-theme = sys.argv[2]
-
-data = {}
-if settings_path.exists():
-    try:
-        data = json.loads(settings_path.read_text())
-        if not isinstance(data, dict):
-            data = {}
-    except Exception:
-        data = {}
-
-data["workbench.colorTheme"] = theme
-settings_path.write_text(json.dumps(data, indent=2) + "\n")
-PY
-
-  apply_vscode_preferred_themes
-}
-
 apply_theme() {
   local theme="$1"
   local theme_dir="$THEMES_DIR/$theme"
 
   load_theme "$theme"
+  local file
+  for file in "$ALACRITTY_IMPORT" "$KITTY_INCLUDE"; do
+    if [[ ! -f "$file" ]]; then
+      echo "Theme asset missing: $file. Run dotfiles-install plugins and links first." >&2
+      return 1
+    fi
+  done
 
-  mkdir -p "$(dirname "$TARGET_GHOSTTY")"
+  prepare_output "$TARGET_GHOSTTY"
   if [[ -n "${GHOSTTY_THEME_FILE:-}" && -f "$GHOSTTY_THEME_FILE" ]]; then
     cp "$GHOSTTY_THEME_FILE" "$TARGET_GHOSTTY"
   else
     printf 'theme = %s\n' "$GHOSTTY_THEME" > "$TARGET_GHOSTTY"
   fi
 
-  if [[ -f "$TARGET_ALACRITTY" ]]; then
-    perl -0pi -e 's~(\[general\]\s*import\s*=\s*\[\s*\n\s*")([^"]+)("\s*\n\s*\])~$1'"$ALACRITTY_IMPORT"'$3~m' "$TARGET_ALACRITTY"
-  fi
-
-  update_line "$TARGET_KITTY" '^include\s+.*$' "include $KITTY_INCLUDE"
+  copy_if_present "$ALACRITTY_IMPORT" "$TARGET_ALACRITTY"
+  copy_if_present "$KITTY_INCLUDE" "$TARGET_KITTY"
   refresh_kitty_theme
   if [[ -n "${BAT_THEME_FILE:-}" && -f "$BAT_THEME_FILE" ]]; then
-    mkdir -p "$TARGET_BAT_THEMES"
-    cp "$BAT_THEME_FILE" "$TARGET_BAT_THEMES/$(basename "$BAT_THEME_FILE")"
+    copy_if_present "$BAT_THEME_FILE" "$TARGET_BAT_THEMES/$(basename "$BAT_THEME_FILE")"
     bat cache --build >/dev/null 2>&1 || true
   fi
-  update_line "$TARGET_BAT" '^--theme=.*$' "--theme=\"$BAT_THEME\""
   ensure_bat_theme
-  if [[ -n "${BTOP_THEME:-}" ]]; then
-    update_line "$TARGET_BTOP" '^color_theme\s*=.*$' "color_theme = \"$BTOP_THEME\""
+  if [[ -n "${BTOP_THEME:-}" && -f "$BTOP_THEME" ]]; then
+    copy_if_present "$BTOP_THEME" "$TARGET_BTOP"
+  else
+    rm -f "$TARGET_BTOP"
   fi
 
   mkdir -p "$(dirname "$TARGET_NVIM_STATE")"
   printf '%s\n' "$NVIM_THEME" > "$TARGET_NVIM_STATE"
 
+  # Optional overlays must not leak from the previously selected theme.
+  rm -f "$TARGET_LAZYGIT" "$TARGET_YAZI_THEME" "$TARGET_EZA_THEME" "$TARGET_TMUX_THEME"
   if [[ -n "${LAZYGIT_THEME_FILE:-}" ]]; then
     copy_if_present "$LAZYGIT_THEME_FILE" "$TARGET_LAZYGIT"
   else
@@ -437,7 +353,6 @@ apply_theme() {
   else
     rm -f "$TARGET_OPENCODE_THEME"
   fi
-  apply_vscode_theme
   refresh_tmux_theme
 
   write_current_env "$theme"
@@ -492,7 +407,7 @@ show_current() {
   echo "kitty include: $KITTY_INCLUDE"
   echo "nvim: $NVIM_THEME"
   echo "bat: $BAT_THEME"
-  echo "btop: $BTOP_THEME"
+  echo "btop: ${BTOP_THEME:-<default>}"
   echo "fzf file: ${FZF_THEME_FILE:-}"
   echo "vscode: ${VSCODE_THEME:-<unset>}"
 }
@@ -589,9 +504,10 @@ tui_menu() {
 }
 
 main() {
+  local cmd="${1:-tui}"
+  case "$cmd" in -h|--help|help) usage; return 0 ;; esac
   ensure_dirs
 
-  local cmd="${1:-tui}"
   case "$cmd" in
     tui)
       tui_menu

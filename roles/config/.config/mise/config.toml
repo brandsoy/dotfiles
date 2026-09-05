@@ -34,3 +34,7 @@ rust = "latest"
 "cargo:jinja-lsp" = "latest"
 "pipx:harlequin[odbc]" = "latest"
 "github:can1357/oh-my-pi" = "latest"
+# Linux packages vary by distro/repository; avoid custom binary-download scripts.
+# Homebrew owns these on macOS.
+"github:jesseduffield/lazygit" = { version = "latest", os = ["linux"] }
+"github:jesseduffield/lazydocker" = { version = "latest", os = ["linux"] }

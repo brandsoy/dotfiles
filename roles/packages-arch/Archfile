@@ -5,6 +5,7 @@
 ## Core System
 base-devel
 git
+git-lfs
 curl
 wget
 stow
@@ -22,6 +23,8 @@ AUR: zsh-patina-git
 neovim
 ripgrep
 fd
+eza
+fastfetch
 bat
 tree
 btop
@@ -34,14 +37,10 @@ tealdeer
 yazi
 
 ## Development Tools
-rust
 cmake
 make
-ansible
-terraform
 github-cli
-lazygit
-lazydocker
+# Runtimes, lazygit, and lazydocker are managed by mise on Linux.
 mise
 
 ## File Management & Sync
@@ -59,6 +58,8 @@ hyprland
 hyprpaper
 hyprlock
 hypridle
+hyprpolkitagent
+uwsm
 xdg-desktop-portal-hyprland
 qt5-wayland
 qt6-wayland
@@ -71,7 +72,7 @@ wl-clipboard
 cliphist
 grim
 slurp
-swappy
+satty
 
 ## Audio & Bluetooth
 pipewire
@@ -83,6 +84,9 @@ pavucontrol
 bluez
 bluez-utils
 blueman
+network-manager-applet
+brightnessctl
+playerctl
 
 ## Fonts
 ttf-fira-code
@@ -96,7 +100,8 @@ otf-monaspace-nerd
 kitty
 
 ## Browsers
-AUR: brave-bin
+AUR: helium-browser-bin
+AUR: vicinae-bin
 
 ## GUI Applications
 obsidian
@@ -118,7 +123,6 @@ reflector
 timeshift
 gparted
 filelight
-AUR: pnpm-bin
 
 ## Display Manager (choose one)
 # sddm

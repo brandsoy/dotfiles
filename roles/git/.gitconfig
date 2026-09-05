@@ -1,20 +1,15 @@
-[includeIf "gitdir:~/Developer/work"]
-    path = .gitconfig-work
-[includeIf "gitdir:~/Developer/personal"]
-    path = .gitconfig-personal   
-
 [fetch]
 	prune = true
 [init]
 	defaultBranch = main
+[include]
+	path = .gitconfig-platform
 [credential "https://github.com"]
-	helper = 
-	helper = !/opt/homebrew/bin/gh auth git-credential
+	helper =
+	helper = !gh auth git-credential
 [credential "https://gist.github.com"]
-	helper = 
-	helper = !/opt/homebrew/bin/gh auth git-credential
-[credential]
-	helper = osxkeychain
+	helper =
+	helper = !gh auth git-credential
 [user]
 	name = Mattis Brandsøy
 	email = mattis.dev@icloud.com
@@ -27,3 +22,9 @@
 	process = git-lfs filter-process
 	required = true
 	clean = git-lfs clean -- %f
+
+# These must follow the fallback [user] values above.
+[includeIf "gitdir:~/Developer/git/work/"]
+	path = .gitconfig-work
+[includeIf "gitdir:~/Developer/git/personal/"]
+	path = .gitconfig-personal

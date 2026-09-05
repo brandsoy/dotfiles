@@ -1,0 +1,20 @@
+# Runtime state and credentials must not be linked, even if present locally.
+\.git
+\.gitignore
+\.gitmodules
+.*\.log
+.*\.bak
+.*\.old
+\.DS_Store
+^/\.config/zsh/(\.zcompcache|\.zsh_sessions|\.zshrc_old|secrets\.zsh)
+^/\.config/theme-sync/(current|current\.env|mode\.env)
+^/\.config/(ghostty|kitty|alacritty)/auto
+^/\.config/btop/themes/dotfiles\.theme
+^/\.config/bat/themes/SupaTheme\.tmTheme
+^/\.config/tmux/theme\.conf
+^/\.config/yazi/theme\.toml
+^/\.config/eza/theme\.yml
+^/\.config/opencode/(opencode-notifier-state\.json|theme\.json)
+^/\.config/gh
+^/\.config/github-copilot/(apps\.json|hosts\.json|rd|go)
+^/\.config/pgcli/(history|log)

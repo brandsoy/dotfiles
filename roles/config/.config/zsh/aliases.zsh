@@ -1,20 +1,16 @@
-# Better ls
-alias ls='eza --icons'
+# Keep a partially installed shell usable.
+if (( $+commands[eza] )); then
+  alias ls='eza --icons'
+  alias ll='eza -lh --icons --git'
+  alias la='eza -lah --icons --git'
+  alias tree='eza --tree --icons'
+  compdef eza=ls
+else
+  alias ll='ls -lh'
+  alias la='ls -lah'
+fi
 
-# Detailed listing
-alias ll='eza -lh --icons --git'
-
-# Detailed listing including hidden files
-alias la='eza -lah --icons --git'
-
-# Tree view
-alias tree='eza --tree --icons'
-
-# Reuse ls completions for eza (avoids defining a separate completion function)
-compdef eza=ls
-
-# Better cat
-alias cat='bat'
+(( $+commands[bat] )) && alias cat='bat'
 
 # =========================================================
 # Core utilities
@@ -23,8 +19,7 @@ alias cat='bat'
 # Apple Silicon-aware system summary (configured in ~/.config/fastfetch)
 alias ff='fastfetch'
 
-alias grep='rg --color=auto'
-alias diff='diff --color=auto'
+# Keep grep/diff semantics portable; use rg explicitly.
 alias df='df -h'
 
 # =========================================================
@@ -51,7 +46,7 @@ alias lg='lazygit'
 # =========================================================
 # Docker
 # =========================================================
-ld='lazydocker'
+alias ld='lazydocker'
 
 # =========================================================
 # Searching
