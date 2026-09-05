@@ -2,16 +2,19 @@ local M = {}
 
 function M.get()
 	return {
-		'stylua',
+		'ansible-lint',
+		'hadolint',
+		'hclfmt',
+		'shfmt',
+		'ruff',
 		'prettierd',
 		'gofumpt',
 		'golines',
 		'pgformatter',
 		'sqlfluff',
-		'terraform',
+		'yamllint',
 		'roslyn',
 		'dotenv-linter',
-		'templ',
 	}
 end
 

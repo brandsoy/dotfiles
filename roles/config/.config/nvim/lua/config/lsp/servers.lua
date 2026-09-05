@@ -1,8 +1,8 @@
 local M = {}
 
 local function configure_servers()
-	if not (vim.lsp and vim.lsp.config and vim.lsp.enable) then
-		vim.notify('Neovim 0.11+ required for this LSP setup', vim.log.levels.ERROR)
+	if vim.fn.has('nvim-0.12') ~= 1 then
+		vim.notify('Neovim 0.12+ required for this LSP setup', vim.log.levels.ERROR)
 		return
 	end
 
@@ -15,7 +15,7 @@ local function configure_servers()
 		update_in_insert = false,
 	})
 
-	local capabilities = vim.lsp.protocol.make_client_capabilities()
+	local capabilities = require('blink.cmp').get_lsp_capabilities()
 
 	local server_tables = {
 		require('config.lsp.servers_general').get(),

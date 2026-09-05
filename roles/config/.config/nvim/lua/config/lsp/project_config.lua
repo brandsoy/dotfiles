@@ -3,6 +3,8 @@ local M = {}
 M.biome_files = {
 	"biome.json",
 	"biome.jsonc",
+	".biome.json",
+	".biome.jsonc",
 }
 
 M.prettier_files = {
@@ -60,6 +62,38 @@ local function package_has_field(package_json, field)
 	return ok and type(package) == "table" and package[field] ~= nil
 end
 
+local function package_has_dependency(package_json, dependency)
+	local lines = vim.fn.readfile(package_json)
+	local ok, package = pcall(vim.json.decode, table.concat(lines, "\n"))
+	if not ok or type(package) ~= "table" then
+		return false
+	end
+
+	for _, section in ipairs({ 'dependencies', 'devDependencies', 'peerDependencies', 'optionalDependencies' }) do
+		if type(package[section]) == 'table' and package[section][dependency] ~= nil then
+			return true
+		end
+	end
+
+	return false
+end
+
+local function find_package_dependency(bufnr, dependency)
+	local dir = buf_dir(bufnr)
+	while dir do
+		local package_json = vim.fs.joinpath(dir, 'package.json')
+		if vim.fn.filereadable(package_json) == 1 and package_has_dependency(package_json, dependency) then
+			return package_json
+		end
+
+		local parent = vim.fs.dirname(dir)
+		if parent == dir then
+			break
+		end
+		dir = parent
+	end
+end
+
 function M.find_package_field(bufnr, field)
 	local dir = buf_dir(bufnr)
 	while dir do
@@ -86,6 +120,7 @@ end
 function M.has_prettier(bufnr)
 	return M.find_file(bufnr, M.prettier_files) ~= nil
 		or M.find_package_field(bufnr, "prettier") ~= nil
+		or find_package_dependency(bufnr, 'prettier') ~= nil
 end
 
 function M.has_eslint(bufnr)

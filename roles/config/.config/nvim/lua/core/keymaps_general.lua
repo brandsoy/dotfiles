@@ -33,7 +33,6 @@ function M.setup()
 	map('n', '<leader>bn', '<Cmd>bnext<CR>', 'Next buffer')
 	map('n', '<leader>bp', '<Cmd>bprevious<CR>', 'Previous buffer')
 	map('n', '<leader>br', '<Cmd>edit!<CR>', 'Revert buffer from disk')
-	map('n', '<leader>bo', '<Cmd>BufferCloseAllButCurrent<CR>', 'Close all other buffers')
 
 	map('n', '<leader>qn', '<Cmd>cnext<CR>', 'Next quickfix item')
 	map('n', '<leader>qp', '<Cmd>cprevious<CR>', 'Previous quickfix item')
@@ -81,8 +80,9 @@ function M.setup()
 	end, 'Toggle relative line numbers')
 
 	map('n', '<leader>uc', function()
-		vim.wo.cursorline = not vim.wo.cursorline
-		notify_option('Cursor line', vim.wo.cursorline)
+		vim.g.cursorline_enabled = not vim.g.cursorline_enabled
+		vim.wo.cursorline = vim.g.cursorline_enabled
+		notify_option('Cursor line', vim.g.cursorline_enabled)
 	end, 'Toggle cursor line')
 
 	map('n', '<leader>uw', function()
@@ -124,11 +124,7 @@ function M.setup()
 		end
 
 		if found_path then
-			if found_path:match('%.pdf$') then
-				vim.fn.jobstart({ 'open', '-a', 'Preview', found_path }, { detach = true })
-			else
-				vim.ui.open(found_path)
-			end
+			vim.ui.open(found_path)
 		elseif file:match('^https?://') then
 			vim.ui.open(file)
 		else

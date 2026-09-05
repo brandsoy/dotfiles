@@ -8,8 +8,10 @@ local ensure_installed = {
 	'gomod',
 	'c_sharp',
 	'hcl',
+	'jinja',
 	'html',
 	'css',
+	'xml',
 	'javascript',
 	'json',
 	'lua',
@@ -48,17 +50,24 @@ end
 
 function M.setup()
 	vim.treesitter.language.register('html', 'htmx')
+	vim.treesitter.language.register('yaml', 'yaml.ansible')
 
-	-- nvim-treesitter no longer enables highlighting automatically.  Start the
-	-- templ parser explicitly so its HTML/CSS/JS injections are highlighted in
-	-- .templ buffers as well as the templ expressions themselves.
+	-- nvim-treesitter no longer enables highlighting automatically. Start the
+	-- matching parser for every supported filetype, including custom filetypes.
 	vim.api.nvim_create_autocmd('FileType', {
 		group = vim.api.nvim_create_augroup('user_treesitter_highlighting', {
 			clear = true,
 		}),
-		pattern = 'templ',
+		pattern = '*',
 		callback = function(args)
-			pcall(vim.treesitter.start, args.buf, 'templ')
+			if vim.b[args.buf].large_file then
+				return
+			end
+
+			local lang = vim.treesitter.language.get_lang(vim.bo[args.buf].filetype)
+			if lang then
+				pcall(vim.treesitter.start, args.buf, lang)
+			end
 		end,
 	})
 

@@ -48,7 +48,8 @@ apply_minimal_theme() {
     tmux set-option -g status-justify left
 
     # Status bar colors and style
-    tmux set-option -g status-style "bg=$bg_color,fg=$text_color"
+    # Use the terminal's background so the status bar follows the active theme.
+    tmux set-option -g status-style "bg=default,fg=$text_color"
     tmux set-option -g status-left-length 100
     tmux set-option -g status-right-length 100
 
@@ -61,20 +62,20 @@ apply_minimal_theme() {
     tmux set-option -g message-command-style "bg=$border_color,fg=$text_color,bold"
 
     # Window status format
-    tmux set-option -g window-status-format "#[fg=$inactive_color,bg=$bg_color] #I:#W "
-    tmux set-option -g window-status-current-format "#[fg=$active_color,bg=$bg_color,bold,underscore] #I:#W "
+    tmux set-option -g window-status-format "#[fg=$inactive_color,bg=default] #I:#W "
+    tmux set-option -g window-status-current-format "#[fg=$active_color,bg=default,bold,underscore] #I:#W "
     tmux set-option -g window-status-separator "  "
 
     # Status left (session name). Keep it flat and use the theme accent only
     # for emphasis, without a filled pill or powerline separator.
-    tmux set-option -g status-left "#[fg=$accent_color,bg=$bg_color,bold] $icon_session #S #[fg=$text_color,bg=$bg_color] " 
+    tmux set-option -g status-left "#[fg=$accent_color,bg=default,bold] $icon_session #S #[fg=$text_color,bg=default] "
 
     # Status right: useful development context instead of information already
     # visible in macOS: git branch/status, current folder, and pane zoom state.
     local status_right="\
-#[fg=$accent_color,bg=$bg_color]  #(git -C \"#{pane_current_path}\" symbolic-ref --short HEAD 2>/dev/null || git -C \"#{pane_current_path}\" rev-parse --short HEAD 2>/dev/null)#(git -C \"#{pane_current_path}\" status --porcelain 2>/dev/null | awk 'NR==1 { print \" ✚\"; exit }') \
-#[fg=$text_color,bg=$bg_color] $icon_dir #([ #{pane_current_path} = \$HOME ] && echo '~' || basename #{pane_current_path}) \
-#[fg=$text_color,bg=$bg_color]#{?window_zoomed_flag, 󰊓 zoomed,} " 
+#[fg=$accent_color,bg=default]  #(git -C \"#{pane_current_path}\" symbolic-ref --short HEAD 2>/dev/null || git -C \"#{pane_current_path}\" rev-parse --short HEAD 2>/dev/null)#(git -C \"#{pane_current_path}\" status --porcelain 2>/dev/null | awk 'NR==1 { print \" ✚\"; exit }') \
+#[fg=$text_color,bg=default] $icon_dir #([ #{pane_current_path} = \$HOME ] && echo '~' || basename #{pane_current_path}) \
+#[fg=$text_color,bg=default]#{?window_zoomed_flag, 󰊓 zoomed,} "
 
     tmux set-option -g status-right "$status_right"
 

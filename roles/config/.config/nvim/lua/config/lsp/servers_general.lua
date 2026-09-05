@@ -28,6 +28,16 @@ function M.get()
 				},
 			},
 		},
+		powershell_es = {
+			filetypes = { 'ps1', 'psm1', 'psd1' },
+			bundle_path = vim.fs.joinpath(
+				vim.fn.stdpath('data'),
+				'mason',
+				'packages',
+				'powershell-editor-services',
+				'PowerShellEditorServices'
+			),
+		},
 		gopls = {
 			settings = {
 				gopls = {
@@ -49,7 +59,23 @@ function M.get()
 		},
 		bashls = {},
 		biome = {
-			root_dir = project_config.root_with_config(project_config.biome_files),
+			filetypes = {
+				'astro',
+				'css',
+				'graphql',
+				'html',
+				'javascript',
+				'javascriptreact',
+				'json',
+				'jsonc',
+				'typescript',
+				'typescriptreact',
+				'vue',
+			},
+			root_dir = function(bufnr, on_dir)
+				local config = project_config.find_file(bufnr, project_config.biome_files)
+				on_dir(config and vim.fs.dirname(config) or vim.fs.root(bufnr, { '.git' }) or vim.uv.cwd())
+			end,
 		},
 		eslint = {
 			root_dir = project_config.root_with_config(project_config.eslint_files, 'eslintConfig'),

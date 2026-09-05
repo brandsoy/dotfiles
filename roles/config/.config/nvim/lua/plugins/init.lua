@@ -5,6 +5,30 @@ local function gh(repo)
 end
 
 function M.setup()
+	vim.api.nvim_create_autocmd('PackChanged', {
+		callback = function(event)
+			local data = event.data
+			if
+				data.spec.name ~= 'markdown-preview.nvim'
+				or not vim.tbl_contains({ 'install', 'update' }, data.kind)
+			then
+				return
+			end
+
+			local result = vim
+				.system({ 'npm', 'install', '--no-audit', '--no-fund' }, {
+					cwd = vim.fs.joinpath(data.path, 'app'),
+				})
+				:wait()
+			if result.code ~= 0 then
+				vim.notify(
+					'Failed to install markdown-preview dependencies',
+					vim.log.levels.ERROR
+				)
+			end
+		end,
+	})
+
 	vim.pack.add({
 		-- Themes
 		gh('0xleodevv/oc-2.nvim'),
@@ -18,6 +42,11 @@ function M.setup()
 		gh('mryodo/rwth.nvim'),
 		-- Plugins
 		gh('echasnovski/mini.nvim'),
+		gh('abecodes/tabout.nvim'),
+		{
+			src = gh('folke/which-key.nvim'),
+			version = vim.version.range('3'),
+		},
 		gh('nvim-tree/nvim-web-devicons'),
 		gh('ibhagwan/fzf-lua'),
 		gh('iamcco/markdown-preview.nvim'),
@@ -25,10 +54,14 @@ function M.setup()
 		gh('lewis6991/gitsigns.nvim'),
 		gh('sindrets/diffview.nvim'),
 		gh('norcalli/nvim-colorizer.lua'),
-		gh('mikavilpas/yazi.nvim'),
 		gh('3rd/image.nvim'),
 		gh('joerdav/templ.vim'),
+		gh('nvim-tree/nvim-tree.lua'),
 		-- LSP
+		{
+			src = gh('Saghen/blink.cmp'),
+			version = vim.version.range('1'),
+		},
 		gh('nvim-treesitter/nvim-treesitter'),
 		gh('neovim/nvim-lspconfig'),
 		gh('williamboman/mason.nvim'),
@@ -39,9 +72,6 @@ function M.setup()
 		gh('seblyng/roslyn.nvim'),
 		-- AI
 		gh('zbirenbaum/copilot.lua'),
-		gh('nvim-lua/plenary.nvim'),
-		gh('nvim-neo-tree/neo-tree.nvim'),
-		gh('MunifTanjim/nui.nvim'),
 		gh('mfussenegger/nvim-lint'),
 		gh('atiladefreitas/dooing'),
 	}, { confirm = false })
@@ -56,13 +86,14 @@ function M.setup()
 	require('plugins.roslyn').setup()
 	require('plugins.ai').setup()
 	require('plugins.lsp').setup()
+	require('plugins.tabout').setup()
 	require('plugins.markdown').setup()
 	require('plugins.git').setup()
-	require('plugins.yazi').setup()
 	require('plugins.image').setup()
-	require('plugins.neo-tree').setup()
+	require('plugins.nvim-tree').setup()
 	require('plugins.lint').setup()
 	require('plugins.dooing').setup()
+	require('plugins.which_key').setup()
 end
 
 return M

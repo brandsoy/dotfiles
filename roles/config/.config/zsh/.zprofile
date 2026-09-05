@@ -72,3 +72,4 @@ esac
 
 # Hermes Agent — ensure ~/.local/bin is on PATH
 export PATH="$HOME/.local/bin:$PATH"
+export PATH="$HOME/.local/share/pnpm/bin:$PATH"

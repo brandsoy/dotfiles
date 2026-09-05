@@ -113,10 +113,11 @@ export PATH="$HOME/.hermes/node/bin:$PATH"
 # so its GitHub-backed tool backends can use an authenticated API request.
 [[ -r "$ZDOTDIR/secrets.zsh" ]] && source "$ZDOTDIR/secrets.zsh"
 
-# mise owns language runtimes and their shims. A terminal can inherit an
-# existing mise activation; reset it so this final activation puts mise tools
-# ahead of all earlier PATH entries.
+# Define pnpm global binary location
+export PNPM_HOME="$HOME/.local/share/pnpm"
+export PATH="$PNPM_HOME:$PNPM_HOME/bin:$PATH"
+
+# mise activation (must stay near the bottom of your config)
 if command -v mise >/dev/null 2>&1; then
-  [[ -n "${MISE_SHELL:-}" ]] && eval "$(mise deactivate)"
   eval "$(mise activate zsh)"
 fi

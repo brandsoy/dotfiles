@@ -36,6 +36,7 @@ function M.setup()
 
 	vim.opt.fillchars = {
 		diff = '╱',
+		eob = ' ',
 		foldopen = '▾',
 		foldclose = '▸',
 	}

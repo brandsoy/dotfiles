@@ -1,19 +1,34 @@
 local M = {}
 
 function M.setup()
-	vim.opt.completeopt = { "menu", "menuone", "noselect", "popup" }
-	vim.o.autocomplete = true -- Enables the overall completion feature.
+	vim.opt.completeopt = { 'menu', 'menuone', 'noselect', 'popup' }
 
-	vim.api.nvim_create_autocmd("LspAttach", {
-		group = vim.api.nvim_create_augroup("NativeLspCompletion", { clear = true }),
-		callback = function(ev)
-			local client = vim.lsp.get_client_by_id(ev.data.client_id)
-			if not client then
-				return
-			end
+	local ok, blink = pcall(require, 'blink.cmp')
+	if not ok then
+		return
+	end
 
-			vim.lsp.completion.enable(true, client.id, ev.buf, { autotrigger = true })
-		end,
+	blink.setup({
+		keymap = {
+			preset = 'default',
+			-- Keep <Tab> available for Copilot's inline suggestions.
+			['<Tab>'] = false,
+			['<S-Tab>'] = false,
+			['<M-l>'] = { 'snippet_forward', 'fallback' },
+			['<M-h>'] = { 'snippet_backward', 'fallback' },
+		},
+		appearance = {
+			nerd_font_variant = 'mono',
+		},
+		completion = {
+			documentation = { auto_show = false },
+		},
+		sources = {
+			default = { 'lsp', 'path', 'buffer' },
+		},
+		fuzzy = {
+			implementation = 'prefer_rust_with_warning',
+		},
 	})
 end
 

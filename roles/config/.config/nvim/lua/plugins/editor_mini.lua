@@ -27,39 +27,7 @@ function M.setup()
 	end)
 
 	pcall(function()
-		require('mini.diff').setup({})
-	end)
-
-	pcall(function()
-		require('mini.git').setup()
-	end)
-
-	pcall(function()
 		require('mini.surround').setup()
-	end)
-
-	pcall(function()
-		local anchor = 'NE' -- top-right
-		require('mini.clue').setup({
-			window = {
-				config = { anchor = anchor, row = 'auto', col = 'auto', width = 'auto' },
-			},
-			triggers = {
-				{ mode = 'n', keys = '<leader>' },
-				{ mode = 'x', keys = '<leader>' },
-				{ mode = 'n', keys = 'g' },
-				{ mode = 'n', keys = '[' },
-				{ mode = 'n', keys = ']' },
-			},
-			clues = {
-				require('mini.clue').gen_clues.builtin_completion(),
-				require('mini.clue').gen_clues.g(),
-				require('mini.clue').gen_clues.marks(),
-				require('mini.clue').gen_clues.registers(),
-				require('mini.clue').gen_clues.windows(),
-				require('mini.clue').gen_clues.z(),
-			},
-		})
 	end)
 
 	pcall(function()

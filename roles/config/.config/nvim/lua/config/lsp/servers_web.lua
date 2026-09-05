@@ -3,65 +3,22 @@ local M = {}
 function M.get()
 	local schemastore_ok, schemastore = pcall(require, 'schemastore')
 
-	local htmx_filetypes = {
-		'aspnetcorerazor',
-		'astro',
-		'astro-markdown',
-		'blade',
-		'clojure',
-		'django-html',
-		'edge',
-		'eelixir',
-		'elixir',
-		'ejs',
-		'erb',
-		'eruby',
-		'gohtml',
-		'gohtmltmpl',
-		'haml',
-		'handlebars',
-		'hbs',
-		'htmx',
-		'htmldjango',
-		'htmlangular',
-		'html-eex',
-		'heex',
-		'jade',
-		'leaf',
-		'liquid',
-		'mdx',
-		'mustache',
-		'njk',
-		'nunjucks',
-		'php',
-		'razor',
-		'reason',
-		'rescript',
-		'slim',
-		'svelte',
-		'templ',
-		'twig',
-		'vue',
-	}
+	local yaml_filetypes = { 'yaml', 'yaml.ansible', 'yaml.docker-compose', 'yaml.gitlab', 'yaml.helm-values' }
 
 	return {
+		cssls = {},
 		html = {},
+		lemminx = {},
 		htmx = {
-			filetypes = htmx_filetypes,
+			filetypes = { 'html', 'htmx' },
 		},
-		tsc = {
-			cmd = { 'tsc', '--lsp', '--stdio' },
-			filetypes = {
-				'javascript',
-				'javascriptreact',
-				'javascript.jsx',
-				'typescript',
-				'typescriptreact',
-				'typescript.tsx',
-			},
-			root_markers = { 'tsconfig.json', 'jsconfig.json', 'package.json', '.git' },
-		},
+		tsc = {},
 		templ = {},
+		jinja_lsp = {
+			cmd = { 'jinja-lsp', '--stdio' },
+			filetypes = { 'jinja' },
+			root_markers = { 'jinja-lsp.toml', 'pyproject.toml', 'Cargo.toml', '.git' },
+		},
 		jsonls = schemastore_ok and {
 			settings = {
 				json = {
@@ -70,15 +27,16 @@ function M.get()
 				},
 			},
 		} or {},
-		yamlls = schemastore_ok and {
-			settings = {
+		yamlls = {
+			filetypes = yaml_filetypes,
+			settings = schemastore_ok and {
 				yaml = {
 					keyOrdering = false,
 					schemaStore = { enable = false, url = '' },
 					schemas = schemastore.yaml.schemas(),
 				},
-			},
-		} or {},
+			} or {},
+		},
 		tailwindcss = {
 			filetypes = {
 				'html',

@@ -4,6 +4,8 @@ local project_formatters = require('config.lsp.formatters_project')
 
 function M.get()
 	return {
+		bash = { 'shfmt' },
+		sh = { 'shfmt' },
 		lua = { 'stylua' },
 		python = { 'ruff_fix', 'ruff_format' },
 		astro = project_formatters.web,
@@ -11,6 +13,7 @@ function M.get()
 		graphql = project_formatters.web,
 		htmx = project_formatters.web,
 		html = project_formatters.web,
+		xml = project_formatters.web,
 		javascript = project_formatters.web,
 		javascriptreact = project_formatters.web,
 		json = project_formatters.web,
@@ -18,10 +21,14 @@ function M.get()
 		svelte = project_formatters.web,
 		typescript = project_formatters.web,
 		typescriptreact = project_formatters.web,
-		vue = project_formatters.web,
+	vue = project_formatters.web,
 		yaml = project_formatters.prettier_only,
+		['yaml.docker-compose'] = project_formatters.prettier_only,
+		['yaml.gitlab'] = project_formatters.prettier_only,
+		['yaml.helm-values'] = project_formatters.prettier_only,
 		markdown = project_formatters.prettier_only,
 		go = { 'golines', 'gofumpt' },
+		hcl = { 'hcl' },
 		sql = function(bufnr)
 			if require('config.lsp.project_config').sql_dialect(bufnr) == 'tsql' then
 				return { 'sqlfluff_tsql' }
@@ -29,7 +36,7 @@ function M.get()
 			return { 'pg_format' }
 		end,
 		terraform = { 'terraform_fmt' },
-		hcl = { 'terraform_fmt' },
+		['terraform-vars'] = { 'terraform_fmt' },
 		templ = { 'templ' },
 	}
 end

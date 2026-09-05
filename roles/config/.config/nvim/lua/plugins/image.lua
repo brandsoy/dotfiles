@@ -10,20 +10,6 @@ function M.setup()
 		integrations = {
 			markdown = {
 				download_remote_images = false,
-				-- ImageMagick can fail on SVGs that reference unavailable fonts.
-				-- Leave those to the markdown preview instead of raising callbacks.
-				resolve_image_path = function(document_path, image_path, fallback)
-					if image_path:match('%.svg([?#].*)?$') then
-						return nil
-					end
-
-					local api = require('obsidian.api')
-					if api.path_is_note(document_path) then
-						return api.resolve_attachment_path(image_path)
-					end
-
-					return fallback(document_path, image_path)
-				end,
 			},
 		},
 	})

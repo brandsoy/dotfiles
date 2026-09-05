@@ -166,7 +166,7 @@ Notes:
 - `dotfiles-update` runs `brew update`, upgrades packages declared in `roles/packages-macos/Brewfile`, then runs `mise upgrade --yes`.
 - Use `dotfiles-update --cleanup` to also run `brew cleanup -s` and `mise prune -y`.
 - The Brewfile is a hand-maintained macOS manifest. Do **not** run `brew bundle dump --force` over it or auto-sync it after package commands.
-- Homebrew owns macOS apps, fonts, native utilities, and mise itself. Mise owns runtimes and language-distributed developer tools; run `mise install` after changing `roles/config/.config/mise/config.toml`.
+- Homebrew owns macOS apps, fonts, and shared native utilities; mise owns runtimes and project tools; Mason owns Neovim-local servers and tools. Run `mise install` after changing `roles/config/.config/mise/config.toml`.
 - If your repo is not at `~/dotfiles`, set `DOTFILES_DIR` before running, for example: `DOTFILES_DIR=~/src/dotfiles dotfiles-update`.
 
 ## Security checks
@@ -238,8 +238,7 @@ Notes:
 
 ## Neovim LSP Setup (0.12+)
 
-This Neovim config uses native LSP (`vim.lsp.config()` / `vim.lsp.enable()`) and does not use Mason.
-Language servers and formatters are managed with `mise` and exposed through the mise shims on your PATH.
+This Neovim config uses native LSP (`vim.lsp.config()` / `vim.lsp.enable()`) with Mason for editor-local language servers and tools. Runtimes and project-independent tools are managed with `mise` and exposed through the mise shims on your PATH.
 
 ### Install tooling with mise
 
@@ -253,7 +252,7 @@ Optional checks:
 
 ```bash
 mise ls
-for bin in lua-language-server stylua terraform-ls gopls golines gofumpt typescript-language-server tsc vscode-json-language-server yaml-language-server docker-langserver tailwindcss-language-server bash-language-server biome svelteserver prettierd prettier; do mise which "$bin"; done
+for bin in biome terraform templ tsc jinja-lsp; do mise which "$bin"; done
 ```
 
 ### Svelte / SvelteKit
@@ -278,12 +277,13 @@ Then add it to `tsconfig.json`/`jsconfig.json`:
 
 ### Optional manual tools
 
-- `postgres-language-server` and `roslyn` are environment-specific; install separately if needed.
-- `pg_format` is used for SQL formatting in `conform.nvim` and may need a separate package-manager install.
+- Mason installs the configured language servers, formatters, and linters on startup.
+- `biome`, `terraform`, `templ`, `tsc`, and `jinja-lsp` are managed by `mise` because they are also used outside Neovim.
+- Run `:Mason` inside Neovim to inspect editor-local servers and tools.
 
 ### Notes
 
-- `typescript-language-server` uses the stable `typescript` package.
+- The TypeScript server uses the native `tsc --lsp` implementation and requires TypeScript 7+.
 - `jsonls` comes from `vscode-langservers-extracted`.
 - `yamlls` comes from `yaml-language-server`.
 
@@ -291,5 +291,5 @@ Then add it to `tsconfig.json`/`jsconfig.json`:
 
 Inside Neovim:
 
-- `:LspInfo` (open a `.ts` file and confirm `ts_ls` is attached)
+- `:LspInfo` (open a `.ts` file and confirm `tsc` is attached)
 - `:checkhealth vim.lsp`

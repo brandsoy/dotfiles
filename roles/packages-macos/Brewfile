@@ -1,5 +1,5 @@
-# Hand-maintained macOS packages only. Language runtimes and language-distributed
-# tools belong in roles/config/.config/mise/config.toml.
+# Hand-maintained macOS packages only. Shared CLI utilities stay here; language
+# runtimes and project tools belong in mise, and editor-local tools belong in Mason.
 tap "amar1729/formulae", trusted: true
 tap "anomalyco/tap", trusted: true
 tap "felixkratz/formulae", trusted: true
@@ -26,8 +26,6 @@ brew "bash"
 brew "bash-completion@2"
 # Clone of cat(1) with syntax highlighting and Git integration
 brew "bat"
-# Toolchain of the web
-brew "biome"
 # Interface bandwidth monitor
 brew "bmon"
 # Resource monitor. C++ version and continuation of bashtop and bpytop
@@ -86,8 +84,6 @@ brew "lazydocker"
 brew "lazygit"
 # Lua interpreter and compiler (provides lua and luac)
 brew "lua"
-# Language Server for the Lua language
-brew "lua-language-server"
 # Utility for directing compilation
 brew "make"
 # Polyglot runtime manager (asdf rust clone)
@@ -134,8 +130,6 @@ brew "stow"
 brew "stylua"
 # Very fast implementation of tldr in Rust
 brew "tealdeer"
-# Terraform Language Server
-brew "terraform-ls"
 # Terminal multiplexer
 brew "tmux"
 # Parser generator tool
