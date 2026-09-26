@@ -170,7 +170,8 @@ Run a quick secret scan before pushing:
 This uses `gitleaks` if installed.
 
 Run all offline checks in one command — formatting (shfmt), lint (shellcheck),
-and tests (Bash, Zsh, Git, Stow, and Python 3 required):
+the gitleaks secret scan (when installed), and tests (Bash, Zsh, Git, Stow,
+and Python 3 required):
 
 ```bash
 ./scripts/check.sh

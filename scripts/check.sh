@@ -42,6 +42,13 @@ fi
 log 'shellcheck: lint (warnings are errors)'
 shellcheck --severity=warning "${SHELL_SCRIPTS[@]}"
 
+log 'gitleaks: secret scan'
+if command -v gitleaks >/dev/null 2>&1; then
+    gitleaks detect --source "$REPO_DIR" --no-banner
+else
+    echo 'gitleaks not installed; skipping (brew install gitleaks)'
+fi
+
 log 'tests: offline regression checks'
 python3 "$REPO_DIR/tests/test_dotfiles.py"
 
