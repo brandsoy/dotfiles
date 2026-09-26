@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 # Maintainer: mattis
 
-CURRENT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+CURRENT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
 # Source the theme file
 source "$CURRENT_DIR/scripts/minimal-theme.sh"

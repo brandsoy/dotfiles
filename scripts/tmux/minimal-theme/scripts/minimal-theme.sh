@@ -23,10 +23,6 @@ apply_minimal_theme() {
     local border_color
     local icon_session
     local icon_dir
-    local icon_memory
-    local icon_date
-    local icon_clock
-    local icon_battery
 
     bg_color=$(get_tmux_option "@minimal_theme_bg_color" "#282c34")
     active_color=$(get_tmux_option "@minimal_theme_active_color" "#98C379")
@@ -36,10 +32,6 @@ apply_minimal_theme() {
     border_color=$(get_tmux_option "@minimal_theme_border_color" "#3e4452")
     icon_session=$(get_tmux_option "@minimal_theme_session_icon" "")
     icon_dir=$(get_tmux_option "@minimal_theme_dir_icon" "")
-    icon_memory=$(get_tmux_option "@minimal_theme_memory_icon" "")
-    icon_date=$(get_tmux_option "@minimal_theme_date_icon" "")
-    icon_clock=$(get_tmux_option "@minimal_theme_clock_icon" "")
-    icon_battery=$(get_tmux_option "@minimal_theme_battery_icon" "")
 
     # Status bar setup
     tmux set-option -g status on

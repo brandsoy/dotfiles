@@ -57,59 +57,59 @@ load_homebrew() {
 
 install_packages() {
     case "$OS" in
-        macos)
+    macos)
+        load_homebrew
+        if ! has_cmd brew; then
+            /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
             load_homebrew
-            if ! has_cmd brew; then
-                /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
-                load_homebrew
+        fi
+        brew bundle --file="$ROLES_DIR/packages-macos/Brewfile"
+        ;;
+    arch)
+        local packages=() aur_packages=() pkg
+        while IFS= read -r pkg; do packages+=("$pkg"); done < <(
+            awk '!/^#/ && !/^AUR:/ && NF { for (i=1;i<=NF;i++) print $i }' "$ROLES_DIR/packages-arch/Archfile"
+        )
+        # Avoid Arch partial upgrades; this only runs for packages/all.
+        sudo pacman -Syu --needed --noconfirm "${packages[@]}"
+        while IFS= read -r pkg; do aur_packages+=("$pkg"); done < <(
+            awk '/^AUR:/ { sub(/^AUR:[[:space:]]*/, ""); for (i=1;i<=NF;i++) print $i }' "$ROLES_DIR/packages-arch/Archfile"
+        )
+        if ((${#aur_packages[@]})); then
+            if has_cmd paru; then
+                paru -S --needed --noconfirm "${aur_packages[@]}"
+            elif has_cmd yay; then
+                yay -S --needed --noconfirm "${aur_packages[@]}"
+            else
+                printf 'AUR packages not installed (install paru or yay, then rerun): %s\n' "${aur_packages[*]}" >&2
+                return 1
             fi
-            brew bundle --file="$ROLES_DIR/packages-macos/Brewfile"
-            ;;
-        arch)
-            local packages=() aur_packages=() pkg
-            while IFS= read -r pkg; do packages+=("$pkg"); done < <(
-                awk '!/^#/ && !/^AUR:/ && NF { for (i=1;i<=NF;i++) print $i }' "$ROLES_DIR/packages-arch/Archfile"
-            )
-            # Avoid Arch partial upgrades; this only runs for packages/all.
-            sudo pacman -Syu --needed --noconfirm "${packages[@]}"
-            while IFS= read -r pkg; do aur_packages+=("$pkg"); done < <(
-                awk '/^AUR:/ { sub(/^AUR:[[:space:]]*/, ""); for (i=1;i<=NF;i++) print $i }' "$ROLES_DIR/packages-arch/Archfile"
-            )
-            if ((${#aur_packages[@]})); then
-                if has_cmd paru; then
-                    paru -S --needed --noconfirm "${aur_packages[@]}"
-                elif has_cmd yay; then
-                    yay -S --needed --noconfirm "${aur_packages[@]}"
-                else
-                    printf 'AUR packages not installed (install paru or yay, then rerun): %s\n' "${aur_packages[*]}" >&2
-                    return 1
+        fi
+        ;;
+    fedora)
+        local packages=() filtered=() pkg
+        while IFS= read -r pkg; do packages+=("$pkg"); done < <(
+            awk '!/^#/ && NF { for (i=1;i<=NF;i++) print $i }' "$ROLES_DIR/packages-redhat/Redhatfile"
+        )
+        for pkg in "${packages[@]}"; do
+            case "$pkg" in
+            docker | docker-compose)
+                if rpm -q podman-docker >/dev/null 2>&1 || has_cmd docker; then
+                    continue
                 fi
-            fi
-            ;;
-        fedora)
-            local packages=() filtered=() pkg
-            while IFS= read -r pkg; do packages+=("$pkg"); done < <(
-                awk '!/^#/ && NF { for (i=1;i<=NF;i++) print $i }' "$ROLES_DIR/packages-redhat/Redhatfile"
-            )
-            for pkg in "${packages[@]}"; do
-                case "$pkg" in
-                    docker|docker-compose)
-                        if rpm -q podman-docker >/dev/null 2>&1 || has_cmd docker; then
-                            continue
-                        fi
-                        ;;
-                esac
-                filtered+=("$pkg")
-            done
-            # Availability depends on Fedora version and enabled repositories.
-            sudo dnf install -y --skip-unavailable "${filtered[@]}"
-            if ! has_cmd starship; then
-                curl -fsSL https://starship.rs/install.sh | sh -s -- -y
-            fi
-            if ! has_cmd mise && [[ ! -x "$HOME/.local/bin/mise" ]]; then
-                curl -fsSL https://mise.run | sh
-            fi
-            ;;
+                ;;
+            esac
+            filtered+=("$pkg")
+        done
+        # Availability depends on Fedora version and enabled repositories.
+        sudo dnf install -y --skip-unavailable "${filtered[@]}"
+        if ! has_cmd starship; then
+            curl -fsSL https://starship.rs/install.sh | sh -s -- -y
+        fi
+        if ! has_cmd mise && [[ ! -x "$HOME/.local/bin/mise" ]]; then
+            curl -fsSL https://mise.run | sh
+        fi
+        ;;
     esac
 }
 
@@ -162,27 +162,44 @@ install_plugins() {
 main() {
     local cmd="${1:---help}" role
     case "$cmd" in
-        -h|--help) usage; return 0 ;;
-        links)
-            shift
-            # Validate the entire request before doing anything.
-            for role in "$@"; do
-                is_valid_role "$role" || { echo "Unknown role: $role" >&2; return 2; }
-            done
-            ;;
-        packages|plugins|all)
-            shift
-            if (($#)); then usage >&2; return 2; fi
-            ;;
-        *) echo "Unknown command: $cmd" >&2; usage >&2; return 2 ;;
+    -h | --help)
+        usage
+        return 0
+        ;;
+    links)
+        shift
+        # Validate the entire request before doing anything.
+        for role in "$@"; do
+            is_valid_role "$role" || {
+                echo "Unknown role: $role" >&2
+                return 2
+            }
+        done
+        ;;
+    packages | plugins | all)
+        shift
+        if (($#)); then
+            usage >&2
+            return 2
+        fi
+        ;;
+    *)
+        echo "Unknown command: $cmd" >&2
+        usage >&2
+        return 2
+        ;;
     esac
 
     detect_os
     case "$cmd" in
-        links) link_roles "$@" ;;
-        packages) install_packages ;;
-        plugins) install_plugins ;;
-        all) install_packages; install_plugins; link_roles ;;
+    links) link_roles "$@" ;;
+    packages) install_packages ;;
+    plugins) install_plugins ;;
+    all)
+        install_packages
+        install_plugins
+        link_roles
+        ;;
     esac
 }
 
