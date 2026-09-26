@@ -38,7 +38,8 @@ New and edited code follows these; deviations need a reason.
   login shell.
 - Offline tests only: disposable homes, mocked package managers, no network.
 - Git history: real commit messages, no `wip`. The point of dotfiles history
-  is bisecting config regressions.
+  is bisecting config regressions. Agents commit when asked; the owner
+  pushes — never push to a remote on the user's behalf.
 - Formatting: 4-space indent everywhere (see backlog — currently mixed).
 - Decisions to keep even if they look removable:
   - `--sync-brewfile|--maintenance` tombstones in `update-tools.sh` (add a
