@@ -6,6 +6,7 @@ Arch, Debian, RHEL, and the Linux server profile are no longer supported.
 ## Structure
 
 - `roles/config/`: shared `~/.config`, including Zsh, Neovim, and terminals
+- `roles/config/.pi/agent/AGENTS.md`: versioned Pi agent notes; credentials and runtime state stay machine-local
 - `roles/zshenv/`, `roles/git/`, `roles/tmux/`, `roles/bin/`: shared home files and commands
 - `roles/agents/`: shared agent skills
 - `roles/macos-config/`, `roles/linux-config/`: platform configs and Git credential helpers

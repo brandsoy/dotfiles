@@ -65,6 +65,7 @@ roles/config/.config/gh
 roles/config/.config/nvim/test
 /roles/bin/.local/bin/gopherhole
 roles/config/.pi/agent/auth.json
+roles/config/.pi/agent/models.json
 roles/config/.pi/agent/sessions/
 roles/config/.pi/agent/fff/
 roles/config/.pi/agent/models-store.json

@@ -112,6 +112,11 @@ New and edited code follows these; deviations need a reason.
   `check.sh` (skips when not installed); removed the stale Atuin entry
   from `notes/`, the dead alacritty gitignore line, and the leftover
   local `hosts/` directory.
+- 2026-09-26 — Versioned the Pi agent notes (`roles/config/.pi/agent/AGENTS.md`)
+  in the config role and re-linked them live; only the notes file is
+  tracked. Added a gitignore tombstone for the credential-bearing
+  `models.json` (contains apiKey fields) alongside the existing
+  `auth.json` guard.
 
 ## Dropped
 
