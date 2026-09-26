@@ -47,22 +47,6 @@ New and edited code follows these; deviations need a reason.
 
 ## Backlog
 
-### Medium
-
-- [ ] `theme-sync.sh` error handling — add a `die()` helper and standardize
-  the `exit`/`return` mix.
-- [ ] `theme-sync.sh`: split `apply_theme` (~60 lines, 10 apps) into
-  `apply_terminal_themes` / `apply_cli_overlays`; extract a `pause()` helper
-  for `tui_menu`'s repeated `read -r -p` lines; make `load_theme` the single
-  theme validator (drop the duplicated check in `set_mode_theme`).
-- [ ] Formatting consistency — run `shfmt -i 4 -w` once (`install.sh` is
-  4-space, `scripts/` is 2-space), add `shfmt` next to `shellcheck` in the
-  Brewfile, and add `scripts/check.sh` running shfmt --check + shellcheck +
-  tests as the single entry point (README and CI both call it).
-- [ ] Split `tests/test_dotfiles.py`'s ~150-line `main()` into named test
-  functions with per-test temp dirs (pattern already proven in
-  `test_plugin_migration`); pytest optional but welcome.
-
 ### Minor
 
 - [ ] `generate-supatheme.sh` — build the alacritty theme (base + indexed
@@ -93,6 +77,18 @@ New and edited code follows these; deviations need a reason.
   branches deleted (all contained leaky commits), local refs/reflog
   purged. `security-scan.sh` green: 1 commit, no leaks, 0.4s.
   Runbook: `notes/credential-rotation.md`.
+- 2026-09-26 — `theme-sync.sh` cleanup: `die()` helper with standardized
+  `exit`/`return` mix, `apply_theme` split into `apply_terminal_themes` /
+  `apply_cli_themes` / `apply_theme_overlays`, `pause()` helper in the TUI,
+  and `require_theme()` as the single theme validator.
+- 2026-09-26 — Formatting pass: `shfmt -i 4` across all own shell scripts
+  (`shfmt` added to the Brewfile), lint findings fixed (dead icon variables
+  in the tmux minimal theme, pattern quoting in `keybinds`), and
+  `scripts/check.sh` added as the single entry point for shfmt + shellcheck
+  (warnings as errors) + tests; README points at it.
+- 2026-09-26 — Split `tests/test_dotfiles.py` into seven named tests with
+  per-test temp homes (`make_repo`/`make_env` builders); failures now
+  isolate to one test instead of aborting the whole run.
 
 ## Dropped
 
