@@ -1,0 +1,10 @@
+# Atuin complements zsh's substring-history bindings (Ctrl-R).
+# History stays local; enable sync deliberately, only after configuring exclusions.
+auto_sync = false
+search_mode = "fuzzy"
+filter_mode = "directory"
+style = "compact"
+inline_height = 20
+show_preview = true
+enter_accept = true
+secrets_filter = true
