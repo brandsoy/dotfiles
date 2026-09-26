@@ -36,7 +36,6 @@ switching themes to load them.
 Application preferences stay tracked. Theme-sync only writes generated files:
 
 - `~/.config/ghostty/auto/theme.ghostty`
-- `~/.config/alacritty/auto/theme.toml`
 - `~/.config/kitty/auto/theme.conf`
 - `~/.config/btop/themes/dotfiles.theme`
 - `~/.config/yazi/theme.toml`

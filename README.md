@@ -61,7 +61,7 @@ Themes are centralized in:
 - `roles/config/.config/theme-sync/`
 - `roles/config/.config/theme-sync/themes/<theme>/`
 
-Each theme folder contains a `theme.env` mapping plus app-specific theme files (for example `alacritty.toml`, `kitty.conf`, `fzf.sh`, and optional overlays like `tmux.theme.conf`, `opencode.theme.json`, etc.).
+Each theme folder contains a `theme.env` mapping plus app-specific theme files (for example `kitty.conf`, `fzf.sh`, and optional overlays like `tmux.theme.conf`, `opencode.theme.json`, etc.).
 
 Active theme state is local, under `${XDG_STATE_HOME:-~/.local/state}/theme-sync/`:
 `current`, `current.env`, and `mode.env`. Legacy state under `~/.config/theme-sync/`

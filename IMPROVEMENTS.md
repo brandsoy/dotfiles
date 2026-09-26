@@ -49,8 +49,6 @@ New and edited code follows these; deviations need a reason.
 
 ### Minor
 
-- [ ] `generate-supatheme.sh` — build the alacritty theme (base + indexed
-  colors) as one string and write once, like the other themes.
 - [ ] `install.sh` — extract a `read_manifest_words` helper to DRY the four
   awk parse loops in the arch/fedora sections. Keep while-read loops (3.2).
 - [ ] README split (judgment call) — slim README keeps overview/install/
@@ -89,6 +87,12 @@ New and edited code follows these; deviations need a reason.
 - 2026-09-26 — Split `tests/test_dotfiles.py` into seven named tests with
   per-test temp homes (`make_repo`/`make_env` builders); failures now
   isolate to one test instead of aborting the whole run.
+- 2026-09-26 — Removed Alacritty (terminal no longer used): config role,
+  15 theme assets and their `ALACRITTY_IMPORT` lines, theme-sync target
+  and apply path, SupaTheme extras (submodule pin updated), generator
+  output, stow ignore, and doc references; live `~/.config/alacritty`
+  cleaned up. The `generate-supatheme.sh` single-write backlog item is
+  moot and dropped.
 
 ## Dropped
 

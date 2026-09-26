@@ -20,7 +20,6 @@ CURRENT_ENV_FILE="$STATE_DIR/current.env"
 MODE_ENV_FILE="$STATE_DIR/mode.env"
 
 TARGET_GHOSTTY="$CONFIG_HOME/ghostty/auto/theme.ghostty"
-TARGET_ALACRITTY="$CONFIG_HOME/alacritty/auto/theme.toml"
 TARGET_KITTY="$CONFIG_HOME/kitty/auto/theme.conf"
 TARGET_BTOP="$CONFIG_HOME/btop/themes/dotfiles.theme"
 TARGET_LAZYGIT="$STATE_DIR/lazygit.yml"
@@ -303,14 +302,13 @@ ensure_bat_theme() {
 }
 
 apply_terminal_themes() {
-    # Ghostty, Alacritty, and Kitty.
+    # Ghostty and Kitty.
     prepare_output "$TARGET_GHOSTTY"
     if [[ -n "${GHOSTTY_THEME_FILE:-}" && -f "$GHOSTTY_THEME_FILE" ]]; then
         cp "$GHOSTTY_THEME_FILE" "$TARGET_GHOSTTY"
     else
         printf 'theme = %s\n' "$GHOSTTY_THEME" >"$TARGET_GHOSTTY"
     fi
-    copy_if_present "$ALACRITTY_IMPORT" "$TARGET_ALACRITTY"
     copy_if_present "$KITTY_INCLUDE" "$TARGET_KITTY"
     refresh_kitty_theme
 }
@@ -355,13 +353,10 @@ apply_theme() {
     local theme="$1"
 
     load_theme "$theme"
-    local file
-    for file in "$ALACRITTY_IMPORT" "$KITTY_INCLUDE"; do
-        if [[ ! -f "$file" ]]; then
-            printf 'Theme asset missing: %s. Run dotfiles-install plugins and links first.\n' "$file" >&2
-            return 1
-        fi
-    done
+    if [[ ! -f "$KITTY_INCLUDE" ]]; then
+        printf 'Theme asset missing: %s. Run dotfiles-install plugins and links first.\n' "$KITTY_INCLUDE" >&2
+        return 1
+    fi
 
     apply_terminal_themes
     apply_cli_themes
@@ -411,7 +406,6 @@ show_current() {
     load_theme "$theme"
     echo "theme: $theme"
     echo "ghostty: $GHOSTTY_THEME"
-    echo "alacritty import: $ALACRITTY_IMPORT"
     echo "kitty include: $KITTY_INCLUDE"
     echo "nvim: $NVIM_THEME"
     echo "bat: $BAT_THEME"

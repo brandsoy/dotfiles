@@ -48,7 +48,7 @@ def make_repo(root):
     copy("roles/macos-config/.stow-local-ignore", repo)
     for role in ("agents", "bin", "blocklists", "git", "tmux", "zshenv", "linux-config", "macos-config"):
         put(repo / "roles" / role / f".{role}-example", "example\n")
-    for relative in ("kitty/kitty.conf", "alacritty/alacritty.toml", "bat/config", "btop/btop.conf", "lazygit/config.yml", "starship.toml"):
+    for relative in ("kitty/kitty.conf", "bat/config", "btop/btop.conf", "lazygit/config.yml", "starship.toml"):
         copy("roles/config/.config/" + relative, repo)
     for relative in (".zshrc", "fzf.zsh", "aliases.zsh", "bindings.zsh", "plugins.zsh", "prompt.zsh", "hooks.zsh"):
         copy("roles/config/.config/zsh/" + relative, repo)
@@ -252,7 +252,6 @@ def test_theme_sync(root, binaries):
     for name in ("a", "b"):
         directory = themes / name
         put(directory / "theme.env", f'''GHOSTTY_THEME="{name}"
-ALACRITTY_IMPORT="$XDG_CONFIG_HOME/theme-sync/themes/{name}/alacritty.toml"
 KITTY_INCLUDE="$XDG_CONFIG_HOME/theme-sync/themes/{name}/kitty.conf"
 NVIM_THEME="{name}"
 BAT_THEME="Theme {name}"
@@ -260,7 +259,6 @@ FZF_THEME_FILE="$XDG_CONFIG_HOME/theme-sync/themes/{name}/fzf.sh"
 VSCODE_THEME="Theme {name}"
 ''')
         put(directory / "kitty.conf", f"# theme {name}\n")
-        put(directory / "alacritty.toml", f"# theme {name}\n")
     put(themes / "a/starship.toml", "# theme a\n")
     with (themes / "a/theme.env").open("a") as f:
         f.write('BAT_THEME_FILE="$XDG_CONFIG_HOME/theme-sync/themes/a/SupaTheme.tmTheme"\n')
@@ -304,7 +302,6 @@ VSCODE_THEME="Theme {name}"
     assert not (state / "lazygit.yml").exists()
     assert str(themes / "a/starship.toml") not in (state / "current.env").read_text()
     assert (home / ".config/kitty/auto/theme.conf").read_text() == "# theme b\n"
-    assert (home / ".config/alacritty/auto/theme.toml").read_text() == "# theme b\n"
     for relative in ("yazi/theme.toml", "eza/theme.yml", "tmux/theme.conf"):
         assert not (home / ".config" / relative).exists()
     run(theme_cmd + ["mode-set", "light", "a"], env, root)
