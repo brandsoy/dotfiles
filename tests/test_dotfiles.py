@@ -13,7 +13,7 @@ REPO = Path(__file__).resolve().parents[1]
 
 # Tools whose calls must stay inert and observable during tests.
 MOCKED_TOOLS = (
-    "sudo", "curl", "brew", "chsh", "paru", "starship", "mise",
+    "sudo", "curl", "brew", "chsh", "starship", "mise",
     "zoxide", "fzf", "kitty", "tmux", "bat", "rpm",
 )
 
@@ -58,7 +58,6 @@ def make_repo(root):
     copy("roles/linux-config/.gitconfig-platform", repo)
     copy("roles/macos-config/.gitconfig-platform", repo)
     copy("roles/packages-macos/Brewfile", repo)
-    copy("roles/packages-arch/Archfile", repo)
     copy("roles/packages-redhat/Redhatfile", repo)
 
     # Ignored files exist locally but must not be deployed.
@@ -87,7 +86,7 @@ def make_env(root, binaries):
         "XDG_DATA_HOME": str(home / ".local/share"),
         "XDG_STATE_HOME": str(home / ".local/state"),
         "GIT_CONFIG_NOSYSTEM": "1", "TERM": "xterm-256color",
-        "LOG": str(root / "commands"), "TEST_OS": "arch",
+        "LOG": str(root / "commands"), "TEST_OS": "fedora",
     }
     # All potentially mutating/integrating tools are inert and recorded.
     for name in MOCKED_TOOLS:
@@ -210,13 +209,11 @@ def test_links(root, binaries):
 def test_packages(root, binaries):
     """Package commands are mocked and logged; no installs or downloads."""
     repo, env = make_repo(root), make_env(root, binaries)
-    for os_name in ("macos", "arch", "fedora"):
+    for os_name in ("macos", "fedora"):
         env["TEST_OS"] = os_name
         install(repo, env, root, binaries, "packages")
     commands = (root / "commands").read_text()
     assert "brew bundle --file=" in commands
-    assert "sudo pacman -Syu --needed" in commands
-    assert "paru -S" in commands
     assert "sudo dnf install" in commands
     assert not any(line.startswith(("chsh ", "curl ")) for line in commands.splitlines())
     print("OK: package managers invoked per OS without chsh or curl")

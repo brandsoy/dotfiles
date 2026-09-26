@@ -14,7 +14,7 @@ usage() {
 Usage: ./install.sh <command>
 
   links [role ...]  Link configs only (requires Stow); default: shared + platform
-  packages         Install macOS, Arch, or Fedora packages
+  packages         Install macOS or Fedora packages
   plugins          Initialize pinned submodules and install tmux's TPM
   all              Install packages, initialize plugins, then link configs
   -h, --help       Show this help without making changes
@@ -37,12 +37,10 @@ is_valid_role() {
 detect_os() {
     if [[ "$OSTYPE" == darwin* ]]; then
         OS=macos
-    elif [[ -f /etc/arch-release ]]; then
-        OS=arch
     elif [[ -f /etc/fedora-release ]]; then
         OS=fedora
     else
-        echo "Unsupported OS: only macOS, Arch, and Fedora are supported." >&2
+        echo "Unsupported OS: only macOS and Fedora are supported." >&2
         return 1
     fi
 }
@@ -64,27 +62,6 @@ install_packages() {
             load_homebrew
         fi
         brew bundle --file="$ROLES_DIR/packages-macos/Brewfile"
-        ;;
-    arch)
-        local packages=() aur_packages=() pkg
-        while IFS= read -r pkg; do packages+=("$pkg"); done < <(
-            awk '!/^#/ && !/^AUR:/ && NF { for (i=1;i<=NF;i++) print $i }' "$ROLES_DIR/packages-arch/Archfile"
-        )
-        # Avoid Arch partial upgrades; this only runs for packages/all.
-        sudo pacman -Syu --needed --noconfirm "${packages[@]}"
-        while IFS= read -r pkg; do aur_packages+=("$pkg"); done < <(
-            awk '/^AUR:/ { sub(/^AUR:[[:space:]]*/, ""); for (i=1;i<=NF;i++) print $i }' "$ROLES_DIR/packages-arch/Archfile"
-        )
-        if ((${#aur_packages[@]})); then
-            if has_cmd paru; then
-                paru -S --needed --noconfirm "${aur_packages[@]}"
-            elif has_cmd yay; then
-                yay -S --needed --noconfirm "${aur_packages[@]}"
-            else
-                printf 'AUR packages not installed (install paru or yay, then rerun): %s\n' "${aur_packages[*]}" >&2
-                return 1
-            fi
-        fi
         ;;
     fedora)
         local packages=() filtered=() pkg
@@ -116,7 +93,7 @@ install_packages() {
 link_roles() {
     if [[ "$OS" == macos ]]; then load_homebrew; fi
     if ! has_cmd stow; then
-        echo "Stow is required. Install it with brew, pacman, or dnf, then rerun links." >&2
+        echo "Stow is required. Install it with brew or dnf, then rerun links." >&2
         return 1
     fi
 

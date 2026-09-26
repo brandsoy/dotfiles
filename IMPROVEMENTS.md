@@ -28,8 +28,9 @@ New and edited code follows these; deviations need a reason.
 - Functions over inline blocks; a function does one thing. Prefer `return`
   over `exit` in helpers called by other functions.
 - Never shadow builtins with variable names (e.g. use `cmd`, not `command`).
-- Comments explain *why*, never *what*. Keep the good ones ("Avoid Arch
-  partial upgrades", "Do not inherit optional mappings…").
+- Comments explain *why*, never *what*. Keep the good ones ("Do not inherit
+  optional mappings…", "GitHub-backed mise backends otherwise share the
+  unauthenticated API rate limit").
 - One source of truth per list — if a name appears in two places, derive the
   second from the first (arrays over duplicated `case` patterns).
 - Scripts are idempotent and safe by default: validate the whole request
@@ -49,8 +50,6 @@ New and edited code follows these; deviations need a reason.
 
 ### Minor
 
-- [ ] `install.sh` — extract a `read_manifest_words` helper to DRY the four
-  awk parse loops in the arch/fedora sections. Keep while-read loops (3.2).
 - [ ] README split (judgment call) — slim README keeps overview/install/
   structure and links to `docs/theme-sync.md`, `docs/ai-models.md`,
   `docs/neovim-lsp.md`. Only if scrolling past sections annoys you.
@@ -93,6 +92,11 @@ New and edited code follows these; deviations need a reason.
   output, stow ignore, and doc references; live `~/.config/alacritty`
   cleaned up. The `generate-supatheme.sh` single-write backlog item is
   moot and dropped.
+- 2026-09-26 — Removed Arch Linux support (distro no longer used): the
+  detect/install paths, the `packages-arch` role, and the paru config;
+  README and tests updated (Fedora is the only Linux target). The
+  `read_manifest_words` backlog item is moot with a single remaining
+  parse loop and was dropped.
 
 ## Dropped
 

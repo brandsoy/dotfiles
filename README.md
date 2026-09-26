@@ -1,7 +1,7 @@
 # Dotfiles
 
-Personal configuration for macOS first, plus Arch and Fedora desktops.
-Debian, RHEL, and the Linux server profile are no longer supported.
+Personal configuration for macOS first, plus a Fedora desktop.
+Arch, Debian, RHEL, and the Linux server profile are no longer supported.
 
 ## Structure
 
@@ -9,7 +9,7 @@ Debian, RHEL, and the Linux server profile are no longer supported.
 - `roles/zshenv/`, `roles/git/`, `roles/tmux/`, `roles/bin/`: shared home files and commands
 - `roles/agents/`: shared agent skills
 - `roles/macos-config/`, `roles/linux-config/`: platform configs and Git credential helpers
-- `roles/packages-macos/Brewfile`, `roles/packages-arch/Archfile`, `roles/packages-redhat/Redhatfile`: package manifests (the latter is Fedora-only)
+- `roles/packages-macos/Brewfile` and `roles/packages-redhat/Redhatfile`: package manifests (the Redhatfile is Fedora-only)
 - `scripts/`: installation helpers, theme-sync, and updates
 
 ## Installation
@@ -32,7 +32,6 @@ After installation, `dotfiles-install` exposes the same commands. Set
 - `plugins` preserves legacy plugin directories without Git metadata under `${XDG_STATE_HOME:-~/.local/state}/dotfiles/plugin-backup.*` before initializing submodules. It prints each backup location; existing Git checkouts are left in place.
 - Stow uses file-level links, with explicit ignores for runtime files and credentials.
 - macOS bootstraps Homebrew if needed, then installs the Brewfile.
-- Arch performs a full package upgrade. Install `paru` or `yay` first for AUR packages; missing AUR support is reported as an error.
 - Fedora keeps your existing desktop/session. Package availability depends on Fedora version and enabled repositories; inspect DNF's skipped-package warnings. Hyprland configs remain available, but Fedora does not install a complete Hyprland desktop automatically.
 - No installer command runs `chsh`. If desired, choose a Zsh path listed in `/etc/shells` and change it yourself.
 - Existing conflicting files are not adopted or overwritten by Stow; back them up before resolving conflicts.
@@ -153,7 +152,7 @@ Notes:
 - `dotfiles-update --check` reports Homebrew and mise updates without running `brew update` or upgrading anything.
 - `dotfiles-update` runs `brew update`, upgrades packages declared in `roles/packages-macos/Brewfile`, then runs `mise upgrade --yes`.
 - Use `dotfiles-update --cleanup` to also run `brew cleanup -s` and `mise prune -y`.
-- Native Linux packages are updated separately with pacman/your AUR helper or DNF; `dotfiles-update` handles Homebrew and mise only.
+- Native Linux packages are updated separately with DNF; `dotfiles-update` handles Homebrew and mise only.
 - The Brewfile is a hand-maintained macOS manifest. Do **not** run `brew bundle dump --force` over it or auto-sync it after package commands.
 - Homebrew owns macOS apps, fonts, and shared native utilities; mise owns runtimes and project tools; Mason owns Neovim-local servers and tools. Run `mise install` after changing `roles/config/.config/mise/config.toml`.
 - If your repo is not at `~/dotfiles`, set `DOTFILES_DIR` before running, for example: `DOTFILES_DIR=~/src/dotfiles dotfiles-update`.
