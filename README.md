@@ -168,11 +168,11 @@ Run a quick secret scan before pushing:
 
 This uses `gitleaks` if installed.
 
-Run offline regression checks (Bash, Zsh, Git, Stow, and Python 3 required):
+Run all offline checks in one command — formatting (shfmt), lint (shellcheck),
+and tests (Bash, Zsh, Git, Stow, and Python 3 required):
 
 ```bash
-python3 tests/test_dotfiles.py
-shellcheck install.sh scripts/theme-sync.sh scripts/update-tools.sh
+./scripts/check.sh
 ```
 
 Tests use disposable homes/repositories and mock package managers and desktop integrations.
