@@ -1,5 +1,9 @@
 # Credential rotation runbook
 
+**Completed 2026-09-26** — all credentials rotated or confirmed dead, and
+history scrubbed (single fresh commit; old branches deleted). Kept as a
+record and a template if this ever happens again.
+
 Why: gitleaks (`./scripts/security-scan.sh`) found real credentials in git
 history, and the repo is **public** (github.com/brandsoy/dotfiles). Sixteen
 commits between 2024-11 and 2026-03 contain them, under the old pre-`roles/`

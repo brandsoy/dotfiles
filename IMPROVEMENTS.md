@@ -47,19 +47,6 @@ New and edited code follows these; deviations need a reason.
 
 ## Backlog
 
-### High
-
-- [ ] Close out credential rotation (status 2026-09-26): GitHub tokens
-  revoked — all five verified `401`; Google key blocked by Google's leak
-  detection ("reported as leaked") — confirm the deleted credential
-  matches the `AIzaSyAK…` prefix; Linear and Raycast no longer used, so
-  those secrets are dead; Asana value is an identifier, not a secret.
-  Remaining: Zed key `ctx7sk-9…` — identify the service, reissue or
-  confirm unused. History scrubbed 2026-09-26: main squashed to a single
-  fresh commit and the seven old remote branches (chezmoi, gnu-stow,
-  lsp, nvim12, snacks.picker, try-dadbod, with-obsidian) deleted — all
-  contained leaky commits. Steps: `notes/credential-rotation.md`.
-
 ### Medium
 
 - [ ] `theme-sync.sh` error handling — add a `die()` helper and standardize
@@ -98,6 +85,14 @@ New and edited code follows these; deviations need a reason.
 - 2026-09-26 — Pending work committed: the removals and deletions landed as
   `Cleanup` (d61735f5, already pushed); the stale README `.pi/` reference and
   the `install.sh` DRY fix followed in their own described commits.
+- 2026-09-26 — Credential rotation complete: GitHub tokens revoked (all
+  five verified `401`), Google key blocked by Google's leak detection,
+  Linear/Raycast dead (services unused), Asana value an identifier only,
+  Zed key identified as a Context7 API key and revoked. History scrubbed
+  the same day: main squashed to one fresh commit, seven old remote
+  branches deleted (all contained leaky commits), local refs/reflog
+  purged. `security-scan.sh` green: 1 commit, no leaks, 0.4s.
+  Runbook: `notes/credential-rotation.md`.
 
 ## Dropped
 
