@@ -103,6 +103,14 @@ New and edited code follows these; deviations need a reason.
   review; tap-qualified and bare entry names are matched by short name,
   and additions use resolvable full names. Never runs as part of other
   commands.
+- 2026-09-26 — Follow-up review fixes: restored the local-only atuin config
+  (`auto_sync` off, secrets filter on) and re-linked it live; added
+  `packages-macos/untracked.txt` (seeded with the 11 hand-curated
+  exclusions) and made `packages-sync` respect it; dropped 3.8 MB of
+  vendored yazi-flavor screenshots; folded the gitleaks scan into
+  `check.sh` (skips when not installed); removed the stale Atuin entry
+  from `notes/`, the dead alacritty gitignore line, and the leftover
+  local `hosts/` directory.
 
 ## Dropped
 

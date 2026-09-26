@@ -4,17 +4,12 @@ Captured for later implementation. Current setup is already strong; prioritize p
 
 ## Highest-value candidates
 
-1. **Atuin**
-   - Searchable shell history with directory, exit-status, and timestamp context.
-   - Start local-only; configure exclusions before enabling sync.
-   - Let Atuin own `Ctrl-R`; retain fzf for files/directories.
-
-2. **Git worktrees for coding agents**
+1. **Git worktrees for coding agents**
    - Use one worktree, branch, and tmux/sesh session per concurrent task.
    - Avoid multiple agents and editors modifying the same checkout.
    - No extra worktree manager needed initially.
 
-3. **Restic**
+2. **Restic**
    - Syncthing is synchronization, not an independent backup.
    - Use Time Machine for Mac recovery and Restic for encrypted, versioned backups.
    - Prioritize Obsidian, projects, local configuration, and secrets.
@@ -23,12 +18,12 @@ Captured for later implementation. Current setup is already strong; prioritize p
 
 ## Infrastructure matches
 
-4. **SOPS**
+3. **SOPS**
    - Complements existing `age`, Ansible, Terraform/OpenTofu, Pulumi, Azure CLI, and Kubernetes tooling.
    - Encrypt YAML/JSON configuration for safe Git storage.
    - Keep decryption keys outside the repository and limit agent access to decrypted secrets.
 
-5. **Difftastic**
+4. **Difftastic**
    - Syntax-aware diffs for reviewing large or AI-generated changes.
    - Use on demand before replacing Git/lazygit defaults.
 
@@ -47,5 +42,9 @@ Choose one only if there is a real need:
 
 ## Suggested starting shortlist
 
-Atuin, Git worktrees, and a tested independent backup.
+Atuin is done (installed, wired to `Ctrl-R`, configured local-only in
+`roles/config/.config/atuin/config.toml`); enable sync deliberately only
+after configuring exclusions.
+
+Git worktrees and a tested independent backup.
 Avoid adding more launchers, terminals, window managers, or database tools for now; coverage is already extensive.

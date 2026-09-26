@@ -21,7 +21,6 @@ roles/config/.config/theme-sync/current.env
 roles/config/.config/theme-sync/mode.env
 roles/config/.config/ghostty/auto/
 roles/config/.config/kitty/auto/
-roles/config/.config/alacritty/auto/
 roles/config/.config/btop/themes/dotfiles.theme
 roles/config/.config/bat/themes/SupaTheme.tmTheme
 roles/config/.config/tmux/theme.conf
