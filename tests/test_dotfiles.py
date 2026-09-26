@@ -97,6 +97,10 @@ def make_env(root, binaries):
             body += 'exit "${RPM_STATUS:-1}"\n'
         elif name == "bat":
             body += 'printf "Theme a\\nTheme b\\n"\n'
+        elif name == "brew":
+            body += 'if [ "$1" = leaves ]; then printf "%s\\n" ${BREW_LEAVES:-}; exit 0; fi\n'
+            body += 'if [ "$1" = list ] && [ "$2" = --cask ] && [ "$3" = --full-name ]; then printf "%s\\n" ${BREW_CASKS_FULL:-}; exit 0; fi\n'
+            body += 'if [ "$1" = list ]; then case "$2" in --formula) printf "%s\\n" ${BREW_FORMULAE:-};; --cask) printf "%s\\n" ${BREW_CASKS:-};; esac; exit 0; fi\n'
         put(mockbin / name, "#!/bin/sh\n" + body)
         (mockbin / name).chmod(0o755)
     for name in ("git", "stow"):
@@ -162,7 +166,7 @@ def test_plugin_migration(binaries):
 def test_installer_safety(root, binaries):
     """Help and rejected commands change nothing."""
     repo, env = make_repo(root), make_env(root, binaries)
-    for args, ok in (([], True), (["--help"], True), (["profile", "linux-server"], False), (["links", "config", "invalid"], False), (["packages", "extra"], False)):
+    for args, ok in (([], True), (["--help"], True), (["profile", "linux-server"], False), (["links", "config", "invalid"], False), (["packages", "extra"], False), (["packages-sync", "extra"], False)):
         run([binaries["bash"], str(repo / "install.sh"), *args], env, root, ok=ok)
     assert not (root / "commands").exists()
     assert not list((root / "home").iterdir())
@@ -217,6 +221,36 @@ def test_packages(root, binaries):
     assert "sudo dnf install" in commands
     assert not any(line.startswith(("chsh ", "curl ")) for line in commands.splitlines())
     print("OK: package managers invoked per OS without chsh or curl")
+
+
+def test_packages_sync(root, binaries):
+    """packages-sync reconciles the Brewfile with installed packages (macOS only)."""
+    repo, env = make_repo(root), make_env(root, binaries)
+    env["TEST_OS"] = "macos"
+    env["BREW_FORMULAE"] = "kept dep-of-kept nested-kept"  # dep-of-kept: installed but not a leaf
+    env["BREW_LEAVES"] = "kept installed-only some/tap/nested-kept full-only"
+    env["BREW_CASKS"] = "kept-cask nested-cask new-cask"
+    env["BREW_CASKS_FULL"] = "kept-cask some/tap/nested-cask some/tap/new-cask"
+    brewfile = repo / "roles/packages-macos/Brewfile"
+    put(brewfile, 'tap "homebrew/core"\n# comment stays\nbrew "kept"\nbrew "gone"\nbrew "some/tap/nested-kept"\ncask "kept-cask"\ncask "some/tap/nested-cask"\n')
+    install(repo, env, root, binaries, "packages-sync")
+    text = brewfile.read_text()
+    assert 'tap "homebrew/core"' in text
+    assert "# comment stays" in text
+    assert 'brew "kept"' in text
+    assert 'brew "gone"' not in text
+    assert 'brew "some/tap/nested-kept"' in text  # tap-qualified entry matches installed short name
+    assert 'cask "kept-cask"' in text
+    assert 'cask "some/tap/nested-cask"' in text
+    assert 'brew "installed-only"' in text
+    assert 'brew "full-only"' in text
+    assert 'cask "some/tap/new-cask"' in text  # additions use resolvable full names
+    assert 'cask "new-cask"' not in text
+    assert 'brew "dep-of-kept"' not in text  # transitive deps stay implicit
+    # The manifest is Homebrew-only; other hosts refuse.
+    env["TEST_OS"] = "fedora"
+    install(repo, env, root, binaries, "packages-sync", ok=False)
+    print("OK: Brewfile reconciled: uninstalled entries removed, leaves and casks appended")
 
 
 def test_git_identity(root, binaries):
@@ -329,7 +363,7 @@ def main():
     binaries = {name: shutil.which(name) for name in ("bash", "zsh", "git", "stow")}
     assert all(binaries.values()), "Install bash, zsh, git, and stow first"
     test_plugin_migration(binaries)
-    tests = (test_installer_safety, test_links, test_packages, test_git_identity, test_theme_sync, test_zsh_shell)
+    tests = (test_installer_safety, test_links, test_packages, test_packages_sync, test_git_identity, test_theme_sync, test_zsh_shell)
     for test in tests:
         with tempfile.TemporaryDirectory(prefix="dotfiles test-") as temporary:
             test(Path(temporary), binaries)

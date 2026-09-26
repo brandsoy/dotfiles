@@ -97,6 +97,12 @@ New and edited code follows these; deviations need a reason.
   README and tests updated (Fedora is the only Linux target). The
   `read_manifest_words` backlog item is moot with a single remaining
   parse loop and was dropped.
+- 2026-09-26 — Added `install.sh packages-sync` (macOS): reconciles the
+  Brewfile with the machine — removes entries for uninstalled packages,
+  appends untracked top-level formulae (`brew leaves`) and casks for
+  review; tap-qualified and bare entry names are matched by short name,
+  and additions use resolvable full names. Never runs as part of other
+  commands.
 
 ## Dropped
 

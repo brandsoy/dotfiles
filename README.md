@@ -21,6 +21,7 @@ Clone into `~/dotfiles`, then choose an explicit action:
 ./install.sh links              # shared + detected platform; requires Stow
 ./install.sh links config tmux  # selected roles only
 ./install.sh packages           # package installation only
+./install.sh packages-sync     # reconcile the Brewfile with installed Homebrew packages
 ./install.sh plugins            # pinned submodules + TPM; network access
 ./install.sh all                # packages, plugins, then links
 ```
@@ -32,6 +33,7 @@ After installation, `dotfiles-install` exposes the same commands. Set
 - `plugins` preserves legacy plugin directories without Git metadata under `${XDG_STATE_HOME:-~/.local/state}/dotfiles/plugin-backup.*` before initializing submodules. It prints each backup location; existing Git checkouts are left in place.
 - Stow uses file-level links, with explicit ignores for runtime files and credentials.
 - macOS bootstraps Homebrew if needed, then installs the Brewfile.
+- `packages-sync` reconciles the Brewfile with the machine: entries for uninstalled packages are removed, and untracked top-level formulae (`brew leaves`) and casks are appended for review. It never runs automatically.
 - Fedora keeps your existing desktop/session. Package availability depends on Fedora version and enabled repositories; inspect DNF's skipped-package warnings. Hyprland configs remain available, but Fedora does not install a complete Hyprland desktop automatically.
 - No installer command runs `chsh`. If desired, choose a Zsh path listed in `/etc/shells` and change it yourself.
 - Existing conflicting files are not adopted or overwritten by Stow; back them up before resolving conflicts.
@@ -153,7 +155,7 @@ Notes:
 - `dotfiles-update` runs `brew update`, upgrades packages declared in `roles/packages-macos/Brewfile`, then runs `mise upgrade --yes`.
 - Use `dotfiles-update --cleanup` to also run `brew cleanup -s` and `mise prune -y`.
 - Native Linux packages are updated separately with DNF; `dotfiles-update` handles Homebrew and mise only.
-- The Brewfile is a hand-maintained macOS manifest. Do **not** run `brew bundle dump --force` over it or auto-sync it after package commands.
+- The Brewfile is a hand-maintained macOS manifest. Do **not** run `brew bundle dump --force` over it or auto-sync it after package commands. Use `./install.sh packages-sync` when you want to reconcile it with installed packages.
 - Homebrew owns macOS apps, fonts, and shared native utilities; mise owns runtimes and project tools; Mason owns Neovim-local servers and tools. Run `mise install` after changing `roles/config/.config/mise/config.toml`.
 - If your repo is not at `~/dotfiles`, set `DOTFILES_DIR` before running, for example: `DOTFILES_DIR=~/src/dotfiles dotfiles-update`.
 

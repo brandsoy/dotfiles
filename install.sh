@@ -15,6 +15,7 @@ Usage: ./install.sh <command>
 
   links [role ...]  Link configs only (requires Stow); default: shared + platform
   packages         Install macOS or Fedora packages
+  packages-sync    Reconcile the Brewfile with installed Homebrew packages
   plugins          Initialize pinned submodules and install tmux's TPM
   all              Install packages, initialize plugins, then link configs
   -h, --help       Show this help without making changes
@@ -25,6 +26,34 @@ EOF
 }
 
 has_cmd() { command -v "$1" >/dev/null 2>&1; }
+
+# Print each already-sorted name on its own line; empty input prints nothing.
+sorted_lines() {
+    [[ -n "$1" ]] && printf '%s\n' "$1"
+    return 0
+}
+
+# Short (last path segment) of each name, sorted; empty input prints nothing.
+short_sorted_lines() {
+    [[ -n "$1" ]] && sed -E 's|.*/||' <<<"$1" | sort -u
+    return 0
+}
+
+# Print the full-name lines from $2 whose short name is listed in $ADDED.
+map_full_names() {
+    ADDED="$ADDED" awk '
+        BEGIN {
+            n = split(ENVIRON["ADDED"], a, "\n")
+            for (i = 1; i <= n; i++) added[a[i]] = 1
+        }
+        {
+            short = $0
+            sub(/^.*\//, "", short)
+            if (short in added) print
+        }
+    ' <<<"$1"
+    return 0
+}
 
 is_valid_role() {
     local candidate="$1" role
@@ -90,6 +119,86 @@ install_packages() {
     esac
 }
 
+sync_packages() {
+    if [[ "$OS" != macos ]]; then
+        echo "packages-sync applies to Homebrew on macOS only." >&2
+        return 1
+    fi
+    load_homebrew
+    if ! has_cmd brew; then
+        echo "Homebrew is required for packages-sync." >&2
+        return 1
+    fi
+
+    local brewfile="$ROLES_DIR/packages-macos/Brewfile"
+    if [[ ! -f "$brewfile" ]]; then
+        echo "Brewfile not found: $brewfile" >&2
+        return 1
+    fi
+
+    # Manifest and machine names are compared by short name (last path
+    # segment) so that tap-qualified entries ("tap/name") and bare names
+    # both match the same installed package.
+    local manifest_brew manifest_cask installed_brew installed_cask
+    manifest_brew="$(grep -E '^brew "' "$brewfile" | sed -E 's/^brew "([^"]+)".*/\1/; s|.*/||' | sort -u)"
+    manifest_cask="$(grep -E '^cask "' "$brewfile" | sed -E 's/^cask "([^"]+)".*/\1/; s|.*/||' | sort -u)"
+    installed_brew="$(brew list --formula | sort -u)"
+    installed_cask="$(brew list --cask | sort -u)"
+    # Additions are deliberate installs only; transitive dependencies stay
+    # implicit. Full names keep new entries resolvable on a fresh machine.
+    local leaves_brew full_cask
+    leaves_brew="$(brew leaves | sort -u)"
+    full_cask="$(brew list --cask --full-name | sort -u)"
+
+    local removed_brew removed_cask added_brew added_cask added_shorts
+    removed_brew="$(comm -23 <(sorted_lines "$manifest_brew") <(sorted_lines "$installed_brew"))"
+    removed_cask="$(comm -23 <(sorted_lines "$manifest_cask") <(sorted_lines "$installed_cask"))"
+    added_shorts="$(comm -13 <(sorted_lines "$manifest_brew") <(short_sorted_lines "$leaves_brew"))"
+    added_brew="$(ADDED="$added_shorts" map_full_names "$leaves_brew")"
+    added_shorts="$(comm -13 <(sorted_lines "$manifest_cask") <(sorted_lines "$installed_cask"))"
+    added_cask="$(ADDED="$added_shorts" map_full_names "$full_cask")"
+
+    if [[ -n "$removed_brew" || -n "$removed_cask" ]]; then
+        # Drop manifest lines whose package is no longer installed; keep
+        # comments, taps, ordering, and any per-entry args untouched.
+        REMOVE_BREW="$removed_brew" REMOVE_CASK="$removed_cask" awk '
+            BEGIN {
+                n = split(ENVIRON["REMOVE_BREW"], b, "\n")
+                for (i = 1; i <= n; i++) remove_brew[b[i]] = 1
+                n = split(ENVIRON["REMOVE_CASK"], c, "\n")
+                for (i = 1; i <= n; i++) remove_cask[c[i]] = 1
+            }
+            /^brew "/ { line = $0; sub(/^brew "/, "", line); sub(/".*/, "", line); sub(/^.*\//, "", line); if (line in remove_brew) next }
+            /^cask "/ { line = $0; sub(/^cask "/, "", line); sub(/".*/, "", line); sub(/^.*\//, "", line); if (line in remove_cask) next }
+            { print }
+        ' "$brewfile" >"$brewfile.tmp" && mv "$brewfile.tmp" "$brewfile"
+    fi
+
+    if [[ -n "$added_brew" || -n "$added_cask" ]]; then
+        {
+            printf '\n# Added by ./install.sh packages-sync on %s; review and organize by hand.\n' "$(date +%Y-%m-%d)"
+            while IFS= read -r pkg; do [[ -n "$pkg" ]] && printf 'brew "%s"\n' "$pkg"; done <<<"$added_brew"
+            while IFS= read -r pkg; do [[ -n "$pkg" ]] && printf 'cask "%s"\n' "$pkg"; done <<<"$added_cask"
+        } >>"$brewfile"
+    fi
+
+    if [[ -z "$removed_brew$removed_cask$added_brew$added_cask" ]]; then
+        echo "Brewfile already matches installed packages."
+        return 0
+    fi
+    if [[ -n "$removed_brew$removed_cask" ]]; then
+        echo "Removed (no longer installed):"
+        [[ -n "$removed_brew" ]] && sed 's/^/    brew /' <<<"$removed_brew"
+        [[ -n "$removed_cask" ]] && sed 's/^/    cask /' <<<"$removed_cask"
+    fi
+    if [[ -n "$added_brew$added_cask" ]]; then
+        echo "Added (installed but untracked):"
+        [[ -n "$added_brew" ]] && sed 's/^/    brew /' <<<"$added_brew"
+        [[ -n "$added_cask" ]] && sed 's/^/    cask /' <<<"$added_cask"
+    fi
+    echo "Commit the updated Brewfile when the changes look right."
+}
+
 link_roles() {
     if [[ "$OS" == macos ]]; then load_homebrew; fi
     if ! has_cmd stow; then
@@ -153,7 +262,7 @@ main() {
             }
         done
         ;;
-    packages | plugins | all)
+    packages | packages-sync | plugins | all)
         shift
         if (($#)); then
             usage >&2
@@ -171,6 +280,7 @@ main() {
     case "$cmd" in
     links) link_roles "$@" ;;
     packages) install_packages ;;
+    packages-sync) sync_packages ;;
     plugins) install_plugins ;;
     all)
         install_packages
