@@ -1,0 +1,53 @@
+# Get editor completions based on the config schema
+"$schema" = 'https://starship.rs/config-schema.json'
+
+add_newline = false
+
+# format = "$directory$os$git_branch$git_status$nodejs$rust$golang$php $character"
+format = "$all"
+
+# [os]
+# disabled = false
+# format = "[$symbol](#E95420) "
+
+# [os.symbols]
+# Ubuntu = "󰕈"
+# Arch   = "󰣇"
+# Macos  = ""
+
+# [directory]
+# format            = "[$path](cyan) "
+# truncation_length = 4
+# truncate_to_repo  = true
+
+# [git_branch]
+# symbol = ""
+# format = "[$symbol $branch](bold purple) "
+
+[git_status]
+format     = "($ahead_behind$staged$modified$untracked$deleted$conflicted)"
+ahead      = "[⇡$count ](bold #268BD2)"
+behind     = "[⇣$count ](bold #268BD2)"
+diverged   = "[⇡$ahead_count⇣$behind_count ](bold #268BD2)"
+staged     = "[+$count ](bold #859900)"
+modified   = "[●$count ](bold #B58900)"
+untracked  = "[?$count ](bold #839496)"
+deleted    = "[✘$count ](bold #DC322F)"
+conflicted = "[⚡$count ](bold #DC322F)"
+
+# [nodejs]
+# symbol = ""
+# format = "[$symbol $version](green) "
+
+# [rust]
+# symbol = ""
+# format = "[$symbol $version](red) "
+
+# [golang]
+# symbol = ""
+# format = "[$symbol $version](cyan) "
+
+# [character]
+# success_symbol = "[❯](green)"
+# error_symbol   = "[❯](red)"
+# vimcmd_symbol  = "[❮](blue)"

@@ -1,0 +1,17 @@
+# Regex patterns removed from upstream lists before allow/deny is applied.
+# Keep this file conservative.
+
+# Core developer/service endpoints that can break tooling if blocked.
+(^|\.)github\.com$
+(^|\.)githubusercontent\.com$
+(^|\.)gitlab\.com$
+(^|\.)docker\.com$
+
+# Core OS package/update domains.
+(^|\.)archlinux\.org$
+(^|\.)debian\.org$
+(^|\.)ubuntu\.com$
+(^|\.)microsoft\.com$
+(^|\.)windowsupdate\.com$
+(^|\.)apple\.com$
+(^|\.)icloud\.com$

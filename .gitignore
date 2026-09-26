@@ -1,0 +1,76 @@
+# Auth tokens (CRITICAL)
+roles/config/.config/gh/hosts.yml
+roles/config/.config/github-copilot/apps.json
+roles/config/.config/github-copilot/hosts.json
+roles/config/.config/zsh/secrets.zsh
+
+# Generated/runtime directories
+roles/config/.config/github-copilot/rd/
+roles/config/.config/github-copilot/go/
+roles/macos-config/.config/raycast/
+
+# Local state retained on existing machines, never deployed by Stow.
+roles/config/.config/zsh/.zcompcache/
+roles/config/.config/zsh/.zsh_sessions/
+roles/config/.config/zsh/.zshrc_old
+roles/macos-config/.config/karabiner/automatic_backups/
+roles/config/.config/opencode/opencode-notifier-state.json
+roles/config/.config/opencode/theme.json
+roles/config/.config/theme-sync/current
+roles/config/.config/theme-sync/current.env
+roles/config/.config/theme-sync/mode.env
+roles/config/.config/ghostty/auto/
+roles/config/.config/kitty/auto/
+roles/config/.config/alacritty/auto/
+roles/config/.config/btop/themes/dotfiles.theme
+roles/config/.config/bat/themes/SupaTheme.tmTheme
+roles/config/.config/tmux/theme.conf
+roles/config/.config/yazi/theme.toml
+roles/config/.config/eza/theme.yml
+hosts/
+
+# Runtime/cache files
+**/.cache/
+**/.state/
+**/*.log
+**/*.mdb
+**/.DS_Store
+**/*.bak
+**/*.old
+
+# VS Code
+.vscode/
+**/.vscode/
+*.code-workspace
+roles/config/.config/pgcli/history
+roles/config/.config/pgcli/log
+
+# Generated local bin shims
+roles/bin/.local/bin/debugpy
+roles/bin/.local/bin/debugpy-adapter
+roles/bin/.local/bin/ipython
+roles/bin/.local/bin/ipython3
+roles/bin/.local/bin/jupyter
+roles/bin/.local/bin/jupyter-kernel
+roles/bin/.local/bin/jupyter-kernelspec
+roles/bin/.local/bin/jupyter-migrate
+roles/bin/.local/bin/jupyter-run
+roles/bin/.local/bin/jupyter-troubleshoot
+roles/bin/.local/bin/pygmentize
+
+# keys
+**/id_*
+**/*.pub
+**/known_hosts*
+roles/config/.config/gh
+roles/config/.config/nvim/test
+/roles/bin/.local/bin/gopherhole
+roles/config/.pi/agent/auth.json
+roles/config/.pi/agent/sessions/
+roles/config/.pi/agent/fff/
+roles/config/.pi/agent/models-store.json
+roles/config/.pi/agent/*.bak
+roles/config/.pi/agent/npm/node_modules/
+roles/config/.pi/agent/npm/.cache/
+roles/config/.pi/agent/pi-blackhole/*.jsonl
+roles/config/.pi/agent/pi-blackhole/*-pending.json

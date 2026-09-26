@@ -1,0 +1,169 @@
+{
+  // -------------------------------------------------------------------------
+  // Workspaces
+  // -------------------------------------------------------------------------
+  "hyprland/workspaces": {
+    "format": "{name}",
+    "format-icons": {
+      "1": "",
+      "2": "",
+      "3": "",
+      "4": "",
+      "5": "",
+      "active": "",
+      "default": ""
+    },
+    "persistent-workspaces": {
+      "DP-2": [
+        1,
+        2,
+        3,
+        4
+      ],
+      "eDP-1": [
+        5
+      ]
+    }
+  },
+  // -------------------------------------------------------------------------
+  // Date and Time
+  // -------------------------------------------------------------------------
+  "clock": {
+    "interval": 60,
+    "format": "{:%H:%M  %d.%m.%Y}",
+    "tooltip-format": "<big>{:%Y %B}</big>\n<tt><small>{calendar}</small></tt>"
+  },
+  // -------------------------------------------------------------------------
+  // Network
+  // -------------------------------------------------------------------------
+  "network": {
+    "format": "{ifname}",
+    "format-wifi": "{essid} ",
+    "format-ethernet": "{ipaddr}/{cidr} 󰊗",
+    "format-disconnected": "",
+    "tooltip-format": "{ifname} via {gwaddr} 󰊗",
+    "tooltip-format-wifi": "{essid} ({signalStrength}%) ",
+    "tooltip-format-ethernet": "{ifname} ",
+    "tooltip-format-disconnected": "Disconnected",
+    "on-click": "nm-connection-editor",
+    "max-length": 50
+  },
+  // -------------------------------------------------------------------------
+  // Bluetooth
+  // -------------------------------------------------------------------------
+  "bluetooth": {
+    "format": "",
+    "format-connected": " {num_connections}",
+    "format-disabled": "󰂲",
+    "on-click": "blueman-manager",
+    "tooltip-format": "{controller_alias}\t{controller_address}"
+  },
+  // -------------------------------------------------------------------------
+  // Audio
+  // -------------------------------------------------------------------------
+  "pulseaudio": {
+    "format": "{icon}",
+    "format-bluetooth": "{icon} ",
+    "format-muted": "",
+    "format-icons": {
+      "headphone": "",
+      "hands-free": "",
+      "headset": "",
+      "phone": "",
+      "portable": "",
+      "car": "",
+      "default": [
+        "",
+        ""
+      ]
+    },
+    "scroll-step": 5,
+    "on-click-right": "pactl set-sink-mute @DEFAULT_SINK@ toggle",
+    "on-click": "pavucontrol"
+  },
+  // -------------------------------------------------------------------------
+  // Battery
+  // -------------------------------------------------------------------------
+  "battery": {
+    "bat": "BAT0",
+    "interval": 60,
+    "states": {
+      "warning": 30,
+      "critical": 15
+    },
+    "format-time": " ({H}h{M}m)",
+    "format-charging": "<span font='Font Awesome 5 Free'></span>  <span font='Font Awesome 5 Free 11'>{icon}</span>  {capacity}% - {time}",
+    "format-full": "<span font='Font Awesome 5 Free'></span>  <span font='Font Awesome 5 Free 11'>{icon}</span>  Charged",
+    "max-length": 25,
+    "format": "{icon}",
+    "format-icons": [
+      "",
+      "",
+      "",
+      "",
+      ""
+    ]
+  },
+  // -------------------------------------------------------------------------
+  // Notifications
+  // -------------------------------------------------------------------------
+  "custom/notification": {
+    "tooltip": true,
+    "format": "<span size='14pt'>{icon}</span>",
+    "format-icons": {
+      "notification": "󱅫",
+      "none": "󰂜",
+      "dnd-notification": "󰂠",
+      "dnd-none": "󰪓",
+      "inhibited-notification": "󰂛",
+      "inhibited-none": "󰪑",
+      "dnd-inhibited-notification": "󰂛",
+      "dnd-inhibited-none": "󰪑"
+    },
+    "return-type": "json",
+    "exec-if": "which swaync-client",
+    "exec": "swaync-client -swb",
+    "on-click": "swaync-client -t -sw",
+    "on-click-right": "swaync-client -d -sw",
+    "escape": true
+  },
+  // -------------------------------------------------------------------------
+  // Language
+  // -------------------------------------------------------------------------
+  "hyprland/language": {
+    "format": "{}",
+    "keyboard-name": "at-translated-set-2-keyboard"
+  },
+  "custom/keyboard-layout": {
+    "exec": "hyprctl devices -j | jq -r '.keyboards[] | select(.main == true) | .active_keymap' | cut -c1-2",
+    "interval": 1,
+    "format": "{}",
+    "tooltip": false
+  },
+  // -------------------------------------------------------------------------
+  // Groups
+  // -------------------------------------------------------------------------
+  "group/left": {
+    "orientation": "horizontal",
+    "modules": [
+      "hyprland/workspaces"
+    ]
+  },
+  "group/center": {
+    "orientation": "horizontal",
+    "modules": [
+      "clock"
+    ]
+  },
+  "group/right": {
+    "orientation": "horizontal",
+    "modules": [
+      "network",
+      "bluetooth",
+      "battery",
+      "pulseaudio",
+      "custom/keyboard-layout",
+      "custom/notification"
+    ]
+  }
+}

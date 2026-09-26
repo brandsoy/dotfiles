@@ -1,0 +1,35 @@
+[fetch]
+	prune = true
+[init]
+	defaultBranch = main
+[include]
+	path = .gitconfig-platform
+[credential "https://github.com"]
+	helper =
+	helper = !gh auth git-credential
+[credential "https://gist.github.com"]
+	helper =
+	helper = !gh auth git-credential
+[user]
+	name = Mattis Brandsøy
+	email = mattis.dev@icloud.com
+[rebase]
+	autoStash = true
+[branch]
+	autosetuprebase = always
+[merge]
+	conflictStyle = zdiff3
+# rerere reuses recorded conflict resolutions; review `git rerere diff` before committing.
+[rerere]
+	enabled = true
+[filter "lfs"]
+	smudge = git-lfs smudge -- %f
+	process = git-lfs filter-process
+	required = true
+	clean = git-lfs clean -- %f
+
+# These must follow the fallback [user] values above.
+[includeIf "gitdir:~/Developer/git/work/"]
+	path = .gitconfig-work
+[includeIf "gitdir:~/Developer/git/personal/"]
+	path = .gitconfig-personal

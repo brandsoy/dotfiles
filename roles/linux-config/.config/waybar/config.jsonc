@@ -1,0 +1,17 @@
+// -*- mode: jsonc -*-
+{
+  "position": "top",
+  "spacing": 2,
+  "include": [
+    "~/.config/waybar/modules.jsonc"
+  ],
+  "modules-left": [
+    "group/left"
+  ],
+  "modules-center": [
+    "group/center"
+  ],
+  "modules-right": [
+    "group/right"
+  ]
+}

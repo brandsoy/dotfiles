@@ -1,0 +1,6 @@
+--no-folding
+--ignore=^\.git$
+--ignore=^\.git(ignore|modules)$
+--ignore=^\.DS_Store$
+--ignore=^\.stowrc$
+--ignore=.*\.(log|bak|old)$

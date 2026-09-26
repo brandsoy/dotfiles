@@ -1,0 +1,67 @@
+#!/usr/bin/env bash
+# Keep model storage in one place while preserving each framework's native layout.
+set -euo pipefail
+
+models_home="${AI_MODELS_HOME:-$HOME/Models}"
+hf_home="$models_home/huggingface"
+ollama_home="$models_home/ollama"
+mlx_home="$models_home/mlx"
+unsloth_home="$models_home/unsloth"
+
+usage() {
+  cat <<'EOF'
+Usage: ai-models <command>
+
+Commands:
+  init       Create the source-of-truth directory layout
+  link       Link legacy framework locations when they do not contain data
+  status     Show configured paths and disk usage
+
+Set AI_MODELS_HOME to store models somewhere other than ~/Models.
+EOF
+}
+
+init() {
+  mkdir -p "$hf_home/hub" "$hf_home/datasets" "$ollama_home" "$mlx_home" \
+    "$unsloth_home" "$models_home/exports" "$models_home/inbox"
+  printf 'Model store initialized at %s\n' "$models_home"
+}
+
+link_empty_or_missing() {
+  local destination="$1" target="$2"
+  if [[ -L "$destination" ]]; then
+    [[ "$(readlink "$destination")" == "$target" ]] || ln -sfn "$target" "$destination"
+  elif [[ -e "$destination" ]]; then
+    printf 'Keeping existing %s (move it first if you want a symlink)\n' "$destination" >&2
+  else
+    mkdir -p "$(dirname "$destination")"
+    ln -s "$target" "$destination"
+    printf 'Linked %s -> %s\n' "$destination" "$target"
+  fi
+}
+
+link_legacy() {
+  init >/dev/null
+  # These are compatibility links for applications that ignore environment variables.
+  link_empty_or_missing "$HOME/.ollama/models" "$ollama_home"
+  link_empty_or_missing "$HOME/.cache/huggingface" "$hf_home"
+}
+
+status() {
+  printf 'AI_MODELS_HOME  %s\n' "$models_home"
+  printf 'HF_HOME         %s\n' "${HF_HOME:-$hf_home}"
+  printf 'OLLAMA_MODELS   %s\n' "${OLLAMA_MODELS:-$ollama_home}"
+  if [[ -d "$models_home" ]]; then
+    du -sh "$models_home" 2>/dev/null || true
+  else
+    printf 'Not initialized (run: ai-models init)\n'
+  fi
+}
+
+case "${1:-}" in
+  init) init ;;
+  link) link_legacy ;;
+  status) status ;;
+  -h|--help|help) usage ;;
+  *) usage >&2; exit 2 ;;
+esac

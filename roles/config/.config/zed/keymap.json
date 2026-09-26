@@ -1,0 +1,87 @@
+// Zed keymap
+//
+// For information on binding keys, see the Zed
+// documentation: https://zed.dev/docs/key-bindings
+//
+// To see the default key bindings run `zed: open default keymap`
+// from the command palette.
+[
+  // Native Zed equivalents for the Neovim bindings that transfer cleanly.
+  // Plugin-only commands (Obsidian, Yazi, fzf-lua, Diffview, etc.) are
+  // intentionally left out when Zed has no matching action.
+  {
+    "context": "Editor && vim_mode == insert",
+    "bindings": {
+      "j k": "vim::NormalBefore"
+    }
+  },
+  {
+    "context": "Editor && vim_mode == normal && !menu",
+    "bindings": {
+      // Pane and buffer navigation
+      "ctrl-h": "workspace::ActivatePaneLeft",
+      "ctrl-j": "workspace::ActivatePaneDown",
+      "ctrl-k": "workspace::ActivatePaneUp",
+      "ctrl-l": "workspace::ActivatePaneRight",
+      "space space": "pane::ActivatePreviousItem",
+      "space b n": "pane::ActivateNextItem",
+      "space b p": "pane::ActivatePreviousItem",
+      "space b d": "pane::CloseActiveItem",
+      "space b o": ["pane::CloseOtherItems", { "close_pinned": false }],
+
+      // Splits, saving, and quitting
+      "space s v": "pane::SplitRight",
+      "space s h": "pane::SplitDown",
+      "space s x": "pane::CloseActiveItem",
+      "space w w": "workspace::Save",
+      "space w a": "workspace::SaveAll",
+      "space q q": "zed::Quit",
+
+      // Search and symbols
+      "space f f": "file_finder::Toggle",
+      "space f b": ["tab_switcher::Toggle", { "select_last": true }],
+      "space f s": "outline::Toggle",
+      "space f S": "project_symbols::Toggle",
+      "space f R": "workspace::ReopenLastPicker",
+      "space f g": "pane::DeploySearch",
+      "space /": "buffer_search::Deploy",
+      "space e": "project_panel::ToggleFocus",
+      "space E": "project_panel::ToggleFocus",
+      "space f e": "pane::RevealInProjectPanel",
+
+      // Language server and diagnostics
+      "shift-k": "editor::Hover",
+      "g r": "editor::FindAllReferences",
+      "space l k": "editor::ShowSignatureHelp",
+      "space l t": "editor::GoToTypeDefinition",
+      "space l d v": "editor::GoToDefinitionSplit",
+      "space l r": "editor::Rename",
+      "space l a": "editor::ToggleCodeActions",
+      "space l f": "editor::Format",
+      "[ d": "editor::GoToPreviousDiagnostic",
+      "] d": "editor::GoToDiagnostic",
+      "space l e": "diagnostics::Deploy",
+
+      // UI and themes
+      "space u w": "editor::ToggleSoftWrap",
+      "space u t": "theme_selector::Toggle",
+      "space u T": "theme::ToggleMode",
+
+      // Git
+      "space g g": "git_panel::ToggleFocus",
+      "space g b": "git::Blame",
+      "space g d": "git::Diff",
+      "space d v": "git::ReviewDiff",
+      "space g e": "git_panel::ToggleFocus",
+
+    }
+  },
+  {
+    "context": "Markdown && vim_mode == normal && !menu",
+    "bindings": {
+      "space m t": ["workspace::SendKeystrokes", "0 i - [ ] escape"],
+      "space m l": ["workspace::SendKeystrokes", "i [ ] ( ) escape f [ a"],
+      "space m p": "markdown::OpenPreview"
+    }
+  }
+]

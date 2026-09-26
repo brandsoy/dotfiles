@@ -1,0 +1,41 @@
+#:schema https://github.com/joshmedeski/sesh/raw/main/sesh.schema.json
+
+# Settings
+cache = false
+
+[[session]]
+name = "Nvim Config"
+path = "~/.config/nvim"
+startup_command = "la"
+
+[[session]]
+name = "Dotfiles"
+path = "~/dotfiles"
+startup_command = "la"
+
+#Work  Projects
+[[session]]
+name = "Saga Connect"
+path = "~/Developer/git/work/SagaConnect/saga-connect"
+startup_command = "la"
+
+[[session]]
+name = "Insight"
+path = "~/Developer/git/work/FBH-Insigth/FBH-Insight"
+startup_command = "la"
+
+[[session]]
+name = "Sharepoint Contract Management"
+path = "~/Developer/git/work/sharepoint-contract-management"
+startup_command = "la"
+
+[[session]]
+name = "Sharepoint Project Management"
+path = "~/Developer/git/work/sharepoint-project-management"
+startup_command = "la"
+
+# Home Projects
+[[session]]
+name = "Homelab"
+path = "~/Developer/git/personal/homelab"
+startup_command = "la"

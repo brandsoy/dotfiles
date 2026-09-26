@@ -1,0 +1,4 @@
+# Popular baseline hosts lists (hosts or plain domain format)
+https://raw.githubusercontent.com/StevenBlack/hosts/master/hosts
+https://adaway.org/hosts.txt
+https://someonewhocares.org/hosts/hosts
