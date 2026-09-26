@@ -39,6 +39,13 @@ short_sorted_lines() {
     return 0
 }
 
+# Indented "prefix name" summary lines; empty input prints nothing.
+print_prefixed() {
+    local prefix="$1" names="$2"
+    [[ -n "$names" ]] || return 0
+    while IFS= read -r name; do printf '    %s %s\n' "$prefix" "$name"; done <<<"$names"
+}
+
 # Print the full-name lines from $2 whose short name is listed in $ADDED.
 map_full_names() {
     ADDED="$ADDED" awk '
@@ -150,12 +157,20 @@ sync_packages() {
     leaves_brew="$(brew leaves | sort -u)"
     full_cask="$(brew list --cask --full-name | sort -u)"
 
+    # Deliberate exclusions: installed on purpose, never re-added by sync.
+    local untracked=""
+    if [[ -f "$ROLES_DIR/packages-macos/untracked.txt" ]]; then
+        untracked="$(grep -vE '^[[:space:]]*(#|$)' "$ROLES_DIR/packages-macos/untracked.txt" | sed -E 's|.*/||' | sort -u)"
+    fi
+
     local removed_brew removed_cask added_brew added_cask added_shorts
     removed_brew="$(comm -23 <(sorted_lines "$manifest_brew") <(sorted_lines "$installed_brew"))"
     removed_cask="$(comm -23 <(sorted_lines "$manifest_cask") <(sorted_lines "$installed_cask"))"
     added_shorts="$(comm -13 <(sorted_lines "$manifest_brew") <(short_sorted_lines "$leaves_brew"))"
+    added_shorts="$(comm -23 <(sorted_lines "$added_shorts") <(sorted_lines "$untracked"))"
     added_brew="$(ADDED="$added_shorts" map_full_names "$leaves_brew")"
     added_shorts="$(comm -13 <(sorted_lines "$manifest_cask") <(sorted_lines "$installed_cask"))"
+    added_shorts="$(comm -23 <(sorted_lines "$added_shorts") <(sorted_lines "$untracked"))"
     added_cask="$(ADDED="$added_shorts" map_full_names "$full_cask")"
 
     if [[ -n "$removed_brew" || -n "$removed_cask" ]]; then
@@ -188,13 +203,13 @@ sync_packages() {
     fi
     if [[ -n "$removed_brew$removed_cask" ]]; then
         echo "Removed (no longer installed):"
-        [[ -n "$removed_brew" ]] && sed 's/^/    brew /' <<<"$removed_brew"
-        [[ -n "$removed_cask" ]] && sed 's/^/    cask /' <<<"$removed_cask"
+        print_prefixed brew "$removed_brew"
+        print_prefixed cask "$removed_cask"
     fi
     if [[ -n "$added_brew$added_cask" ]]; then
         echo "Added (installed but untracked):"
-        [[ -n "$added_brew" ]] && sed 's/^/    brew /' <<<"$added_brew"
-        [[ -n "$added_cask" ]] && sed 's/^/    cask /' <<<"$added_cask"
+        print_prefixed brew "$added_brew"
+        print_prefixed cask "$added_cask"
     fi
     echo "Commit the updated Brewfile when the changes look right."
 }

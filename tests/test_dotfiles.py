@@ -58,6 +58,7 @@ def make_repo(root):
     copy("roles/linux-config/.gitconfig-platform", repo)
     copy("roles/macos-config/.gitconfig-platform", repo)
     copy("roles/packages-macos/Brewfile", repo)
+    copy("roles/packages-macos/untracked.txt", repo)
     copy("roles/packages-redhat/Redhatfile", repo)
 
     # Ignored files exist locally but must not be deployed.
@@ -228,7 +229,8 @@ def test_packages_sync(root, binaries):
     repo, env = make_repo(root), make_env(root, binaries)
     env["TEST_OS"] = "macos"
     env["BREW_FORMULAE"] = "kept dep-of-kept nested-kept"  # dep-of-kept: installed but not a leaf
-    env["BREW_LEAVES"] = "kept installed-only some/tap/nested-kept full-only"
+    env["BREW_LEAVES"] = "kept installed-only some/tap/nested-kept full-only excluded-only"
+    put(repo / "roles/packages-macos/untracked.txt", "# deliberate exclusions\nexcluded-only\n")
     env["BREW_CASKS"] = "kept-cask nested-cask new-cask"
     env["BREW_CASKS_FULL"] = "kept-cask some/tap/nested-cask some/tap/new-cask"
     brewfile = repo / "roles/packages-macos/Brewfile"
@@ -247,6 +249,7 @@ def test_packages_sync(root, binaries):
     assert 'cask "some/tap/new-cask"' in text  # additions use resolvable full names
     assert 'cask "new-cask"' not in text
     assert 'brew "dep-of-kept"' not in text  # transitive deps stay implicit
+    assert 'brew "excluded-only"' not in text  # untracked.txt exclusions stick
     # The manifest is Homebrew-only; other hosts refuse.
     env["TEST_OS"] = "fedora"
     install(repo, env, root, binaries, "packages-sync", ok=False)

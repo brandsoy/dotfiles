@@ -1,0 +1,15 @@
+# Installed on purpose but deliberately not tracked in the Brewfile.
+# `./install.sh packages-sync` skips these when appending
+# installed-but-untracked packages, so curation sticks.
+# One package per line; short names; comments allowed.
+affinity
+db-browser-for-sqlite
+dev
+font-blex-mono-nerd-font
+font-fira-code-nerd-font
+font-ibm-plex-mono
+font-inconsolata-nerd-font
+font-ubuntu-mono-nerd-font
+lm-studio
+protonvpn
+raycast

@@ -33,7 +33,7 @@ After installation, `dotfiles-install` exposes the same commands. Set
 - `plugins` preserves legacy plugin directories without Git metadata under `${XDG_STATE_HOME:-~/.local/state}/dotfiles/plugin-backup.*` before initializing submodules. It prints each backup location; existing Git checkouts are left in place.
 - Stow uses file-level links, with explicit ignores for runtime files and credentials.
 - macOS bootstraps Homebrew if needed, then installs the Brewfile.
-- `packages-sync` reconciles the Brewfile with the machine: entries for uninstalled packages are removed, and untracked top-level formulae (`brew leaves`) and casks are appended for review. It never runs automatically.
+- `packages-sync` reconciles the Brewfile with the machine: entries for uninstalled packages are removed, and untracked top-level formulae (`brew leaves`) and casks are appended for review. Packages listed in `roles/packages-macos/untracked.txt` are skipped, so deliberate exclusions stick. It never runs automatically.
 - Fedora keeps your existing desktop/session. Package availability depends on Fedora version and enabled repositories; inspect DNF's skipped-package warnings. Hyprland configs remain available, but Fedora does not install a complete Hyprland desktop automatically.
 - No installer command runs `chsh`. If desired, choose a Zsh path listed in `/etc/shells` and change it yourself.
 - Existing conflicting files are not adopted or overwritten by Stow; back them up before resolving conflicts.
