@@ -167,7 +167,6 @@ brew "pulumi/tap/pulumi"
 # AeroSpace is an i3-like tiling window manager for macOS
 cask "nikitabobko/tap/aerospace"
 # Image editing and design software
-cask "affinity"
 # Application uninstaller
 cask "appcleaner"
 # Desktop password and login vault
@@ -181,16 +180,11 @@ cask "codex"
 # Brings the power of Copilot coding agent directly to your terminal
 cask "copilot-cli"
 # Browser for SQLite databases
-cask "db-browser-for-sqlite"
-cask "font-blex-mono-nerd-font"
-cask "font-fira-code-nerd-font"
 cask "font-geist-mono-nerd-font"
-cask "font-ibm-plex-mono"
 cask "font-jetbrains-mono-nerd-font"
 cask "font-maple-mono-nf"
 cask "font-monaspace-nf"
 cask "font-symbols-only-nerd-font"
-cask "font-ubuntu-mono-nerd-font"
 # Web browser
 cask "google-chrome"
 # Chromium-based web browser
@@ -204,7 +198,6 @@ cask "keepingyouawake"
 # GPU-based terminal emulator
 cask "kitty"
 # Discover, download, and run local LLMs
-cask "lm-studio"
 # Open-source firewall to block unknown outgoing connections
 cask "lulu"
 # Online collaborative whiteboard platform
@@ -219,7 +212,6 @@ cask "orbstack"
 # GUI client for PostgreSQL databases
 cask "postico"
 # Control your tools with a few keystrokes
-cask "raycast"
 # Instant messaging application focusing on security
 cask "signal"
 # Real time file synchronisation software
@@ -246,14 +238,11 @@ brew "range-v3"
 brew "rust"
 brew "wilfredinni/noodle/noodle"
 cask "abue-ammar/tinycast/tinycast"
-cask "agentasticai/tap/dev"
 cask "firefox@beta"
-cask "font-inconsolata-nerd-font"
 cask "ghostty"
 cask "github-copilot-app"
 cask "knockknock"
 cask "microsoft-outlook"
 cask "ngrok"
 cask "onyx@beta"
-cask "protonvpn"
 cask "stablyai/orca/orca"
