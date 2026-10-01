@@ -7,7 +7,9 @@ function M.get()
 
 	return {
 		cssls = {},
-		graphql = {},
+		graphql = {
+			filetypes = { 'graphql' },
+		},
 		html = {},
 		lemminx = {},
 		htmx = {

@@ -19,6 +19,7 @@ function M.get()
 		'tailwindcss',
 		'bashls',
 		'eslint',
+		'tsc',
 		'svelte',
 		'tflint',
 		'terraformls',

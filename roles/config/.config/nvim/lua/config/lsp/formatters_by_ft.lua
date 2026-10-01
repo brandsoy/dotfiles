@@ -10,7 +10,7 @@ function M.get()
 		python = { 'ruff_fix', 'ruff_format' },
 		astro = project_formatters.web,
 		css = project_formatters.web,
-		graphql = { 'prettierd', 'prettier', stop_after_first = true },
+		graphql = project_formatters.prettier_only,
 		htmx = project_formatters.web,
 		html = project_formatters.web,
 		xml = project_formatters.web,
