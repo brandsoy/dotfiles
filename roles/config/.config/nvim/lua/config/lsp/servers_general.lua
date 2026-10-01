@@ -74,7 +74,9 @@ function M.get()
 			},
 			root_dir = function(bufnr, on_dir)
 				local config = project_config.find_file(bufnr, project_config.biome_files)
-				on_dir(config and vim.fs.dirname(config) or vim.fs.root(bufnr, { '.git' }) or vim.uv.cwd())
+				if config then
+					on_dir(vim.fs.dirname(config))
+				end
 			end,
 		},
 		eslint = {

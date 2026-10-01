@@ -32,6 +32,17 @@ local ensure_installed = {
 	'vimdoc',
 }
 
+local function start_treesitter(bufnr)
+	if vim.b[bufnr].large_file or vim.treesitter.highlighter.active[bufnr] then
+		return
+	end
+
+	local lang = vim.treesitter.language.get_lang(vim.bo[bufnr].filetype)
+	if lang then
+		pcall(vim.treesitter.start, bufnr, lang)
+	end
+end
+
 local function install_missing_parsers()
 	local ok_ts, ts = pcall(require, 'nvim-treesitter')
 	if not ok_ts then
@@ -55,19 +66,26 @@ function M.setup()
 
 	-- nvim-treesitter no longer enables highlighting automatically. Start the
 	-- matching parser for every supported filetype, including custom filetypes.
-	vim.api.nvim_create_autocmd('FileType', {
-		group = vim.api.nvim_create_augroup('user_treesitter_highlighting', {
-			clear = true,
-		}),
+	local highlighting_group = vim.api.nvim_create_augroup('user_treesitter_highlighting', {
+		clear = true,
+	})
+
+	vim.api.nvim_create_autocmd({ 'BufEnter', 'FileType' }, {
+		group = highlighting_group,
 		pattern = '*',
 		callback = function(args)
-			if vim.b[args.buf].large_file then
-				return
-			end
+			start_treesitter(args.buf)
+		end,
+	})
 
-			local lang = vim.treesitter.language.get_lang(vim.bo[args.buf].filetype)
-			if lang then
-				pcall(vim.treesitter.start, args.buf, lang)
+	vim.api.nvim_create_autocmd('User', {
+		group = highlighting_group,
+		pattern = 'TSUpdate',
+		callback = function()
+			for _, bufnr in ipairs(vim.api.nvim_list_bufs()) do
+				if vim.api.nvim_buf_is_loaded(bufnr) then
+					start_treesitter(bufnr)
+				end
 			end
 		end,
 	})
