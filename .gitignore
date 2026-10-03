@@ -4,6 +4,9 @@ roles/config/.config/github-copilot/apps.json
 roles/config/.config/github-copilot/hosts.json
 roles/config/.config/zsh/secrets.zsh
 
+# Herdr preferences and runtime state stay machine-local.
+roles/config/.config/herdr/
+
 # Generated/runtime directories
 roles/config/.config/github-copilot/rd/
 roles/config/.config/github-copilot/go/
@@ -61,7 +64,6 @@ roles/bin/.local/bin/pygmentize
 **/id_*
 **/*.pub
 **/known_hosts*
-roles/config/.config/gh
 roles/config/.config/nvim/test
 /roles/bin/.local/bin/gopherhole
 roles/config/.pi/agent/auth.json
