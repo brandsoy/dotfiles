@@ -1,0 +1,20 @@
+"$schema" = 'https://starship.rs/config-schema.json'
+
+add_newline = false
+
+format = "$all"
+
+
+
+
+
+[git_status]
+format     = "($ahead_behind$staged$modified$untracked$deleted$conflicted)"
+ahead      = "[⇡$count ](bold {{git_status_ahead}})"
+behind     = "[⇣$count ](bold {{git_status_behind}})"
+diverged   = "[⇡$ahead_count⇣$behind_count ](bold {{git_status_diverged}})"
+staged     = "[+$count ](bold {{git_status_staged}})"
+modified   = "[●$count ](bold {{git_status_modified}})"
+untracked  = "[?$count ](bold {{git_status_untracked}})"
+deleted    = "[✘$count ](bold {{git_status_deleted}})"
+conflicted = "[⚡$count ](bold {{git_status_conflicted}})"

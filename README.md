@@ -61,12 +61,18 @@ in-memory credential cache.
 Themes are centralized in:
 
 - `roles/config/.config/theme-sync/`
-- `roles/config/.config/theme-sync/themes/<theme>/`
+- `roles/config/.config/theme-sync/themes/<theme>.json`: one palette, native app mappings, and template bindings per theme
+- `roles/config/.config/theme-sync/templates/<app>/`: shared app syntax and layout variants
 
-Each theme folder contains a `theme.env` mapping plus app-specific theme files (for example `kitty.conf`, `fzf.sh`, and optional overlays like `tmux.theme.conf`, `opencode.theme.json`, etc.).
+`theme-sync set` and `apply` render app files on demand using Python 3.9+ (standard
+library only). Edit colors in the JSON definition, not in generated app files.
+All 16 bundled themes are migrated; native Neovim/Bat themes stay native.
+See [theme-sync documentation](roles/config/.config/theme-sync/README.md) for the
+schema, app overrides, and legacy personal-theme compatibility.
 
 Active theme state is local, under `${XDG_STATE_HOME:-~/.local/state}/theme-sync/`:
-`current`, `current.env`, and `mode.env`. Legacy state under `~/.config/theme-sync/`
+`current`, `current.env`, `mode.env`, and rendered assets in `generated/<theme>/`.
+Legacy state under `~/.config/theme-sync/`
 is imported once, without overwriting newer choices. Hostname-specific theme overrides
 are no longer applied. Generated theme files are ignored by both Git and Stow.
 

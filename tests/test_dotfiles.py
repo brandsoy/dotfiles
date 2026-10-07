@@ -4,8 +4,11 @@
 Run: python3 tests/test_dotfiles.py  (or ./scripts/check.sh for all checks)
 Requires: bash, zsh, git, and GNU Stow.
 """
+import json
+import runpy
 import shutil
 import subprocess
+import sys
 import tempfile
 from pathlib import Path
 
@@ -44,6 +47,7 @@ def make_repo(root):
     copy("install.sh", repo)
     copy(".stowrc", repo)
     copy("scripts/theme-sync.sh", repo)
+    copy("scripts/render-theme.py", repo)
     copy("roles/config/.stow-local-ignore", repo)
     copy("roles/macos-config/.stow-local-ignore", repo)
     for role in ("agents", "bin", "blocklists", "git", "tmux", "zshenv", "linux-config", "macos-config"):
@@ -348,6 +352,104 @@ VSCODE_THEME="Theme {name}"
     print("OK: theme state, overlay cleanup, legacy migration, JSONC safety")
 
 
+def test_theme_generation(root, binaries):
+    """Every managed theme renders offline; failures leave the active theme intact."""
+    repo, env = make_repo(root), make_env(root, binaries)
+    (root / "bin/python3").symlink_to(sys.executable)
+    source = REPO / "roles/config/.config/theme-sync"
+    definitions = root / "definitions"
+    shutil.copytree(source / "templates", definitions / "templates")
+    for theme in (source / "themes").glob("*.json"):
+        put(definitions / "themes" / theme.name, theme.read_text())
+    env["THEME_SYNC_ROOT"] = str(definitions)
+    command = [binaries["bash"], str(repo / "scripts/theme-sync.sh")]
+    themes = sorted(path.stem for path in (definitions / "themes").glob("*.json"))
+    assert len(themes) == 16
+    assert run(command + ["list"], env, root).stdout.splitlines() == themes
+    before = {path: path.read_bytes() for path in definitions.rglob("*") if path.is_file()}
+    config = root / "home/.config"
+    state = root / "home/.local/state/theme-sync"
+    targets = {
+        "ghostty": config / "ghostty/auto/theme.ghostty",
+        "kitty.conf": config / "kitty/auto/theme.conf",
+        "btop.theme": config / "btop/themes/dotfiles.theme",
+        "tmux.theme.conf": config / "tmux/theme.conf",
+        "lazygit.yml": state / "lazygit.yml",
+        "yazi.theme.toml": config / "yazi/theme.toml",
+        "eza.theme.yml": config / "eza/theme.yml",
+        "opencode.theme.json": config / "opencode/theme.json",
+    }
+    renderer = runpy.run_path(str(REPO / "scripts/render-theme.py"))
+    for theme in themes:
+        expected, mappings = renderer["render"](definitions, theme, config)
+        run(command + ["set", theme], env, root)
+        assert (state / "current").read_text().strip() == theme
+        assert (root / "home/.local/state/nvim/theme.txt").read_text().strip() == mappings["NVIM_THEME"]
+        for filename, target in targets.items():
+            if filename in expected:
+                assert target.read_text() == expected[filename], (theme, filename)
+                assert "{{" not in target.read_text()
+            else:
+                assert not target.exists(), (theme, filename)
+        exports = run([binaries["bash"], "-c", 'source "$1"; printf "%s\\n" "$FZF_THEME_FILE"',
+                       "test", str(state / "current.env")], env, root)
+        assert exports.stdout.strip() == str(state / "generated" / theme / "fzf.sh")
+    assert all(path.read_bytes() == content for path, content in before.items())
+
+    # Editing one color propagates through all managed apps on re-apply.
+    run(command + ["set", "rwth-dark"], env, root)
+    theme_file = definitions / "themes/rwth-dark.json"
+    definition = json.loads(theme_file.read_text())
+    definition["palette"]["background"] = "@custom_background"
+    definition["palette"]["custom_background"] = "#123456"
+    put(theme_file, json.dumps(definition))
+    run(command + ["apply"], env, root)
+    for filename in ("kitty.conf", "ghostty", "btop.theme", "tmux.theme.conf"):
+        assert "#123456" in targets[filename].read_text(), filename
+    generated = state / "generated/rwth-dark"
+    assert "#123456" in (generated / "fzf.sh").read_text()
+    assert "#123456" in (generated / "starship.toml").read_text()
+    assert "#123456" in (generated / "yazi.theme.toml").read_text()
+    assert 'color8 #9c9e9f' in targets["kitty.conf"].read_text()
+    assert 'palette = 8=#000c17' in targets["ghostty"].read_text()  # Preserve the app override.
+
+    # Template, palette, path and mapping errors are rejected before any writes.
+    stable = {path: path.read_bytes() for path in state.rglob("*") if path.is_file()}
+    stable.update({path: path.read_bytes() for path in targets.values() if path.is_file()})
+    bad = []
+    for value in ("not-a-color", "@missing", "@background"):
+        broken = json.loads(json.dumps(definition))
+        broken["palette"]["background"] = value
+        bad.append(broken)
+    broken = json.loads(json.dumps(definition))
+    del broken["files"]["kitty.conf"]["values"]["background"]
+    del broken["palette"]["background"]
+    bad.append(broken)
+    broken = json.loads(json.dumps(definition))
+    broken["files"]["kitty.conf"]["template"] = "../../outside"
+    bad.append(broken)
+    broken = json.loads(json.dumps(definition))
+    broken["files"]["../outside"] = {"template": "kitty/default.conf"}
+    bad.append(broken)
+    broken = json.loads(json.dumps(definition))
+    del broken["mappings"]["NVIM_THEME"]
+    bad.append(broken)
+    for broken in bad:
+        put(theme_file, json.dumps(broken))
+        run(command + ["apply"], env, root, ok=False)
+        assert all(path.read_bytes() == content for path, content in stable.items())
+    run(command + ["set", "../rwth-dark"], env, root, ok=False)
+
+    # Removed optional outputs cannot survive editing a theme definition.
+    del definition["files"]["yazi.theme.toml"]
+    put(theme_file, json.dumps(definition))
+    run(command + ["apply"], env, root)
+    assert not targets["yazi.theme.toml"].exists()
+    assert not (generated / "yazi.theme.toml").exists()
+    assert (config / "bat/themes/SupaTheme.tmTheme").exists()
+    print("OK: all 16 themes, shared palette edits, app overrides, validation, overlay cleanup")
+
+
 def test_zsh_shell(root, binaries):
     """A partial/offline shell creates its directories and loads nothing online."""
     repo, env = make_repo(root), make_env(root, binaries)
@@ -366,7 +468,7 @@ def main():
     binaries = {name: shutil.which(name) for name in ("bash", "zsh", "git", "stow")}
     assert all(binaries.values()), "Install bash, zsh, git, and stow first"
     test_plugin_migration(binaries)
-    tests = (test_installer_safety, test_links, test_packages, test_packages_sync, test_git_identity, test_theme_sync, test_zsh_shell)
+    tests = (test_installer_safety, test_links, test_packages, test_packages_sync, test_git_identity, test_theme_sync, test_theme_generation, test_zsh_shell)
     for test in tests:
         with tempfile.TemporaryDirectory(prefix="dotfiles test-") as temporary:
             test(Path(temporary), binaries)
