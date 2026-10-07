@@ -50,8 +50,9 @@ def make_repo(root):
     copy("scripts/render-theme.py", repo)
     copy("roles/config/.stow-local-ignore", repo)
     copy("roles/macos-config/.stow-local-ignore", repo)
-    for role in ("agents", "bin", "blocklists", "git", "tmux", "zshenv", "linux-config", "macos-config"):
+    for role in ("bin", "blocklists", "git", "tmux", "zshenv", "linux-config", "macos-config"):
         put(repo / "roles" / role / f".{role}-example", "example\n")
+    put(repo / "roles/agents/.agents/example", "example\n")
     for relative in ("kitty/kitty.conf", "bat/config", "btop/btop.conf", "lazygit/config.yml", "starship.toml"):
         copy("roles/config/.config/" + relative, repo)
     for relative in (".zshrc", "fzf.zsh", "aliases.zsh", "bindings.zsh", "plugins.zsh", "prompt.zsh", "hooks.zsh"):
@@ -179,16 +180,20 @@ def test_installer_safety(root, binaries):
 
 
 def test_links(root, binaries):
-    """File-level Stow links: idempotence, conflict safety, ignores, one platform."""
+    """File-level Stow links plus one managed agents directory link."""
     repo, env = make_repo(root), make_env(root, binaries)
     home = root / "home"
 
+    (home / ".agents").mkdir()
+    install(repo, env, root, binaries, "links", ok=False)
+    (home / ".agents").rmdir()
     install(repo, env, root, binaries, "links")
     assert (home / ".gitconfig").is_symlink()
     assert (home / ".gitconfig-platform").is_symlink()
     assert (home / ".config/kitty/kitty.conf").is_symlink()
     assert not (home / ".config").is_symlink()
     assert not (home / ".config/zsh").is_symlink()
+    assert (home / ".agents").is_symlink()
     assert (home / ".linux-config-example").is_symlink()
     assert not (home / ".macos-config-example").exists()
     for relative in ("zsh/.zcompcache", "zsh/.zsh_sessions", "zsh/secrets.zsh", "zsh/.zshrc_old", "ghostty/auto", "theme-sync/current", "yazi/theme.toml", "eza/theme.yml", "tmux/theme.conf"):
@@ -199,10 +204,8 @@ def test_links(root, binaries):
     target = home / ".config/kitty/kitty.conf"
     target.unlink()
     target.write_text("personal config\n")
-    (home / ".agents-example").unlink()
     install(repo, env, root, binaries, "links", ok=False)
     assert target.read_text() == "personal config\n"
-    assert not (home / ".agents-example").exists()
     target.unlink()
     install(repo, env, root, binaries, "links")
     assert not (root / "commands").exists()

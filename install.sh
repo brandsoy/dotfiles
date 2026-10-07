@@ -13,7 +13,7 @@ usage() {
     cat <<'EOF'
 Usage: ./install.sh <command>
 
-  links [role ...]  Link configs only (requires Stow); default: shared + platform
+  links [role ...]  Link configs only; default: shared + platform
   packages         Install macOS or Fedora packages
   packages-sync    Reconcile the Brewfile with installed Homebrew packages
   plugins          Initialize pinned submodules and install tmux's TPM
@@ -214,14 +214,31 @@ sync_packages() {
     echo "Commit the updated Brewfile when the changes look right."
 }
 
-link_roles() {
-    if [[ "$OS" == macos ]]; then load_homebrew; fi
-    if ! has_cmd stow; then
-        echo "Stow is required. Install it with brew or dnf, then rerun links." >&2
+check_agents_target() {
+    local source="$ROLES_DIR/agents/.agents" target="$HOME/.agents"
+    if [[ -L "$target" ]]; then
+        [[ "$(readlink "$target")" == "$source" ]] && return 0
+        echo "Refusing to replace an unrelated symlink: $target" >&2
         return 1
     fi
+    if [[ -e "$target" ]]; then
+        echo "Refusing to replace existing directory: $target (move it aside first)" >&2
+        return 1
+    fi
+}
 
-    local roles=("$@")
+link_agents() {
+    local source="$ROLES_DIR/agents/.agents" target="$HOME/.agents"
+    check_agents_target
+    [[ -L "$target" ]] || ln -s "$source" "$target"
+}
+
+link_roles() {
+    if [[ "$OS" == macos ]]; then load_homebrew; fi
+
+    local roles=("$@") stow_roles=() wants_agents=0 role
+    # The agents package must remain one directory link for skill discovery;
+    # every other role is managed by Stow.
     if ((${#roles[@]} == 0)); then
         roles=("${SHARED_ROLES[@]}")
         if [[ "$OS" == macos ]]; then
@@ -230,10 +247,71 @@ link_roles() {
             roles+=("$LINUX_ROLE")
         fi
     fi
-    printf 'Linking %s\n' "${roles[@]}"
-    # One Stow operation checks all conflicts before changing any links.
-    # Use repository ignore rules regardless of the caller's cwd.
-    (cd "$DOTFILES_DIR" && stow --dir="$ROLES_DIR" --restow --no-folding --target="$HOME" "${roles[@]}")
+    for role in "${roles[@]}"; do
+        if [[ "$role" == agents ]]; then
+            wants_agents=1
+        else
+            stow_roles+=("$role")
+        fi
+    done
+
+    if ((wants_agents)); then
+        check_agents_target
+    fi
+    if ((${#stow_roles[@]})); then
+        if ! has_cmd stow; then
+            echo "Stow is required. Install it with brew or dnf, then rerun links." >&2
+            return 1
+        fi
+        printf 'Linking %s\n' "${stow_roles[@]}"
+        # One Stow operation checks all conflicts before changing any links.
+        # Use repository ignore rules regardless of the caller's cwd.
+        (cd "$DOTFILES_DIR" && stow --dir="$ROLES_DIR" --restow --no-folding --target="$HOME" "${stow_roles[@]}")
+    fi
+    if ((wants_agents)); then
+        printf 'Linking agents\n'
+        link_agents
+    fi
+}
+
+install_herdr_plugins() {
+    local manifest="$ROLES_DIR/config/.config/herdr/plugins.txt"
+    [[ -f "$manifest" ]] || return 0
+    if ! has_cmd herdr; then
+        echo "Herdr is required for configured plugins. Install it, then rerun plugins." >&2
+        return 1
+    fi
+
+    local line plugin ref extra
+    while IFS= read -r line || [[ -n "$line" ]]; do
+        [[ "$line" =~ ^[[:space:]]*(#|$) ]] && continue
+        plugin="" ref="" extra=""
+        read -r plugin ref extra <<<"$line"
+        if [[ -z "$plugin" || -z "$ref" || -n "$extra" ]]; then
+            echo "Invalid Herdr plugin declaration: $line" >&2
+            return 1
+        fi
+        echo "Installing Herdr plugin $plugin@$ref"
+        herdr plugin install "$plugin" --ref "$ref" --yes
+    done <"$manifest"
+
+    local patch="$DOTFILES_DIR/scripts/herdr/herdr-web-ui-pig.patch"
+    [[ -f "$patch" ]] || return 0
+    local plugin_root
+    plugin_root="$(find "$HOME/.config/herdr/plugins/github" -mindepth 1 -maxdepth 1 -type d -name 'devswha.herdr-web-ui-*' -print -quit 2>/dev/null || true)"
+    if [[ -z "$plugin_root" ]]; then
+        echo "Configured Herdr web UI plugin was not installed; cannot apply PiG patch." >&2
+        return 1
+    fi
+    if git -C "$plugin_root" apply --check "$patch" >/dev/null 2>&1; then
+        git -C "$plugin_root" apply "$patch"
+        echo "Applied Herdr web UI PiG patch."
+    elif git -C "$plugin_root" apply --reverse --check "$patch" >/dev/null 2>&1; then
+        echo "Herdr web UI PiG patch already applied."
+    else
+        echo "Herdr web UI PiG patch does not apply cleanly; update the pinned plugin or patch." >&2
+        return 1
+    fi
 }
 
 install_plugins() {
@@ -257,7 +335,8 @@ install_plugins() {
     if [[ ! -d "$HOME/.tmux/plugins/tpm" ]]; then
         git clone --depth=1 https://github.com/tmux-plugins/tpm "$HOME/.tmux/plugins/tpm"
     fi
-    echo "TPM ready. In tmux, press Ctrl+s I to install tmux plugins."
+    install_herdr_plugins
+    echo "TPM and Herdr plugins ready. In tmux, press Ctrl+s I to install tmux plugins."
 }
 
 main() {

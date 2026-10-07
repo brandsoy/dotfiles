@@ -16,7 +16,7 @@
 ^/\.config/eza/theme\.yml
 ^/\.config/opencode/(opencode-notifier-state\.json|theme\.json)
 ^/\.config/gh/hosts\.yml
-^/\.config/herdr
+^/\.config/herdr/(?!config\.toml$|plugins\.txt$).*
 ^/\.config/github-copilot/(apps\.json|hosts\.json|rd|go)
 ^/\.config/pgcli/(history|log)
 ^/\.pi/agent/auth\.json

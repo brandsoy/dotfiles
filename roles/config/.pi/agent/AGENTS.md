@@ -16,5 +16,5 @@
 - macOS-only tooling: bash 3.2 compatible (no mapfile, no associative
   arrays) until Homebrew's bash exists on fresh installs.
 
-This file is the only Pi state kept in the repository. Credentials
+This directory contains versioned Pi notes and themes. Credentials
 (`auth.json`, `models.json`) and runtime state stay machine-local.
