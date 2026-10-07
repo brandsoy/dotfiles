@@ -92,9 +92,10 @@ theme-sync auto
 theme-sync auto --watch 5
 ```
 
-On a fresh install, choose a theme with `theme-sync set <theme>`; on an existing
-install, run `theme-sync apply` to generate the new includes. Open a new shell to
-load the updated Bat, FZF, Starship, and lazygit environment.
+On a fresh install, choose a theme with `theme-sync set <theme>`. On an existing
+install, run `./install.sh links config` to link the new JSON definitions and
+templates, then `theme-sync apply` to regenerate the includes. Open a new shell
+to load the updated Bat, FZF, Starship, and lazygit environment.
 
 VS Code settings are **never rewritten**. Set these in VS Code's Settings UI:
 

@@ -30,6 +30,8 @@ def render(root, name, config_home):
     if not NAME.fullmatch(name):
         raise ValueError(f"Invalid theme name: {name!r}")
     definition = json.loads((root / "themes" / f"{name}.json").read_text())
+    if not isinstance(definition, dict):
+        raise ValueError("Theme definition must be an object")
     palette = definition["palette"]
     if not isinstance(palette, dict) or not isinstance(definition["files"], dict):
         raise ValueError("palette and files must be objects")
@@ -59,13 +61,18 @@ def render(root, name, config_home):
     env = {key: resolve(value).replace("{{config_home}}", str(config_home))
            for key, value in mappings.items()}
     outputs = {}
-    templates = (root / "templates").resolve()
+    templates = root / "templates"
     for filename, spec in definition["files"].items():
         if filename not in OUTPUTS:
             raise ValueError(f"Unknown output: {filename}")
-        template = (templates / spec["template"]).resolve()
-        if not template.is_relative_to(templates):
-            raise ValueError(f"Template outside templates directory: {template}")
+        if not isinstance(spec, dict) or not isinstance(spec.get("values", {}), dict):
+            raise ValueError(f"Output {filename} must contain a template and a values object")
+        template_name = Path(spec["template"])
+        if template_name.is_absolute() or ".." in template_name.parts:
+            raise ValueError(f"Template outside templates directory: {template_name}")
+        # Stow links individual files to the repository, outside this directory.
+        # Reject path traversal, but allow those trusted template symlinks.
+        template = templates / template_name
         values = {**colors, **{key: resolve(value) for key, value in spec.get("values", {}).items()}}
         outputs[filename] = TOKEN.sub(lambda match: values[match[1]], template.read_text())
         if "{{" in outputs[filename]:

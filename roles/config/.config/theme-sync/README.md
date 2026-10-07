@@ -61,8 +61,9 @@ Existing GitHub monochrome FZF/btop overrides are retained rather than silently
 recolored. Remove an optional entry from `files` to stop generating that overlay.
 
 To add a theme, copy an existing JSON definition to `themes/<new-name>.json`,
-change its palette/mappings, then run `theme-sync set <new-name>`. No registry
-needs updating. Reuse an existing template variant unless the app layout or
+change its palette/mappings, then run `./install.sh links config` from the repo
+root to link the new definition, followed by `theme-sync set <new-name>`. No
+registry needs updating. Reuse an existing template variant unless the app layout or
 settings actually differ. Templates contain app syntax, not theme color literals.
 
 Neovim and built-in Bat syntax themes remain native mappings; their full
@@ -91,9 +92,17 @@ Each rendered file is replaced atomically; this is not a transaction across all
 applications. A render validation failure leaves the active configs/state intact.
 
 Legacy `current` and `mode.env` in the definitions directory are imported once.
-Exports are regenerated using this machine's paths. Run `theme-sync apply` after
-updating an existing installation. Open a new shell after switching to load the
-updated Bat, FZF, Starship and lazygit exports.
+Exports are regenerated using this machine's paths. After updating an existing
+installation, run these commands from the repository root:
+
+```bash
+./install.sh links config           # link the new JSON definitions and templates
+theme-sync apply                   # regenerate the current theme's app files
+```
+
+Without relinking, obsolete file-level Stow links can leave only SupaTheme
+visible. Open a new shell after switching to load the updated Bat, FZF, Starship
+and lazygit exports.
 
 Application preferences stay tracked. Theme-sync writes generated includes:
 
