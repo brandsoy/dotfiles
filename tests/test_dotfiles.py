@@ -447,7 +447,16 @@ def test_theme_generation(root, binaries):
     assert not targets["yazi.theme.toml"].exists()
     assert not (generated / "yazi.theme.toml").exists()
     assert (config / "bat/themes/SupaTheme.tmTheme").exists()
-    print("OK: all 16 themes, shared palette edits, app overrides, validation, overlay cleanup")
+
+    # Deployment matters: file-level Stow links must include the new JSON files.
+    deployed = repo / "roles/config/.config/theme-sync"
+    shutil.copytree(definitions, deployed, dirs_exist_ok=True)
+    install(repo, env, root, binaries, "links", "config")
+    del env["THEME_SYNC_ROOT"]
+    assert (config / "theme-sync/themes/rwth-dark.json").is_symlink()
+    assert run(command + ["list"], env, root).stdout.splitlines() == themes
+    run(command + ["set", "carbonfox"], env, root)
+    print("OK: all 16 themes, shared palette edits, app overrides, validation, overlay cleanup, Stow deployment")
 
 
 def test_zsh_shell(root, binaries):
