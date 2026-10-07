@@ -10,6 +10,7 @@ function M.get()
 		'ruff',
 		'basedpyright',
 		'gopls',
+		'rust_analyzer',
 		'jsonls',
 		'yamlls',
 		'html',

@@ -38,6 +38,9 @@ function M.get()
 				'PowerShellEditorServices'
 			),
 		},
+		rust_analyzer = {
+			root_markers = { 'Cargo.toml', 'rust-project.json', '.git' },
+		},
 		gopls = {
 			settings = {
 				gopls = {
