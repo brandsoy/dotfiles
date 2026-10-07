@@ -54,3 +54,6 @@ source "$ZDOTDIR/hooks.zsh"
 if (( $+commands[mise] )); then
   eval "$(mise activate zsh)"
 fi
+
+# bun completions
+[ -s "/Users/mattis/.bun/_bun" ] && source "/Users/mattis/.bun/_bun"

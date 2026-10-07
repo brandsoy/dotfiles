@@ -28,6 +28,7 @@ function M.get()
 		['yaml.helm-values'] = project_formatters.prettier_only,
 		markdown = project_formatters.prettier_only,
 		go = { 'golines', 'gofumpt' },
+		rust = { 'rustfmt' },
 		hcl = { 'hcl' },
 		sql = function(bufnr)
 			if require('config.lsp.project_config').sql_dialect(bufnr) == 'tsql' then
