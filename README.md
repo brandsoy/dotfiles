@@ -6,9 +6,9 @@ Arch, Debian, RHEL, and the Linux server profile are no longer supported.
 ## Structure
 
 - `roles/config/`: shared `~/.config`, including Zsh, Neovim, and terminals
-- `roles/config/.pi/agent/AGENTS.md`: versioned Pi agent notes; credentials and runtime state stay machine-local
+- `roles/config/.pi/agent/`: versioned Pi notes and themes; credentials and runtime state stay machine-local
 - `roles/zshenv/`, `roles/git/`, `roles/tmux/`, `roles/bin/`: shared home files and commands
-- `roles/agents/`: shared agent skills
+- `roles/agents/.agents/`: shared agent skills; installed as one `~/.agents` symlink
 - `roles/macos-config/`, `roles/linux-config/`: platform configs and Git credential helpers
 - `roles/packages-macos/Brewfile` and `roles/packages-redhat/Redhatfile`: package manifests (the Redhatfile is Fedora-only)
 - `scripts/`: installation helpers, theme-sync, and updates
@@ -19,11 +19,11 @@ Clone into `~/dotfiles`, then choose an explicit action:
 
 ```bash
 ./install.sh                    # help only; no changes
-./install.sh links              # shared + detected platform; requires Stow
+./install.sh links              # shared + detected platform
 ./install.sh links config tmux  # selected roles only
 ./install.sh packages           # package installation only
 ./install.sh packages-sync     # reconcile the Brewfile with installed Homebrew packages
-./install.sh plugins            # pinned submodules + TPM; network access
+./install.sh plugins            # pinned submodules, TPM, and Herdr plugins; network access
 ./install.sh all                # packages, plugins, then links
 ```
 
@@ -31,8 +31,8 @@ After installation, `dotfiles-install` exposes the same commands. Set
 `DOTFILES_DIR` if the repository is somewhere other than `~/dotfiles`.
 
 - Linking never installs packages, downloads plugins, or changes your login shell.
-- `plugins` preserves legacy plugin directories without Git metadata under `${XDG_STATE_HOME:-~/.local/state}/dotfiles/plugin-backup.*` before initializing submodules. It prints each backup location; existing Git checkouts are left in place.
-- Stow uses file-level links, with explicit ignores for runtime files and credentials.
+- `plugins` installs Herdr plugins from `roles/config/.config/herdr/plugins.txt`, applies maintained patches, preserves legacy plugin directories without Git metadata under `${XDG_STATE_HOME:-~/.local/state}/dotfiles/plugin-backup.*`, and initializes submodules. It prints each backup location; existing Git checkouts are left in place.
+- Stow uses file-level links for config roles, with explicit ignores for runtime files and credentials. Agent skills are a single `~/.agents` symlink.
 - macOS bootstraps Homebrew if needed, then installs the Brewfile.
 - `packages-sync` reconciles the Brewfile with the machine: entries for uninstalled packages are removed, and untracked top-level formulae (`brew leaves`) and casks are appended for review. Packages listed in `roles/packages-macos/untracked.txt` are skipped, so deliberate exclusions stick. It never runs automatically.
 - Fedora keeps your existing desktop/session. Package availability depends on Fedora version and enabled repositories; inspect DNF's skipped-package warnings. Hyprland configs remain available, but Fedora does not install a complete Hyprland desktop automatically.
@@ -189,12 +189,15 @@ Tests use disposable homes/repositories and mock package managers and desktop in
 
 ## Uninstalling
 
-To remove symlinks:
+To remove Stow-managed symlinks:
 
 ```bash
 cd ~/dotfiles
 stow --dir=roles --delete --target="$HOME" <role>
 ```
+
+`~/.agents` is intentionally a single direct link, not a Stow package. Remove
+it separately only after checking that it points to `roles/agents/.agents`.
 
 ## Blocklists
 

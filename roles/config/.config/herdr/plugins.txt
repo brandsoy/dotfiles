@@ -1,0 +1,3 @@
+# GitHub plugins: OWNER/REPO REF
+# Keep the ref pinned; update it deliberately.
+devswha/herdr-web-ui v0.3.52

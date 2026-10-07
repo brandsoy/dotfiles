@@ -1,0 +1,159 @@
+diff --git a/server/conversation.ts b/server/conversation.ts
+index 514bffe..88a40d8 100644
+--- a/server/conversation.ts
++++ b/server/conversation.ts
+@@ -40,6 +40,7 @@ import { claudeProcessSession, claudeTranscriptFile, defaultClaudeConfigDir, for
+ import { forgetGjcState, gjcPidUnderShell, gjcTranscriptForPane, isGjcProcess, storeRelative } from "./gjc-runtime.ts";
+ import { isOmoProcess, omoSessionForPane } from "./omo.ts";
+ import { piTranscriptPath, unwrittenSession } from "./pi.ts";
++import { pigTranscriptPath } from "./pig.ts";
+ import { piAbandonedTurns, piBranchSegments } from "./pi-tree.ts";
+ import { trimOutput } from "./tool-output.ts";
+ import { parseConversationMetadata } from "./conversation-metadata.ts";
+@@ -830,6 +831,12 @@ async function resolveTranscript(pane: HerdrPane, cwd: string, codexHome?: strin
+       const sessionCwd = typeof pane.foreground_cwd === "string" && pane.foreground_cwd.length > 0 ? pane.foreground_cwd : cwd;
+       return { source: "gjc-transcript", path: await gjcTranscriptPath(paneId, sessionCwd) };
+     }
++    // PiG shares Pi's session format, not its identity or session directory.
++    if (agent === "pig") {
++      const path = await pigTranscriptPath(paneId);
++      if (!path) throw new ConversationUnavailable("no_session_path");
++      return { source: "pi-transcript", path };
++    }
+     // pi's own label only routes pi: an omo pane was taken above, by its process tree.
+     if (agent === "pi") {
+       const found = await piTranscriptPath(paneId);
+diff --git a/server/pig.ts b/server/pig.ts
+new file mode 100644
+index 0000000..21c2feb
+--- /dev/null
++++ b/server/pig.ts
+@@ -0,0 +1,58 @@
++import { readFileSync, readlinkSync, realpathSync } from "node:fs";
++import { homedir } from "node:os";
++import { basename, dirname, join, resolve } from "node:path";
++import { herdrRpc, herdrSocketPath } from "./herdr/client.ts";
++import { piTranscriptInStore } from "./pi.ts";
++
++/** PiG uses Pi's entry-tree format, but has a separate config/session store. */
++export function pigAgentDirs(): string[] {
++  const home = homedir();
++  return [...new Set([
++    process.env["PIG_CODING_AGENT_DIR"],
++    process.env["PIG_HOME"] ? join(process.env["PIG_HOME"]!, "agent") : undefined,
++    join(process.env["XDG_CONFIG_HOME"] || join(home, ".config"), "pig", "agent"),
++    join(home, ".pig", "agent"),
++  ].filter((dir): dir is string => Boolean(dir)))];
++}
++
++/** Bun on macOS cannot realpath a Unix socket; resolve its links and parent instead. */
++function socketIdentity(path: string, links = 0): string {
++  if (links > 8) throw new Error("Socket symlink loop");
++  try {
++    const target = readlinkSync(path);
++    return socketIdentity(resolve(dirname(path), target), links + 1);
++  } catch (error) {
++    if ((error as NodeJS.ErrnoException).code !== "EINVAL") throw error;
++    return join(realpathSync(dirname(path)), basename(path));
++  }
++}
++
++/** A live PiG PID, pane and socket must all match. Never choose a file by cwd or recency. */
++export function pigBoundTranscript(pid: number, paneId: string, socket: string, agentDirs = pigAgentDirs()): string | null {
++  if (!Number.isSafeInteger(pid) || pid <= 0) return null;
++  for (const dir of agentDirs) {
++    try {
++      const text = readFileSync(join(dir, "herdr", `${pid}.json`), "utf8");
++      if (text.length > 16_384) continue;
++      const binding = JSON.parse(text);
++      if (binding.pid !== pid || binding.pane_id !== paneId || typeof binding.socket_path !== "string" ||
++          socketIdentity(binding.socket_path) !== socketIdentity(socket) || typeof binding.session_file !== "string") continue;
++      const path = piTranscriptInStore(binding.session_file, process.env["PIG_CODING_AGENT_SESSION_DIR"] || join(dir, "sessions"));
++      if (path) return path;
++    } catch { /* missing, stale, malformed or out-of-store binding: not evidence */ }
++  }
++  return null;
++}
++
++export async function pigTranscriptPath(paneId: string): Promise<string | null> {
++  const info = await herdrRpc<{ process_info?: { foreground_processes?: { pid: number; argv?: string[]; name?: string }[] } }>(
++    "pane.process_info", { pane_id: paneId },
++  ).catch(() => null);
++  const paths = new Set<string>();
++  for (const process of info?.process_info?.foreground_processes ?? []) {
++    if (basename(process.argv?.[0] ?? process.name ?? "").replace(/\.exe$/i, "") !== "pig") continue;
++    const path = pigBoundTranscript(process.pid, paneId, herdrSocketPath());
++    if (path) paths.add(path);
++  }
++  return paths.size === 1 ? [...paths][0]! : null;
++}
+diff --git a/server/pig.test.ts b/server/pig.test.ts
+new file mode 100644
+index 0000000..6a00de6
+--- /dev/null
++++ b/server/pig.test.ts
+@@ -0,0 +1,64 @@
++import { afterAll, expect, test } from "bun:test";
++import { mkdirSync, mkdtempSync, realpathSync, rmSync, symlinkSync, writeFileSync } from "node:fs";
++import { tmpdir } from "node:os";
++import { join } from "node:path";
++import { createServer } from "node:net";
++import { pigBoundTranscript } from "./pig.ts";
++import { transcriptPage } from "./conversation.ts";
++
++const root = realpathSync(mkdtempSync(join(tmpdir(), "herdr-pig-")));
++const agent = join(root, "agent"), socket = join(root, "herdr.sock");
++mkdirSync(join(agent, "sessions"), { recursive: true });
++mkdirSync(join(agent, "herdr"));
++writeFileSync(socket, "");
++afterAll(() => rmSync(root, { recursive: true, force: true }));
++const path = join(agent, "sessions", "session.jsonl");
++writeFileSync(path, [
++  { type: "session", version: 3, id: "pig-session", cwd: root },
++  { type: "message", id: "s", parentId: null, message: { role: "system", content: "private instructions" } },
++  { type: "message", id: "u", parentId: "s", message: { role: "user", content: [{ type: "text", text: "hello pig" }] } },
++  { type: "message", id: "a", parentId: "u", message: { role: "assistant", content: [{ type: "text", text: "hello human" }], stopReason: "stop" } },
++].map(entry => JSON.stringify(entry)).join("\n") + "\n");
++const binding = { pid: 123, pane_id: "w1:p2", socket_path: socket, session_file: path };
++function bind(overrides: Record<string, unknown> = {}) {
++  writeFileSync(join(agent, "herdr", "123.json"), JSON.stringify({ ...binding, ...overrides }));
++}
++const read = () => pigBoundTranscript(123, "w1:p2", socket, [agent]);
++
++test("PiG binds the exact live pane and reuses Pi's chat reader without exposing the system prompt", () => {
++  bind();
++  expect(read()).toBe(path);
++  const page = transcriptPage("pi-transcript", read()!);
++  expect(page.turns.map(t => t.role)).toEqual(["user", "assistant"]);
++  expect(page.turns[0]?.parts).toEqual([{ kind: "text", text: "hello pig" }]);
++  expect(JSON.stringify(page.turns)).not.toContain("private instructions");
++  const link = join(root, "socket-link");
++  symlinkSync(socket, link);
++  expect(pigBoundTranscript(123, "w1:p2", link, [agent])).toBe(path);
++});
++
++test("real Unix sockets are compared without Bun's unsupported socket realpath", async () => {
++  const unix = join(root, "live.sock");
++  const server = createServer();
++  await new Promise<void>((done, reject) => { server.once("error", reject); server.listen(unix, done); });
++  try {
++    bind({ socket_path: unix });
++    expect(pigBoundTranscript(123, "w1:p2", unix, [agent])).toBe(path);
++  } finally {
++    await new Promise<void>((done, reject) => server.close(error => error ? reject(error) : done()));
++  }
++});
++
++test("stale, cross-pane, cross-server, malformed and out-of-store bindings fail closed", () => {
++  bind({ pid: 456 }); expect(read()).toBeNull();
++  bind({ pane_id: "w1:p3" }); expect(read()).toBeNull();
++  const otherSocket = join(root, "other.sock"); writeFileSync(otherSocket, "");
++  bind({ socket_path: otherSocket }); expect(read()).toBeNull();
++  const outside = join(root, "outside.jsonl"); writeFileSync(outside, "{}\n");
++  bind({ session_file: outside }); expect(read()).toBeNull();
++  const escape = join(agent, "sessions", "escape.jsonl"); symlinkSync(outside, escape);
++  bind({ session_file: escape }); expect(read()).toBeNull();
++  writeFileSync(join(agent, "herdr", "123.json"), "not json"); expect(read()).toBeNull();
++  expect(pigBoundTranscript(999, "w1:p2", socket, [agent])).toBeNull();
++  expect(pigBoundTranscript(-1, "w1:p2", socket, [agent])).toBeNull();
++});
