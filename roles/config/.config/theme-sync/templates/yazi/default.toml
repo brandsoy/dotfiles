@@ -1,0 +1,95 @@
+[mgr]
+cwd = { fg = "{{mgr_cwd_fg}}", bold = true }
+hovered = { reversed = true }
+preview_hovered = { underline = true }
+
+find_keyword = { fg = "{{mgr_find_keyword_fg}}", bold = true, italic = true, underline = true }
+find_position = { fg = "{{mgr_find_position_fg}}", bg = "reset", bold = true, italic = true }
+
+marker_copied = { fg = "{{mgr_marker_copied_fg}}", bg = "{{mgr_marker_copied_bg}}" }
+marker_cut = { fg = "{{mgr_marker_cut_fg}}", bg = "{{mgr_marker_cut_bg}}" }
+marker_marked = { fg = "{{mgr_marker_marked_fg}}", bg = "{{mgr_marker_marked_bg}}" }
+marker_selected = { fg = "{{mgr_marker_selected_fg}}", bg = "{{mgr_marker_selected_bg}}" }
+
+count_copied = { fg = "{{mgr_count_copied_fg}}", bg = "{{mgr_count_copied_bg}}" }
+count_cut = { fg = "{{mgr_count_cut_fg}}", bg = "{{mgr_count_cut_bg}}" }
+count_selected = { fg = "{{mgr_count_selected_fg}}", bg = "{{mgr_count_selected_bg}}" }
+
+border_symbol = "│"
+border_style = { fg = "{{mgr_border_style_fg}}" }
+
+tab_active = { fg = "{{mgr_tab_active_fg}}", bg = "{{mgr_tab_active_bg}}", bold = true }
+tab_inactive = { fg = "{{mgr_tab_inactive_fg}}", bg = "{{mgr_tab_inactive_bg}}" }
+tab_width = 1
+
+[tabs]
+active = { fg = "{{tabs_active_fg}}", bg = "{{tabs_active_bg}}", bold = true }
+inactive = { fg = "{{tabs_inactive_fg}}", bg = "{{tabs_inactive_bg}}" }
+
+[mode]
+normal_main = { fg = "{{mode_normal_main_fg}}", bg = "{{mode_normal_main_bg}}", bold = true }
+normal_alt = { fg = "{{mode_normal_alt_fg}}", bg = "{{mode_normal_alt_bg}}" }
+select_main = { fg = "{{mode_select_main_fg}}", bg = "{{mode_select_main_bg}}", bold = true }
+select_alt = { fg = "{{mode_select_alt_fg}}", bg = "{{mode_select_alt_bg}}" }
+unset_main = { fg = "{{mode_unset_main_fg}}", bg = "{{mode_unset_main_bg}}", bold = true }
+unset_alt = { fg = "{{mode_unset_alt_fg}}", bg = "{{mode_unset_alt_bg}}" }
+
+[status]
+sep_left = { open = "", close = "" }
+sep_right = { open = "", close = "" }
+progress_label = { fg = "{{status_progress_label_fg}}", bold = true }
+progress_normal = { fg = "{{status_progress_normal_fg}}", bg = "{{status_progress_normal_bg}}" }
+progress_error = { fg = "{{status_progress_error_fg}}", bg = "{{status_progress_error_bg}}" }
+perm_sep = { fg = "{{status_perm_sep_fg}}" }
+perm_type = { fg = "{{status_perm_type_fg}}" }
+perm_read = { fg = "{{status_perm_read_fg}}" }
+perm_write = { fg = "{{status_perm_write_fg}}" }
+perm_exec = { fg = "{{status_perm_exec_fg}}" }
+
+[pick]
+border = { fg = "{{pick_border_fg}}" }
+active = { fg = "{{pick_active_fg}}", bold = true }
+inactive = { fg = "{{pick_inactive_fg}}" }
+
+[input]
+border = { fg = "{{input_border_fg}}" }
+title = { fg = "{{input_title_fg}}" }
+value = { fg = "{{input_value_fg}}" }
+selected = { reversed = true }
+
+[cmp]
+border = { fg = "{{cmp_border_fg}}" }
+
+[tasks]
+border = { fg = "{{tasks_border_fg}}" }
+title = { fg = "{{tasks_title_fg}}" }
+hovered = { fg = "{{tasks_hovered_fg}}", underline = true }
+
+[which]
+mask = { bg = "{{which_mask_bg}}" }
+cand = { fg = "{{which_cand_fg}}" }
+rest = { fg = "{{which_rest_fg}}" }
+desc = { fg = "{{which_desc_fg}}" }
+separator = "  "
+separator_style = { fg = "{{which_separator_style_fg}}" }
+
+[help]
+on = { fg = "{{help_on_fg}}" }
+run = { fg = "{{help_run_fg}}" }
+hovered = { reversed = true, bold = true }
+footer = { fg = "{{help_footer_fg}}", bg = "{{help_footer_bg}}" }
+
+[notify]
+title_info = { fg = "{{notify_title_info_fg}}" }
+title_warn = { fg = "{{notify_title_warn_fg}}" }
+title_error = { fg = "{{notify_title_error_fg}}" }
+
+[filetype]
+rules = [
+  { mime = "image/*", fg = "{{filetype_rules_fg}}" },
+  { mime = "{audio,video}/*", fg = "{{filetype_rules_fg_2}}" },
+  { mime = "application/{zip,rar,7z*,tar,gzip,xz,zstd,bzip*,lzma,compress,archive,cpio,arj,xar,ms-cab*}", fg = "{{filetype_rules_fg_3}}" },
+  { mime = "application/{pdf,doc,rtf,odt,docx,xlsx,pptx}", fg = "{{filetype_rules_fg_4}}" },
+  { url = "*", fg = "{{filetype_rules_fg_5}}" },
+  { url = "*/", fg = "{{filetype_rules_fg_6}}", bold = true },
+]

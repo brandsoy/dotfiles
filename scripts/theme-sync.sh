@@ -58,7 +58,8 @@ die() {
 }
 
 theme_exists() {
-    [[ -f "$THEMES_DIR/$1/theme.env" ]]
+    [[ "$1" =~ ^[a-zA-Z0-9][a-zA-Z0-9_-]*$ ]] || return 1
+    [[ -f "$THEMES_DIR/$1.json" || -f "$THEMES_DIR/$1/theme.env" ]]
 }
 
 # Single validator: every command that accepts a theme name goes through here.
@@ -82,8 +83,8 @@ ensure_dirs() {
     done
     if [[ ! -e "$CURRENT_ENV_FILE" && -f "$CURRENT_FILE" ]]; then
         theme="$(current_theme)"
-        if [[ -f "$THEMES_DIR/$theme/theme.env" ]]; then
-            load_theme "$theme"
+        if theme_exists "$theme"; then
+            load_theme "$theme" || return 1
             write_current_env "$theme"
         fi
     fi
@@ -209,10 +210,20 @@ load_theme() {
 
     require_theme "$theme"
 
-    # Do not inherit optional mappings from the previous theme or parent shell.
+    # Never inherit mappings or overlays from a previous theme or parent shell.
+    unset GHOSTTY_THEME KITTY_INCLUDE NVIM_THEME BAT_THEME FZF_THEME_FILE
     unset GHOSTTY_THEME_FILE BAT_THEME_FILE BTOP_THEME LAZYGIT_THEME_FILE OPENCODE_THEME_FILE VSCODE_THEME TMUX_BACKGROUND
     STARSHIP_CONFIG="$CONFIG_HOME/starship.toml"
-    [[ ! -f "$THEMES_DIR/$theme/starship.toml" ]] || STARSHIP_CONFIG="$THEMES_DIR/$theme/starship.toml"
+    THEME_DIR="$THEMES_DIR/$theme"
+    if [[ -f "$THEMES_DIR/$theme.json" ]]; then
+        command -v python3 >/dev/null 2>&1 || die "python3 is required to render themes."
+        THEME_DIR="$STATE_DIR/generated/$theme"
+        python3 "$SCRIPT_DIR/render-theme.py" "$ROOT" "$theme" "$THEME_DIR" "$CONFIG_HOME" || return 1
+        theme_file="$THEME_DIR/theme.env"
+    else
+        # Compatibility for personal themes that still use the old layout.
+        [[ ! -f "$THEME_DIR/starship.toml" ]] || STARSHIP_CONFIG="$THEME_DIR/starship.toml"
+    fi
     # shellcheck disable=SC1090
     source "$theme_file"
 }
@@ -352,7 +363,7 @@ apply_theme_overlays() {
 apply_theme() {
     local theme="$1"
 
-    load_theme "$theme"
+    load_theme "$theme" || return 1
     if [[ ! -f "$KITTY_INCLUDE" ]]; then
         printf 'Theme asset missing: %s. Run dotfiles-install plugins and links first.\n' "$KITTY_INCLUDE" >&2
         return 1
@@ -360,7 +371,7 @@ apply_theme() {
 
     apply_terminal_themes
     apply_cli_themes
-    apply_theme_overlays "$THEMES_DIR/$theme"
+    apply_theme_overlays "$THEME_DIR"
 
     write_current_env "$theme"
     printf '%s\n' "$theme" >"$CURRENT_FILE"
@@ -381,12 +392,14 @@ set_theme() {
 
 list_themes() {
     [[ -d "$THEMES_DIR" ]] || return 0
-    for dir in "$THEMES_DIR"/*; do
-        [[ -d "$dir" ]] || continue
-        local theme
-        theme="$(basename "$dir")"
-        echo "$theme"
-    done
+    for file in "$THEMES_DIR"/*.json "$THEMES_DIR"/*/theme.env; do
+        [[ -f "$file" ]] || continue
+        if [[ "$file" == *.json ]]; then
+            basename "$file" .json
+        else
+            basename "$(dirname "$file")"
+        fi
+    done | sort -u
 }
 
 current_theme() {
@@ -403,7 +416,7 @@ show_current() {
 
     [[ -n "$theme" ]] || die "No current theme set."
 
-    load_theme "$theme"
+    load_theme "$theme" || return 1
     echo "theme: $theme"
     echo "ghostty: $GHOSTTY_THEME"
     echo "kitty include: $KITTY_INCLUDE"

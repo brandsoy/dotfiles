@@ -1,0 +1,192 @@
+{
+  "palette": {
+    "background": "#ffffff",
+    "foreground": "#2b343f",
+    "black": "#1f252d",
+    "red": "#d73a49",
+    "green": "#0c9671",
+    "yellow": "#c48200",
+    "blue": "#0350ae",
+    "magenta": "#a268f6",
+    "cyan": "#04baba",
+    "white": "#70818f",
+    "bright_black": "#55667b",
+    "bright_red": "#fb2843",
+    "bright_green": "#00a57c",
+    "bright_yellow": "#d58e00",
+    "bright_blue": "#005bc6",
+    "bright_magenta": "#ad78ff",
+    "bright_cyan": "#00c9c9",
+    "selection": "#cddcef",
+    "cursor": "#9775fa",
+    "active_tab_background": "#dfe1e2",
+    "inactive_tab_foreground": "#969696"
+  },
+  "mappings": {
+    "GHOSTTY_THEME": "github_monochrome_light",
+    "NVIM_THEME": "github-monochrome-light",
+    "BAT_THEME": ""
+  },
+  "files": {
+    "btop.theme": {
+      "template": "btop/default.theme",
+      "values": {
+        "main_bg": "@background",
+        "main_fg": "@foreground",
+        "title": "@foreground",
+        "hi_fg": "@blue",
+        "selected_bg": "@selection",
+        "selected_fg": "@foreground",
+        "inactive_fg": "@white",
+        "proc_misc": "@magenta",
+        "cpu_box": "@white",
+        "mem_box": "@white",
+        "net_box": "@white",
+        "proc_box": "@white",
+        "div_line": "@white",
+        "temp_start": "@green",
+        "temp_mid": "@cyan",
+        "temp_end": "@red",
+        "cpu_start": "@green",
+        "cpu_mid": "@cyan",
+        "cpu_end": "@red",
+        "free_start": "@green",
+        "free_mid": "@cyan",
+        "free_end": "@red",
+        "cached_start": "@blue",
+        "cached_mid": "@magenta",
+        "cached_end": "@red",
+        "available_start": "@green",
+        "available_mid": "@cyan",
+        "available_end": "@blue",
+        "used_start": "@red",
+        "used_mid": "@yellow",
+        "used_end": "@magenta",
+        "download_start": "@blue",
+        "download_mid": "@cyan",
+        "download_end": "@magenta",
+        "upload_start": "@green",
+        "upload_mid": "@yellow",
+        "upload_end": "@red"
+      }
+    },
+    "fzf.sh": {
+      "template": "fzf/github-monochrome-dark.sh",
+      "values": {
+        "fzf_bg_plus": "@selection",
+        "fzf_bg": "@background",
+        "fzf_border": "@white",
+        "fzf_fg": "@foreground",
+        "fzf_gutter": "@background",
+        "fzf_hl_plus": "@blue",
+        "fzf_hl": "@blue",
+        "fzf_info": "@white",
+        "fzf_marker": "@magenta",
+        "fzf_pointer": "@magenta",
+        "fzf_prompt": "@green",
+        "fzf_query": "@foreground",
+        "fzf_scrollbar": "@white",
+        "fzf_separator": "@magenta",
+        "fzf_spinner": "@magenta"
+      }
+    },
+    "ghostty": {
+      "template": "ghostty/github-monochrome-dark.conf",
+      "values": {
+        "background": "@background",
+        "color0": "@black",
+        "color1": "@red",
+        "color10": "@bright_green",
+        "color11": "@bright_yellow",
+        "color12": "@bright_blue",
+        "color13": "@bright_magenta",
+        "color14": "@bright_cyan",
+        "color15": "@foreground",
+        "color2": "@green",
+        "color3": "@yellow",
+        "color4": "@blue",
+        "color5": "@magenta",
+        "color6": "@cyan",
+        "color7": "@white",
+        "color8": "@bright_black",
+        "color9": "@bright_red",
+        "cursor_color": "@cursor",
+        "foreground": "@foreground",
+        "selection_background": "@selection",
+        "selection_foreground": "@foreground"
+      }
+    },
+    "kitty.conf": {
+      "template": "kitty/github-monochrome-dark.conf",
+      "values": {
+        "active_tab_background": "@active_tab_background",
+        "active_tab_foreground": "@white",
+        "background": "@background",
+        "color0": "@black",
+        "color1": "@red",
+        "color10": "@bright_green",
+        "color11": "@bright_yellow",
+        "color12": "@bright_blue",
+        "color13": "@bright_magenta",
+        "color14": "@bright_cyan",
+        "color15": "@foreground",
+        "color2": "@green",
+        "color3": "@yellow",
+        "color4": "@blue",
+        "color5": "@magenta",
+        "color6": "@cyan",
+        "color7": "@white",
+        "color8": "@bright_black",
+        "color9": "@bright_red",
+        "cursor": "@cursor",
+        "foreground": "@foreground",
+        "inactive_tab_background": "@background",
+        "inactive_tab_foreground": "@inactive_tab_foreground",
+        "selection_background": "@selection",
+        "selection_foreground": "@foreground",
+        "tab_bar_background": "none"
+      }
+    },
+    "lazygit.yml": {
+      "template": "lazygit/github-monochrome-dark.yml",
+      "values": {
+        "activeBorderColor": "@blue",
+        "inactiveBorderColor": "@white",
+        "searchingActiveBorderColor": "@cyan",
+        "optionsTextColor": "@blue",
+        "selectedLineBgColor": "@bright_black",
+        "inactiveViewSelectedLineBgColor": "@bright_black",
+        "cherryPickedCommitFgColor": "@foreground",
+        "cherryPickedCommitBgColor": "@magenta",
+        "markedBaseCommitFgColor": "@foreground",
+        "markedBaseCommitBgColor": "@yellow",
+        "unstagedChangesColor": "@red",
+        "defaultFgColor": "@foreground"
+      }
+    },
+    "starship.toml": {
+      "template": "starship/github-monochrome-dark.toml",
+      "values": {
+        "git_status_ahead": "@blue",
+        "git_status_behind": "@blue",
+        "git_status_diverged": "@blue",
+        "git_status_staged": "@green",
+        "git_status_modified": "@yellow",
+        "git_status_untracked": "@foreground",
+        "git_status_deleted": "@red",
+        "git_status_conflicted": "@red"
+      }
+    },
+    "tmux.theme.conf": {
+      "template": "tmux/default.conf",
+      "values": {
+        "bg": "@background",
+        "active": "@blue",
+        "inactive": "@white",
+        "text": "@foreground",
+        "accent": "@magenta",
+        "border": "@bright_black"
+      }
+    }
+  }
+}

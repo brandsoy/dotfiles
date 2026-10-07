@@ -1,0 +1,102 @@
+colourful: true
+
+filekinds:
+  normal: { foreground: "{{normal_foreground}}" }
+  directory: { foreground: "{{directory_foreground}}" }
+  symlink: { foreground: "{{symlink_foreground}}" }
+  pipe: { foreground: "{{pipe_foreground}}" }
+  block_device: { foreground: "{{block_device_foreground}}" }
+  char_device: { foreground: "{{char_device_foreground}}" }
+  socket: { foreground: "{{socket_foreground}}" }
+  special: { foreground: "{{special_foreground}}" }
+  executable: { foreground: "{{executable_foreground}}" }
+  mount_point: { foreground: "{{mount_point_foreground}}" }
+
+perms:
+  user_read: { foreground: "{{user_read_foreground}}" }
+  user_write: { foreground: "{{user_write_foreground}}" }
+  user_execute_file: { foreground: "{{user_execute_file_foreground}}" }
+  user_execute_other: { foreground: "{{user_execute_other_foreground}}" }
+  group_read: { foreground: "{{group_read_foreground}}" }
+  group_write: { foreground: "{{group_write_foreground}}" }
+  group_execute: { foreground: "{{group_execute_foreground}}" }
+  other_read: { foreground: "{{other_read_foreground}}" }
+  other_write: { foreground: "{{other_write_foreground}}" }
+  other_execute: { foreground: "{{other_execute_foreground}}" }
+  special_user_file: { foreground: "{{special_user_file_foreground}}" }
+  special_other: { foreground: "{{special_other_foreground}}" }
+  attribute: { foreground: "{{attribute_foreground}}" }
+
+size:
+  major: { foreground: "{{major_foreground}}" }
+  minor: { foreground: "{{minor_foreground}}" }
+  number_byte: { foreground: "{{number_byte_foreground}}" }
+  number_kilo: { foreground: "{{number_kilo_foreground}}" }
+  number_mega: { foreground: "{{number_mega_foreground}}" }
+  number_giga: { foreground: "{{number_giga_foreground}}" }
+  number_huge: { foreground: "{{number_huge_foreground}}" }
+  unit_byte: { foreground: "{{unit_byte_foreground}}" }
+  unit_kilo: { foreground: "{{unit_kilo_foreground}}" }
+  unit_mega: { foreground: "{{unit_mega_foreground}}" }
+  unit_giga: { foreground: "{{unit_giga_foreground}}" }
+  unit_huge: { foreground: "{{unit_huge_foreground}}" }
+
+users:
+  user_you: { foreground: "{{user_you_foreground}}" }
+  user_root: { foreground: "{{user_root_foreground}}" }
+  user_other: { foreground: "{{user_other_foreground}}" }
+  group_yours: { foreground: "{{group_yours_foreground}}" }
+  group_root: { foreground: "{{group_root_foreground}}" }
+  group_other: { foreground: "{{group_other_foreground}}" }
+
+links:
+  normal: { foreground: "{{normal_foreground_2}}" }
+  multi_link_file: { foreground: "{{multi_link_file_foreground}}" }
+
+git:
+  new: { foreground: "{{new_foreground}}" }
+  modified: { foreground: "{{modified_foreground}}" }
+  deleted: { foreground: "{{deleted_foreground}}" }
+  renamed: { foreground: "{{renamed_foreground}}" }
+  typechange: { foreground: "{{typechange_foreground}}" }
+  ignored: { foreground: "{{ignored_foreground}}" }
+  conflicted: { foreground: "{{conflicted_foreground}}" }
+
+git_repo:
+  branch_main: { foreground: "{{branch_main_foreground}}" }
+  branch_other: { foreground: "{{branch_other_foreground}}" }
+  git_clean: { foreground: "{{git_clean_foreground}}" }
+  git_dirty: { foreground: "{{git_dirty_foreground}}" }
+
+security_context:
+  colon: { foreground: "{{colon_foreground}}" }
+  user: { foreground: "{{user_foreground}}" }
+  role: { foreground: "{{role_foreground}}" }
+  typ: { foreground: "{{typ_foreground}}" }
+  range: { foreground: "{{range_foreground}}" }
+
+file_type:
+  image: { foreground: "{{image_foreground}}" }
+  video: { foreground: "{{video_foreground}}" }
+  music: { foreground: "{{music_foreground}}" }
+  lossless: { foreground: "{{lossless_foreground}}" }
+  crypto: { foreground: "{{crypto_foreground}}" }
+  document: { foreground: "{{document_foreground}}" }
+  compressed: { foreground: "{{compressed_foreground}}" }
+  temp: { foreground: "{{temp_foreground}}" }
+  compiled: { foreground: "{{compiled_foreground}}" }
+  build: { foreground: "{{build_foreground}}" }
+  source: { foreground: "{{source_foreground}}" }
+
+punctuation: { foreground: "{{punctuation_foreground}}" }
+date: { foreground: "{{date_foreground}}" }
+inode: { foreground: "{{inode_foreground}}" }
+blocks: { foreground: "{{blocks_foreground}}" }
+header: { foreground: "{{header_foreground}}" }
+octal: { foreground: "{{octal_foreground}}" }
+flags: { foreground: "{{flags_foreground}}" }
+
+symlink_path: { foreground: "{{symlink_path_foreground}}" }
+control_char: { foreground: "{{control_char_foreground}}" }
+broken_symlink: { foreground: "{{broken_symlink_foreground}}" }
+broken_path_overlay: { foreground: "{{broken_path_overlay_foreground}}" }
