@@ -2,7 +2,7 @@
 set -euo pipefail
 
 DOTFILES_DIR="${DOTFILES_DIR:-$HOME/dotfiles}"
-UPDATE_SCRIPT="$DOTFILES_DIR/scripts/update-tools.sh"
+UPDATE_SCRIPT="$DOTFILES_DIR/scripts/maintenance/update-tools.sh"
 
 if [[ ! -x "$UPDATE_SCRIPT" ]]; then
     echo "dotfiles-update: not found or not executable: $UPDATE_SCRIPT" >&2

@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Offline smoke/regression checks. Only temporary homes/repos are modified.
 
-Run: python3 tests/test_dotfiles.py  (or ./scripts/check.sh for all checks)
+Run: python3 tests/test_dotfiles.py  (or ./scripts/maintenance/check.sh for all checks)
 Requires: bash, zsh, git, and GNU Stow.
 """
 import json
@@ -46,8 +46,8 @@ def make_repo(root):
     repo = root / "repo"
     copy("install.sh", repo)
     copy(".stowrc", repo)
-    copy("scripts/theme-sync.sh", repo)
-    copy("scripts/render-theme.py", repo)
+    copy("scripts/theme/theme-sync.sh", repo)
+    copy("scripts/theme/render-theme.py", repo)
     copy("roles/config/.stow-local-ignore", repo)
     copy("roles/macos-config/.stow-local-ignore", repo)
     for role in ("bin", "blocklists", "git", "tmux", "zshenv", "linux-config", "macos-config"):
@@ -325,7 +325,7 @@ VSCODE_THEME="Theme {name}"
     for path in vscode:
         put(path, jsonc)
 
-    theme_cmd = [binaries["bash"], str(repo / "scripts/theme-sync.sh")]
+    theme_cmd = [binaries["bash"], str(repo / "scripts/theme/theme-sync.sh")]
     run(theme_cmd + ["current"], env, root)
     state = home / ".local/state/theme-sync"
     assert (state / "current").read_text() == "a\n"
@@ -365,7 +365,7 @@ def test_theme_generation(root, binaries):
     for theme in (source / "themes").glob("*.json"):
         put(definitions / "themes" / theme.name, theme.read_text())
     env["THEME_SYNC_ROOT"] = str(definitions)
-    command = [binaries["bash"], str(repo / "scripts/theme-sync.sh")]
+    command = [binaries["bash"], str(repo / "scripts/theme/theme-sync.sh")]
     themes = sorted(path.stem for path in (definitions / "themes").glob("*.json"))
     assert len(themes) == 16
     assert run(command + ["list"], env, root).stdout.splitlines() == themes
@@ -382,7 +382,7 @@ def test_theme_generation(root, binaries):
         "eza.theme.yml": config / "eza/theme.yml",
         "opencode.theme.json": config / "opencode/theme.json",
     }
-    renderer = runpy.run_path(str(REPO / "scripts/render-theme.py"))
+    renderer = runpy.run_path(str(REPO / "scripts/theme/render-theme.py"))
     for theme in themes:
         expected, mappings = renderer["render"](definitions, theme, config)
         run(command + ["set", theme], env, root)

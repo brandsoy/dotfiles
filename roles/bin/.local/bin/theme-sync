@@ -1,4 +1,4 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-exec "${DOTFILES_DIR:-$HOME/dotfiles}/scripts/theme-sync.sh" "$@"
+exec "${DOTFILES_DIR:-$HOME/dotfiles}/scripts/theme/theme-sync.sh" "$@"

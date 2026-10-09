@@ -2,7 +2,7 @@
 
 Edit `themes/<name>.json`: one source of truth per theme for managed app colors
 and native theme mappings. Shared app templates live in `templates/<app>/`.
-The executable is `~/dotfiles/scripts/theme-sync.sh` (or `theme-sync` after
+The executable is `~/dotfiles/scripts/theme/theme-sync.sh` (or `theme-sync` after
 linking `bin`). Rendering requires Python 3.9+; no Python packages are needed.
 
 ## Commands
@@ -70,7 +70,7 @@ Neovim and built-in Bat syntax themes remain native mappings; their full
 highlight rules belong to their upstream plugins/themes. SupaTheme's custom
 Bat, terminal, prompt, lazygit and OpenCode files are generated from
 `themes/SupaTheme.json`. Its upstream submodule is left unchanged and is not
-used as the renderer's color source. `scripts/generate-supatheme.sh` is now a
+used as the renderer's color source. `scripts/theme/generate-supatheme.sh` is now a
 compatibility shortcut for `theme-sync set SupaTheme`.
 
 Personal themes using the old `themes/<name>/theme.env` layout still work.
