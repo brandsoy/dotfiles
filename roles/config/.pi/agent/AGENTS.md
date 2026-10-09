@@ -6,7 +6,7 @@
 - Real commit messages only; never "wip".
 
 ## Dotfiles (~/dotfiles)
-- Run `./scripts/check.sh` before committing (shfmt, shellcheck, gitleaks,
+- Run `./scripts/maintenance/check.sh` before committing (shfmt, shellcheck, gitleaks,
   offline tests); fix what it reports.
 - `IMPROVEMENTS.md` is the backlog and convention ledger: move finished
   items to Done with a date; deviations from the style rules need a reason.

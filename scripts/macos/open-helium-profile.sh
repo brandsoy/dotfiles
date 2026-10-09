@@ -2,17 +2,18 @@
 set -euo pipefail
 
 case "${1:-}" in
-    You) profile=Default ;;
-    Work) profile='Profile 1' ;;
-    Admin) profile='Profile 2' ;;
-    *)
-        printf 'Usage: %s {You|Work|Admin}\n' "${0##*/}" >&2
-        exit 2
-        ;;
+You) profile=Default ;;
+Work) profile='Profile 1' ;;
+Admin) profile='Profile 2' ;;
+*)
+    printf 'Usage: %s {You|Work|Admin}\n' "${0##*/}" >&2
+    exit 2
+    ;;
 esac
 
 # Helium's native profile switch reuses an existing window when available.
-if result=$(/usr/bin/osascript - "$1" <<'APPLESCRIPT'
+if result=$(
+    /usr/bin/osascript - "$1" <<'APPLESCRIPT'
 on run argv
     tell application "System Events"
         if not (exists process "Helium") then return "not-running"

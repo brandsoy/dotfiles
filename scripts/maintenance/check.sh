@@ -5,12 +5,14 @@ set -euo pipefail
 # Requires: shfmt, shellcheck, python3, plus the test suite's own tools.
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-REPO_DIR="$(cd "$SCRIPT_DIR/.." && pwd)"
+REPO_DIR="$(cd "$SCRIPT_DIR/../.." && pwd)"
 
 # Our own scripts only; vendored skills and compiled binaries are excluded.
 SHELL_SCRIPTS=(
     "$REPO_DIR/install.sh"
-    "$REPO_DIR"/scripts/*.sh
+    "$REPO_DIR"/scripts/maintenance/*.sh
+    "$REPO_DIR"/scripts/theme/*.sh
+    "$REPO_DIR"/scripts/macos/*.sh
     "$REPO_DIR"/scripts/tmux/*.sh
     "$REPO_DIR"/scripts/tmux/minimal-theme/*.tmux
     "$REPO_DIR"/scripts/tmux/minimal-theme/scripts/*.sh
@@ -33,7 +35,7 @@ for tool in shfmt shellcheck python3; do
 done
 
 log 'shfmt: formatting check (shfmt -i 4)'
-nonconforming="$(shfmt -i 4 -l "${SHELL_SCRIPTS[@]}")"
+nonconforming="$(shfmt -i 4 -l "${SHELL_SCRIPTS[@]}" || true)"
 if [[ -n "$nonconforming" ]]; then
     printf 'These files need formatting; run: shfmt -i 4 -w <file>\n%s\n' "$nonconforming" >&2
     exit 1
@@ -41,6 +43,20 @@ fi
 
 log 'shellcheck: lint (warnings are errors)'
 shellcheck --severity=warning "${SHELL_SCRIPTS[@]}"
+
+log 'go: vet, build, test (ai-scan TUI)'
+if command -v go >/dev/null 2>&1; then
+    go_build_dir="$(mktemp -d)"
+    (
+        cd "$REPO_DIR/scripts/ai" &&
+            go vet ./... &&
+            go test ./... >/dev/null &&
+            go build -o "$go_build_dir/ai-scan" .
+    )
+    rm -rf "$go_build_dir"
+else
+    echo 'go not installed; skipping (brew install go)'
+fi
 
 log 'gitleaks: secret scan'
 if command -v gitleaks >/dev/null 2>&1; then

@@ -82,7 +82,7 @@ New and edited code follows these; deviations need a reason.
 - 2026-09-26 — Formatting pass: `shfmt -i 4` across all own shell scripts
   (`shfmt` added to the Brewfile), lint findings fixed (dead icon variables
   in the tmux minimal theme, pattern quoting in `keybinds`), and
-  `scripts/check.sh` added as the single entry point for shfmt + shellcheck
+  `scripts/maintenance/check.sh` added as the single entry point for shfmt + shellcheck
   (warnings as errors) + tests; README points at it.
 - 2026-09-26 — Split `tests/test_dotfiles.py` into seven named tests with
   per-test temp homes (`make_repo`/`make_env` builders); failures now
@@ -121,5 +121,5 @@ New and edited code follows these; deviations need a reason.
 ## Dropped
 
 - 2026-09-26 — CI workflow in `.github/` (GitHub Actions): no need for CI in
-  a personal dotfiles repo; `scripts/check.sh` (backlog) covers the same
+  a personal dotfiles repo; `scripts/maintenance/check.sh` (backlog) covers the same
   checks locally, and the empty `.github/` directory was removed.

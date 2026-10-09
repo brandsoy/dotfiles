@@ -11,7 +11,9 @@ Arch, Debian, RHEL, and the Linux server profile are no longer supported.
 - `roles/agents/.agents/`: shared agent skills; installed as one `~/.agents` symlink
 - `roles/macos-config/`, `roles/linux-config/`: platform configs and Git credential helpers
 - `roles/packages-macos/Brewfile` and `roles/packages-redhat/Redhatfile`: package manifests (the Redhatfile is Fedora-only)
-- `scripts/`: installation helpers, theme-sync, and updates
+- `scripts/`: helpers grouped by purpose — `maintenance/` (checks, security scan,
+  tool updates), `theme/` (theme-sync pipeline), `ai/` (AI tooling inventory
+  TUI; run with `go run ./scripts/ai`), `macos/`, `tmux/`, `herdr/`
 
 ## Installation
 
@@ -172,7 +174,7 @@ Notes:
 Run a quick secret scan before pushing:
 
 ```bash
-./scripts/security-scan.sh
+./scripts/maintenance/security-scan.sh
 ```
 
 This uses `gitleaks` if installed.
@@ -182,7 +184,7 @@ the gitleaks secret scan (when installed), and tests (Bash, Zsh, Git, Stow,
 and Python 3 required):
 
 ```bash
-./scripts/check.sh
+./scripts/maintenance/check.sh
 ```
 
 Tests use disposable homes/repositories and mock package managers and desktop integrations.

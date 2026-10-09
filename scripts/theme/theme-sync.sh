@@ -10,7 +10,7 @@ if [[ -n "${THEME_SYNC_ROOT:-}" ]]; then
 elif [[ -d "$CONFIG_HOME/theme-sync/themes" ]]; then
     ROOT="$CONFIG_HOME/theme-sync"
 else
-    ROOT="$SCRIPT_DIR/../roles/config/.config/theme-sync"
+    ROOT="$SCRIPT_DIR/../../roles/config/.config/theme-sync"
 fi
 
 THEMES_DIR="$ROOT/themes"

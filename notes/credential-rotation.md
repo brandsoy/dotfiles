@@ -4,7 +4,7 @@
 history scrubbed (single fresh commit; old branches deleted). Kept as a
 record and a template if this ever happens again.
 
-Why: gitleaks (`./scripts/security-scan.sh`) found real credentials in git
+Why: gitleaks (`./scripts/maintenance/security-scan.sh`) found real credentials in git
 history, and the repo is **public** (github.com/brandsoy/dotfiles). Sixteen
 commits between 2024-11 and 2026-03 contain them, under the old pre-`roles/`
 layout. The current tree is clean — the secrets exist only in history — but
@@ -143,7 +143,7 @@ contain the secrets — which is why step 2 comes first and is not optional.
 ## 5. Final verification
 
 ```bash
-./scripts/security-scan.sh        # expect: no leaks found
+./scripts/maintenance/security-scan.sh        # expect: no leaks found
 ```
 
 Then tick the High item in `IMPROVEMENTS.md`, move it to Done with the
