@@ -12,14 +12,36 @@ import (
 )
 
 func main() {
-	print := flag.Bool("print", false, "print scan results as text instead of opening the TUI")
+	print := flag.Bool("print", false, "print saved results instead of opening the TUI")
+	rescan := flag.Bool("rescan", false, "scan all tools and save updated results")
 	flag.Parse()
 
+	path, err := resultsPath()
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "ai-scan: %v\n", err)
+		os.Exit(1)
+	}
+	result, err := loadResults(path)
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "ai-scan: load saved results: %v\n", err)
+		os.Exit(1)
+	}
+	if *rescan {
+		result = runScan()
+		if err := saveResults(path, result); err != nil {
+			fmt.Fprintf(os.Stderr, "ai-scan: save results: %v\n", err)
+			os.Exit(1)
+		}
+	}
 	if *print {
-		printResult(runScan())
+		printResult(result)
 		return
 	}
-	if _, err := tea.NewProgram(newModel(), tea.WithAltScreen()).Run(); err != nil {
+	m := newModel()
+	m.result, m.store = result, path
+	m.notice = "Saved inventory · press r to scan and save"
+	m.setItems(result)
+	if _, err := tea.NewProgram(m, tea.WithAltScreen()).Run(); err != nil {
 		fmt.Fprintf(os.Stderr, "ai-scan: %v\n", err)
 		os.Exit(1)
 	}

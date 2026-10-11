@@ -43,6 +43,7 @@ function M.setup()
 		-- Plugins
 		gh('echasnovski/mini.nvim'),
 		gh('abecodes/tabout.nvim'),
+		gh('BitYoungjae/i18n-inline.nvim'),
 		{
 			src = gh('folke/which-key.nvim'),
 			version = vim.version.range('3'),
@@ -94,6 +95,7 @@ function M.setup()
 	require('plugins.ai').setup()
 	require('plugins.lsp').setup()
 	require('plugins.tabout').setup()
+	require('i18n-inline').setup()
 	require('plugins.markdown').setup()
 	require('plugins.git').setup()
 	require('plugins.image').setup()

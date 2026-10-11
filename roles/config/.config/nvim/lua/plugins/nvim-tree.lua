@@ -19,7 +19,8 @@ function M.setup()
 					return
 				end
 
-				local path = require('core.clipboard').paste_image_to_dir(node.absolute_path)
+				local path =
+					require('core.clipboard').paste_image_to_dir(node.absolute_path)
 				if path then
 					api.tree.reload()
 				end
@@ -31,11 +32,36 @@ function M.setup()
 		require('nvim-tree.api').tree.toggle({ find_file = true })
 	end
 
-	vim.keymap.set('n', '<leader>e', toggle, { desc = 'Nvim-tree toggle and reveal current file' })
-	vim.keymap.set('n', '<leader>E', '<cmd>NvimTreeFocus<cr>', { desc = 'Nvim-tree focus' })
-	vim.keymap.set('n', '<leader>fe', toggle, { desc = 'Nvim-tree reveal current file' })
-	vim.keymap.set('n', '<leader>be', '<cmd>NvimTreeToggle<cr>', { desc = 'Nvim-tree buffers' })
-	vim.keymap.set('n', '<leader>ge', '<cmd>NvimTreeToggle<cr>', { desc = 'Nvim-tree git status' })
+	vim.keymap.set(
+		'n',
+		'<leader>e',
+		toggle,
+		{ desc = 'Nvim-tree toggle and reveal current file' }
+	)
+	vim.keymap.set(
+		'n',
+		'<leader>E',
+		'<cmd>NvimTreeFocus<cr>',
+		{ desc = 'Nvim-tree focus' }
+	)
+	vim.keymap.set(
+		'n',
+		'<leader>fe',
+		toggle,
+		{ desc = 'Nvim-tree reveal current file' }
+	)
+	vim.keymap.set(
+		'n',
+		'<leader>be',
+		'<cmd>NvimTreeToggle<cr>',
+		{ desc = 'Nvim-tree buffers' }
+	)
+	vim.keymap.set(
+		'n',
+		'<leader>ge',
+		'<cmd>NvimTreeToggle<cr>',
+		{ desc = 'Nvim-tree git status' }
+	)
 end
 
 return M

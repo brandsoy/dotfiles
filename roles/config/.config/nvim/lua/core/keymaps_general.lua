@@ -74,6 +74,10 @@ function M.setup()
 		require('core.yank_history').pick()
 	end, 'Pick from yank history')
 
+	map('n', '<leader>ii', '<Cmd>I18nHover<CR>', 'i18n: hover translations')
+	map('n', '<leader>ij', '<Cmd>I18nJump<CR>', 'i18n: jump to translation')
+	map('n', '<leader>ui', '<Cmd>I18nToggle<CR>', 'i18n: toggle inline previews')
+
 	map('n', '<leader>un', function()
 		vim.wo.relativenumber = not vim.wo.relativenumber
 		notify_option('Relative number', vim.wo.relativenumber)

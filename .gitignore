@@ -78,3 +78,4 @@ roles/config/.pi/agent/npm/node_modules/
 roles/config/.pi/agent/npm/.cache/
 roles/config/.pi/agent/pi-blackhole/*.jsonl
 roles/config/.pi/agent/pi-blackhole/*-pending.json
+/scripts/ai/ai-scan
