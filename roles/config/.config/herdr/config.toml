@@ -37,7 +37,7 @@ onboarding = false
 # panel_bg = "#1e1e2e"
 # text = "#cdd6f4"
 
-name = "tokyo-night"
+name = "rose-pine"
 auto_switch = false
 [terminal]
 # Executable used for new interactive panes.
@@ -127,7 +127,7 @@ resize_mode = "prefix+r"
 # resize_pane_down = ""   # optional, e.g. "ctrl+shift+alt+down"
 # resize_pane_up = ""     # optional, e.g. "ctrl+shift+alt+up"
 # resize_pane_right = ""  # optional, e.g. "ctrl+shift+alt+right"
-# toggle_sidebar = "prefix+b"
+toggle_sidebar = "prefix+b"
 
 # Navigate-mode movement. These local shortcuts win while navigate mode is open.
 # They are independent from focus_pane_*. Do not include prefix+, esc, enter, tab, or 1..9 here.
@@ -246,7 +246,7 @@ resize_mode = "prefix+r"
 
 # Hide the tab row when a workspace has exactly one tab.
 # New tabs can still be created with the configured keybinding.
-# hide_tab_bar_when_single_tab = false
+hide_tab_bar_when_single_tab = true
 
 # Desktop tab row placement: "top" or "bottom".
 # tab_bar_position = "top"

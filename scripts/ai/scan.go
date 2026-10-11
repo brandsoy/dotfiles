@@ -529,14 +529,23 @@ func scanModels(home string, sweepModels []string) []ModelEntry {
 	seen := map[string]bool{}
 
 	record := func(root string) bool {
-		if root == "" || seen[root] {
+		if root == "" {
 			return false
 		}
-		seen[root] = true
-		if info, err := os.Stat(root); err != nil || !info.IsDir() {
+		resolved, err := filepath.EvalSymlinks(root)
+		if err != nil {
 			return false
 		}
-		excludes = append(excludes, root+string(filepath.Separator))
+		resolved, err = filepath.Abs(resolved)
+		if err != nil || seen[resolved] {
+			return false
+		}
+		info, err := os.Stat(resolved)
+		if err != nil || !info.IsDir() {
+			return false
+		}
+		seen[resolved] = true
+		excludes = append(excludes, resolved+string(filepath.Separator))
 		return true
 	}
 
@@ -618,25 +627,12 @@ func scanModels(home string, sweepModels []string) []ModelEntry {
 		}
 	}
 
-	// omlx: cache size plus model names from its settings file.
+	// omlx cache size.
 	omlxRoot := join(home, ".omlx")
 	if record(omlxRoot) {
-		entry := ModelEntry{Source: "omlx", Name: "(cache)", Path: join(omlxRoot, "cache"), Size: dirSize(join(omlxRoot, "cache"))}
-		out = append(out, entry)
-		if data, err := os.ReadFile(join(omlxRoot, "model_settings.json")); err == nil {
-			var doc struct {
-				Models map[string]any `json:"models"`
-			}
-			if json.Unmarshal(data, &doc) == nil {
-				names := make([]string, 0, len(doc.Models))
-				for name := range doc.Models {
-					names = append(names, name)
-				}
-				sort.Strings(names)
-				for _, name := range names {
-					out = append(out, ModelEntry{Source: "omlx", Name: strings.ReplaceAll(name, "--", "/"), Path: join(omlxRoot, "model_settings.json")})
-				}
-			}
+		cache := join(omlxRoot, "cache")
+		if isDir(cache) {
+			out = append(out, ModelEntry{Source: "omlx", Name: "(cache)", Path: cache, Size: dirSize(cache)})
 		}
 	}
 
@@ -671,14 +667,23 @@ func isDir(path string) bool {
 // --- top level ---
 
 func runScan() ScanResult {
+	return runScanSection(sectionCount)
+}
+
+func runScanSection(target section) ScanResult {
 	home := homeDir()
 	vibeHome := envDefault("VIBE_HOME", filepath.Join(home, ".vibe"))
 	sw := runSweep(home)
-	skills := append(scanSkills(sw.skills), symlinkedSkillInstalls(home, vibeHome)...)
-	return ScanResult{
-		Servers: append(scanMCPConfigs(home, vibeHome), scanFoundMCP(sw.mcpJSON)...),
-		Running: runningMCP(),
-		Skills:  skills,
-		Models:  scanModels(home, sw.models),
+	var result ScanResult
+	if target == secMCP || target == sectionCount {
+		result.Servers = append(scanMCPConfigs(home, vibeHome), scanFoundMCP(sw.mcpJSON)...)
+		result.Running = runningMCP()
 	}
+	if target == secSkills || target == sectionCount {
+		result.Skills = append(scanSkills(sw.skills), symlinkedSkillInstalls(home, vibeHome)...)
+	}
+	if target == secModels || target == sectionCount {
+		result.Models = scanModels(home, sw.models)
+	}
+	return result
 }

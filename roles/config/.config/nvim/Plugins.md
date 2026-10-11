@@ -40,6 +40,7 @@ Plugins installed by this configuration via `vim.pack.add(...)`.
 - [nvim-lint](https://github.com/mfussenegger/nvim-lint): Asynchronous linting framework.
 - [SchemaStore.nvim](https://github.com/b0o/SchemaStore.nvim): JSON schemas for improved configuration-file editing.
 - [roslyn.nvim](https://github.com/seblyng/roslyn.nvim): Roslyn language-server integration for C#.
+- [i18n-inline.nvim](https://github.com/BitYoungjae/i18n-inline.nvim): Inline translation previews and audits. In projects with `.i18n-inline.json`, use `<leader>ii` to hover, `<leader>ij` to jump to a translation, and `<leader>ui` to toggle previews. Run `:checkhealth i18n-inline` to check project setup.
 
 ## Markdown And Media
 
