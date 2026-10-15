@@ -11,10 +11,6 @@ export VISUAL=nvim
 
 # Shared model location; frameworks retain their native storage layouts.
 export AI_MODELS_HOME="${AI_MODELS_HOME:-$HOME/Models}"
-export HF_HOME="$AI_MODELS_HOME/huggingface"
-export HF_HUB_CACHE="$HF_HOME/hub"
-export HUGGINGFACE_HUB_CACHE="$HF_HUB_CACHE"
-export TRANSFORMERS_CACHE="$HF_HUB_CACHE"
 export OLLAMA_MODELS="$AI_MODELS_HOME/ollama"
 
 # Zsh keeps PATH and path in sync; preserve the first occurrence of each entry.

@@ -1,0 +1,23 @@
+# Report Vibe lifecycle state to the herdr server when running in a herdr pane.
+# The script is a no-op outside herdr (guards on HERDR_ENV/HERDR_SOCKET_PATH).
+
+[[hooks]]
+name = "herdr-state-pre-tool"
+type = "pre_tool"
+command = "/Users/mattis/.vibe/herdr-agent-state.sh"
+timeout = 15.0
+description = "Report working/blocked state to herdr before each tool call"
+
+[[hooks]]
+name = "herdr-state-post-tool"
+type = "post_tool"
+command = "/Users/mattis/.vibe/herdr-agent-state.sh"
+timeout = 15.0
+description = "Report working state to herdr after each tool call"
+
+[[hooks]]
+name = "herdr-state-post-agent"
+type = "post_agent"
+command = "/Users/mattis/.vibe/herdr-agent-state.sh"
+timeout = 15.0
+description = "Report idle state to herdr when the agent finishes a turn"
