@@ -199,6 +199,9 @@ def test_links(root, binaries):
     for relative in ("zsh/.zcompcache", "zsh/.zsh_sessions", "zsh/secrets.zsh", "zsh/.zshrc_old", "ghostty/auto", "theme-sync/current", "yazi/theme.toml", "eza/theme.yml", "tmux/theme.conf"):
         assert not (home / ".config" / relative).exists(), relative
     install(repo, env, root, binaries, "links")  # Restowing is idempotent.
+    install(repo, env, root, binaries, "links", "macos-config")
+    assert (home / ".linux-config-example").is_symlink()
+    assert not (home / ".macos-config-example").exists()
 
     # A conflicting personal file must survive; no role may be partially linked.
     target = home / ".config/kitty/kitty.conf"
@@ -215,6 +218,8 @@ def test_links(root, binaries):
     (home / ".gitconfig-platform").unlink()
     install(repo, env, root, binaries, "links", "macos-config")
     assert not (home / ".config/karabiner/automatic_backups").exists()
+    assert not (home / ".linux-config-example").exists()
+    assert (home / ".macos-config-example").is_symlink()
     print("OK: Stow isolation, idempotence, conflict survival, platform selection")
 
 
