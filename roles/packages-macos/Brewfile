@@ -153,7 +153,6 @@ brew "zoxide"
 # UNIX shell (command interpreter)
 brew "zsh"
 # The AI coding agent built for the terminal.
-brew "anomalyco/tap/opencode"
 # A window border system for macOS
 brew "felixkratz/formulae/borders"
 # Drop in replacement for ueberzug written in C++
@@ -247,3 +246,8 @@ brew "openapi-tui"
 
 # Added by ./install.sh packages-sync on 2026-10-11; review and organize by hand.
 brew "eugene1g/safehouse/agent-safehouse"
+
+# Added by ./install.sh packages-sync on 2026-10-16; review and organize by hand.
+brew "anomalyco/tap/opencode-v2"
+brew "dmno-dev/tap/varlock"
+brew "nayji7/tap/gitoui"
