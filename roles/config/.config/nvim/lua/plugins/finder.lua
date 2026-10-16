@@ -116,9 +116,8 @@ function M.setup()
 
 	fzf.setup({
 		ui_select = {},
-		fzf_colors = true,
+		fzf_colors = { true, bg = '-1', ['bg+'] = '-1', gutter = '-1', },
 		winopts = {
-			backdrop = 60,
 			preview = {
 				layout = 'vertical',
 				vertical = 'down:65%',
