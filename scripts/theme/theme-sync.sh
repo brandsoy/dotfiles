@@ -536,7 +536,11 @@ main() {
 
     case "$cmd" in
     tui)
-        tui_menu
+        if [[ -x "$HOME/.local/bin/theme-sync-tui" ]]; then
+            THEME_SYNC_ROOT="$ROOT" THEME_SYNC_COMMAND="$SCRIPT_DIR/theme-sync.sh" "$HOME/.local/bin/theme-sync-tui"
+        else
+            THEME_SYNC_ROOT="$ROOT" THEME_SYNC_COMMAND="$SCRIPT_DIR/theme-sync.sh" go run "$SCRIPT_DIR/tui"
+        fi
         ;;
     list)
         list_themes
