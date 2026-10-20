@@ -19,6 +19,7 @@ OUTPUTS = {
     "starship.toml": "STARSHIP_CONFIG",
     "opencode.theme.json": "OPENCODE_THEME_FILE",
     "bat.tmTheme": "BAT_THEME_FILE",
+    "herdr.theme.toml": "HERDR_THEME_FILE",
     "tmux.theme.conf": None,
     "yazi.theme.toml": None,
     "eza.theme.yml": None,

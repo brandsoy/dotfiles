@@ -134,7 +134,9 @@ func load(root string) ([]theme, error) {
 		name := strings.TrimSuffix(filepath.Base(file), ".json")
 		themes = append(themes, theme{name, colors})
 	}
-	sort.Slice(themes, func(i, j int) bool { return themes[i].name < themes[j].name })
+	sort.Slice(themes, func(i, j int) bool {
+		return strings.ToLower(themes[i].name) < strings.ToLower(themes[j].name)
+	})
 	return themes, nil
 }
 func main() {
@@ -161,7 +163,14 @@ func main() {
 	if command == "" {
 		command = filepath.Join(os.Getenv("HOME"), "dotfiles/scripts/theme/theme-sync.sh")
 	}
-	p := tea.NewProgram(model{themes: themes, current: current, root: root, command: command})
+	selected := 0
+	for i, t := range themes {
+		if t.name == current {
+			selected = i
+			break
+		}
+	}
+	p := tea.NewProgram(model{themes: themes, current: current, root: root, command: command, selected: selected}, tea.WithAltScreen())
 	if _, err := p.Run(); err != nil {
 		fmt.Fprintln(os.Stderr, err)
 		os.Exit(1)

@@ -27,6 +27,7 @@ TARGET_YAZI_THEME="$CONFIG_HOME/yazi/theme.toml"
 TARGET_EZA_THEME="$CONFIG_HOME/eza/theme.yml"
 TARGET_TMUX_THEME="$CONFIG_HOME/tmux/theme.conf"
 TARGET_OPENCODE_THEME="$CONFIG_HOME/opencode/theme.json"
+TARGET_HERDR_CONFIG="$CONFIG_HOME/herdr/config.toml"
 TARGET_BAT_THEMES="$CONFIG_HOME/bat/themes"
 TARGET_NVIM_STATE="$STATE_HOME/nvim/theme.txt"
 
@@ -212,7 +213,7 @@ load_theme() {
 
     # Never inherit mappings or overlays from a previous theme or parent shell.
     unset GHOSTTY_THEME KITTY_INCLUDE NVIM_THEME BAT_THEME FZF_THEME_FILE
-    unset GHOSTTY_THEME_FILE BAT_THEME_FILE BTOP_THEME LAZYGIT_THEME_FILE OPENCODE_THEME_FILE VSCODE_THEME TMUX_BACKGROUND
+    unset GHOSTTY_THEME_FILE BAT_THEME_FILE BTOP_THEME LAZYGIT_THEME_FILE HERDR_THEME_FILE OPENCODE_THEME_FILE VSCODE_THEME TMUX_BACKGROUND
     STARSHIP_CONFIG="$CONFIG_HOME/starship.toml"
     THEME_DIR="$THEMES_DIR/$theme"
     if [[ -f "$THEMES_DIR/$theme.json" ]]; then
@@ -276,6 +277,22 @@ refresh_tmux_theme() {
     tmux run-shell "${DOTFILES_DIR:-$HOME/dotfiles}/scripts/tmux/minimal-theme/minimal.tmux" || true
 }
 
+refresh_ghostty_theme() {
+    # SIGUSR2 makes Ghostty (>= 1.2) reload its configuration. kill is
+    # fire-and-forget, so this never blocks, no matter which terminal (if
+    # any) it runs from. pkill cannot target the app process on macOS, so
+    # discover PIDs via ps instead; ucomm is "ghostty" on both macOS and
+    # Linux. Never send any other signal: Ghostty only handles USR2.
+    command -v ps >/dev/null 2>&1 || return 0
+    local pid name
+    ps -axo pid=,ucomm= 2>/dev/null | while read -r pid name; do
+        if [[ "$name" == "ghostty" || "$name" == "Ghostty" ]]; then
+            kill -USR2 "$pid" 2>/dev/null || true
+        fi
+    done
+    return 0
+}
+
 refresh_kitty_theme() {
     command -v kitty >/dev/null 2>&1 || return 0
 
@@ -293,10 +310,12 @@ refresh_kitty_theme() {
 
     local target
     for target in "${targets[@]}"; do
+        # Only talk to an explicit socket. Without --to, kitty @ falls back to
+        # writing DCS escape sequences to the controlling terminal and blocks
+        # waiting for a response, which wedges any TUI sharing that terminal.
         kitty @ --to "$target" load-config "$CONFIG_HOME/kitty/kitty.conf" >/dev/null 2>&1 && return 0
     done
-
-    kitty @ load-config "$CONFIG_HOME/kitty/kitty.conf" >/dev/null 2>&1 || true
+    return 0
 }
 
 ensure_bat_theme() {
@@ -320,6 +339,7 @@ apply_terminal_themes() {
     else
         printf 'theme = %s\n' "$GHOSTTY_THEME" >"$TARGET_GHOSTTY"
     fi
+    refresh_ghostty_theme
     copy_if_present "$KITTY_INCLUDE" "$TARGET_KITTY"
     refresh_kitty_theme
 }
@@ -338,6 +358,34 @@ apply_cli_themes() {
     fi
     mkdir -p "$(dirname "$TARGET_NVIM_STATE")"
     printf '%s\n' "$NVIM_THEME" >"$TARGET_NVIM_STATE"
+}
+
+refresh_herdr_theme() {
+    # Talks to the running server's API socket; fails fast when Herdr is
+    # not installed or no server is running, so it never blocks.
+    command -v herdr >/dev/null 2>&1 || return 0
+    herdr server reload-config >/dev/null 2>&1 || true
+    return 0
+}
+
+apply_herdr_theme() {
+    # Herdr's built-in terminal theme reads the active terminal palette. Do not
+    # override it with a guessed mapping from another theme's palette tokens.
+    local config="$TARGET_HERDR_CONFIG"
+    [[ -f "$config" ]] || return 0
+    if grep -q '^# theme-sync:begin$' "$config"; then
+        local temporary
+        temporary="$(mktemp "${config}.theme-sync.XXXXXX")" || return 0
+        if awk '
+            /^# theme-sync:begin$/ { inside = 1; next }
+            /^# theme-sync:end$/ { inside = 0; next }
+            !inside { print }
+        ' "$config" >"$temporary"; then
+            cat "$temporary" >"$config"
+        fi
+        rm -f "$temporary"
+    fi
+    refresh_herdr_theme
 }
 
 apply_theme_overlays() {
@@ -372,6 +420,7 @@ apply_theme() {
     apply_terminal_themes
     apply_cli_themes
     apply_theme_overlays "$THEME_DIR"
+    apply_herdr_theme
 
     write_current_env "$theme"
     printf '%s\n' "$theme" >"$CURRENT_FILE"
@@ -425,104 +474,6 @@ show_current() {
     echo "btop: ${BTOP_THEME:-<default>}"
     echo "fzf file: ${FZF_THEME_FILE:-}"
     echo "vscode: ${VSCODE_THEME:-<unset>}"
-}
-
-pause() {
-    read -r -p "Press Enter to continue..." _
-}
-
-tui_pick_theme() {
-    local prompt="$1"
-    local themes
-    themes="$(list_themes)"
-
-    if [[ -z "$themes" ]]; then
-        echo "No themes found in $THEMES_DIR"
-        return 1
-    fi
-
-    if command -v fzf >/dev/null 2>&1; then
-        printf '%s\n' "$themes" | fzf --prompt "$prompt" --height 40% --layout=reverse --border
-    else
-        local picked=""
-        select picked in $themes; do
-            [[ -n "$picked" ]] && {
-                echo "$picked"
-                return 0
-            }
-        done
-    fi
-}
-
-tui_menu() {
-    while true; do
-        local current light dark mode
-        current="$(current_theme)"
-        load_mode_config
-        light="${THEME_LIGHT:-<unset>}"
-        dark="${THEME_DARK:-<unset>}"
-        mode="$(detect_system_mode 2>/dev/null || echo "unknown")"
-
-        clear
-        echo "theme-sync"
-        echo "----------"
-        echo "Current: ${current:-<unset>}"
-        echo "System mode: $mode"
-        echo "Light mode theme: $light"
-        echo "Dark mode theme:  $dark"
-        echo
-        echo "1) Set current theme"
-        echo "2) Apply current theme"
-        echo "3) Set light mode theme"
-        echo "4) Set dark mode theme"
-        echo "5) Auto-apply from system mode"
-        echo "6) Show current details"
-        echo "q) Quit"
-        echo
-        read -r -p "Choose: " choice
-
-        case "$choice" in
-        1)
-            local picked
-            picked="$(tui_pick_theme "Theme > ")" || true
-            [[ -n "${picked:-}" ]] && apply_theme "$picked"
-            pause
-            ;;
-        2)
-            local t
-            t="$(current_theme)"
-            if [[ -z "$t" ]]; then
-                echo "No current theme set."
-            else
-                apply_theme "$t"
-            fi
-            pause
-            ;;
-        3)
-            local light_pick
-            light_pick="$(tui_pick_theme "Light theme > ")" || true
-            [[ -n "${light_pick:-}" ]] && set_mode_theme light "$light_pick"
-            pause
-            ;;
-        4)
-            local dark_pick
-            dark_pick="$(tui_pick_theme "Dark theme > ")" || true
-            [[ -n "${dark_pick:-}" ]] && set_mode_theme dark "$dark_pick"
-            pause
-            ;;
-        5)
-            apply_system_mode_theme || true
-            pause
-            ;;
-        6)
-            show_current || true
-            pause
-            ;;
-        q | Q)
-            break
-            ;;
-        esac
-    done
 }
 
 main() {

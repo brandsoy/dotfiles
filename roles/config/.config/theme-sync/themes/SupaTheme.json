@@ -34,6 +34,30 @@
     "BAT_THEME": "SupaTheme"
   },
   "files": {
+    "herdr.theme.toml": {
+      "template": "herdr/theme.toml",
+      "values": {
+        "panel_bg": "@surface",
+        "sidebar_bg": "@surface",
+        "active_row_bg": "@selection",
+        "selection_bg": "@selection_soft",
+        "accent": "@magenta",
+        "surface0": "@surface",
+        "surface1": "@surface",
+        "surface_dim": "@background",
+        "overlay0": "@grey_mid",
+        "overlay1": "@grey_light",
+        "text": "@foreground",
+        "subtext0": "@white",
+        "mauve": "@magenta",
+        "green": "@green",
+        "yellow": "@yellow",
+        "red": "@red",
+        "blue": "@blue",
+        "teal": "@blue",
+        "peach": "@yellow"
+      }
+    },
     "bat.tmTheme": {
       "template": "bat/default.tmTheme",
       "values": {

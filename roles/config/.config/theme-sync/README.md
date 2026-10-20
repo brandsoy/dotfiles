@@ -113,13 +113,16 @@ Application preferences stay tracked. Theme-sync writes generated includes:
 - `~/.config/yazi/theme.toml` (optional)
 - `~/.config/eza/theme.yml` (optional)
 - `~/.config/opencode/theme.json` (optional)
+- Herdr uses its built-in `terminal` theme so its colors follow the active
+  terminal palette; any old theme-sync-managed `[theme.custom]` block is removed
 - `~/.config/bat/themes/SupaTheme.tmTheme` (custom Bat theme; cache rebuilt)
 - `~/.local/state/nvim/theme.txt`
 
-Ghostty, Kitty, btop, tmux and FZF are generated for all 16 bundled themes.
+Ghostty, Kitty, btop, tmux and FZF are generated for all 16 bundled themes. Herdr's built-in `terminal` theme follows the terminal palette directly.
 Other overlays retain their existing theme coverage. Optional overlays are
 removed when switching to a theme without them, or when removing them from a
-definition. Kitty/tmux are refreshed when available; other apps may require a
+definition. Kitty/tmux are refreshed when available; Herdr reloads its running
+server via `herdr server reload-config`; other apps may require a
 reload or restart. Apps use their defaults until a theme is applied.
 
 Config/state paths respect `XDG_CONFIG_HOME` and `XDG_STATE_HOME`. Stow itself

@@ -20,6 +20,30 @@
     "BAT_THEME": "OneHalfDark"
   },
   "files": {
+    "herdr.theme.toml": {
+      "template": "herdr/theme.toml",
+      "values": {
+        "panel_bg": "@background",
+        "sidebar_bg": "@bright_black",
+        "active_row_bg": "@selection",
+        "selection_bg": "@selection",
+        "accent": "@magenta",
+        "surface0": "@bright_black",
+        "surface1": "@inactive",
+        "surface_dim": "@background",
+        "overlay0": "@inactive",
+        "overlay1": "@border",
+        "text": "@foreground",
+        "subtext0": "@bright_white",
+        "mauve": "@magenta",
+        "green": "@green",
+        "yellow": "@yellow",
+        "red": "@red",
+        "blue": "@blue",
+        "teal": "@cyan",
+        "peach": "@yellow"
+      }
+    },
     "btop.theme": {
       "template": "btop/catppuccin-latte.theme",
       "values": {

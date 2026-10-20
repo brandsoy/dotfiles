@@ -1,0 +1,31 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+command -v fzf >/dev/null || { echo "herdr-agent-picker requires fzf" >&2; exit 1; }
+command -v jq >/dev/null || { echo "herdr-agent-picker requires jq" >&2; exit 1; }
+
+agents="$(herdr agent list)"
+selected="$(jq -r '
+  .result.agents[]? |
+  [.pane_id, .agent,
+   (if .agent_status == "working" then "WORKING"
+    elif .agent_status == "blocked" then "BLOCKED"
+    elif .agent_status == "done" then "DONE"
+    else "IDLE" end),
+   (.terminal_title_stripped // .cwd // "")] |
+  @tsv
+' <<<"$agents" | awk -F '\t' 'BEGIN { OFS = "\t" }
+  { printf "%s\t%-16s %-9s %s\n", $1, $2, $3, $4 }
+' | fzf \
+  --delimiter=$'\t' \
+  --with-nth=2 \
+  --prompt='› ' \
+  --header=$'AGENT             STATUS     TITLE\nEnter focus  ·  Esc close' \
+  --no-info \
+  --no-border \
+  --padding=1,2 \
+  --layout=reverse \
+  --color='bg:-1,bg+:-1,fg:7,fg+:15,hl:4,hl+:4,prompt:6,pointer:5,marker:2,header:7')" || exit 0
+
+pane_id="${selected%%$'\t'*}"
+[[ -n "$pane_id" ]] && herdr agent focus "$pane_id"

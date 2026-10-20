@@ -26,6 +26,30 @@
     "VSCODE_THEME": "Dracula"
   },
   "files": {
+    "herdr.theme.toml": {
+      "template": "herdr/theme.toml",
+      "values": {
+        "panel_bg": "@background",
+        "sidebar_bg": "@black",
+        "active_row_bg": "@selection",
+        "selection_bg": "@selection",
+        "accent": "@magenta",
+        "surface0": "@black",
+        "surface1": "@bright_black",
+        "surface_dim": "@background",
+        "overlay0": "@bright_black",
+        "overlay1": "@bright_white",
+        "text": "@foreground",
+        "subtext0": "@bright_white",
+        "mauve": "@magenta",
+        "green": "@green",
+        "yellow": "@yellow",
+        "red": "@red",
+        "blue": "@blue",
+        "teal": "@cyan",
+        "peach": "@yellow"
+      }
+    },
     "btop.theme": {
       "template": "btop/catppuccin-latte.theme",
       "values": {
