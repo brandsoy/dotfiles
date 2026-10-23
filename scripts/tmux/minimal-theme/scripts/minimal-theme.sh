@@ -48,6 +48,9 @@ apply_minimal_theme() {
     # Pane borders
     tmux set-option -g pane-border-style "fg=$border_color"
     tmux set-option -g pane-active-border-style "fg=$active_color"
+    tmux set-option -g pane-border-status off
+    tmux set-option -g status 2
+    tmux set-option -g 'status-format[1]' ' '
 
     # Message style
     tmux set-option -g message-style "bg=$border_color,fg=$text_color,bold"
