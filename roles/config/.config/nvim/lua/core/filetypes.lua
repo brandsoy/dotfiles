@@ -11,6 +11,11 @@ function M.setup()
 			tfvars = 'terraform-vars',
 		},
 		pattern = {
+			['.*/%.zshrc'] = 'zsh',
+			['.*/%.zshenv'] = 'zsh',
+			['.*/%.zprofile'] = 'zsh',
+			['.*/%.zlogin'] = 'zsh',
+			['.*/%.zlogout'] = 'zsh',
 			['.*/ansible/.*%.ya?ml'] = 'yaml.ansible',
 			['.*/playbooks?/.*%.ya?ml'] = 'yaml.ansible',
 			['.*playbook.*%.ya?ml'] = 'yaml.ansible',

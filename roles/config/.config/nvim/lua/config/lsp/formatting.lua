@@ -15,6 +15,11 @@ function M.setup_conform()
 		end,
 		formatters_by_ft = require('config.lsp.formatters_by_ft').get(),
 		formatters = {
+			shfmt_zsh = {
+				command = 'shfmt',
+				args = { '-ln=zsh' },
+				stdin = true,
+			},
 			-- SQLFluff's tsql dialect handles SQL Server stored-procedure syntax.
 			sqlfluff_tsql = {
 				command = 'sqlfluff',

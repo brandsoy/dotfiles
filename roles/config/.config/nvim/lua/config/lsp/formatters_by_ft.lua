@@ -6,6 +6,7 @@ function M.get()
 	return {
 		bash = { 'shfmt' },
 		sh = { 'shfmt' },
+		zsh = { 'shfmt_zsh' },
 		lua = { 'stylua' },
 		python = { 'ruff_fix', 'ruff_format' },
 		astro = project_formatters.web,

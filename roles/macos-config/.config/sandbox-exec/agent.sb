@@ -1,0 +1,135 @@
+   (version 1)
+   (import "system.sb")
+
+   ; ---------------------------------------------------------------------------
+   ; 00-base.sb — shared path helpers and default-deny baseline
+   ; ---------------------------------------------------------------------------
+
+   (define HOME_DIR "/Users/mattis")
+   (define WORK_DIR #f)
+
+   (define (home-subpath rel) (subpath (string-append HOME_DIR rel)))
+   (define (home-literal rel) (literal (string-append HOME_DIR rel)))
+   (define (home-prefix rel) (prefix (string-append HOME_DIR rel)))
+
+   (define (workdir-subpath rel) (subpath (string-append WORK_DIR rel)))
+   (define (workdir-literal rel) (literal (string-append WORK_DIR rel)))
+   (define (workdir-prefix rel) (prefix (string-append WORK_DIR rel)))
+
+   (deny default)
+
+   ; ---------------------------------------------------------------------------
+   ; 10-system-runtime.sb — read-only macOS runtime and detected toolchains
+   ; ---------------------------------------------------------------------------
+
+   (allow file-read*
+       (subpath "/System")
+       (subpath "/usr")
+       (subpath "/bin")
+       (subpath "/sbin")
+       (subpath "/Library/Apple")
+       (subpath "/private/etc")
+       (subpath "/private/var/db")
+       (literal "/etc")
+       (literal "/tmp")
+       (literal "/var")
+       (literal "/dev/null")
+       (literal "/dev/zero")
+       (literal "/dev/random")
+       (literal "/dev/urandom")
+       (subpath "/opt/homebrew/bin")
+       (subpath "/opt/homebrew/Cellar")
+       (subpath "/opt/homebrew/opt")
+       (home-subpath "/.local/share/mise/installs")
+       (home-subpath "/.local/bin")
+       (home-subpath "/.bun/bin")
+       (home-subpath "/.cargo/bin")
+       (home-subpath "/go/bin"))
+
+   (allow file-read-metadata
+       (literal "/")
+       (literal "/System")
+       (literal "/Library")
+       (literal "/private")
+       (literal "/private/var")
+       (literal "/opt")
+       (literal "/opt/homebrew")
+       (literal "/Users")
+       (literal "/Users/mattis")
+       (home-literal "/.local")
+       (home-literal "/.bun")
+       (home-literal "/.cargo")
+       (home-literal "/go"))
+
+   ; Safehouse baseline: permit child-process execution; file access is
+   ; controlled separately by the read and write rules.
+   (allow process-exec)
+   (allow process-fork)
+   (allow sysctl-read)
+   (allow mach-lookup)
+
+   ; ---------------------------------------------------------------------------
+   ; 20-network.sb — IP networking and DNS; no general UNIX-socket grant
+   ; ---------------------------------------------------------------------------
+
+   (allow network-outbound
+       (remote tcp)
+       (remote udp))
+
+   (allow network-inbound
+       (local tcp)
+       (local udp))
+
+   (allow mach-lookup
+       (global-name "com.apple.mDNSResponder"))
+
+   ; ---------------------------------------------------------------------------
+   ; 30-toolchains/*.sb — detected toolchains only
+   ; Runtime installations are readable above. Project writes are added by
+   ; the wrapper. No blanket home-directory cache or credential grant is made.
+   ; ---------------------------------------------------------------------------
+
+   ; Node, Bun, Python/uv, Go, Rust/Cargo, and mise are detected.
+   ; Their package/build outputs should be written inside the selected project
+   ; unless a later, explicit cache grant is added.
+
+   ; ---------------------------------------------------------------------------
+   ; 40-shared/agent-common.sb — shared agent baseline
+   ; ---------------------------------------------------------------------------
+
+   ; Agent configuration, history, credentials, browser data, and shell startup
+   ; files remain denied by default.
+
+   ; ---------------------------------------------------------------------------
+   ; 50-integrations-core/*.sb — core integrations, default-denied posture
+   ; ---------------------------------------------------------------------------
+
+   ; Git can use the selected project. The wrapper adds read-only access to
+   ; sibling worktrees and read/write access to an external shared git common dir.
+   ; SSH agent, Docker/container sockets, and other UNIX sockets are not granted.
+
+   ; ---------------------------------------------------------------------------
+   ; 55-integrations-optional/*.sb — none selected
+   ; 60-agents/opencode.sb — narrow runtime log access
+   ; 65-apps/*.sb — none selected
+   ; ---------------------------------------------------------------------------
+
+   ; Ancestor traversal grants for OpenCode's log directory.
+   (allow file-read-metadata
+       (home-literal "/.local/share")
+       (home-literal "/.local/share/opencode")
+       (home-literal "/.local/share/opencode/log"))
+
+   ; OpenCode writes runtime logs and local state. Keep its separate auth and
+   ; database files elsewhere in ~/.local/share/opencode denied unless needed.
+   (allow file-read* file-write*
+       (home-subpath "/.local/share/opencode/log")
+       (home-subpath "/.local/state/opencode"))
+
+   (allow file-read-metadata
+       (home-literal "/.local/state")
+       (home-literal "/.local/state/opencode"))
+
+   ; Detected commands: opencode, cagent, tiny-agents, herdr-agent-picker.
+   ; Their executable paths are readable above when under ~/.local/bin.
+   ; Other agent state/configuration is not granted implicitly.
