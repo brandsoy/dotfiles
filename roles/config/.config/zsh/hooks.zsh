@@ -6,7 +6,7 @@ auto_ls_on_cd() {
 }
 add-zsh-hook chpwd auto_ls_on_cd
 safe-opencode() {
-	"$HOME/.config/sandbox-exec/run-sandboxed.sh" -- opencode "$@"
+	"$HOME/.config/sandbox-exec/run-sandboxed.sh" -- opencode --standalone "$@"
 }
 
 safe-pi() {

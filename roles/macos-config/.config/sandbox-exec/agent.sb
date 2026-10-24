@@ -46,6 +46,10 @@
        (home-subpath "/.cargo/bin")
        (home-subpath "/go/bin"))
 
+   ; OpenCode's service changes its working directory to HOME; allow the
+   ; directory itself, not recursive access to its contents.
+   (allow file-read* (literal "/Users/mattis"))
+
    (allow file-read-metadata
        (literal "/")
        (literal "/System")
@@ -118,18 +122,40 @@
    (allow file-read-metadata
        (home-literal "/.local/share")
        (home-literal "/.local/share/opencode")
-       (home-literal "/.local/share/opencode/log"))
+       (home-literal "/.local/share/opencode/log")
+       (home-literal "/.local/share/opencode/repos"))
 
-   ; OpenCode writes runtime logs and local state. Keep its separate auth and
-   ; database files elsewhere in ~/.local/share/opencode denied unless needed.
+   ; OpenCode's background service updates its database and app data here.
+   ; This follows Safehouse's OpenCode module; auth.json/account.json live in
+   ; this tree, so this grant includes those files.
    (allow file-read* file-write*
-       (home-subpath "/.local/share/opencode/log")
+       (home-subpath "/.local/share/opencode")
        (home-subpath "/.local/state/opencode"))
 
    (allow file-read-metadata
        (home-literal "/.local/state")
-       (home-literal "/.local/state/opencode"))
+       (home-literal "/.local/state/opencode")
+       (home-literal "/.cache")
+       (home-literal "/.cache/opencode")
+       (home-literal "/.config")
+       (home-literal "/.config/opencode"))
 
-   ; Detected commands: opencode, cagent, tiny-agents, herdr-agent-picker.
-   ; Their executable paths are readable above when under ~/.local/bin.
-   ; Other agent state/configuration is not granted implicitly.
+   ; OpenCode installs language servers and other cached tools here.
+   (allow file-read* file-write*
+       (home-subpath "/.cache/opencode"))
+
+   ; OpenCode reads and updates its own configuration only.
+   (allow file-read* file-write*
+       (home-subpath "/.config/opencode"))
+
+   ; Pi's binary is read-only under the detected mise installation above.
+   ; Its global agent directory contains settings, sessions, extensions, and
+   ; auth.json credentials; project-local resources use the selected workdir.
+   (allow file-read-metadata
+       (home-literal "/.pi")
+       (home-literal "/.pi/agent"))
+   (allow file-read* file-write*
+       (home-subpath "/.pi/agent"))
+
+   ; Detected commands: pi, opencode, cagent, tiny-agents, herdr-agent-picker.
+   ; Agent-specific state/configuration is granted only by the modules above.

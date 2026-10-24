@@ -84,6 +84,17 @@ emit_readwrite_dir() {
 # The selected project is read/write.
 emit_readwrite_dir "$WORKDIR"
 
+# OpenCode uses a dedicated temporary subdirectory; grant only that child.
+TMP_BASE="$(cd "${TMPDIR:-/tmp}" && pwd -P)"
+emit_readwrite_dir "${TMP_BASE%/}/opencode"
+
+# TUI runtimes fstat the inherited terminal. Permit metadata on this TTY only.
+if TTY_DEVICE="$(tty 2>/dev/null)" && [[ "$TTY_DEVICE" == /dev/* ]]; then
+  emit_ancestors "$TTY_DEVICE"
+  printf '(allow file-read-metadata (literal %s))\n' \
+    "$(scheme_string "$TTY_DEVICE")" >>"$tmp"
+fi
+
 # If this is a linked worktree root, snapshot all other existing worktrees
 # as read-only paths. Git reports their absolute roots in porcelain output.
 if git -C "$WORKDIR" rev-parse --is-inside-work-tree >/dev/null 2>&1; then
