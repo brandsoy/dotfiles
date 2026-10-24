@@ -27,3 +27,4 @@ python = "3.12.12"
 aspire = "latest"
 pi = "latest"
 pnpm = "latest"
+fnox = { version = "latest", workflow = "release.yml" }
