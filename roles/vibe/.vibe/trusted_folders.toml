@@ -1,5 +1,0 @@
-trusted = [
-    "/Users/mattis/Developer/git/personal/Plow",
-    "/Users/mattis/Developer/git/personal/homelab",
-]
-untrusted = []

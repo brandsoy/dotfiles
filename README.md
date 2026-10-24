@@ -12,7 +12,7 @@ Arch, Debian, RHEL, and the Linux server profile are no longer supported.
 - `roles/macos-config/`, `roles/linux-config/`: platform configs and Git credential helpers
 - `roles/packages-macos/Brewfile` and `roles/packages-redhat/Redhatfile`: package manifests (the Redhatfile is Fedora-only)
 - `scripts/`: helpers grouped by purpose — `maintenance/` (checks, security scan,
-  tool updates), `theme/` (theme-sync pipeline), `ai/` (AI tooling inventory
+  tool updates), `theme/` (theme-switcher pipeline), `ai/` (AI tooling inventory
   TUI; run with `go run ./scripts/ai`), `macos/`, `tmux/`, `herdr/`
 
 ## Installation
@@ -58,45 +58,45 @@ Git identity roots are `~/Developer/git/work/` and `~/Developer/git/personal/`.
 GitHub credentials use `gh auth login`; other hosts use macOS Keychain or Linux's
 in-memory credential cache.
 
-## Theme management (theme-sync)
+## Theme management (theme-switcher)
 
 Themes are centralized in:
 
-- `roles/config/.config/theme-sync/`
-- `roles/config/.config/theme-sync/themes/<theme>.json`: one palette, native app mappings, and template bindings per theme
-- `roles/config/.config/theme-sync/templates/<app>/`: shared app syntax and layout variants
+- `roles/config/.config/theme-switcher/`
+- `roles/config/.config/theme-switcher/themes/<theme>.json`: one palette, native app mappings, and template bindings per theme
+- `roles/config/.config/theme-switcher/templates/<app>/`: shared app syntax and layout variants
 
-`theme-sync set` and `apply` render app files on demand using Python 3.9+ (standard
+`theme-switcher set` and `apply` render app files on demand using Python 3.9+ (standard
 library only). Edit colors in the JSON definition, not in generated app files.
 All 16 bundled themes are migrated; native Neovim/Bat themes stay native.
-See [theme-sync documentation](roles/config/.config/theme-sync/README.md) for the
+See [theme-switcher documentation](roles/config/.config/theme-switcher/README.md) for the
 schema, app overrides, and legacy personal-theme compatibility.
 
-Active theme state is local, under `${XDG_STATE_HOME:-~/.local/state}/theme-sync/`:
+Active theme state is local, under `${XDG_STATE_HOME:-~/.local/state}/theme-switcher/`:
 `current`, `current.env`, `mode.env`, and rendered assets in `generated/<theme>/`.
-Legacy state under `~/.config/theme-sync/`
+Legacy state under `~/.config/theme-switcher/`
 is imported once, without overwriting newer choices. Hostname-specific theme overrides
 are no longer applied. Generated theme files are ignored by both Git and Stow.
 
 Apply and switch themes with:
 
 ```bash
-theme-sync           # interactive TUI
-theme-sync list
-theme-sync current
-theme-sync set <theme>
-theme-sync apply
+theme-switcher           # interactive TUI
+theme-switcher list
+theme-switcher current
+theme-switcher set <theme>
+theme-switcher apply
 
 # Optional automatic light/dark switching
-theme-sync mode-set light <theme>
-theme-sync mode-set dark <theme>
-theme-sync auto
-theme-sync auto --watch 5
+theme-switcher mode-set light <theme>
+theme-switcher mode-set dark <theme>
+theme-switcher auto
+theme-switcher auto --watch 5
 ```
 
-On a fresh install, choose a theme with `theme-sync set <theme>`. On an existing
+On a fresh install, choose a theme with `theme-switcher set <theme>`. On an existing
 install, run `./install.sh links config` to link the new JSON definitions and
-templates, then `theme-sync apply` to regenerate the includes. Open a new shell
+templates, then `theme-switcher apply` to regenerate the includes. Open a new shell
 to load the updated Bat, FZF, Starship, and lazygit environment.
 
 VS Code settings are **never rewritten**. Set these in VS Code's Settings UI:
@@ -106,7 +106,7 @@ VS Code settings are **never rewritten**. Set these in VS Code's Settings UI:
 - `workbench.preferredDarkColorTheme`: your dark theme
 
 Before pulling this cleanup onto another machine, preserve its old `current` and
-`mode.env` files in `~/.local/state/theme-sync/` if you want to retain its choices.
+`mode.env` files in `~/.local/state/theme-switcher/` if you want to retain its choices.
 The generated `current.env` will be rebuilt; do not copy machine-specific exports.
 
 ## AI model storage (Hugging Face, MLX, Ollama, Unsloth)
@@ -170,6 +170,17 @@ Notes:
 - If your repo is not at `~/dotfiles`, set `DOTFILES_DIR` before running, for example: `DOTFILES_DIR=~/src/dotfiles dotfiles-update`.
 
 ## Security checks
+
+Enable the Gitleaks pre-commit hook after cloning:
+
+```bash
+pre-commit install
+```
+
+Requires `pre-commit` and `gitleaks` (both declared in the Brewfile). The hook
+scans staged changes and blocks commits containing detected secrets. Output
+redacts secret values. It uses the installed Gitleaks binary without downloading
+a separate hook environment.
 
 Run a quick secret scan before pushing:
 

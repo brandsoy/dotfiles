@@ -7,7 +7,7 @@
 .*\.old
 \.DS_Store
 ^/\.config/zsh/(\.zcompcache|\.zsh_sessions|\.zshrc_old|secrets\.zsh)
-^/\.config/theme-sync/(current|current\.env|mode\.env)
+^/\.config/theme-switcher/(current|current\.env|mode\.env)
 ^/\.config/(ghostty|kitty)/auto
 ^/\.config/btop/themes/dotfiles\.theme
 ^/\.config/bat/themes/SupaTheme\.tmTheme

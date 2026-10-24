@@ -5,16 +5,16 @@ CONFIG_HOME="${XDG_CONFIG_HOME:-$HOME/.config}"
 STATE_HOME="${XDG_STATE_HOME:-$HOME/.local/state}"
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
-if [[ -n "${THEME_SYNC_ROOT:-}" ]]; then
-    ROOT="$THEME_SYNC_ROOT"
-elif [[ -d "$CONFIG_HOME/theme-sync/themes" ]]; then
-    ROOT="$CONFIG_HOME/theme-sync"
+if [[ -n "${THEME_SWITCHER_ROOT:-}" ]]; then
+    ROOT="$THEME_SWITCHER_ROOT"
+elif [[ -d "$CONFIG_HOME/theme-switcher/themes" ]]; then
+    ROOT="$CONFIG_HOME/theme-switcher"
 else
-    ROOT="$SCRIPT_DIR/../../roles/config/.config/theme-sync"
+    ROOT="$SCRIPT_DIR/../../roles/config/.config/theme-switcher"
 fi
 
 THEMES_DIR="$ROOT/themes"
-STATE_DIR="$STATE_HOME/theme-sync"
+STATE_DIR="$STATE_HOME/theme-switcher"
 CURRENT_FILE="$STATE_DIR/current"
 CURRENT_ENV_FILE="$STATE_DIR/current.env"
 MODE_ENV_FILE="$STATE_DIR/mode.env"
@@ -33,7 +33,7 @@ TARGET_NVIM_STATE="$STATE_HOME/nvim/theme.txt"
 
 usage() {
     cat <<'EOF'
-Usage: theme-sync <command> [theme]
+Usage: theme-switcher <command> [theme]
 
 Commands:
   tui                               Open interactive TUI
@@ -47,9 +47,9 @@ Commands:
                                      --watch only reapplies when mode changes
 
 Environment:
-  THEME_SYNC_ROOT                   Override root path (default: ~/.config/theme-sync)
-  THEME_SYNC_LIGHT_THEME            Override configured light mode theme
-  THEME_SYNC_DARK_THEME             Override configured dark mode theme
+  THEME_SWITCHER_ROOT                   Override root path (default: ~/.config/theme-switcher)
+  THEME_SWITCHER_LIGHT_THEME            Override configured light mode theme
+  THEME_SWITCHER_DARK_THEME             Override configured dark mode theme
 EOF
 }
 
@@ -67,7 +67,7 @@ theme_exists() {
 require_theme() {
     if ! theme_exists "$1"; then
         printf 'Unknown theme: %s\n' "$1" >&2
-        printf "Run 'theme-sync list' to view available themes.\n" >&2
+        printf "Run 'theme-switcher list' to view available themes.\n" >&2
         exit 1
     fi
 }
@@ -113,8 +113,8 @@ load_mode_config() {
         source "$MODE_ENV_FILE"
     fi
 
-    THEME_LIGHT="${THEME_SYNC_LIGHT_THEME:-${THEME_LIGHT:-}}"
-    THEME_DARK="${THEME_SYNC_DARK_THEME:-${THEME_DARK:-}}"
+    THEME_LIGHT="${THEME_SWITCHER_LIGHT_THEME:-${THEME_LIGHT:-}}"
+    THEME_DARK="${THEME_SWITCHER_DARK_THEME:-${THEME_DARK:-}}"
 }
 
 save_mode_config() {
@@ -174,7 +174,7 @@ apply_system_mode_theme() {
         theme="${THEME_LIGHT:-}"
     fi
 
-    [[ -n "$theme" ]] || die "No theme configured for $mode mode. Use: theme-sync mode-set $mode <theme>"
+    [[ -n "$theme" ]] || die "No theme configured for $mode mode. Use: theme-switcher mode-set $mode <theme>"
 
     local current
     current="$(current_theme)"
@@ -300,7 +300,7 @@ refresh_kitty_theme() {
     local s
 
     [[ -n "${KITTY_LISTEN_ON:-}" ]] && targets+=("$KITTY_LISTEN_ON")
-    [[ -n "${THEME_SYNC_KITTY_LISTEN_ON:-}" ]] && targets+=("$THEME_SYNC_KITTY_LISTEN_ON")
+    [[ -n "${THEME_SWITCHER_KITTY_LISTEN_ON:-}" ]] && targets+=("$THEME_SWITCHER_KITTY_LISTEN_ON")
     targets+=("unix:/tmp/kitty")
     [[ -n "${TMPDIR:-}" ]] && targets+=("unix:${TMPDIR%/}/kitty")
 
@@ -373,12 +373,12 @@ apply_herdr_theme() {
     # override it with a guessed mapping from another theme's palette tokens.
     local config="$TARGET_HERDR_CONFIG"
     [[ -f "$config" ]] || return 0
-    if grep -q '^# theme-sync:begin$' "$config"; then
+    if grep -q '^# theme-switcher:begin$' "$config"; then
         local temporary
-        temporary="$(mktemp "${config}.theme-sync.XXXXXX")" || return 0
+        temporary="$(mktemp "${config}.theme-switcher.XXXXXX")" || return 0
         if awk '
-            /^# theme-sync:begin$/ { inside = 1; next }
-            /^# theme-sync:end$/ { inside = 0; next }
+            /^# theme-switcher:begin$/ { inside = 1; next }
+            /^# theme-switcher:end$/ { inside = 0; next }
             !inside { print }
         ' "$config" >"$temporary"; then
             cat "$temporary" >"$config"
@@ -487,11 +487,10 @@ main() {
 
     case "$cmd" in
     tui)
-        if [[ -x "$HOME/.local/bin/theme-sync-tui" ]]; then
-            THEME_SYNC_ROOT="$ROOT" THEME_SYNC_COMMAND="$SCRIPT_DIR/theme-sync.sh" "$HOME/.local/bin/theme-sync-tui"
-        else
-            THEME_SYNC_ROOT="$ROOT" THEME_SYNC_COMMAND="$SCRIPT_DIR/theme-sync.sh" go run "$SCRIPT_DIR/tui"
-        fi
+        (
+            cd "$SCRIPT_DIR/tui"
+            THEME_SWITCHER_ROOT="$ROOT" THEME_SWITCHER_COMMAND="$SCRIPT_DIR/theme-switcher.sh" go run .
+        )
         ;;
     list)
         list_themes
@@ -505,7 +504,7 @@ main() {
     apply)
         local theme
         theme="$(current_theme)"
-        [[ -n "$theme" ]] || die "No current theme set. Use: theme-sync set <theme>"
+        [[ -n "$theme" ]] || die "No current theme set. Use: theme-switcher set <theme>"
         apply_theme "$theme"
         ;;
     mode-set)

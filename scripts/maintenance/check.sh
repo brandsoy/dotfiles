@@ -9,60 +9,69 @@ REPO_DIR="$(cd "$SCRIPT_DIR/../.." && pwd)"
 
 # Our own scripts only; vendored skills and compiled binaries are excluded.
 SHELL_SCRIPTS=(
-    "$REPO_DIR/install.sh"
-    "$REPO_DIR"/scripts/maintenance/*.sh
-    "$REPO_DIR"/scripts/theme/*.sh
-    "$REPO_DIR"/scripts/macos/*.sh
-    "$REPO_DIR"/scripts/tmux/*.sh
-    "$REPO_DIR"/scripts/tmux/minimal-theme/*.tmux
-    "$REPO_DIR"/scripts/tmux/minimal-theme/scripts/*.sh
-    "$REPO_DIR"/roles/bin/.local/bin/ai-models
-    "$REPO_DIR"/roles/bin/.local/bin/dotfiles-install
-    "$REPO_DIR"/roles/bin/.local/bin/dotfiles-update
-    "$REPO_DIR"/roles/bin/.local/bin/keybinds
-    "$REPO_DIR"/roles/bin/.local/bin/theme-sync
+  "$REPO_DIR/install.sh"
+  "$REPO_DIR"/scripts/maintenance/*.sh
+  "$REPO_DIR"/scripts/theme/*.sh
+  "$REPO_DIR"/scripts/macos/*.sh
+  "$REPO_DIR"/scripts/tmux/*.sh
+  "$REPO_DIR"/scripts/tmux/minimal-theme/*.tmux
+  "$REPO_DIR"/scripts/tmux/minimal-theme/scripts/*.sh
+  "$REPO_DIR"/roles/bin/.local/bin/ai-models
+  "$REPO_DIR"/roles/bin/.local/bin/dotfiles-install
+  "$REPO_DIR"/roles/bin/.local/bin/dotfiles-update
+  "$REPO_DIR"/roles/bin/.local/bin/keybinds
+  "$REPO_DIR"/roles/bin/.local/bin/theme-switcher
+  "$REPO_DIR"/roles/bin/.local/bin/herdr-agent-picker
+  "$REPO_DIR"/roles/vibe/.vibe/herdr-agent-state.sh
+  "$REPO_DIR"/roles/macos-config/.config/sandbox-exec/run-sandboxed.sh
 )
 
 log() {
-    printf '\n==> %s\n' "$*"
+  printf '\n==> %s\n' "$*"
 }
 
 for tool in shfmt shellcheck python3; do
-    if ! command -v "$tool" >/dev/null 2>&1; then
-        printf 'check.sh: %s is required\n' "$tool" >&2
-        exit 1
-    fi
+  if ! command -v "$tool" >/dev/null 2>&1; then
+    printf 'check.sh: %s is required\n' "$tool" >&2
+    exit 1
+  fi
 done
 
 log 'shfmt: formatting check (shfmt -i 4)'
-nonconforming="$(shfmt -i 4 -l "${SHELL_SCRIPTS[@]}" || true)"
+nonconforming="$(shfmt -i 4 -l "${SHELL_SCRIPTS[@]}")"
 if [[ -n "$nonconforming" ]]; then
-    printf 'These files need formatting; run: shfmt -i 4 -w <file>\n%s\n' "$nonconforming" >&2
-    exit 1
+  printf 'These files need formatting; run: shfmt -i 4 -w <file>\n%s\n' "$nonconforming" >&2
+  exit 1
 fi
 
 log 'shellcheck: lint (warnings are errors)'
 shellcheck --severity=warning "${SHELL_SCRIPTS[@]}"
 
-log 'go: vet, build, test (ai-scan TUI)'
+log 'go: vet, build, test'
 if command -v go >/dev/null 2>&1; then
+  (
     go_build_dir="$(mktemp -d)"
-    (
-        cd "$REPO_DIR/scripts/ai" &&
-            go vet ./... &&
-            go test ./... >/dev/null &&
-            go build -o "$go_build_dir/ai-scan" .
-    )
-    rm -rf "$go_build_dir"
+    trap 'rm -rf "$go_build_dir"' EXIT
+
+    for module in scripts/ai scripts/theme/tui; do
+      log "$module"
+      (
+        cd "$REPO_DIR/$module"
+        go vet ./...
+        go test ./...
+        go build -o "$go_build_dir/$(basename "$module")" .
+      )
+    done
+  )
 else
-    echo 'go not installed; skipping (brew install go)'
+  echo 'go not installed; skipping Go checks'
 fi
 
 log 'gitleaks: secret scan'
 if command -v gitleaks >/dev/null 2>&1; then
-    gitleaks detect --source "$REPO_DIR" --no-banner
+  gitleaks detect --source "$REPO_DIR" --no-banner
 else
-    echo 'gitleaks not installed; skipping (brew install gitleaks)'
+  echo 'gitleaks not installed; skipping (brew install gitleaks)'
 fi
 
 log 'tests: offline regression checks'

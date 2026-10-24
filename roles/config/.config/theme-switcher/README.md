@@ -1,26 +1,26 @@
-# theme-sync
+# theme-switcher
 
 Edit `themes/<name>.json`: one source of truth per theme for managed app colors
 and native theme mappings. Shared app templates live in `templates/<app>/`.
-The executable is `~/dotfiles/scripts/theme/theme-sync.sh` (or `theme-sync` after
+The executable is `~/dotfiles/scripts/theme/theme-switcher.sh` (or `theme-switcher` after
 linking `bin`). Rendering requires Python 3.9+; no Python packages are needed.
 
 ## Commands
 
 ```bash
-theme-sync                         # interactive menu
-theme-sync list
-theme-sync current
-theme-sync set tokyonight-night
-theme-sync apply                   # regenerate after editing the current theme
-theme-sync mode-set light <theme>
-theme-sync mode-set dark <theme>
-theme-sync auto                     # macOS system appearance
-theme-sync auto --watch 5
+theme-switcher                         # interactive menu
+theme-switcher list
+theme-switcher current
+theme-switcher set tokyonight-night
+theme-switcher apply                   # regenerate after editing the current theme
+theme-switcher mode-set light <theme>
+theme-switcher mode-set dark <theme>
+theme-switcher auto                     # macOS system appearance
+theme-switcher auto --watch 5
 ```
 
-`THEME_SYNC_ROOT` overrides the definitions/templates root.
-`THEME_SYNC_LIGHT_THEME` and `THEME_SYNC_DARK_THEME` override saved mode choices.
+`THEME_SWITCHER_ROOT` overrides the definitions/templates root.
+`THEME_SWITCHER_LIGHT_THEME` and `THEME_SWITCHER_DARK_THEME` override saved mode choices.
 
 ## Editing and adding themes
 
@@ -54,7 +54,7 @@ bindings for its other variables too. Templates use `{{variable}}` placeholders;
 values can reference any palette color with `@name`. Palette names are also
 available directly to templates. Shell/Starship `$variables` are left untouched.
 
-Change a palette color once, then run `theme-sync apply`. All bindings that
+Change a palette color once, then run `theme-switcher apply`. All bindings that
 reference that color update together. App-specific differences are explicit:
 RWTH's Ghostty and Kitty ANSI color 8, for example, intentionally differ.
 Existing GitHub monochrome FZF/btop overrides are retained rather than silently
@@ -62,7 +62,7 @@ recolored. Remove an optional entry from `files` to stop generating that overlay
 
 To add a theme, copy an existing JSON definition to `themes/<new-name>.json`,
 change its palette/mappings, then run `./install.sh links config` from the repo
-root to link the new definition, followed by `theme-sync set <new-name>`. No
+root to link the new definition, followed by `theme-switcher set <new-name>`. No
 registry needs updating. Reuse an existing template variant unless the app layout or
 settings actually differ. Templates contain app syntax, not theme color literals.
 
@@ -71,14 +71,14 @@ highlight rules belong to their upstream plugins/themes. SupaTheme's custom
 Bat, terminal, prompt, lazygit and OpenCode files are generated from
 `themes/SupaTheme.json`. Its upstream submodule is left unchanged and is not
 used as the renderer's color source. `scripts/theme/generate-supatheme.sh` is now a
-compatibility shortcut for `theme-sync set SupaTheme`.
+compatibility shortcut for `theme-switcher set SupaTheme`.
 
 Personal themes using the old `themes/<name>/theme.env` layout still work.
 A JSON definition takes precedence when both layouts exist.
 
 ## Local state and generated output
 
-`$XDG_STATE_HOME/theme-sync/` (default `~/.local/state/theme-sync/`) contains:
+`$XDG_STATE_HOME/theme-switcher/` (default `~/.local/state/theme-switcher/`) contains:
 
 - `current`: active theme name
 - `current.env`: shell exports for Bat, FZF, Starship, and lazygit
@@ -97,7 +97,7 @@ installation, run these commands from the repository root:
 
 ```bash
 ./install.sh links config           # link the new JSON definitions and templates
-theme-sync apply                   # regenerate the current theme's app files
+theme-switcher apply                   # regenerate the current theme's app files
 ```
 
 Without relinking, obsolete file-level Stow links can leave only SupaTheme
@@ -114,7 +114,7 @@ Application preferences stay tracked. Theme-sync writes generated includes:
 - `~/.config/eza/theme.yml` (optional)
 - `~/.config/opencode/theme.json` (optional)
 - Herdr uses its built-in `terminal` theme so its colors follow the active
-  terminal palette; any old theme-sync-managed `[theme.custom]` block is removed
+  terminal palette; any old theme-switcher-managed `[theme.custom]` block is removed
 - `~/.config/bat/themes/SupaTheme.tmTheme` (custom Bat theme; cache rebuilt)
 - `~/.local/state/nvim/theme.txt`
 
@@ -132,7 +132,7 @@ tracked.
 VS Code settings are never modified, including JSONC files with comments. Use
 `window.autoDetectColorScheme`, `workbench.preferredLightColorTheme`, and
 `workbench.preferredDarkColorTheme` instead. `VSCODE_THEME` mappings are retained
-only as suggestions shown by `theme-sync current`.
+only as suggestions shown by `theme-switcher current`.
 
 ## Checks
 

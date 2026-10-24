@@ -1,4 +1,4 @@
-module theme-tui
+module theme-switcher
 
 go 1.27
 

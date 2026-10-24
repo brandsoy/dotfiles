@@ -106,7 +106,7 @@ func (m model) View() string {
 	if m.message != "" {
 		footer += "  |  " + m.message
 	}
-	return lipgloss.NewStyle().Padding(1, 2).Render("theme-sync\n" + content + "\n" + lipgloss.NewStyle().Faint(true).Render(footer))
+	return lipgloss.NewStyle().Padding(1, 2).Render("theme-switcher\n" + content + "\n" + lipgloss.NewStyle().Faint(true).Render(footer))
 }
 func load(root string) ([]theme, error) {
 	files, err := filepath.Glob(filepath.Join(root, "themes", "*.json"))
@@ -140,13 +140,13 @@ func load(root string) ([]theme, error) {
 	return themes, nil
 }
 func main() {
-	root := os.Getenv("THEME_SYNC_ROOT")
+	root := os.Getenv("THEME_SWITCHER_ROOT")
 	if root == "" {
-		root = filepath.Join(os.Getenv("HOME"), ".config", "theme-sync")
+		root = filepath.Join(os.Getenv("HOME"), ".config", "theme-switcher")
 	}
 	if _, err := os.Stat(filepath.Join(root, "themes")); err != nil {
 		exe, _ := os.Executable()
-		root = filepath.Clean(filepath.Join(filepath.Dir(exe), "../../../roles/config/.config/theme-sync"))
+		root = filepath.Clean(filepath.Join(filepath.Dir(exe), "../../../roles/config/.config/theme-switcher"))
 	}
 	themes, err := load(root)
 	if err != nil {
@@ -154,14 +154,14 @@ func main() {
 		os.Exit(1)
 	}
 	current := ""
-	if b, err := os.ReadFile(filepath.Join(os.Getenv("XDG_STATE_HOME"), "theme-sync", "current")); err == nil {
+	if b, err := os.ReadFile(filepath.Join(os.Getenv("XDG_STATE_HOME"), "theme-switcher", "current")); err == nil {
 		current = strings.TrimSpace(string(b))
-	} else if b, err := os.ReadFile(filepath.Join(os.Getenv("HOME"), ".local/state/theme-sync/current")); err == nil {
+	} else if b, err := os.ReadFile(filepath.Join(os.Getenv("HOME"), ".local/state/theme-switcher/current")); err == nil {
 		current = strings.TrimSpace(string(b))
 	}
-	command := os.Getenv("THEME_SYNC_COMMAND")
+	command := os.Getenv("THEME_SWITCHER_COMMAND")
 	if command == "" {
-		command = filepath.Join(os.Getenv("HOME"), "dotfiles/scripts/theme/theme-sync.sh")
+		command = filepath.Join(os.Getenv("HOME"), "dotfiles/scripts/theme/theme-switcher.sh")
 	}
 	selected := 0
 	for i, t := range themes {

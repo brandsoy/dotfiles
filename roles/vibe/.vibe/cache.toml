@@ -1,9 +1,0 @@
-[greeting]
-last_shown_at = 1792780139
-
-[update_cache]
-latest_version = "3.0.2"
-stored_at_timestamp = 1792780129
-seen_whats_new_version = "3.0.2"
-source_stored_at = 1792780129
-source = "uv"

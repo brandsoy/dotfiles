@@ -1,7 +1,9 @@
 #!/usr/bin/env bash
 
-state="${XDG_STATE_HOME:-$HOME/.local/state}/theme-sync/current.env"
+state="${XDG_STATE_HOME:-$HOME/.local/state}/theme-switcher/current.env"
+# shellcheck disable=SC1090
 [[ -r "$state" ]] && source "$state"
+# shellcheck disable=SC1090
 [[ -r "${FZF_THEME_FILE:-}" ]] && source "$FZF_THEME_FILE"
 
 selection="$(sesh list -t --icons | fzf-tmux -p 80%,70% \

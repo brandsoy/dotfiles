@@ -1,4 +1,4 @@
-# theme-sync managed block; overwritten on every theme-sync apply.
+# theme-switcher managed block; overwritten on every theme-switcher apply.
 [theme.custom]
 panel_bg = "{{panel_bg}}"
 sidebar_bg = "{{sidebar_bg}}"

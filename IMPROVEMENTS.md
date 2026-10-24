@@ -45,14 +45,14 @@ New and edited code follows these; deviations need a reason.
   - `--sync-brewfile|--maintenance` tombstones in `update-tools.sh` (add a
     removal date if adding new ones).
   - `run_mise` GITHUB_TOKEN scoping in `update-tools.sh`.
-  - `prepare_output`'s dangling-link detach in `theme-sync.sh`.
+  - `prepare_output`'s dangling-link detach in `theme-switcher.sh`.
 
 ## Backlog
 
 ### Minor
 
 - [ ] README split (judgment call) — slim README keeps overview/install/
-  structure and links to `docs/theme-sync.md`, `docs/ai-models.md`,
+  structure and links to `docs/theme-switcher.md`, `docs/ai-models.md`,
   `docs/neovim-lsp.md`. Only if scrolling past sections annoys you.
 
 ## Done
@@ -75,7 +75,7 @@ New and edited code follows these; deviations need a reason.
   branches deleted (all contained leaky commits), local refs/reflog
   purged. `security-scan.sh` green: 1 commit, no leaks, 0.4s.
   Runbook: `notes/credential-rotation.md`.
-- 2026-09-26 — `theme-sync.sh` cleanup: `die()` helper with standardized
+- 2026-09-26 — `theme-switcher.sh` cleanup: `die()` helper with standardized
   `exit`/`return` mix, `apply_theme` split into `apply_terminal_themes` /
   `apply_cli_themes` / `apply_theme_overlays`, `pause()` helper in the TUI,
   and `require_theme()` as the single theme validator.
@@ -88,7 +88,7 @@ New and edited code follows these; deviations need a reason.
   per-test temp homes (`make_repo`/`make_env` builders); failures now
   isolate to one test instead of aborting the whole run.
 - 2026-09-26 — Removed Alacritty (terminal no longer used): config role,
-  15 theme assets and their `ALACRITTY_IMPORT` lines, theme-sync target
+  15 theme assets and their `ALACRITTY_IMPORT` lines, theme-switcher target
   and apply path, SupaTheme extras (submodule pin updated), generator
   output, stow ignore, and doc references; live `~/.config/alacritty`
   cleaned up. The `generate-supatheme.sh` single-write backlog item is

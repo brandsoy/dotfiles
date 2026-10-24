@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Render theme-sync definitions. Python standard library only."""
+"""Render theme-switcher definitions. Python standard library only."""
 import json
 import os
 from pathlib import Path

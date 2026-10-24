@@ -21,9 +21,9 @@ roles/config/.config/zsh/.zshrc_old
 roles/macos-config/.config/karabiner/automatic_backups/
 roles/config/.config/opencode/opencode-notifier-state.json
 roles/config/.config/opencode/theme.json
-roles/config/.config/theme-sync/current
-roles/config/.config/theme-sync/current.env
-roles/config/.config/theme-sync/mode.env
+roles/config/.config/theme-switcher/current
+roles/config/.config/theme-switcher/current.env
+roles/config/.config/theme-switcher/mode.env
 roles/config/.config/ghostty/auto/
 roles/config/.config/kitty/auto/
 roles/config/.config/btop/themes/dotfiles.theme
@@ -81,3 +81,8 @@ roles/config/.pi/agent/pi-blackhole/*-pending.json
 /scripts/ai/ai-scan
 /roles/config/.config/nvim/nvim-pack-lock.json
 /roles/config/.config/nvim/nvim-pack-lock.json
+
+# Vibe machine-local state
+roles/vibe/.vibe/vibehistory
+roles/vibe/.vibe/cache.toml
+roles/vibe/.vibe/trusted_folders.toml

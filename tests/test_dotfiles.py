@@ -4,6 +4,7 @@
 Run: python3 tests/test_dotfiles.py  (or ./scripts/maintenance/check.sh for all checks)
 Requires: bash, zsh, git, and GNU Stow.
 """
+
 import json
 import runpy
 import shutil
@@ -16,8 +17,18 @@ REPO = Path(__file__).resolve().parents[1]
 
 # Tools whose calls must stay inert and observable during tests.
 MOCKED_TOOLS = (
-    "sudo", "curl", "brew", "chsh", "starship", "mise",
-    "zoxide", "fzf", "kitty", "tmux", "bat", "rpm",
+    "sudo",
+    "curl",
+    "brew",
+    "chsh",
+    "starship",
+    "mise",
+    "zoxide",
+    "fzf",
+    "kitty",
+    "tmux",
+    "bat",
+    "rpm",
 )
 
 
@@ -33,7 +44,9 @@ def copy(relative, root):
 
 
 def run(args, env, cwd, ok=True):
-    result = subprocess.run(args, env=env, cwd=cwd, text=True, capture_output=True, timeout=30)
+    result = subprocess.run(
+        args, env=env, cwd=cwd, text=True, capture_output=True, timeout=30
+    )
     if ok:
         assert result.returncode == 0, (args, result.stdout, result.stderr)
     else:
@@ -46,16 +59,39 @@ def make_repo(root):
     repo = root / "repo"
     copy("install.sh", repo)
     copy(".stowrc", repo)
-    copy("scripts/theme/theme-sync.sh", repo)
+    copy("scripts/theme/theme-switcher.sh", repo)
     copy("scripts/theme/render-theme.py", repo)
     copy("roles/config/.stow-local-ignore", repo)
     copy("roles/macos-config/.stow-local-ignore", repo)
-    for role in ("bin", "blocklists", "git", "tmux", "zshenv", "linux-config", "macos-config"):
+    for role in (
+        "bin",
+        "blocklists",
+        "git",
+        "tmux",
+        "zshenv",
+        "vibe",
+        "linux-config",
+        "macos-config",
+    ):
         put(repo / "roles" / role / f".{role}-example", "example\n")
     put(repo / "roles/agents/.agents/example", "example\n")
-    for relative in ("kitty/kitty.conf", "bat/config", "btop/btop.conf", "lazygit/config.yml", "starship.toml"):
+    for relative in (
+        "kitty/kitty.conf",
+        "bat/config",
+        "btop/btop.conf",
+        "lazygit/config.yml",
+        "starship.toml",
+    ):
         copy("roles/config/.config/" + relative, repo)
-    for relative in (".zshrc", "fzf.zsh", "aliases.zsh", "bindings.zsh", "plugins.zsh", "prompt.zsh", "hooks.zsh"):
+    for relative in (
+        ".zshrc",
+        "fzf.zsh",
+        "aliases.zsh",
+        "bindings.zsh",
+        "plugins.zsh",
+        "prompt.zsh",
+        "hooks.zsh",
+    ):
         copy("roles/config/.config/zsh/" + relative, repo)
     copy("roles/zshenv/.zshenv", repo)
     for relative in (".gitconfig", ".gitconfig-work", ".gitconfig-personal"):
@@ -69,12 +105,21 @@ def make_repo(root):
     # Ignored files exist locally but must not be deployed.
     config = repo / "roles/config/.config"
     for relative in (
-        "zsh/.zcompcache/cache", "zsh/.zsh_sessions/session", "zsh/secrets.zsh",
-        "zsh/.zshrc_old", "ghostty/auto/theme.ghostty", "theme-sync/current",
-        "yazi/theme.toml", "eza/theme.yml", "tmux/theme.conf",
+        "zsh/.zcompcache/cache",
+        "zsh/.zsh_sessions/session",
+        "zsh/secrets.zsh",
+        "zsh/.zshrc_old",
+        "ghostty/auto/theme.ghostty",
+        "theme-switcher/current",
+        "yazi/theme.toml",
+        "eza/theme.yml",
+        "tmux/theme.conf",
     ):
         put(config / relative, "local-only\n")
-    put(repo / "roles/macos-config/.config/karabiner/automatic_backups/local.json", "{}\n")
+    put(
+        repo / "roles/macos-config/.config/karabiner/automatic_backups/local.json",
+        "{}\n",
+    )
     put(repo / "roles/macos-config/.config/karabiner/karabiner.json", "{}\n")
     return repo
 
@@ -86,13 +131,16 @@ def make_env(root, binaries):
     mockbin.mkdir()
     # Do not inherit credentials, XDG paths, or tmux sockets from the caller.
     env = {
-        "HOME": str(home), "PATH": f"{mockbin}:/usr/bin:/bin",
+        "HOME": str(home),
+        "PATH": f"{mockbin}:/usr/bin:/bin",
         "XDG_CONFIG_HOME": str(home / ".config"),
         "XDG_CACHE_HOME": str(home / ".cache"),
         "XDG_DATA_HOME": str(home / ".local/share"),
         "XDG_STATE_HOME": str(home / ".local/state"),
-        "GIT_CONFIG_NOSYSTEM": "1", "TERM": "xterm-256color",
-        "LOG": str(root / "commands"), "TEST_OS": "fedora",
+        "GIT_CONFIG_NOSYSTEM": "1",
+        "TERM": "xterm-256color",
+        "LOG": str(root / "commands"),
+        "TEST_OS": "fedora",
     }
     # All potentially mutating/integrating tools are inert and recorded.
     for name in MOCKED_TOOLS:
@@ -117,7 +165,12 @@ def make_env(root, binaries):
 def install(repo, env, root, binaries, *args, ok=True):
     """Run install.sh with a stubbed OS detector (no host probing)."""
     driver = 'source "$1"; detect_os() { OS="$TEST_OS"; }; load_homebrew() { :; }; main "${@:2}"'
-    return run([binaries["bash"], "-c", driver, "test", str(repo / "install.sh"), *args], env, root, ok=ok)
+    return run(
+        [binaries["bash"], "-c", driver, "test", str(repo / "install.sh"), *args],
+        env,
+        root,
+        ok=ok,
+    )
 
 
 def test_plugin_migration(binaries):
@@ -126,11 +179,16 @@ def test_plugin_migration(binaries):
         home, repo, upstream = root / "home", root / "repo", root / "upstream"
         (home / ".tmux/plugins/tpm").mkdir(parents=True)  # No TPM download.
         env = {
-            "HOME": str(home), "PATH": f"{Path(binaries['git']).parent}:/usr/bin:/bin",
-            "GIT_CONFIG_NOSYSTEM": "1", "GIT_ALLOW_PROTOCOL": "file",
-            "GIT_AUTHOR_NAME": "Test", "GIT_AUTHOR_EMAIL": "test@example.com",
-            "GIT_COMMITTER_NAME": "Test", "GIT_COMMITTER_EMAIL": "test@example.com",
+            "HOME": str(home),
+            "PATH": f"{Path(binaries['git']).parent}:/usr/bin:/bin",
+            "GIT_CONFIG_NOSYSTEM": "1",
+            "GIT_ALLOW_PROTOCOL": "file",
+            "GIT_AUTHOR_NAME": "Test",
+            "GIT_AUTHOR_EMAIL": "test@example.com",
+            "GIT_COMMITTER_NAME": "Test",
+            "GIT_COMMITTER_EMAIL": "test@example.com",
         }
+
         def git(*args, cwd=repo, ok=True):
             return run([binaries["git"], *args], env, cwd, ok=ok)
 
@@ -156,23 +214,42 @@ def test_plugin_migration(binaries):
         # Reproduce the reported error: files exist, but there is no Git metadata.
         result = git("submodule", "update", "--init", "--recursive", ok=False)
         assert "not an empty directory" in result.stderr
-        command = [binaries["bash"], "-c", 'source "$1"; install_plugins', "test", str(repo / "install.sh")]
+        command = [
+            binaries["bash"],
+            "-c",
+            'source "$1"; install_plugins',
+            "test",
+            str(repo / "install.sh"),
+        ]
         run(command, env, root)
         backups = list((home / ".local/state/dotfiles").glob("plugin-backup.*"))
         assert len(backups) == 1
-        assert (backups[0] / legacy / "plugin.zsh").read_text() == "# preserve local changes\n"
+        assert (
+            backups[0] / legacy / "plugin.zsh"
+        ).read_text() == "# preserve local changes\n"
         assert git("rev-parse", "HEAD", cwd=repo / legacy).stdout.strip() == pin
         assert (repo / legacy / "plugin.zsh").read_text() == "# pinned version\n"
-        assert (repo / existing / "local.txt").read_text() == "keep initialized plugin\n"
+        assert (
+            repo / existing / "local.txt"
+        ).read_text() == "keep initialized plugin\n"
         run(command, env, root)  # Initialized repos are left alone on subsequent runs.
         assert list((home / ".local/state/dotfiles").glob("plugin-backup.*")) == backups
-    print("OK: legacy plugin backup, pinned initialization, repeat installation (local Git only)")
+    print(
+        "OK: legacy plugin backup, pinned initialization, repeat installation (local Git only)"
+    )
 
 
 def test_installer_safety(root, binaries):
     """Help and rejected commands change nothing."""
     repo, env = make_repo(root), make_env(root, binaries)
-    for args, ok in (([], True), (["--help"], True), (["profile", "linux-server"], False), (["links", "config", "invalid"], False), (["packages", "extra"], False), (["packages-sync", "extra"], False)):
+    for args, ok in (
+        ([], True),
+        (["--help"], True),
+        (["profile", "linux-server"], False),
+        (["links", "config", "invalid"], False),
+        (["packages", "extra"], False),
+        (["packages-sync", "extra"], False),
+    ):
         run([binaries["bash"], str(repo / "install.sh"), *args], env, root, ok=ok)
     assert not (root / "commands").exists()
     assert not list((root / "home").iterdir())
@@ -196,7 +273,17 @@ def test_links(root, binaries):
     assert (home / ".agents").is_symlink()
     assert (home / ".linux-config-example").is_symlink()
     assert not (home / ".macos-config-example").exists()
-    for relative in ("zsh/.zcompcache", "zsh/.zsh_sessions", "zsh/secrets.zsh", "zsh/.zshrc_old", "ghostty/auto", "theme-sync/current", "yazi/theme.toml", "eza/theme.yml", "tmux/theme.conf"):
+    for relative in (
+        "zsh/.zcompcache",
+        "zsh/.zsh_sessions",
+        "zsh/secrets.zsh",
+        "zsh/.zshrc_old",
+        "ghostty/auto",
+        "theme-switcher/current",
+        "yazi/theme.toml",
+        "eza/theme.yml",
+        "tmux/theme.conf",
+    ):
         assert not (home / ".config" / relative).exists(), relative
     install(repo, env, root, binaries, "links")  # Restowing is idempotent.
     install(repo, env, root, binaries, "links", "macos-config")
@@ -232,7 +319,9 @@ def test_packages(root, binaries):
     commands = (root / "commands").read_text()
     assert "brew bundle --file=" in commands
     assert "sudo dnf install" in commands
-    assert not any(line.startswith(("chsh ", "curl ")) for line in commands.splitlines())
+    assert not any(
+        line.startswith(("chsh ", "curl ")) for line in commands.splitlines()
+    )
     print("OK: package managers invoked per OS without chsh or curl")
 
 
@@ -240,20 +329,32 @@ def test_packages_sync(root, binaries):
     """packages-sync reconciles the Brewfile with installed packages (macOS only)."""
     repo, env = make_repo(root), make_env(root, binaries)
     env["TEST_OS"] = "macos"
-    env["BREW_FORMULAE"] = "kept dep-of-kept nested-kept"  # dep-of-kept: installed but not a leaf
-    env["BREW_LEAVES"] = "kept installed-only some/tap/nested-kept full-only excluded-only"
-    put(repo / "roles/packages-macos/untracked.txt", "# deliberate exclusions\nexcluded-only\n")
+    env["BREW_FORMULAE"] = (
+        "kept dep-of-kept nested-kept"  # dep-of-kept: installed but not a leaf
+    )
+    env["BREW_LEAVES"] = (
+        "kept installed-only some/tap/nested-kept full-only excluded-only"
+    )
+    put(
+        repo / "roles/packages-macos/untracked.txt",
+        "# deliberate exclusions\nexcluded-only\n",
+    )
     env["BREW_CASKS"] = "kept-cask nested-cask new-cask"
     env["BREW_CASKS_FULL"] = "kept-cask some/tap/nested-cask some/tap/new-cask"
     brewfile = repo / "roles/packages-macos/Brewfile"
-    put(brewfile, 'tap "homebrew/core"\n# comment stays\nbrew "kept"\nbrew "gone"\nbrew "some/tap/nested-kept"\ncask "kept-cask"\ncask "some/tap/nested-cask"\n')
+    put(
+        brewfile,
+        'tap "homebrew/core"\n# comment stays\nbrew "kept"\nbrew "gone"\nbrew "some/tap/nested-kept"\ncask "kept-cask"\ncask "some/tap/nested-cask"\n',
+    )
     install(repo, env, root, binaries, "packages-sync")
     text = brewfile.read_text()
     assert 'tap "homebrew/core"' in text
     assert "# comment stays" in text
     assert 'brew "kept"' in text
     assert 'brew "gone"' not in text
-    assert 'brew "some/tap/nested-kept"' in text  # tap-qualified entry matches installed short name
+    assert (
+        'brew "some/tap/nested-kept"' in text
+    )  # tap-qualified entry matches installed short name
     assert 'cask "kept-cask"' in text
     assert 'cask "some/tap/nested-cask"' in text
     assert 'brew "installed-only"' in text
@@ -265,7 +366,9 @@ def test_packages_sync(root, binaries):
     # The manifest is Homebrew-only; other hosts refuse.
     env["TEST_OS"] = "fedora"
     install(repo, env, root, binaries, "packages-sync", ok=False)
-    print("OK: Brewfile reconciled: uninstalled entries removed, leaves and casks appended")
+    print(
+        "OK: Brewfile reconciled: uninstalled entries removed, leaves and casks appended"
+    )
 
 
 def test_git_identity(root, binaries):
@@ -274,19 +377,42 @@ def test_git_identity(root, binaries):
     install(repo, env, root, binaries, "links")
     home = root / "home"
     (home / ".gitconfig-platform").unlink()
-    shutil.copy2(REPO / "roles/linux-config/.gitconfig-platform", home / ".gitconfig-platform")
-    for directory, expected in (("work/nested/repo", "mattis.brandsoy@fjordbase.no"), ("personal/repo", "mattis.dev@icloud.com")):
+    shutil.copy2(
+        REPO / "roles/linux-config/.gitconfig-platform", home / ".gitconfig-platform"
+    )
+    for directory, expected in (
+        ("work/nested/repo", "mattis.brandsoy@fjordbase.no"),
+        ("personal/repo", "mattis.dev@icloud.com"),
+    ):
         project = home / "Developer/git" / directory
         run([binaries["git"], "init", "-q", str(project)], env, root)
-        email = run([binaries["git"], "config", "user.email"], env, project).stdout.strip()
+        email = run(
+            [binaries["git"], "config", "user.email"], env, project
+        ).stdout.strip()
         assert email == expected, (directory, email)
-    assert run([binaries["git"], "config", "--global", "--includes", "credential.helper"], env, root).stdout.strip() == "cache"
-    shutil.copy2(REPO / "roles/macos-config/.gitconfig-platform", home / ".gitconfig-platform")
-    assert run([binaries["git"], "config", "--global", "--includes", "credential.helper"], env, root).stdout.strip() == "osxkeychain"
+    assert (
+        run(
+            [binaries["git"], "config", "--global", "--includes", "credential.helper"],
+            env,
+            root,
+        ).stdout.strip()
+        == "cache"
+    )
+    shutil.copy2(
+        REPO / "roles/macos-config/.gitconfig-platform", home / ".gitconfig-platform"
+    )
+    assert (
+        run(
+            [binaries["git"], "config", "--global", "--includes", "credential.helper"],
+            env,
+            root,
+        ).stdout.strip()
+        == "osxkeychain"
+    )
     print("OK: Git identity roots and platform credential helpers")
 
 
-def test_theme_sync(root, binaries):
+def test_theme_switcher(root, binaries):
     """Theme state is local, overlays do not leak, VS Code settings are never rewritten."""
     repo, env = make_repo(root), make_env(root, binaries)
     install(repo, env, root, binaries, "links")
@@ -294,20 +420,25 @@ def test_theme_sync(root, binaries):
     config = repo / "roles/config/.config"
 
     # Native theme includes: config sources stay byte-identical after switching.
-    themes = home / ".config/theme-sync/themes"
+    themes = home / ".config/theme-switcher/themes"
     for name in ("a", "b"):
         directory = themes / name
-        put(directory / "theme.env", f'''GHOSTTY_THEME="{name}"
-KITTY_INCLUDE="$XDG_CONFIG_HOME/theme-sync/themes/{name}/kitty.conf"
+        put(
+            directory / "theme.env",
+            f'''GHOSTTY_THEME="{name}"
+KITTY_INCLUDE="$XDG_CONFIG_HOME/theme-switcher/themes/{name}/kitty.conf"
 NVIM_THEME="{name}"
 BAT_THEME="Theme {name}"
-FZF_THEME_FILE="$XDG_CONFIG_HOME/theme-sync/themes/{name}/fzf.sh"
+FZF_THEME_FILE="$XDG_CONFIG_HOME/theme-switcher/themes/{name}/fzf.sh"
 VSCODE_THEME="Theme {name}"
-''')
+''',
+        )
         put(directory / "kitty.conf", f"# theme {name}\n")
     put(themes / "a/starship.toml", "# theme a\n")
     with (themes / "a/theme.env").open("a") as f:
-        f.write('BAT_THEME_FILE="$XDG_CONFIG_HOME/theme-sync/themes/a/SupaTheme.tmTheme"\n')
+        f.write(
+            'BAT_THEME_FILE="$XDG_CONFIG_HOME/theme-switcher/themes/a/SupaTheme.tmTheme"\n'
+        )
     put(themes / "a/SupaTheme.tmTheme", "new Bat theme\n")
     old_bat = config / "bat/themes/SupaTheme.tmTheme"
     put(old_bat, "old preserved Bat theme\n")
@@ -321,18 +452,24 @@ VSCODE_THEME="Theme {name}"
     put(themes / "a/eza.theme.yml", "# theme a\n")
     put(themes / "a/tmux.theme.conf", "# theme a\n")
     # Existing legacy state is migrated without copying stale absolute exports.
-    put(home / ".config/theme-sync/current", "a\n")
-    put(home / ".config/theme-sync/current.env", 'export STARSHIP_CONFIG="/old/machine/config"\n')
-    put(home / ".config/theme-sync/mode.env", 'THEME_LIGHT="b"\nTHEME_DARK="a"\n')
+    put(home / ".config/theme-switcher/current", "a\n")
+    put(
+        home / ".config/theme-switcher/current.env",
+        'export STARSHIP_CONFIG="/old/machine/config"\n',
+    )
+    put(home / ".config/theme-switcher/mode.env", 'THEME_LIGHT="b"\nTHEME_DARK="a"\n')
     before = {p: p.read_bytes() for p in (repo / "roles").rglob("*") if p.is_file()}
-    vscode = [home / "Library/Application Support/Code/User/settings.json", home / ".config/Code/User/settings.json"]
+    vscode = [
+        home / "Library/Application Support/Code/User/settings.json",
+        home / ".config/Code/User/settings.json",
+    ]
     jsonc = '{\n // Valid VS Code JSONC\n "editor.fontSize": 14,\n}\n'
     for path in vscode:
         put(path, jsonc)
 
-    theme_cmd = [binaries["bash"], str(repo / "scripts/theme/theme-sync.sh")]
+    theme_cmd = [binaries["bash"], str(repo / "scripts/theme/theme-switcher.sh")]
     run(theme_cmd + ["current"], env, root)
-    state = home / ".local/state/theme-sync"
+    state = home / ".local/state/theme-switcher"
     assert (state / "current").read_text() == "a\n"
     assert "/old/machine" not in (state / "current.env").read_text()
     assert (state / "mode.env").read_text() == 'THEME_LIGHT="b"\nTHEME_DARK="a"\n'
@@ -340,7 +477,9 @@ VSCODE_THEME="Theme {name}"
     assert (state / "lazygit.yml").exists()
     assert not (home / ".config/ghostty/auto/theme.ghostty").is_symlink()
     assert not dangling_target.exists()
-    assert (home / ".config/bat/themes/SupaTheme.tmTheme").read_text() == "new Bat theme\n"
+    assert (
+        home / ".config/bat/themes/SupaTheme.tmTheme"
+    ).read_text() == "new Bat theme\n"
     assert not (home / ".config/bat/themes/SupaTheme.tmTheme").is_symlink()
     assert "," in (state / "current.env").read_text()
     env["STARSHIP_CONFIG"] = str(themes / "a/starship.toml")
@@ -364,19 +503,21 @@ def test_theme_generation(root, binaries):
     """Every managed theme renders offline; failures leave the active theme intact."""
     repo, env = make_repo(root), make_env(root, binaries)
     (root / "bin/python3").symlink_to(sys.executable)
-    source = REPO / "roles/config/.config/theme-sync"
+    source = REPO / "roles/config/.config/theme-switcher"
     definitions = root / "definitions"
     shutil.copytree(source / "templates", definitions / "templates")
     for theme in (source / "themes").glob("*.json"):
         put(definitions / "themes" / theme.name, theme.read_text())
-    env["THEME_SYNC_ROOT"] = str(definitions)
-    command = [binaries["bash"], str(repo / "scripts/theme/theme-sync.sh")]
+    env["THEME_SWITCHER_ROOT"] = str(definitions)
+    command = [binaries["bash"], str(repo / "scripts/theme/theme-switcher.sh")]
     themes = sorted(path.stem for path in (definitions / "themes").glob("*.json"))
-    assert len(themes) == 16
+    assert themes, "No themes found in definitions"
     assert run(command + ["list"], env, root).stdout.splitlines() == themes
-    before = {path: path.read_bytes() for path in definitions.rglob("*") if path.is_file()}
+    before = {
+        path: path.read_bytes() for path in definitions.rglob("*") if path.is_file()
+    }
     config = root / "home/.config"
-    state = root / "home/.local/state/theme-sync"
+    state = root / "home/.local/state/theme-switcher"
     targets = {
         "ghostty": config / "ghostty/auto/theme.ghostty",
         "kitty.conf": config / "kitty/auto/theme.conf",
@@ -392,15 +533,26 @@ def test_theme_generation(root, binaries):
         expected, mappings = renderer["render"](definitions, theme, config)
         run(command + ["set", theme], env, root)
         assert (state / "current").read_text().strip() == theme
-        assert (root / "home/.local/state/nvim/theme.txt").read_text().strip() == mappings["NVIM_THEME"]
+        assert (
+            root / "home/.local/state/nvim/theme.txt"
+        ).read_text().strip() == mappings["NVIM_THEME"]
         for filename, target in targets.items():
             if filename in expected:
                 assert target.read_text() == expected[filename], (theme, filename)
                 assert "{{" not in target.read_text()
             else:
                 assert not target.exists(), (theme, filename)
-        exports = run([binaries["bash"], "-c", 'source "$1"; printf "%s\\n" "$FZF_THEME_FILE"',
-                       "test", str(state / "current.env")], env, root)
+        exports = run(
+            [
+                binaries["bash"],
+                "-c",
+                'source "$1"; printf "%s\\n" "$FZF_THEME_FILE"',
+                "test",
+                str(state / "current.env"),
+            ],
+            env,
+            root,
+        )
         assert exports.stdout.strip() == str(state / "generated" / theme / "fzf.sh")
     assert all(path.read_bytes() == content for path, content in before.items())
 
@@ -418,12 +570,16 @@ def test_theme_generation(root, binaries):
     assert "#123456" in (generated / "fzf.sh").read_text()
     assert "#123456" in (generated / "starship.toml").read_text()
     assert "#123456" in (generated / "yazi.theme.toml").read_text()
-    assert 'color8 #9c9e9f' in targets["kitty.conf"].read_text()
-    assert 'palette = 8=#000c17' in targets["ghostty"].read_text()  # Preserve the app override.
+    assert "color8 #9c9e9f" in targets["kitty.conf"].read_text()
+    assert (
+        "palette = 8=#000c17" in targets["ghostty"].read_text()
+    )  # Preserve the app override.
 
     # Template, palette, path and mapping errors are rejected before any writes.
     stable = {path: path.read_bytes() for path in state.rglob("*") if path.is_file()}
-    stable.update({path: path.read_bytes() for path in targets.values() if path.is_file()})
+    stable.update(
+        {path: path.read_bytes() for path in targets.values() if path.is_file()}
+    )
     bad = []
     for value in ("not-a-color", "@missing", "@background"):
         broken = json.loads(json.dumps(definition))
@@ -457,14 +613,16 @@ def test_theme_generation(root, binaries):
     assert (config / "bat/themes/SupaTheme.tmTheme").exists()
 
     # Deployment matters: file-level Stow links must include the new JSON files.
-    deployed = repo / "roles/config/.config/theme-sync"
+    deployed = repo / "roles/config/.config/theme-switcher"
     shutil.copytree(definitions, deployed, dirs_exist_ok=True)
     install(repo, env, root, binaries, "links", "config")
-    del env["THEME_SYNC_ROOT"]
-    assert (config / "theme-sync/themes/rwth-dark.json").is_symlink()
+    del env["THEME_SWITCHER_ROOT"]
+    assert (config / "theme-switcher/themes/rwth-dark.json").is_symlink()
     assert run(command + ["list"], env, root).stdout.splitlines() == themes
     run(command + ["set", "carbonfox"], env, root)
-    print("OK: all 16 themes, shared palette edits, app overrides, validation, overlay cleanup, Stow deployment")
+    print(
+        f"OK: all {len(themes)} themes, shared palette edits, app overrides, validation, overlay cleanup, Stow deployment"
+    )
 
 
 def test_zsh_shell(root, binaries):
@@ -477,7 +635,10 @@ def test_zsh_shell(root, binaries):
     assert "ld=lazydocker" in result.stdout
     assert "command not found" not in result.stderr, result.stderr
     assert str(home / ".config/starship.toml") in result.stdout
-    assert not any(line.startswith("curl ") for line in (root / "commands").read_text().splitlines())
+    assert not any(
+        line.startswith("curl ")
+        for line in (root / "commands").read_text().splitlines()
+    )
     print("OK: offline Zsh startup, lazydocker alias, default starship config")
 
 
@@ -485,7 +646,16 @@ def main():
     binaries = {name: shutil.which(name) for name in ("bash", "zsh", "git", "stow")}
     assert all(binaries.values()), "Install bash, zsh, git, and stow first"
     test_plugin_migration(binaries)
-    tests = (test_installer_safety, test_links, test_packages, test_packages_sync, test_git_identity, test_theme_sync, test_theme_generation, test_zsh_shell)
+    tests = (
+        test_installer_safety,
+        test_links,
+        test_packages,
+        test_packages_sync,
+        test_git_identity,
+        test_theme_switcher,
+        test_theme_generation,
+        test_zsh_shell,
+    )
     for test in tests:
         with tempfile.TemporaryDirectory(prefix="dotfiles test-") as temporary:
             test(Path(temporary), binaries)

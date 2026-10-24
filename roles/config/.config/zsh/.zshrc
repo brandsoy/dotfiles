@@ -24,9 +24,9 @@ zstyle ':completion:*' matcher-list 'm:{a-z}={A-Za-z}'
 
 source "$ZDOTDIR/fzf.zsh"
 export STARSHIP_CONFIG="$XDG_CONFIG_HOME/starship.toml"
-# Legacy fallback preserves existing installs until the first theme-sync command.
-_theme_env="$XDG_STATE_HOME/theme-sync/current.env"
-[[ -r "$_theme_env" ]] || _theme_env="$XDG_CONFIG_HOME/theme-sync/current.env"
+# Legacy fallback preserves existing installs until the first theme-switcher command.
+_theme_env="$XDG_STATE_HOME/theme-switcher/current.env"
+[[ -r "$_theme_env" ]] || _theme_env="$XDG_CONFIG_HOME/theme-switcher/current.env"
 [[ -r "$_theme_env" ]] && source "$_theme_env"
 unset _theme_env
 [[ -n "${FZF_THEME_FILE:-}" && -r "$FZF_THEME_FILE" ]] && source "$FZF_THEME_FILE"
