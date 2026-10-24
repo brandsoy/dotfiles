@@ -6,7 +6,6 @@ tap "felixkratz/formulae", trusted: true
 tap "gurgeous/tap", trusted: true
 tap "hashicorp/tap", trusted: true
 tap "jstkdng/programs", trusted: true
-tap "michel-kraemer/zsh-patina"
 tap "nikitabobko/tap", trusted: true
 tap "nnnkkk7/tap", trusted: true
 tap "pulumi/tap", trusted: true
@@ -158,7 +157,7 @@ brew "felixkratz/formulae/borders"
 # Drop in replacement for ueberzug written in C++
 brew "jstkdng/programs/ueberzugpp"
 # $ A blazingly fast Zsh syntax highlighter
-brew "michel-kraemer/zsh-patina/zsh-patina", trusted: true
+brew "zsh-patina"
 # A TUI to visualize and manage GitHub Actions
 brew "nnnkkk7/tap/lazyactions"
 # Pulumi - Modern Infrastructure as Code. Any cloud, any language 
@@ -231,13 +230,12 @@ brew "lazyssh"
 brew "nlohmann-json"
 brew "range-v3"
 brew "rust"
-brew "wilfredinni/noodle/noodle"
+brew "noodle"
 cask "abue-ammar/tinycast/tinycast"
 cask "firefox@beta"
 cask "knockknock"
 cask "microsoft-outlook"
 cask "ngrok"
-cask "onyx@beta"
 
 # Added by ./install.sh packages-sync on 2026-10-03; review and organize by hand.
 brew "herdr"
@@ -251,3 +249,8 @@ brew "eugene1g/safehouse/agent-safehouse"
 brew "anomalyco/tap/opencode-v2"
 brew "dmno-dev/tap/varlock"
 brew "nayji7/tap/gitoui"
+
+# Added by ./install.sh packages-sync on 2026-10-24; review and organize by hand.
+cask "ghostty"
+cask "microsoft-teams"
+cask "orion"
