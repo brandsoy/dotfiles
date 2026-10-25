@@ -1,11 +1,15 @@
 # Hand-maintained macOS packages only. Shared CLI utilities stay here; language
 # runtimes and project tools belong in mise, and editor-local tools belong in Mason.
+tap "abue-ammar/tap", trusted: true
 tap "amar1729/formulae", trusted: true
 tap "anomalyco/tap", trusted: true
+tap "dmno-dev/tap", trusted: true
+tap "eugene1g/safehouse", trusted: true
 tap "felixkratz/formulae", trusted: true
 tap "gurgeous/tap", trusted: true
 tap "hashicorp/tap", trusted: true
 tap "jstkdng/programs", trusted: true
+tap "nayji7/tap", trusted: true
 tap "nikitabobko/tap", trusted: true
 tap "nnnkkk7/tap", trusted: true
 tap "pulumi/tap", trusted: true
@@ -13,6 +17,8 @@ tap "pulumi/tap", trusted: true
 brew "act"
 # Simple, modern, secure file encryption
 brew "age"
+# Magical shell history: sync, search, and statistics
+brew "atuin"
 # Display directories as trees (with optional color/HTML output)
 brew "tree"
 # Tool for generating GNU Standards-compliant Makefiles
@@ -31,10 +37,14 @@ brew "bmon"
 brew "btop"
 # Versatile and fast Unicode/ASCII/ANSI graphics renderer
 brew "chafa"
+# A text-mode web browser
+brew "chawan"
 # Cross-platform make
 brew "cmake"
 # Documentation for CMake
 brew "cmake-docs"
+# CLI11: command line parser for C++11 and beyond
+brew "cli11"
 # Create and run Linux containers using lightweight virtual machines
 brew "container"
 # GNU File, Shell, and Text utilities
@@ -67,6 +77,10 @@ brew "git-filter-repo"
 brew "gitleaks"
 # Render markdown on the CLI
 brew "glow"
+# Hugging Face CLI: download and manage models and datasets
+brew "hf"
+# The terminal for AI coding agents
+brew "herdr"
 # Improved top (interactive process viewer)
 brew "htop"
 # Tools and libraries to manipulate images in select formats
@@ -83,16 +97,28 @@ brew "kubernetes-cli"
 brew "lazydocker"
 # Simple terminal UI for git commands
 brew "lazygit"
+# Cross-platform TUI for managing SQL databases
+brew "lazysql"
+# SSH client and server manager TUI
+brew "lazyssh"
 # Lua interpreter and compiler (provides lua and luac)
 brew "lua"
 # Utility for directing compilation
 brew "make"
 # Polyglot runtime manager (asdf rust clone)
 brew "mise"
-# Tail multiple files in one terminal simultaneously
+# Tail multiple files in a terminal simultaneously
 brew "multitail"
+# Network exploration tool and security / port scanner
+brew "nmap"
+# JSON for Modern C++
+brew "nlohmann-json"
+# Simple HTTP server for sharing files on the LAN
+brew "noodle"
 # Ambitious Vim-fork focused on extensibility and agility
 brew "neovim"
+# Terminal UI to list, browse and run OpenAPI operations
+brew "openapi-tui"
 # Drop-in replacement for Terraform. Infrastructure as Code Tool
 brew "opentofu"
 # Terminal User Interface (TUI) to view & control docker containers
@@ -111,12 +137,16 @@ brew "powershell"
 brew "pre-commit"
 # Database management TUI for PostgreSQL/MySQL/SQLite
 brew "rainfrog"
+# Range library for C++14/17/20
+brew "range-v3"
 # Terminal client for .http/.rest files with HTTP, GraphQL, and gRPC support
 brew "resterm"
 # SVG rendering tool and library
 brew "resvg"
 # Search tool like grep and The Silver Searcher
 brew "ripgrep"
+# Safe, concurrent, practical language toolchain
+brew "rust"
 # Smart session manager for the terminal
 brew "sesh"
 # 7-Zip is a file archiver with a high compression ratio
@@ -151,7 +181,14 @@ brew "yazi"
 brew "zoxide"
 # UNIX shell (command interpreter)
 brew "zsh"
-# The AI coding agent built for the terminal.
+# Sandbox for running AI agents safely
+brew "eugene1g/safehouse/agent-safehouse"
+# Encrypted environment variable and secret manager
+brew "dmno-dev/tap/varlock"
+# OpenCode: AI coding agent for the terminal
+brew "anomalyco/tap/opencode-v2"
+# Blazing fast terminal-ui interface for git
+brew "nayji7/tap/gitoui"
 # A window border system for macOS
 brew "felixkratz/formulae/borders"
 # Drop in replacement for ueberzug written in C++
@@ -160,8 +197,10 @@ brew "jstkdng/programs/ueberzugpp"
 brew "zsh-patina"
 # A TUI to visualize and manage GitHub Actions
 brew "nnnkkk7/tap/lazyactions"
-# Pulumi - Modern Infrastructure as Code. Any cloud, any language 
+# Pulumi - Modern Infrastructure as Code. Any cloud, any language
 brew "pulumi/tap/pulumi"
+# Fast, feature-rich terminal emulator that uses platform-native UI
+cask "ghostty"
 # AeroSpace is an i3-like tiling window manager for macOS
 cask "nikitabobko/tap/aerospace"
 # Image editing and design software
@@ -185,8 +224,14 @@ cask "font-symbols-only-nerd-font"
 cask "google-chrome"
 # Chromium-based web browser
 cask "helium-browser"
+# Web browser (beta channel)
+cask "firefox@beta"
+# Web browser with Chrome and Firefox extension support
+cask "orion"
 # Keyboard customiser
 cask "karabiner-elements"
+# See who's knocking at your Mac's door (security scanner)
+cask "knockknock"
 # Password manager app
 cask "keepassxc"
 # Tool to prevent the system from going into sleep mode
@@ -208,8 +253,16 @@ cask "orbstack"
 # GUI client for PostgreSQL databases
 cask "postico"
 # Control your tools with a few keystrokes
+# Screen recording tool
+cask "abue-ammar/tinycast/tinycast"
+# Secure introspectable tunnels to localhost
+cask "ngrok"
+# Email client
+cask "microsoft-outlook"
 # Instant messaging application focusing on security
 cask "signal"
+# Team collaboration and messaging
+cask "microsoft-teams"
 # Real time file synchronisation software
 # Mesh VPN based on WireGuard
 cask "tailscale-app"
@@ -219,38 +272,3 @@ cask "visual-studio-code"
 cask "windows-app"
 # Multiplayer code editor
 cask "zed"
-
-# Added by ./install.sh packages-sync on 2026-09-26; review and organize by hand.
-brew "atuin"
-brew "chawan"
-brew "cli11"
-brew "hf"
-brew "lazysql"
-brew "lazyssh"
-brew "nlohmann-json"
-brew "range-v3"
-brew "rust"
-brew "noodle"
-cask "abue-ammar/tinycast/tinycast"
-cask "firefox@beta"
-cask "knockknock"
-cask "microsoft-outlook"
-cask "ngrok"
-
-# Added by ./install.sh packages-sync on 2026-10-03; review and organize by hand.
-brew "herdr"
-brew "nmap"
-brew "openapi-tui"
-
-# Added by ./install.sh packages-sync on 2026-10-11; review and organize by hand.
-brew "eugene1g/safehouse/agent-safehouse"
-
-# Added by ./install.sh packages-sync on 2026-10-16; review and organize by hand.
-brew "anomalyco/tap/opencode-v2"
-brew "dmno-dev/tap/varlock"
-brew "nayji7/tap/gitoui"
-
-# Added by ./install.sh packages-sync on 2026-10-24; review and organize by hand.
-cask "ghostty"
-cask "microsoft-teams"
-cask "orion"
