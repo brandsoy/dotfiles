@@ -17,7 +17,7 @@ Usage: ./install.sh <command>
                     Opposite-platform roles are always excluded
   packages         Install macOS or Fedora packages
   packages-sync    Reconcile the Brewfile with installed Homebrew packages
-  plugins          Initialize pinned submodules and install tmux's TPM
+  plugins          Initialize pinned submodules, TPM, and Herdr integrations
   all              Install packages, initialize plugins, then link configs
   -h, --help       Show this help without making changes
 
@@ -305,6 +305,11 @@ install_herdr_plugins() {
         echo "Installing Herdr plugin $plugin@$ref"
         herdr plugin install "$plugin" --ref "$ref" --yes
     done <"$manifest"
+
+    if has_cmd hermes; then
+        echo "Installing Herdr integration for Hermes Agent"
+        herdr integration install hermes
+    fi
 
     local patch="$DOTFILES_DIR/scripts/herdr/herdr-web-ui-pig.patch"
     [[ -f "$patch" ]] || return 0

@@ -239,6 +239,41 @@ def test_plugin_migration(binaries):
     )
 
 
+def test_herdr_hermes_integration(binaries):
+    """Install the official Herdr integration when Hermes is available."""
+    with tempfile.TemporaryDirectory(prefix="dotfiles-hermes-integration-") as temporary:
+        root = Path(temporary)
+        home, repo, mockbin = root / "home", root / "repo", root / "bin"
+        home.mkdir()
+        mockbin.mkdir()
+        copy("install.sh", repo)
+        put(repo / "roles/config/.config/herdr/plugins.txt", "# no third-party plugins\n")
+        log = root / "commands"
+        for name in ("herdr", "hermes"):
+            path = mockbin / name
+            body = 'printf "%s\\n" "$*" >> "$LOG"\n' if name == "herdr" else ":\n"
+            put(path, "#!/bin/sh\n" + body)
+            path.chmod(0o755)
+        env = {
+            "HOME": str(home),
+            "PATH": f"{mockbin}:/usr/bin:/bin",
+            "LOG": str(log),
+        }
+        run(
+            [
+                binaries["bash"],
+                "-c",
+                'source "$1"; install_herdr_plugins',
+                "test",
+                str(repo / "install.sh"),
+            ],
+            env,
+            root,
+        )
+        assert log.read_text().splitlines() == ["integration install hermes"]
+    print("OK: Hermes Herdr integration is installed with configured Herdr plugins")
+
+
 def test_installer_safety(root, binaries):
     """Help and rejected commands change nothing."""
     repo, env = make_repo(root), make_env(root, binaries)
@@ -646,6 +681,7 @@ def main():
     binaries = {name: shutil.which(name) for name in ("bash", "zsh", "git", "stow")}
     assert all(binaries.values()), "Install bash, zsh, git, and stow first"
     test_plugin_migration(binaries)
+    test_herdr_hermes_integration(binaries)
     tests = (
         test_installer_safety,
         test_links,
