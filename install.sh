@@ -311,23 +311,11 @@ install_herdr_plugins() {
         herdr integration install hermes
     fi
 
-    local patch="$DOTFILES_DIR/scripts/herdr/herdr-web-ui-agents.patch"
-    [[ -f "$patch" ]] || return 0
-    local plugin_root
-    plugin_root="$(find "$HOME/.config/herdr/plugins/github" -mindepth 1 -maxdepth 1 -type d -name 'devswha.herdr-web-ui-*' -print -quit 2>/dev/null || true)"
-    if [[ -z "$plugin_root" ]]; then
-        echo "Configured Herdr web UI plugin was not installed; cannot apply agents patch." >&2
-        return 1
-    fi
-    if git -C "$plugin_root" apply --check "$patch" >/dev/null 2>&1; then
-        git -C "$plugin_root" apply "$patch"
-        echo "Applied Herdr web UI agents patch (PiG, OpenCode, Vibe)."
-    elif git -C "$plugin_root" apply --reverse --check "$patch" >/dev/null 2>&1; then
-        echo "Herdr web UI agents patch already applied."
-    else
-        echo "Herdr web UI agents patch does not apply cleanly; update the pinned plugin or patch." >&2
-        return 1
-    fi
+    # Out-of-tree agent adapters (Vibe, PiG) + the small hook patch: sync.sh
+    # deploys both to the tree that actually serves and restarts the plugin.
+    local sync="$DOTFILES_DIR/scripts/herdr/herdr-web-ui/sync.sh"
+    [[ -x "$sync" ]] || return 0
+    "$sync"
 }
 
 install_plugins() {
