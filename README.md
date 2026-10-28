@@ -58,6 +58,13 @@ Git identity roots are `~/Developer/git/work/` and `~/Developer/git/personal/`.
 GitHub credentials use `gh auth login`; other hosts use macOS Keychain or Linux's
 in-memory credential cache.
 
+## Bookmarks
+
+Versioned `default` and `work` collections live in
+`roles/config/.config/bookmarks/`. The `bookmark-sync` command imports browser
+bookmarks, exports HTML, and diffs/syncs HTML interchange files. Native browser
+writes are not enabled. See the [bookmark workflow](roles/config/.config/bookmarks/README.md).
+
 ## Theme management (theme-switcher)
 
 Themes are centralized in:

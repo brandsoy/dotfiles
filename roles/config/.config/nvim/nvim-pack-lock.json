@@ -1,7 +1,7 @@
 {
   "plugins": {
     "SchemaStore.nvim": {
-      "rev": "0065b39e82ce104b7d90ad1b9eb3670203bf26ea",
+      "rev": "fa093b1323f7cb379f47fc6704b38864f1cb97bf",
       "src": "https://github.com/b0o/SchemaStore.nvim"
     },
     "SupaTheme": {
@@ -18,7 +18,7 @@
       "src": "https://github.com/stevearc/conform.nvim"
     },
     "copilot.lua": {
-      "rev": "891bb2fda9595307e762cead6a2b7dc2f4076c37",
+      "rev": "82607bbb8528222a9a28bfcab0aceb3a7fed7e85",
       "src": "https://github.com/zbirenbaum/copilot.lua"
     },
     "diffview.nvim": {
@@ -30,7 +30,7 @@
       "src": "https://github.com/atiladefreitas/dooing"
     },
     "fzf-lua": {
-      "rev": "507dfc85551ff2d9293ec215f10f19395252aada",
+      "rev": "5b88d6f0af7fcb41d4a8bb340bf70d7e3824ee9d",
       "src": "https://github.com/ibhagwan/fzf-lua"
     },
     "github-monochrome.nvim": {
@@ -66,7 +66,7 @@
       "src": "https://github.com/williamboman/mason.nvim"
     },
     "mini.nvim": {
-      "rev": "4084a97fb06593e7f3855a9c5c63f1b87ae225e3",
+      "rev": "ed8683521996657ce774e5eec9d2f9b1b5ecef82",
       "src": "https://github.com/echasnovski/mini.nvim"
     },
     "nightfox.nvim": {
@@ -110,7 +110,7 @@
       "src": "https://github.com/nvim-neotest/nvim-nio"
     },
     "nvim-tree.lua": {
-      "rev": "9a2e0006d42f292eb3ade7dfdff201a7429a780c",
+      "rev": "3be8cad084e79e84833ef98cef88116c26a224ff",
       "src": "https://github.com/nvim-tree/nvim-tree.lua"
     },
     "nvim-treesitter": {

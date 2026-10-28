@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+    <key>CFBundleIdentifier</key>
+    <string>com.mattis.proximity-lock</string>
+    <key>CFBundleName</key>
+    <string>proximity-lock</string>
+    <key>CFBundleShortVersionString</key>
+    <string>1.0</string>
+    <key>NSBluetoothAlwaysUsageDescription</key>
+    <string>Detects when your iPhone is nearby so the screen locks when you leave it.</string>
+</dict>
+</plist>

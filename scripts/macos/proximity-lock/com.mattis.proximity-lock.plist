@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<!--
+  Lock the Mac when the iPhone (tracked via proximity-lock) is no longer nearby.
+
+  Setup (once):
+    cd ~/dotfiles/scripts/macos/proximity-lock
+    swiftc -O proximity-lock.swift \
+        -Xlinker -sectcreate -Xlinker __TEXT -Xlinker __info_plist -Xlinker Info.plist \
+        -o ~/.local/bin/proximity-lock
+    ~/.local/bin/proximity-lock --learn 30   # keep the phone next to the Mac,
+                                             # approve the Bluetooth prompt
+    cp com.mattis.proximity-lock.plist ~/Library/LaunchAgents/
+    launchctl bootstrap gui/$(id -u) \
+        ~/Library/LaunchAgents/com.mattis.proximity-lock.plist
+
+  Stop: launchctl bootout gui/$(id -u)/com.mattis.proximity-lock
+  Log: ~/Library/Logs/proximity-lock.log
+-->
+<plist version="1.0">
+<dict>
+    <key>Label</key>
+    <string>com.mattis.proximity-lock</string>
+    <key>ProgramArguments</key>
+    <array>
+        <string>/Users/mattis/.local/bin/proximity-lock</string>
+        <string>--grace</string>
+        <string>30</string>
+    </array>
+    <key>RunAtLoad</key>
+    <true/>
+    <key>KeepAlive</key>
+    <true/>
+    <key>StandardOutPath</key>
+    <string>/Users/mattis/Library/Logs/proximity-lock.log</string>
+    <key>StandardErrorPath</key>
+    <string>/Users/mattis/Library/Logs/proximity-lock.log</string>
+</dict>
+</plist>

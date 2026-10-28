@@ -84,3 +84,4 @@ roles/config/.pi/agent/pi-blackhole/*-pending.json
 roles/vibe/.vibe/vibehistory
 roles/vibe/.vibe/cache.toml
 roles/vibe/.vibe/trusted_folders.toml
+/roles/bin/.local/bin/bookmark-sync
