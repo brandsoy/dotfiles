@@ -28,3 +28,4 @@ aspire = "latest"
 pi = "latest"
 pnpm = "latest"
 fnox = { version = "latest", workflow = "release.yml" }
+bun = "latest"
