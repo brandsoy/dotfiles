@@ -36,6 +36,8 @@ tealdeer
 cmake
 make
 gh
+shfmt
+ShellCheck
 # Runtimes, lazygit, and lazydocker are managed by mise on Linux.
 
 ## Sync / networking
@@ -47,8 +49,11 @@ tailscale
 wireguard-tools
 
 ## Desktop essentials (keep your existing Fedora desktop/session)
+hyprpolkitagent
+keyd
 kitty
 wl-clipboard
+xclip
 
 ## Containers
 docker

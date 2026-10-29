@@ -12,6 +12,7 @@ SHELL_SCRIPTS=(
   "$REPO_DIR/install.sh"
   "$REPO_DIR"/scripts/maintenance/*.sh
   "$REPO_DIR"/scripts/theme/*.sh
+  "$REPO_DIR"/scripts/herdr/herdr-web-ui/sync.sh
   "$REPO_DIR"/scripts/macos/*.sh
   "$REPO_DIR"/scripts/tmux/*.sh
   "$REPO_DIR"/scripts/tmux/minimal-theme/*.tmux
@@ -76,5 +77,12 @@ fi
 
 log 'tests: offline regression checks'
 python3 "$REPO_DIR/tests/test_dotfiles.py"
+python3 "$REPO_DIR/tests/test_monitor_workspace_setup.py"
+python3 "$REPO_DIR/scripts/bookmarks/test_sync.py"
+if command -v bun >/dev/null 2>&1; then
+  bun test "$REPO_DIR/scripts/herdr/herdr-web-ui/agents"
+else
+  echo 'bun not installed; skipping Herdr adapter tests'
+fi
 
-log 'All checks passed'
+log 'All available checks passed'

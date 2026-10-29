@@ -56,4 +56,4 @@ if (( $+commands[mise] )); then
 fi
 
 # bun completions
-[ -s "/Users/mattis/.bun/_bun" ] && source "/Users/mattis/.bun/_bun"
+[ -s "$HOME/.bun/_bun" ] && source "$HOME/.bun/_bun"

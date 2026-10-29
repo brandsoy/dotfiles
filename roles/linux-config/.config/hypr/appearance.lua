@@ -9,8 +9,8 @@ hl.config({
     },
     decoration = {
         rounding = 0, rounding_power = 2, active_opacity = 1.0, inactive_opacity = 1.0,
-        shadow = { enabled = true, range = 4, render_power = 3, color = "rgba(1a1a1aee)" },
-        blur = { enabled = true, size = 3, passes = 1, vibrancy = 0.1696 },
+        shadow = { enabled = false, range = 4, render_power = 3, color = "rgba(1a1a1aee)" },
+        blur = { enabled = false, size = 3, passes = 1, vibrancy = 0.1696 },
     },
     animations = { enabled = true },
     misc = { force_default_wallpaper = -1, disable_hyprland_logo = false, focus_on_activate = true },
@@ -28,10 +28,10 @@ for name, points in pairs({
     almostLinear={{.5,.5},{.75,1}}, quick={{.15,0},{.1,1}},
 }) do hl.curve(name, { type = "bezier", points = points }) end
 for _, a in ipairs({
-    {"global",1,10,"default"},{"border",1,5.39,"easeOutQuint"},{"windows",1,4.79,"easeOutQuint"},
-    {"windowsIn",1,4.1,"easeOutQuint","popin 87%"},{"windowsOut",1,1.49,"linear","popin 87%"},
+    {"global",1,10,"default"},{"border",1,2,"easeOutQuint"},{"windows",1,2,"easeOutQuint"},
+    {"windowsIn",1,2,"easeOutQuint","popin 87%"},{"windowsOut",1,1.49,"linear","popin 87%"},
     {"fadeIn",1,1.73,"almostLinear"},{"fadeOut",1,1.46,"almostLinear"},{"fade",1,3.03,"quick"},
-    {"layers",1,3.81,"easeOutQuint"},{"layersIn",1,4,"easeOutQuint","fade"},{"layersOut",1,1.5,"linear","fade"},
+    {"layers",1,2,"easeOutQuint"},{"layersIn",1,2,"easeOutQuint","fade"},{"layersOut",1,1.5,"linear","fade"},
     {"fadeLayersIn",1,1.79,"almostLinear"},{"fadeLayersOut",1,1.39,"almostLinear"},
     {"workspaces",1,1.94,"almostLinear","fade"},{"workspacesIn",1,1.21,"almostLinear","fade"},
     {"workspacesOut",1,1.94,"almostLinear","fade"},{"zoomFactor",1,7,"quick"},

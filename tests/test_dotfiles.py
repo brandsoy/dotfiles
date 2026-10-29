@@ -337,7 +337,12 @@ def test_links(root, binaries):
 
     # A host deploys exactly one platform role.
     env["TEST_OS"] = "macos"
-    (home / ".gitconfig-platform").unlink()
+    put(home / ".macos-config-example", "personal config\n")
+    install(repo, env, root, binaries, "links", "macos-config", ok=False)
+    assert (home / ".linux-config-example").is_symlink()
+    assert (home / ".gitconfig-platform").is_symlink()
+    assert (home / ".macos-config-example").read_text() == "personal config\n"
+    (home / ".macos-config-example").unlink()
     install(repo, env, root, binaries, "links", "macos-config")
     assert not (home / ".config/karabiner/automatic_backups").exists()
     assert not (home / ".linux-config-example").exists()
@@ -398,6 +403,11 @@ def test_packages_sync(root, binaries):
     assert 'cask "new-cask"' not in text
     assert 'brew "dep-of-kept"' not in text  # transitive deps stay implicit
     assert 'brew "excluded-only"' not in text  # untracked.txt exclusions stick
+    # Empty categories and comment-only exclusions are valid manifests.
+    put(repo / "roles/packages-macos/untracked.txt", "# no exclusions\n")
+    for content in ('brew "kept"\n', 'cask "kept-cask"\n', '# empty\n'):
+        put(brewfile, content)
+        install(repo, env, root, binaries, "packages-sync")
     # The manifest is Homebrew-only; other hosts refuse.
     env["TEST_OS"] = "fedora"
     install(repo, env, root, binaries, "packages-sync", ok=False)
@@ -660,12 +670,30 @@ def test_theme_generation(root, binaries):
     )
 
 
+def test_binaries(root, binaries):
+    repo, env = make_repo(root), make_env(root, binaries)
+    (repo / "scripts/ai").mkdir(parents=True)
+    (repo / "scripts/theme/tui").mkdir(parents=True)
+    go = root / "bin/go"
+    put(go, '#!/bin/sh\nprintf "%s\\n" "$PWD $*" >> "$LOG"\nprintf "#!/bin/sh\\nexit 0\\n" > "$3"\nchmod +x "$3"\n')
+    go.chmod(0o755)
+    put(root / "home/.local/bin/theme-switcher-tui", "old binary")
+    install(repo, env, root, binaries, "binaries")
+    assert (root / "home/.local/bin/ai-scan").is_file()
+    assert (root / "home/.local/libexec/dotfiles/theme-switcher-tui").is_file()
+    assert not (root / "home/.local/bin/theme-switcher-tui").exists()
+    calls = (root / "commands").read_text()
+    assert "scripts/ai build -o" in calls and "scripts/theme/tui build -o" in calls
+    print("OK: Go binaries installed into local bin")
+
+
 def test_zsh_shell(root, binaries):
     """A partial/offline shell creates its directories and loads nothing online."""
     repo, env = make_repo(root), make_env(root, binaries)
     install(repo, env, root, binaries, "links")
     home = root / "home"
-    shell = 'source "$HOME/.zshenv"; source "$ZDOTDIR/.zshrc"; [[ -d "$XDG_CACHE_HOME/zsh" && -d "$XDG_STATE_HOME/zsh" ]]; alias ld; print -r -- "$STARSHIP_CONFIG"'
+    put(home / ".bun/_bun", 'BUN_COMPLETION_TEST=loaded\n')
+    shell = 'source "$HOME/.zshenv"; source "$ZDOTDIR/.zshrc"; [[ -d "$XDG_CACHE_HOME/zsh" && -d "$XDG_STATE_HOME/zsh" && "$BUN_COMPLETION_TEST" == loaded ]] || exit 1; (( $+functions[safe-pi] )) && exit 1; alias ld; print -r -- "$STARSHIP_CONFIG"'
     result = run([binaries["zsh"], "-dfi", "-c", shell], env, root)
     assert "ld=lazydocker" in result.stdout
     assert "command not found" not in result.stderr, result.stderr
@@ -690,6 +718,7 @@ def main():
         test_git_identity,
         test_theme_switcher,
         test_theme_generation,
+        test_binaries,
         test_zsh_shell,
     )
     for test in tests:

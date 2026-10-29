@@ -487,10 +487,14 @@ main() {
 
     case "$cmd" in
     tui)
-        (
-            cd "$SCRIPT_DIR/tui"
-            THEME_SWITCHER_ROOT="$ROOT" THEME_SWITCHER_COMMAND="$SCRIPT_DIR/theme-switcher.sh" go run .
-        )
+        if [[ -x "$HOME/.local/libexec/dotfiles/theme-switcher-tui" ]]; then
+            THEME_SWITCHER_ROOT="$ROOT" THEME_SWITCHER_COMMAND="$SCRIPT_DIR/theme-switcher.sh" "$HOME/.local/libexec/dotfiles/theme-switcher-tui"
+        else
+            (
+                cd "$SCRIPT_DIR/tui"
+                THEME_SWITCHER_ROOT="$ROOT" THEME_SWITCHER_COMMAND="$SCRIPT_DIR/theme-switcher.sh" go run .
+            )
+        fi
         ;;
     list)
         list_themes

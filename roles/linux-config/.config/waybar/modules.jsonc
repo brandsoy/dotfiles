@@ -40,7 +40,7 @@
     "format": "{ifname}",
     "format-wifi": "{essid} ",
     "format-ethernet": "{ipaddr}/{cidr} 󰊗",
-    "format-disconnected": "",
+    "format-disconnected": "Disconnected 󰤭",
     "tooltip-format": "{ifname} via {gwaddr} 󰊗",
     "tooltip-format-wifi": "{essid} ({signalStrength}%) ",
     "tooltip-format-ethernet": "{ifname} ",
@@ -93,9 +93,9 @@
     },
     "format-time": " ({H}h{M}m)",
     "format-charging": "<span font='Font Awesome 5 Free'></span>  <span font='Font Awesome 5 Free 11'>{icon}</span>  {capacity}% - {time}",
-    "format-full": "<span font='Font Awesome 5 Free'></span>  <span font='Font Awesome 5 Free 11'>{icon}</span>  Charged",
+    "format-full": "<span font='Font Awesome 5 Free'></span>  <span font='Font Awesome 5 Free 11'>{icon}</span>  {capacity}%",
     "max-length": 25,
-    "format": "{icon}",
+    "format": "{icon} {capacity}%",
     "format-icons": [
       "",
       "",
@@ -131,13 +131,7 @@
   // Language
   // -------------------------------------------------------------------------
   "hyprland/language": {
-    "format": "{}",
-    "keyboard-name": "at-translated-set-2-keyboard"
-  },
-  "custom/keyboard-layout": {
-    "exec": "hyprctl devices -j | jq -r '.keyboards[] | select(.main == true) | .active_keymap' | cut -c1-2",
-    "interval": 1,
-    "format": "{}",
+    "format": "{short}",
     "tooltip": false
   },
   // -------------------------------------------------------------------------
@@ -162,7 +156,7 @@
       "bluetooth",
       "battery",
       "pulseaudio",
-      "custom/keyboard-layout",
+      "hyprland/language",
       "custom/notification"
     ]
   }

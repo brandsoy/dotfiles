@@ -18,11 +18,12 @@ Usage: ./install.sh <command>
   packages         Install macOS or Fedora packages
   packages-sync    Reconcile the Brewfile with installed Homebrew packages
   plugins          Initialize pinned submodules, TPM, and Herdr integrations
-  all              Install packages, initialize plugins, then link configs
+  binaries         Build the Go tools
+  all              Install packages, plugins, links, and Go binaries
   -h, --help       Show this help without making changes
 
 No command shows help. No command changes your login shell.
-After linking, run `mise install` to install configured runtimes and tools.
+Go is required to build binaries; run `mise install` first if needed.
 EOF
 }
 
@@ -148,8 +149,8 @@ sync_packages() {
     # segment) so that tap-qualified entries ("tap/name") and bare names
     # both match the same installed package.
     local manifest_brew manifest_cask installed_brew installed_cask
-    manifest_brew="$(grep -E '^brew "' "$brewfile" | sed -E 's/^brew "([^"]+)".*/\1/; s|.*/||' | sort -u)"
-    manifest_cask="$(grep -E '^cask "' "$brewfile" | sed -E 's/^cask "([^"]+)".*/\1/; s|.*/||' | sort -u)"
+    manifest_brew="$(awk '/^brew "/ { sub(/^brew "/, ""); sub(/".*/, ""); sub(/^.*\//, ""); print }' "$brewfile" | sort -u)"
+    manifest_cask="$(awk '/^cask "/ { sub(/^cask "/, ""); sub(/".*/, ""); sub(/^.*\//, ""); print }' "$brewfile" | sort -u)"
     installed_brew="$(brew list --formula | sort -u)"
     installed_cask="$(brew list --cask | sort -u)"
     # Additions are deliberate installs only; transitive dependencies stay
@@ -161,7 +162,7 @@ sync_packages() {
     # Deliberate exclusions: installed on purpose, never re-added by sync.
     local untracked=""
     if [[ -f "$ROLES_DIR/packages-macos/untracked.txt" ]]; then
-        untracked="$(grep -vE '^[[:space:]]*(#|$)' "$ROLES_DIR/packages-macos/untracked.txt" | sed -E 's|.*/||' | sort -u)"
+        untracked="$(awk '!/^[[:space:]]*(#|$)/ { sub(/^.*\//, ""); print }' "$ROLES_DIR/packages-macos/untracked.txt" | sort -u)"
     fi
 
     local removed_brew removed_cask added_brew added_cask added_shorts
@@ -271,18 +272,30 @@ link_roles() {
         echo "Stow is required. Install it with brew or dnf, then rerun links." >&2
         return 1
     fi
-    # Use repository ignore rules regardless of the caller's cwd. Remove links
-    # from the other platform role, even when only that role was requested.
-    (cd "$DOTFILES_DIR" && stow --dir="$ROLES_DIR" --delete --target="$HOME" "$inactive_role")
+    # Plan platform removal and requested links together, so a conflict does
+    # not remove the old platform's links before the new ones are checked.
     if ((${#stow_roles[@]})); then
         printf 'Linking %s\n' "${stow_roles[@]}"
-        # One Stow operation checks all conflicts before changing any links.
-        (cd "$DOTFILES_DIR" && stow --dir="$ROLES_DIR" --restow --no-folding --target="$HOME" "${stow_roles[@]}")
+        (cd "$DOTFILES_DIR" && stow --dir="$ROLES_DIR" --no-folding --target="$HOME" --delete "$inactive_role" --restow "${stow_roles[@]}")
+    else
+        (cd "$DOTFILES_DIR" && stow --dir="$ROLES_DIR" --delete --target="$HOME" "$inactive_role")
     fi
     if ((wants_agents)); then
         printf 'Linking agents\n'
         link_agents
     fi
+}
+
+install_binaries() {
+    if ! has_cmd go; then
+        echo "Go is required to build binaries. Install Go or run 'mise install', then rerun binaries." >&2
+        return 1
+    fi
+    mkdir -p "$HOME/.local/bin" "$HOME/.local/libexec/dotfiles"
+    echo "Building ai-scan and theme-switcher TUI"
+    (cd "$DOTFILES_DIR/scripts/ai" && go build -o "$HOME/.local/bin/ai-scan" .)
+    (cd "$DOTFILES_DIR/scripts/theme/tui" && go build -o "$HOME/.local/libexec/dotfiles/theme-switcher-tui" .)
+    rm -f "$HOME/.local/bin/theme-switcher-tui"
 }
 
 install_herdr_plugins() {
@@ -360,7 +373,7 @@ main() {
             }
         done
         ;;
-    packages | packages-sync | plugins | all)
+    packages | packages-sync | plugins | binaries | all)
         shift
         if (($#)); then
             usage >&2
@@ -380,10 +393,12 @@ main() {
     packages) install_packages ;;
     packages-sync) sync_packages ;;
     plugins) install_plugins ;;
+    binaries) install_binaries ;;
     all)
         install_packages
         install_plugins
         link_roles
+        install_binaries
         ;;
     esac
 }

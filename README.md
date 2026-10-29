@@ -13,7 +13,7 @@ Arch, Debian, RHEL, and the Linux server profile are no longer supported.
 - `roles/packages-macos/Brewfile` and `roles/packages-redhat/Redhatfile`: package manifests (the Redhatfile is Fedora-only)
 - `scripts/`: helpers grouped by purpose — `maintenance/` (checks, security scan,
   tool updates), `theme/` (theme-switcher pipeline), `ai/` (AI tooling inventory
-  TUI; run with `go run ./scripts/ai`), `macos/`, `tmux/`, `herdr/`
+  TUI), `macos/`, `tmux/`, `herdr/`
 
 ## Installation
 
@@ -26,18 +26,20 @@ Clone into `~/dotfiles`, then choose an explicit action:
 ./install.sh packages           # package installation only
 ./install.sh packages-sync     # reconcile the Brewfile with installed Homebrew packages
 ./install.sh plugins            # pinned submodules, TPM, Herdr plugins/integrations; network access
-./install.sh all                # packages, plugins, then links
+./install.sh binaries           # build ai-scan and the theme-switcher TUI
+./install.sh all                # packages, plugins, links, then binaries
 ```
 
 After installation, `dotfiles-install` exposes the same commands. Set
 `DOTFILES_DIR` if the repository is somewhere other than `~/dotfiles`.
 
 - Linking never installs packages, downloads plugins, or changes your login shell.
+- Building binaries requires Go and may download Go modules. Install Go first (or run `mise install` after linking); if `all` stops at this step, run `./install.sh binaries` afterward. `ai-scan` is available on PATH; `theme-switcher` uses its compiled TUI in `~/.local/libexec/dotfiles/` when installed, otherwise it falls back to `go run`.
 - `plugins` installs Herdr plugins from `roles/config/.config/herdr/plugins.txt`, installs Herdr's Hermes integration when Hermes is available, applies maintained patches, preserves legacy plugin directories without Git metadata under `${XDG_STATE_HOME:-~/.local/state}/dotfiles/plugin-backup.*`, and initializes submodules. It prints each backup location; existing Git checkouts are left in place.
-- Stow uses file-level links for config roles, with explicit ignores for runtime files and credentials. Agent skills are a single `~/.agents` symlink.
+- Stow uses file-level links for config roles, with explicit ignores for runtime files and credentials. Configs are deployed to `~/.config`; a custom `XDG_CONFIG_HOME` is not supported for Stow-managed configs. Agent skills are a single `~/.agents` symlink.
 - macOS bootstraps Homebrew if needed, then installs the Brewfile.
 - `packages-sync` reconciles the Brewfile with the machine: entries for uninstalled packages are removed, and untracked top-level formulae (`brew leaves`) and casks are appended for review. Packages listed in `roles/packages-macos/untracked.txt` are skipped, so deliberate exclusions stick. It never runs automatically.
-- Fedora keeps your existing desktop/session. Package availability depends on Fedora version and enabled repositories; inspect DNF's skipped-package warnings. Hyprland configs remain available, but Fedora does not install a complete Hyprland desktop automatically.
+- Fedora keeps your existing desktop/session. Package availability depends on Fedora version and enabled repositories; inspect DNF's skipped-package warnings. Hyprland configs remain available, but Fedora does not install a complete Hyprland desktop automatically. `scripts/fedora/fedora_things_to_do.sh` is a separate, machine-specific root script that changes system services and repositories; review it before running it and do not assume it is safe to rerun.
 - No installer command runs `chsh`. If desired, choose a Zsh path listed in `/etc/shells` and change it yourself.
 - Existing conflicting files are not adopted or overwritten by Stow; back them up before resolving conflicts.
 
@@ -51,8 +53,27 @@ Homebrew owns macOS applications and native CLI utilities. Native Linux package
 managers own desktop/system utilities; mise owns runtimes and, on Linux, lazygit
 and lazydocker to avoid distro-specific binary-download scripts. Mason owns
 Neovim-local tooling. Zsh plugins are pinned submodules, loaded without network
-access during shell startup. Use `git submodule update --remote <path>` only when
+access during shell startup. TPM is cloned from its current upstream default branch
+on first installation; it is not pinned. Use `git submodule update --remote <path>` only when
 you deliberately want to update a pin, then commit the changed gitlink.
+
+### Fedora keyboard navigation
+
+The Fedora package list includes `keyd`. To activate the repository's keyboard
+mapping, replace the system keyd configuration and enable the service:
+
+```bash
+keyd check roles/linux-config/.config/keyd/default.conf
+sudo install -Dm644 roles/linux-config/.config/keyd/default.conf /etc/keyd/default.conf
+sudo systemctl enable --now keyd
+sudo keyd reload
+```
+
+Back up `/etc/keyd/default.conf` first if it contains other customizations. Caps
+Lock acts as Escape when tapped and Control when held; hold Caps with H/J/K/L
+for left/down/up/right. Physical Control shortcuts remain unchanged. If a bad
+configuration makes the keyboard unusable, press Backspace+Escape+Enter to
+stop keyd.
 
 Git identity roots are `~/Developer/git/work/` and `~/Developer/git/personal/`.
 GitHub credentials use `gh auth login`; other hosts use macOS Keychain or Linux's

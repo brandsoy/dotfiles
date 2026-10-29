@@ -5,6 +5,9 @@ auto_ls_on_cd() {
 	la
 }
 add-zsh-hook chpwd auto_ls_on_cd
+
+# sandbox-exec and its profile are only available on macOS.
+if [[ $OSTYPE == darwin* ]]; then
 safe-opencode() {
 	"$HOME/.config/sandbox-exec/run-sandboxed.sh" -- opencode --standalone "$@"
 }
@@ -36,3 +39,4 @@ safe-tiny-agents() {
 safe-herdr-agent-picker() {
 	"$HOME/.config/sandbox-exec/run-sandboxed.sh" -- herdr-agent-picker "$@"
 }
+fi

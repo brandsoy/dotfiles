@@ -73,7 +73,7 @@ function M.paste_image_to_dir(dir, filename)
 		)
 	elseif platform == 'x11' then
 		if vim.fn.executable('xclip') ~= 1 then
-			notify('xclip not found. Install with: sudo apt install xclip', vim.log.levels.ERROR)
+			notify('xclip not found. Install the xclip package.', vim.log.levels.ERROR)
 			return nil
 		end
 		if not vim.fn.system('xclip -selection clipboard -t TARGETS -o 2>/dev/null'):match('image/png') then
@@ -83,7 +83,7 @@ function M.paste_image_to_dir(dir, filename)
 		write_cmd = string.format('xclip -selection clipboard -t image/png -o > %q', outpath)
 	elseif platform == 'wayland' then
 		if vim.fn.executable('wl-paste') ~= 1 then
-			notify('wl-paste not found. Install with: sudo apt install wl-clipboard', vim.log.levels.ERROR)
+			notify('wl-paste not found. Install the wl-clipboard package.', vim.log.levels.ERROR)
 			return nil
 		end
 		if not vim.fn.system('wl-paste --list-types 2>/dev/null'):match('image/png') then
