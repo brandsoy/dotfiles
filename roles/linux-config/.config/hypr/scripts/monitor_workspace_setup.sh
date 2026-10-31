@@ -14,18 +14,21 @@ hypr_command() {
 }
 
 configure_workspaces() {
-  local monitors laptop external target quoted ws existing current focused after failed=0
+  local monitors laptop external eizo target quoted ws existing current focused after failed=0
   monitors=$(hyprctl monitors -j) || return 1
   laptop=$(jq -er '[.[].name | select(startswith("eDP-"))][0] // ""' <<< "$monitors") || return 1
   external=$(jq -er '[.[].name | select(startswith("eDP-") | not)] | if index("DP-2") then "DP-2" else .[0] // "" end' <<< "$monitors") || return 1
+  eizo=$(jq -r '[.[] | select(.make == "Eizo Nanao Corporation" and .model == "EV2436W") | .name][0] // ""' <<< "$monitors") || return 1
   [ -n "$laptop$external" ] || return 1
   existing=$(hyprctl workspaces -j) || return 1
   focused=$(hyprctl activeworkspace -j | jq -er '.id | numbers') || return 1
 
-  for ws in {1..5}; do
+  for ws in {1..7}; do
     target=${external:-$laptop}
-    if [ "$ws" -eq 5 ] && [ -n "$laptop" ]; then
+    if { [ "$ws" -eq 5 ] || [ "$ws" -eq 6 ]; } && [ -n "$laptop" ]; then
       target=$laptop
+    elif [ "$ws" -eq 7 ] && [ -n "$eizo" ]; then
+      target=$eizo
     fi
     [ -n "$target" ] || continue
     # Monitor connector names use these characters; reject anything else rather
@@ -57,7 +60,7 @@ monitor_names() {
   hyprctl monitors -j | jq -r '.[].name' | sort
 }
 workspace_rules() {
-  hyprctl workspacerules -j | jq -c '[.[] | select(.workspaceString as $ws | ["1", "2", "3", "4", "5"] | index($ws)) | {workspaceString, monitor, enabled}] | sort_by(.workspaceString)'
+  hyprctl workspacerules -j | jq -c '[.[] | select(.workspaceString as $ws | ["1", "2", "3", "4", "5", "6", "7"] | index($ws)) | {workspaceString, monitor, enabled}] | sort_by(.workspaceString)'
 }
 
 previous_monitors=
@@ -68,7 +71,7 @@ while :; do
     if configure_workspaces; then
       previous_monitors=$current_monitors
       previous_rules=$(workspace_rules) || previous_rules=
-      if [ "$(jq 'length' <<< "$previous_rules")" != 5 ]; then
+      if [ "$(jq 'length' <<< "$previous_rules")" != 7 ]; then
         previous_rules=
       fi
     fi

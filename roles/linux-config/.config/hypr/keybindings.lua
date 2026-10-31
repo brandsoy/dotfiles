@@ -24,7 +24,7 @@ for _, x in ipairs({ { "h", "left" }, { "l", "right" }, { "k", "up" }, { "j", "d
 end
 hl.bind("SUPER + SHIFT + RETURN", hl.dsp.window.fullscreen({ mode = "fullscreen", action = "toggle" }))
 hl.bind("SUPER + SHIFT + F", hl.dsp.window.fullscreen({ action = "toggle" }))
-for i = 1, 5 do
+for i = 1, 7 do
 	hl.bind("SUPER + " .. i, hl.dsp.focus({ workspace = i }))
 	hl.bind("SUPER + SHIFT + " .. i, hl.dsp.window.move({ workspace = i }))
 end
