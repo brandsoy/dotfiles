@@ -10,13 +10,6 @@ function M.setup()
 	-- vim.g.mkdp_browser = ""
 	-- vim.g.mkdp_echo_preview_url = 1
 	vim.g.mkdp_filetypes = { 'markdown' }
-
-	require('render-markdown').setup({
-		enabled = false,
-		file_types = { 'markdown' },
-		completions = { lsp = { enabled = true } },
-		latex = { enabled = false },
-	})
 end
 
 return M

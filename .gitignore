@@ -85,3 +85,5 @@ roles/vibe/.vibe/vibehistory
 roles/vibe/.vibe/cache.toml
 roles/vibe/.vibe/trusted_folders.toml
 /roles/bin/.local/bin/bookmark-sync
+/roles/bin/.local/bin/herdr-agent-picker
+/roles/bin/.local/bin/herdr-agent-picker

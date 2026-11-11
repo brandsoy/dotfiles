@@ -572,6 +572,7 @@ def test_theme_generation(root, binaries):
         "yazi.theme.toml": config / "yazi/theme.toml",
         "eza.theme.yml": config / "eza/theme.yml",
         "opencode.theme.json": config / "opencode/theme.json",
+        "sqlmux.theme.toml": config / "sqlmux/themes/dotfiles.toml",
     }
     renderer = runpy.run_path(str(REPO / "scripts/theme/render-theme.py"))
     for theme in themes:
@@ -615,6 +616,7 @@ def test_theme_generation(root, binaries):
     assert "#123456" in (generated / "fzf.sh").read_text()
     assert "#123456" in (generated / "starship.toml").read_text()
     assert "#123456" in (generated / "yazi.theme.toml").read_text()
+    assert 'bg = "#123456"' in (generated / "sqlmux.theme.toml").read_text()
     assert "color8 #9c9e9f" in targets["kitty.conf"].read_text()
     assert (
         "palette = 8=#000c17" in targets["ghostty"].read_text()

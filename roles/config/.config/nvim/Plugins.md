@@ -42,11 +42,9 @@ Plugins installed by this configuration via `vim.pack.add(...)`.
 - [roslyn.nvim](https://github.com/seblyng/roslyn.nvim): Roslyn language-server integration for C#.
 - [i18n-inline.nvim](https://github.com/BitYoungjae/i18n-inline.nvim): Inline translation previews and audits. In projects with `.i18n-inline.json`, use `<leader>ii` to hover, `<leader>ij` to jump to a translation, and `<leader>ui` to toggle previews. Run `:checkhealth i18n-inline` to check project setup.
 
-## Markdown And Media
+## Markdown
 
 - [markdown-preview.nvim](https://github.com/iamcco/markdown-preview.nvim): Live browser preview for Markdown files.
-- [render-markdown.nvim](https://github.com/MeanderingProgrammer/render-markdown.nvim): Renders Markdown syntax directly in Neovim buffers.
-- [image.nvim](https://github.com/3rd/image.nvim): Displays images inside supported Neovim environments.
 - [templ.vim](https://github.com/joerdav/templ.vim): Syntax support for Templ files.
 - [nvim-colorizer.lua](https://github.com/norcalli/nvim-colorizer.lua): Highlights color codes with their actual colors.
 

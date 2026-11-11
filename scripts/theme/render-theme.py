@@ -23,6 +23,7 @@ OUTPUTS = {
     "tmux.theme.conf": None,
     "yazi.theme.toml": None,
     "eza.theme.yml": None,
+    "sqlmux.theme.toml": None,
 }
 MAPPINGS = {"GHOSTTY_THEME", "NVIM_THEME", "BAT_THEME", "BTOP_THEME", "VSCODE_THEME"}
 
@@ -78,6 +79,13 @@ def render(root, name, config_home):
         outputs[filename] = TOKEN.sub(lambda match: values[match[1]], template.read_text())
         if "{{" in outputs[filename]:
             raise ValueError(f"Invalid template variable in {filename}")
+    sqlmux_template = templates / "sqlmux/default.toml"
+    sqlmux_colors = {**colors}
+    for key, fallback in {"black": "background", "white": "foreground", "bright_black": "black", "cyan": "blue", "selection": "background"}.items():
+        sqlmux_colors.setdefault(key, sqlmux_colors[fallback])
+    outputs["sqlmux.theme.toml"] = TOKEN.sub(lambda match: sqlmux_colors[match[1]], sqlmux_template.read_text())
+    if "{{" in outputs["sqlmux.theme.toml"]:
+        raise ValueError("Invalid template variable in sqlmux.theme.toml")
     if "kitty.conf" not in outputs:
         raise ValueError("Theme must generate kitty.conf")
     return outputs, env

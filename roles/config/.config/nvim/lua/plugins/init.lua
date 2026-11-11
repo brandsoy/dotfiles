@@ -51,11 +51,9 @@ function M.setup()
 		gh('nvim-tree/nvim-web-devicons'),
 		gh('ibhagwan/fzf-lua'),
 		gh('iamcco/markdown-preview.nvim'),
-		gh('MeanderingProgrammer/render-markdown.nvim'),
 		gh('lewis6991/gitsigns.nvim'),
 		gh('sindrets/diffview.nvim'),
 		gh('norcalli/nvim-colorizer.lua'),
-		gh('3rd/image.nvim'),
 		gh('joerdav/templ.vim'),
 		gh('nvim-tree/nvim-tree.lua'),
 		-- Debugging
@@ -98,7 +96,6 @@ function M.setup()
 	require('i18n-inline').setup()
 	require('plugins.markdown').setup()
 	require('plugins.git').setup()
-	require('plugins.image').setup()
 	require('plugins.nvim-tree').setup()
 	require('plugins.lint').setup()
 	require('plugins.dooing').setup()

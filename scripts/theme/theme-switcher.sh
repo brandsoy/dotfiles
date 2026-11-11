@@ -27,6 +27,7 @@ TARGET_YAZI_THEME="$CONFIG_HOME/yazi/theme.toml"
 TARGET_EZA_THEME="$CONFIG_HOME/eza/theme.yml"
 TARGET_TMUX_THEME="$CONFIG_HOME/tmux/theme.conf"
 TARGET_OPENCODE_THEME="$CONFIG_HOME/opencode/theme.json"
+TARGET_SQLMUX_THEME="$CONFIG_HOME/sqlmux/themes/dotfiles.toml"
 TARGET_HERDR_CONFIG="$CONFIG_HOME/herdr/config.toml"
 TARGET_BAT_THEMES="$CONFIG_HOME/bat/themes"
 TARGET_NVIM_STATE="$STATE_HOME/nvim/theme.txt"
@@ -391,7 +392,7 @@ apply_herdr_theme() {
 apply_theme_overlays() {
     # Optional overlays must not leak from the previously selected theme.
     local theme_dir="$1"
-    rm -f "$TARGET_LAZYGIT" "$TARGET_YAZI_THEME" "$TARGET_EZA_THEME" "$TARGET_TMUX_THEME"
+    rm -f "$TARGET_LAZYGIT" "$TARGET_YAZI_THEME" "$TARGET_EZA_THEME" "$TARGET_TMUX_THEME" "$TARGET_SQLMUX_THEME"
     if [[ -n "${LAZYGIT_THEME_FILE:-}" ]]; then
         copy_if_present "$LAZYGIT_THEME_FILE" "$TARGET_LAZYGIT"
     else
@@ -400,6 +401,7 @@ apply_theme_overlays() {
     copy_if_present "$theme_dir/yazi.theme.toml" "$TARGET_YAZI_THEME"
     copy_if_present "$theme_dir/eza.theme.yml" "$TARGET_EZA_THEME"
     copy_tmux_theme "$theme_dir/tmux.theme.conf" "$TARGET_TMUX_THEME"
+    copy_if_present "$theme_dir/sqlmux.theme.toml" "$TARGET_SQLMUX_THEME"
     if [[ -n "${OPENCODE_THEME_FILE:-}" ]]; then
         copy_if_present "$OPENCODE_THEME_FILE" "$TARGET_OPENCODE_THEME"
     else

@@ -7,11 +7,6 @@ config-version = 2
 start-at-login = true
 after-login-command = []
 
-# # JankyBorders: https://github.com/FelixKratz/JankyBorders
-# after-startup-command = [
-#     'exec-and-forget borders active_color=0xcc9d7cd8 inactive_color=0xcc1a1b26 width=8.0',
-# ]
-
 # Normalizations: https://nikitabobko.github.io/AeroSpace/guide#normalization
 enable-normalization-flatten-containers = true
 enable-normalization-opposite-orientation-for-nested-containers = true
@@ -23,9 +18,7 @@ default-root-container-orientation = 'auto'
 automatically-unhide-macos-hidden-apps = true
 
 # Mouse Behavior
-# Mouse follows focus when focused monitor changes
 on-focused-monitor-changed = ['move-mouse monitor-lazy-center']
-
 
 # ==============================================================================
 # Key Mapping
@@ -33,7 +26,6 @@ on-focused-monitor-changed = ['move-mouse monitor-lazy-center']
 
 [key-mapping]
 preset = 'qwerty'
-
 
 # ==============================================================================
 # Gaps
@@ -95,35 +87,63 @@ alt-shift-right = 'join-with right'
 alt-shift-minus = 'resize smart -100'
 alt-shift-equal = 'resize smart +100'
 
-# --- Workspace Navigation ---
-alt-1 = 'workspace term'
-alt-2 = 'workspace web'
-alt-3 = 'workspace code'
-alt-4 = 'workspace misc'
+# Workspace-specific settings are grouped by name here, in Window Rules,
+# and in Monitor Configuration (TOML requires separate tables).
 
-alt-q = 'workspace chat'
-alt-w = 'workspace web2'
-alt-e = 'workspace email'
+# --- Workspace wweb ---
+alt-1 = 'workspace wweb'
+alt-shift-1 = 'move-node-to-workspace wweb'
 
-alt-a = 'workspace ai'
-alt-s = 'workspace web3'
-alt-d = 'workspace notes'
+# --- Workspace aweb ---
+alt-2 = 'workspace aweb'
+alt-shift-2 = 'move-node-to-workspace aweb'
 
+# --- Workspace pweb ---
+alt-3 = 'workspace pweb'
+alt-shift-3 = 'move-node-to-workspace pweb'
+
+# --- Workspace term ---
+alt-q = 'workspace term'
+alt-shift-q = 'move-node-to-workspace term'
+
+# --- Workspace herdr ---
+alt-w = 'workspace herdr'
+alt-shift-w = 'move-node-to-workspace herdr'
+
+# --- Workspace code ---
+alt-e = 'workspace code'
+alt-shift-e = 'move-node-to-workspace code '
+
+# --- Workspace chat ---
+alt-a = 'workspace chat'
+alt-shift-a = 'move-node-to-workspace chat'
+
+# --- Workspace wmail ---
+alt-s = 'workspace wmail'
+alt-shift-s = 'move-node-to-workspace wmail'
+
+# --- Workspace pmail ---
+alt-d = 'workspace pmail'
+alt-shift-d = 'move-node-to-workspace pmail'
+
+# --- Workspace wai ---
+alt-z = 'workspace wai'
+alt-shift-z = 'move-node-to-workspace wai'
+
+# --- Workspace pai1 ---
+alt-x = 'workspace pai1'
+alt-shift-x = 'move-node-to-workspace pai1'
+
+# --- Workspace pai2 ---
+alt-c = 'workspace pai2'
+alt-shift-c = 'move-node-to-workspace pai2'
+
+# --- Workspace notes ---
+alt-n = 'workspace notes'
+alt-shift-n = 'move-node-to-workspace notes'
+
+# --- Workspace media ---
 alt-m = 'workspace media'
-
-# --- Move Windows to Workspaces ---
-alt-shift-1 = 'move-node-to-workspace term'
-alt-shift-2 = 'move-node-to-workspace web'
-alt-shift-3 = 'move-node-to-workspace code'
-alt-shift-4 = 'move-node-to-workspace misc'
-
-alt-shift-q = 'move-node-to-workspace chat'
-alt-shift-w = 'move-node-to-workspace web2'
-alt-shift-e = 'move-node-to-workspace email'
-
-alt-shift-a = 'move-node-to-workspace ai'
-alt-shift-s = 'move-node-to-workspace web3'
-alt-shift-d = 'move-node-to-workspace notes'
 alt-shift-m = 'move-node-to-workspace media'
 
 alt-tab = 'workspace-back-and-forth'
@@ -168,37 +188,28 @@ esc = 'mode main'
 # Workspace assignments and floating window overrides
 # ==============================================================================
 
-# --- Notes -> Workspace notes ---
-[[on-window-detected]]
-if.app-id = 'com.apple.Notes'
-run = ['move-node-to-workspace notes']
-
-[[on-window-detected]]
-if.app-id = 'md.obsidian'
-run = ['move-node-to-workspace notes']
-
-# --- Browsers -> Workspace web ---
+# --- Workspace wweb ---
 [[on-window-detected]]
 if.app-id = 'org.mozilla.firefox'
-run = ['move-node-to-workspace web']
+run = ['move-node-to-workspace wweb']
 
 [[on-window-detected]]
 if.app-id = 'com.google.chrome'
-run = ['move-node-to-workspace web']
+run = ['move-node-to-workspace wweb']
 
 [[on-window-detected]]
 if.app-id = 'com.apple.Safari'
-run = ['move-node-to-workspace web']
+run = ['move-node-to-workspace wweb']
 
 [[on-window-detected]]
 if.app-id = 'com.brave.Browser'
-run = ['move-node-to-workspace web']
+run = ['move-node-to-workspace wweb']
 
 [[on-window-detected]]
 if.app-id = 'net.input.helium'
-run = ['move-node-to-workspace web']
+run = ['move-node-to-workspace wweb']
 
-# --- Terminals -> Workspace term ---
+# --- Workspace term ---
 [[on-window-detected]]
 if.app-id = 'net.kovidgoyal.kitty'
 run = ['move-node-to-workspace term']
@@ -207,47 +218,75 @@ run = ['move-node-to-workspace term']
 if.app-id = 'com.mitchellh.ghostty'
 run = ['move-node-to-workspace term']
 
-# --- Terminals -> Workspace media ---
-[[on-window-detected]]
-if.app-id = 'com.apple.Music'
-run = ['move-node-to-workspace media']
-
-# Youtube
-[[on-window-detected]]
-if.app-id = 'net.imput.helium.app.agimnkijcaahngcdmfeangaknmldooml'
-run = ['move-node-to-workspace media']
-
-# --- Editors -> Workspace code ---
-[[on-window-detected]]
-if.app-id = 'com.microsoft.VSCode'
-run = ['move-node-to-workspace code']
-
+# --- Workspace code ---
 [[on-window-detected]]
 if.app-id = 'dev.zed.Zed'
 run = ['move-node-to-workspace code']
 
-# --- Communication -> Workspace email ---
+# --- Workspace code2 ---
 [[on-window-detected]]
-if.app-id = 'com.microsoft.Outlook'
-run = ['move-node-to-workspace email']
+if.app-id = 'com.microsoft.VSCode'
+run = ['move-node-to-workspace code2']
 
-[[on-window-detected]]
-if.app-id = 'com.apple.mail'
-run = ['move-node-to-workspace email']
-
-# --- Communication -> Workspace chat ---
+# --- Workspace chat ---
 [[on-window-detected]]
 if.app-id = 'com.microsoft.teams2'
 run = ['move-node-to-workspace chat']
 
-# --- Communication -> Workspace AI ---
+# --- Workspace wmail ---
+[[on-window-detected]]
+if.app-id = 'com.microsoft.Outlook'
+run = ['move-node-to-workspace wmail']
+
+# --- Workspace pmail ---
+[[on-window-detected]]
+if.app-id = 'com.apple.mail'
+run = ['move-node-to-workspace pmail']
+
+# --- Workspace wai ---
+[[on-window-detected]]
+if.app-id = 'com.microsoft.m365copilot'
+run = ['move-node-to-workspace wai']
+
+# --- Workspace pai1 ---
 [[on-window-detected]]
 if.app-id = 'com.openai.codex'
-run = ['move-node-to-workspace ai']
+run = ['move-node-to-workspace pai1']
 
 [[on-window-detected]]
 if.app-id = 'com.openai.chat'
-run = ['move-node-to-workspace ai']
+run = ['move-node-to-workspace pai1']
+
+# --- Workspace pai2 ---
+[[on-window-detected]]
+if.app-id = 'dev.herdr.app'
+run = ['move-node-to-workspace pai2']
+
+[[on-window-detected]]
+if.app-id = 'com.apple.Siri'
+run = ['move-node-to-workspace pai2']
+
+[[on-window-detected]]
+if.app-id = 'net.imput.helium.app.hpkkadlgbdkiimnjhfolkbcmpbmedpja'
+run = ['move-node-to-workspace pai2']
+
+# --- Workspace notes ---
+[[on-window-detected]]
+if.app-id = 'com.apple.Notes'
+run = ['move-node-to-workspace notes']
+
+[[on-window-detected]]
+if.app-id = 'md.obsidian'
+run = ['move-node-to-workspace notes']
+
+# --- Workspace media ---
+[[on-window-detected]]
+if.app-id = 'com.apple.Music'
+run = ['move-node-to-workspace media']
+
+[[on-window-detected]]
+if.app-id = 'com.firecore.infuse'
+run = ['move-node-to-workspace media']
 
 # --- Floating Windows ---
 [[on-window-detected]]
@@ -290,11 +329,6 @@ run = ['layout floating']
 if.app-id = 'com.apple.stocks'
 run = ['layout floating']
 
-
-[[on-window-detected]]
-if.app-id = 'com.bitwarden.desktop'
-run = ['layout floating']
-
 [[on-window-detected]]
 if.app-id = 'com.objective-see.lulu.app'
 run = ['layout floating']
@@ -313,16 +347,44 @@ run = ['layout floating']
 # ==============================================================================
 
 [workspace-to-monitor-force-assignment]
-term = ['VZ27A', 'LS49A950U', 'main']
-web = ['VZ27A', 'LS49A950U', 'main']
-code = ['VZ27A', 'LS49A950U', 'main']
-misc = ['VZ27A', 'LS49A950U', 'main']
+# --- Workspace wweb ---
+wweb = ['main']
 
-web2 = ['EV2436W', 'LS49A950U', 'VZ27A', 'built-in', 'main']
-web3 = ['EV2436W', 'LS49A950U', 'VZ27A', 'built-in', 'main']
-notes = ['EV2436W', 'built-in', 'LS49A950U', 'VZ27A', 'main']
-ai = ['built-in', 'LS49A950U', 'VZ27A', 'main']
+# --- Workspace aweb ---
+aweb = ['main']
 
-email = ['built-in', 'EV2436W', 'LS49A950U', 'VZ27A', 'main']
-chat = ['built-in', 'EV2436W', 'LS49A950U', 'VZ27A', 'main']
-media = ['built-in', 'LS49A950U', 'VZ27A', 'main']
+# --- Workspace pweb ---
+pweb = ['main']
+
+# --- Workspace term ---
+term = ['main']
+
+# --- Workspace code ---
+code = ['main']
+
+# --- Workspace code2 ---
+code2 = ['main']
+
+# --- Workspace chat ---
+chat = ['built-in']
+
+# --- Workspace wmail ---
+wmail = ['built-in']
+
+# --- Workspace pmail ---
+pmail = ['built-in']
+
+# --- Workspace wai ---
+wai = ['built-in']
+
+# --- Workspace pai1 ---
+pai1 = ['built-in']
+
+# --- Workspace pai2 ---
+pai2 = ['built-in']
+
+# --- Workspace notes ---
+notes = ['main']
+
+# --- Workspace media ---
+media = ['main']

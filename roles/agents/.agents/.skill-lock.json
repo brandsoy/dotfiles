@@ -33,9 +33,9 @@
       "sourceType": "github",
       "sourceUrl": "https://github.com/microsoft/azure-skills.git",
       "skillPath": ".github/plugins/azure-skills/skills/microsoft-foundry/SKILL.md",
-      "skillFolderHash": "a5bf1548c6dfa10599bce7f5133113b5cdd19c3a",
+      "skillFolderHash": "555965adb1ae9d3bda1df83facf6f998e3fc9be7",
       "installedAt": "2026-08-24T07:16:01.196Z",
-      "updatedAt": "2026-10-15T08:58:58.371Z"
+      "updatedAt": "2026-11-10T19:11:54.612Z"
     }
   },
   "dismissed": {

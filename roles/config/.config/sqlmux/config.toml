@@ -1,0 +1,34 @@
+theme = "dotfiles" # generated from the active theme-switcher palette
+icons = "nerd"             # nerd | ascii (no Nerd Font needed)
+border = "single"          # single | rounded | double | bold | hidden
+language = "en"            # en | zh
+vim = true                 # false: query and WHERE are plain editors; the grid and tree also take PgUp / PgDn / Delete
+timeoutlen = 1000          # ms to wait for the next key of a sequence
+result_height = 0.4        # share of the window the result area starts with, between 0 and 1
+tab_width = 2              # indent in queries, and for the formatter
+keyword_case = "lower"     # lower | upper | preserve, for formatting (gq)
+formatprg = ""             # a command to format with instead of the built-in sql-formatter, e.g. "pg_format -"
+autopairs = true           # typing a bracket or quote adds its other half
+confirm_dangerous = true   # ask before DELETE / UPDATE without WHERE, DROP, TRUNCATE, and saves that delete rows
+
+[ui]
+tips = true # a feature tip in the status bar
+
+[tree]
+width = 32 # sidebar width in columns, borders included
+
+[grid]
+full_width = 22     # columns up to this width are never squeezed
+order = "asc"       # asc | desc: the default sort of a table you open
+transpose = false   # open tables transposed
+preview_save = true # C-s shows the statements before running them (always on for production connections)
+
+[query]
+max_rows = 500     # rows a query keeps per page of a result
+history_max = 1000 # statements kept in history.jsonl
+hints = true       # the line that says which column the value under the cursor goes in
+
+[redis]
+delimiter = ":"   # splits key names into namespaces in the tree
+scan_keys = 10000 # keys a database scan reads before it stops (use / to filter)
+load_all = 5000   # hashes, sets and sorted sets up to this length are read whole

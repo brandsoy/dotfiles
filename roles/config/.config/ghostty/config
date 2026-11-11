@@ -1,6 +1,7 @@
 # Font
 font-size = 14
 font-family = "JetBrainsMono Nerd Font Mono"
+# font-family = "GeistMono Nerd Font Mono"
 adjust-cell-height = 10%
 bold-is-bright = true
 
@@ -16,13 +17,14 @@ shell-integration-features = cursor,sudo,title,path
 macos-titlebar-style = hidden
 macos-titlebar-proxy-icon = hidden
 macos-icon = custom-style
-macos-icon-frame = "plastic"
-macos-icon-ghost-color = purple
+# macos-icon-frame = "plastic"
+# macos-icon-ghost-color = purple
+# macos-window-buttons = visible
 window-colorspace = "display-p3"
 maximize = true
 
 # Window
-fullscreen = true
+fullscreen = false
 window-save-state = always
 quit-after-last-window-closed = true
 window-padding-balance = true
