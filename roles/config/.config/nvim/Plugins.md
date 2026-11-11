@@ -4,6 +4,9 @@ Plugins installed by this configuration via `vim.pack.add(...)`.
 
 ## Themes
 
+- [neovim-ayu](https://github.com/Shatur/neovim-ayu): Ayu color scheme.
+- [nord.nvim](https://github.com/shaunsingh/nord.nvim): Nord color scheme.
+
 - [oc-2.nvim](https://github.com/0xleodevv/oc-2.nvim): OC-2 color scheme.
 - [catppuccin](https://github.com/catppuccin/nvim): Soothing pastel color scheme.
 - [nightfox.nvim](https://github.com/EdenEast/nightfox.nvim): Collection of dark and light color schemes.
@@ -46,7 +49,6 @@ Plugins installed by this configuration via `vim.pack.add(...)`.
 
 - [markdown-preview.nvim](https://github.com/iamcco/markdown-preview.nvim): Live browser preview for Markdown files.
 - [templ.vim](https://github.com/joerdav/templ.vim): Syntax support for Templ files.
-- [nvim-colorizer.lua](https://github.com/norcalli/nvim-colorizer.lua): Highlights color codes with their actual colors.
 
 ## AI And Utilities
 

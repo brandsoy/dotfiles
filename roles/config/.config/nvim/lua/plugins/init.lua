@@ -31,6 +31,8 @@ function M.setup()
 
 	vim.pack.add({
 		-- Themes
+		gh('Shatur/neovim-ayu'),
+		gh('shaunsingh/nord.nvim'),
 		gh('0xleodevv/oc-2.nvim'),
 		gh('catppuccin/nvim'),
 		gh('EdenEast/nightfox.nvim'),
@@ -53,7 +55,6 @@ function M.setup()
 		gh('iamcco/markdown-preview.nvim'),
 		gh('lewis6991/gitsigns.nvim'),
 		gh('sindrets/diffview.nvim'),
-		gh('norcalli/nvim-colorizer.lua'),
 		gh('joerdav/templ.vim'),
 		gh('nvim-tree/nvim-tree.lua'),
 		-- Debugging

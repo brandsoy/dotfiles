@@ -58,6 +58,24 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 	}
 	return m, nil
 }
+
+// codePreview uses the terminal palette, not Neovim's actual highlight groups.
+func codePreview(colors map[string]string) string {
+	paint := func(key, text string) string {
+		color := colors[key]
+		if color == "" {
+			color = colors["foreground"]
+		}
+		return lipgloss.NewStyle().Foreground(lipgloss.Color(color)).Background(lipgloss.Color(colors["background"])).Render(text)
+	}
+	return strings.Join([]string{
+		paint("bright_black", "// A small Go example"),
+		paint("magenta", "func ") + paint("blue", "greet") + paint("foreground", "(name ") + paint("yellow", "string") + paint("foreground", ") {"),
+		paint("foreground", "  fmt.") + paint("blue", "Println") + paint("foreground", "(") + paint("green", `"Hello, "`) + paint("foreground", " + name)"),
+		paint("foreground", "}"),
+	}, "\n")
+}
+
 func (m model) View() string {
 	if len(m.themes) == 0 {
 		return "No theme definitions found.\n"
@@ -95,7 +113,7 @@ func (m model) View() string {
 		block := lipgloss.NewStyle().Foreground(color).Render("████")
 		colors = append(colors, fmt.Sprintf("%s  %-22s %s", block, key, value))
 	}
-	body := lipgloss.NewStyle().Foreground(lipgloss.Color(t.colors["foreground"])).Background(lipgloss.Color(t.colors["background"])).Padding(1, 2).Render("The quick brown fox\n\nfunc main() {\n  fmt.Println(\"Hello, theme!\")\n}\n\n" + strings.Join(colors, "\n"))
+	body := lipgloss.NewStyle().Foreground(lipgloss.Color(t.colors["foreground"])).Background(lipgloss.Color(t.colors["background"])).Padding(1, 2).Render("Code preview (approximate)\n\n" + codePreview(t.colors) + "\n\n" + strings.Join(colors, "\n"))
 	if m.height > 8 && lipgloss.Height(body) > m.height-6 {
 		body = lipgloss.NewStyle().Height(m.height - 6).MaxHeight(m.height - 6).Render(body)
 	}

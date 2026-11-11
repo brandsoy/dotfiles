@@ -37,12 +37,6 @@ function M.setup()
 		})
 	end)
 
-	pcall(function()
-		require('colorizer').setup({
-			'*', -- Highlight all supported filetypes.
-			'!markdown', -- Disable color highlighting in Markdown files.
-		})
-	end)
 end
 
 return M

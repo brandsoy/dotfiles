@@ -118,7 +118,7 @@ Application preferences stay tracked. Theme-sync writes generated includes:
 - `~/.config/bat/themes/SupaTheme.tmTheme` (custom Bat theme; cache rebuilt)
 - `~/.local/state/nvim/theme.txt`
 
-Ghostty, Kitty, btop, tmux and FZF are generated for all 16 bundled themes. Herdr's built-in `terminal` theme follows the terminal palette directly.
+Ghostty, Kitty, btop, tmux and FZF are generated for all bundled themes. Herdr's built-in `terminal` theme follows the terminal palette directly.
 Other overlays retain their existing theme coverage. Optional overlays are
 removed when switching to a theme without them, or when removing them from a
 definition. Kitty/tmux are refreshed when available; Herdr reloads its running

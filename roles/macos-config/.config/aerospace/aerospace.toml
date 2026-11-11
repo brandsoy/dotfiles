@@ -106,10 +106,6 @@ alt-shift-3 = 'move-node-to-workspace pweb'
 alt-q = 'workspace term'
 alt-shift-q = 'move-node-to-workspace term'
 
-# --- Workspace herdr ---
-alt-w = 'workspace herdr'
-alt-shift-w = 'move-node-to-workspace herdr'
-
 # --- Workspace code ---
 alt-e = 'workspace code'
 alt-shift-e = 'move-node-to-workspace code '

@@ -1,6 +1,8 @@
 local M = {}
 
 M.themes = {
+	{ name = 'ayu-dark' },
+	{ name = 'nord' },
 	{ name = 'oc-2' },
 	{ name = 'oc-2-noir' },
 	{ name = 'SupaTheme' },
