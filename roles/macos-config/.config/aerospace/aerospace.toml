@@ -90,49 +90,53 @@ alt-shift-equal = 'resize smart +100'
 # Workspace-specific settings are grouped by name here, in Window Rules,
 # and in Monitor Configuration (TOML requires separate tables).
 
-# --- Workspace wweb ---
-alt-1 = 'workspace wweb'
-alt-shift-1 = 'move-node-to-workspace wweb'
+# --- Workspace w-web ---
+alt-1 = 'workspace w-web'
+alt-shift-1 = 'move-node-to-workspace w-web'
 
-# --- Workspace aweb ---
-alt-2 = 'workspace aweb'
-alt-shift-2 = 'move-node-to-workspace aweb'
+# --- Workspace a-web ---
+alt-2 = 'workspace a-web'
+alt-shift-2 = 'move-node-to-workspace a-web'
 
-# --- Workspace pweb ---
-alt-3 = 'workspace pweb'
-alt-shift-3 = 'move-node-to-workspace pweb'
+# --- Workspace p-web ---
+alt-3 = 'workspace p-web'
+alt-shift-3 = 'move-node-to-workspace p-web'
 
 # --- Workspace term ---
 alt-q = 'workspace term'
 alt-shift-q = 'move-node-to-workspace term'
 
 # --- Workspace code ---
-alt-e = 'workspace code'
-alt-shift-e = 'move-node-to-workspace code '
+alt-w = 'workspace code'
+alt-shift-w = 'move-node-to-workspace code'
+
+# --- Workspace code2 ---
+alt-e = 'workspace code2'
+alt-shift-e = 'move-node-to-workspace code2'
 
 # --- Workspace chat ---
 alt-a = 'workspace chat'
 alt-shift-a = 'move-node-to-workspace chat'
 
-# --- Workspace wmail ---
-alt-s = 'workspace wmail'
-alt-shift-s = 'move-node-to-workspace wmail'
+# --- Workspace w-mail ---
+alt-s = 'workspace w-mail'
+alt-shift-s = 'move-node-to-workspace w-mail'
 
-# --- Workspace pmail ---
-alt-d = 'workspace pmail'
-alt-shift-d = 'move-node-to-workspace pmail'
+# --- Workspace p-mail ---
+alt-d = 'workspace p-mail'
+alt-shift-d = 'move-node-to-workspace p-mail'
 
-# --- Workspace wai ---
-alt-z = 'workspace wai'
-alt-shift-z = 'move-node-to-workspace wai'
+# --- Workspace w-ai ---
+alt-z = 'workspace w-ai'
+alt-shift-z = 'move-node-to-workspace w-ai'
 
-# --- Workspace pai1 ---
-alt-x = 'workspace pai1'
-alt-shift-x = 'move-node-to-workspace pai1'
+# --- Workspace p-ai1 ---
+alt-x = 'workspace p-ai1'
+alt-shift-x = 'move-node-to-workspace p-ai1'
 
-# --- Workspace pai2 ---
-alt-c = 'workspace pai2'
-alt-shift-c = 'move-node-to-workspace pai2'
+# --- Workspace p-ai2 ---
+alt-c = 'workspace p-ai2'
+alt-shift-c = 'move-node-to-workspace p-ai2'
 
 # --- Workspace notes ---
 alt-n = 'workspace notes'
@@ -184,26 +188,26 @@ esc = 'mode main'
 # Workspace assignments and floating window overrides
 # ==============================================================================
 
-# --- Workspace wweb ---
+# --- Workspace w-web ---
 [[on-window-detected]]
 if.app-id = 'org.mozilla.firefox'
-run = ['move-node-to-workspace wweb']
+run = ['move-node-to-workspace w-web']
 
 [[on-window-detected]]
 if.app-id = 'com.google.chrome'
-run = ['move-node-to-workspace wweb']
+run = ['move-node-to-workspace w-web']
 
 [[on-window-detected]]
 if.app-id = 'com.apple.Safari'
-run = ['move-node-to-workspace wweb']
+run = ['move-node-to-workspace w-web']
 
 [[on-window-detected]]
 if.app-id = 'com.brave.Browser'
-run = ['move-node-to-workspace wweb']
+run = ['move-node-to-workspace w-web']
 
 [[on-window-detected]]
 if.app-id = 'net.input.helium'
-run = ['move-node-to-workspace wweb']
+run = ['move-node-to-workspace w-web']
 
 # --- Workspace term ---
 [[on-window-detected]]
@@ -229,42 +233,39 @@ run = ['move-node-to-workspace code2']
 if.app-id = 'com.microsoft.teams2'
 run = ['move-node-to-workspace chat']
 
-# --- Workspace wmail ---
+# --- Workspace w-mail ---
 [[on-window-detected]]
 if.app-id = 'com.microsoft.Outlook'
-run = ['move-node-to-workspace wmail']
+run = ['move-node-to-workspace w-mail']
 
-# --- Workspace pmail ---
+# --- Workspace p-mail ---
 [[on-window-detected]]
 if.app-id = 'com.apple.mail'
-run = ['move-node-to-workspace pmail']
+run = ['move-node-to-workspace p-mail']
 
-# --- Workspace wai ---
+# --- Workspace w-ai ---
 [[on-window-detected]]
 if.app-id = 'com.microsoft.m365copilot'
-run = ['move-node-to-workspace wai']
+run = ['move-node-to-workspace w-ai']
 
-# --- Workspace pai1 ---
+# --- Workspace p-ai1 ---
 [[on-window-detected]]
 if.app-id = 'com.openai.codex'
-run = ['move-node-to-workspace pai1']
+run = ['move-node-to-workspace p-ai1']
 
 [[on-window-detected]]
 if.app-id = 'com.openai.chat'
-run = ['move-node-to-workspace pai1']
+run = ['move-node-to-workspace p-ai1']
 
-# --- Workspace pai2 ---
-[[on-window-detected]]
-if.app-id = 'dev.herdr.app'
-run = ['move-node-to-workspace pai2']
+# --- Workspace p-ai2 ---
 
 [[on-window-detected]]
 if.app-id = 'com.apple.Siri'
-run = ['move-node-to-workspace pai2']
+run = ['move-node-to-workspace p-ai2']
 
 [[on-window-detected]]
 if.app-id = 'net.imput.helium.app.hpkkadlgbdkiimnjhfolkbcmpbmedpja'
-run = ['move-node-to-workspace pai2']
+run = ['move-node-to-workspace p-ai2']
 
 # --- Workspace notes ---
 [[on-window-detected]]
@@ -343,14 +344,14 @@ run = ['layout floating']
 # ==============================================================================
 
 [workspace-to-monitor-force-assignment]
-# --- Workspace wweb ---
-wweb = ['main']
+# --- Workspace w-web ---
+w-web = ['main']
 
-# --- Workspace aweb ---
-aweb = ['main']
+# --- Workspace a-web ---
+a-web = ['main']
 
-# --- Workspace pweb ---
-pweb = ['main']
+# --- Workspace p-web ---
+p-web = ['main']
 
 # --- Workspace term ---
 term = ['main']
@@ -364,20 +365,20 @@ code2 = ['main']
 # --- Workspace chat ---
 chat = ['built-in']
 
-# --- Workspace wmail ---
-wmail = ['built-in']
+# --- Workspace w-mail ---
+w-mail = ['built-in']
 
-# --- Workspace pmail ---
-pmail = ['built-in']
+# --- Workspace p-mail ---
+p-mail = ['built-in']
 
-# --- Workspace wai ---
-wai = ['built-in']
+# --- Workspace w-ai ---
+w-ai = ['built-in']
 
-# --- Workspace pai1 ---
-pai1 = ['built-in']
+# --- Workspace p-ai1 ---
+p-ai1 = ['built-in']
 
-# --- Workspace pai2 ---
-pai2 = ['built-in']
+# --- Workspace p-ai2 ---
+p-ai2 = ['built-in']
 
 # --- Workspace notes ---
 notes = ['main']

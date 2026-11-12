@@ -6,11 +6,11 @@ STATE_HOME="${XDG_STATE_HOME:-$HOME/.local/state}"
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
 if [[ -n "${THEME_SWITCHER_ROOT:-}" ]]; then
-    ROOT="$THEME_SWITCHER_ROOT"
+  ROOT="$THEME_SWITCHER_ROOT"
 elif [[ -d "$CONFIG_HOME/theme-switcher/themes" ]]; then
-    ROOT="$CONFIG_HOME/theme-switcher"
+  ROOT="$CONFIG_HOME/theme-switcher"
 else
-    ROOT="$SCRIPT_DIR/../../roles/config/.config/theme-switcher"
+  ROOT="$SCRIPT_DIR/../../roles/config/.config/theme-switcher"
 fi
 
 THEMES_DIR="$ROOT/themes"
@@ -28,12 +28,11 @@ TARGET_EZA_THEME="$CONFIG_HOME/eza/theme.yml"
 TARGET_TMUX_THEME="$CONFIG_HOME/tmux/theme.conf"
 TARGET_OPENCODE_THEME="$CONFIG_HOME/opencode/theme.json"
 TARGET_SQLMUX_THEME="$CONFIG_HOME/sqlmux/themes/dotfiles.toml"
-TARGET_HERDR_CONFIG="$CONFIG_HOME/herdr/config.toml"
 TARGET_BAT_THEMES="$CONFIG_HOME/bat/themes"
 TARGET_NVIM_STATE="$STATE_HOME/nvim/theme.txt"
 
 usage() {
-    cat <<'EOF'
+  cat <<'EOF'
 Usage: theme-switcher <command> [theme]
 
 Commands:
@@ -55,483 +54,454 @@ EOF
 }
 
 die() {
-    printf 'error: %s\n' "$*" >&2
-    exit 1
+  printf 'error: %s\n' "$*" >&2
+  exit 1
 }
 
 theme_exists() {
-    [[ "$1" =~ ^[a-zA-Z0-9][a-zA-Z0-9_-]*$ ]] || return 1
-    [[ -f "$THEMES_DIR/$1.json" || -f "$THEMES_DIR/$1/theme.env" ]]
+  [[ "$1" =~ ^[a-zA-Z0-9][a-zA-Z0-9_-]*$ ]] || return 1
+  [[ -f "$THEMES_DIR/$1.json" || -f "$THEMES_DIR/$1/theme.env" ]]
 }
 
 # Single validator: every command that accepts a theme name goes through here.
 require_theme() {
-    if ! theme_exists "$1"; then
-        printf 'Unknown theme: %s\n' "$1" >&2
-        printf "Run 'theme-switcher list' to view available themes.\n" >&2
-        exit 1
-    fi
+  if ! theme_exists "$1"; then
+    printf 'Unknown theme: %s\n' "$1" >&2
+    printf "Run 'theme-switcher list' to view available themes.\n" >&2
+    exit 1
+  fi
 }
 
 ensure_dirs() {
-    mkdir -p "$STATE_DIR"
-    # One-time migration: retain local choices, never overwrite newer state.
-    # Regenerate exports rather than copying machine-specific absolute paths.
-    local f theme
-    for f in current mode.env; do
-        if [[ ! -e "$STATE_DIR/$f" && -f "$ROOT/$f" ]]; then
-            cp "$ROOT/$f" "$STATE_DIR/$f"
-        fi
-    done
-    if [[ ! -e "$CURRENT_ENV_FILE" && -f "$CURRENT_FILE" ]]; then
-        theme="$(current_theme)"
-        if theme_exists "$theme"; then
-            load_theme "$theme" || return 1
-            write_current_env "$theme"
-        fi
+  mkdir -p "$STATE_DIR"
+  # One-time migration: retain local choices, never overwrite newer state.
+  # Regenerate exports rather than copying machine-specific absolute paths.
+  local f theme
+  for f in current mode.env; do
+    if [[ ! -e "$STATE_DIR/$f" && -f "$ROOT/$f" ]]; then
+      cp "$ROOT/$f" "$STATE_DIR/$f"
     fi
+  done
+  if [[ ! -e "$CURRENT_ENV_FILE" && -f "$CURRENT_FILE" ]]; then
+    theme="$(current_theme)"
+    if theme_exists "$theme"; then
+      load_theme "$theme" || return 1
+      write_current_env "$theme"
+    fi
+  fi
 }
 
 write_current_env() {
-    local theme="$1"
-    {
-        printf 'export TERMINAL_THEME=%q\n' "$theme"
-        printf 'export BAT_THEME=%q\n' "${BAT_THEME:-}"
-        printf 'export FZF_THEME_FILE=%q\n' "${FZF_THEME_FILE:-}"
-        printf 'export STARSHIP_CONFIG=%q\n' "$STARSHIP_CONFIG"
-        local lazygit_config="$CONFIG_HOME/lazygit/config.yml"
-        [[ ! -f "$TARGET_LAZYGIT" ]] || lazygit_config+=",$TARGET_LAZYGIT"
-        printf 'export LG_CONFIG_FILE=%q\n' "$lazygit_config"
-    } >"$CURRENT_ENV_FILE"
+  local theme="$1"
+  {
+    printf 'export TERMINAL_THEME=%q\n' "$theme"
+    printf 'export BAT_THEME=%q\n' "${BAT_THEME:-}"
+    printf 'export FZF_THEME_FILE=%q\n' "${FZF_THEME_FILE:-}"
+    printf 'export STARSHIP_CONFIG=%q\n' "$STARSHIP_CONFIG"
+    local lazygit_config="$CONFIG_HOME/lazygit/config.yml"
+    [[ ! -f "$TARGET_LAZYGIT" ]] || lazygit_config+=",$TARGET_LAZYGIT"
+    printf 'export LG_CONFIG_FILE=%q\n' "$lazygit_config"
+  } >"$CURRENT_ENV_FILE"
 }
 
 load_mode_config() {
-    THEME_LIGHT=""
-    THEME_DARK=""
+  THEME_LIGHT=""
+  THEME_DARK=""
 
-    if [[ -f "$MODE_ENV_FILE" ]]; then
-        # shellcheck disable=SC1090
-        source "$MODE_ENV_FILE"
-    fi
+  if [[ -f "$MODE_ENV_FILE" ]]; then
+    # shellcheck disable=SC1090
+    source "$MODE_ENV_FILE"
+  fi
 
-    THEME_LIGHT="${THEME_SWITCHER_LIGHT_THEME:-${THEME_LIGHT:-}}"
-    THEME_DARK="${THEME_SWITCHER_DARK_THEME:-${THEME_DARK:-}}"
+  THEME_LIGHT="${THEME_SWITCHER_LIGHT_THEME:-${THEME_LIGHT:-}}"
+  THEME_DARK="${THEME_SWITCHER_DARK_THEME:-${THEME_DARK:-}}"
 }
 
 save_mode_config() {
-    mkdir -p "$STATE_DIR"
-    cat >"$MODE_ENV_FILE" <<EOF
+  mkdir -p "$STATE_DIR"
+  cat >"$MODE_ENV_FILE" <<EOF
 THEME_LIGHT="${THEME_LIGHT:-}"
 THEME_DARK="${THEME_DARK:-}"
 EOF
 }
 
 set_mode_theme() {
-    local mode="$1"
-    local theme="$2"
+  local mode="$1"
+  local theme="$2"
 
-    require_theme "$theme"
+  require_theme "$theme"
 
-    load_mode_config
-    case "$mode" in
-    light) THEME_LIGHT="$theme" ;;
-    dark) THEME_DARK="$theme" ;;
-    *) die "Mode must be 'light' or 'dark'." ;;
-    esac
+  load_mode_config
+  case "$mode" in
+  light) THEME_LIGHT="$theme" ;;
+  dark) THEME_DARK="$theme" ;;
+  *) die "Mode must be 'light' or 'dark'." ;;
+  esac
 
-    save_mode_config
-    echo "Saved $mode mode theme: $theme"
+  save_mode_config
+  echo "Saved $mode mode theme: $theme"
 }
 
 show_mode_config() {
-    load_mode_config
-    echo "light: ${THEME_LIGHT:-<unset>}"
-    echo "dark:  ${THEME_DARK:-<unset>}"
+  load_mode_config
+  echo "light: ${THEME_LIGHT:-<unset>}"
+  echo "dark:  ${THEME_DARK:-<unset>}"
 }
 
 detect_system_mode() {
-    case "$(uname -s)" in
-    Darwin)
-        if defaults read -g AppleInterfaceStyle >/dev/null 2>&1; then
-            echo "dark"
-        else
-            echo "light"
-        fi
-        ;;
-    *) die "Unsupported OS for automatic mode detection: $(uname -s)" ;;
-    esac
+  case "$(uname -s)" in
+  Darwin)
+    if defaults read -g AppleInterfaceStyle >/dev/null 2>&1; then
+      echo "dark"
+    else
+      echo "light"
+    fi
+    ;;
+  *) die "Unsupported OS for automatic mode detection: $(uname -s)" ;;
+  esac
 }
 
 apply_system_mode_theme() {
-    load_mode_config
+  load_mode_config
 
-    local mode
-    mode="$(detect_system_mode)"
+  local mode
+  mode="$(detect_system_mode)"
 
-    local theme
-    if [[ "$mode" == "dark" ]]; then
-        theme="${THEME_DARK:-}"
-    else
-        theme="${THEME_LIGHT:-}"
-    fi
+  local theme
+  if [[ "$mode" == "dark" ]]; then
+    theme="${THEME_DARK:-}"
+  else
+    theme="${THEME_LIGHT:-}"
+  fi
 
-    [[ -n "$theme" ]] || die "No theme configured for $mode mode. Use: theme-switcher mode-set $mode <theme>"
+  [[ -n "$theme" ]] || die "No theme configured for $mode mode. Use: theme-switcher mode-set $mode <theme>"
 
-    local current
-    current="$(current_theme)"
-    if [[ "$current" == "$theme" ]]; then
-        echo "System mode is $mode; theme already set: $theme"
-        refresh_tmux_theme
-        return 0
-    fi
+  local current
+  current="$(current_theme)"
+  if [[ "$current" == "$theme" ]]; then
+    echo "System mode is $mode; theme already set: $theme"
+    refresh_tmux_theme
+    return 0
+  fi
 
-    echo "System mode is $mode; applying theme: $theme"
-    apply_theme "$theme"
+  echo "System mode is $mode; applying theme: $theme"
+  apply_theme "$theme"
 }
 
 watch_system_mode_theme() {
-    local interval="${1:-5}"
-    local last_mode=""
+  local interval="${1:-5}"
+  local last_mode=""
 
-    while true; do
-        local mode
-        mode="$(detect_system_mode 2>/dev/null || true)"
+  while true; do
+    local mode
+    mode="$(detect_system_mode 2>/dev/null || true)"
 
-        if [[ -n "$mode" && "$mode" != "$last_mode" ]]; then
-            apply_system_mode_theme || true
-            last_mode="$mode"
-        fi
+    if [[ -n "$mode" && "$mode" != "$last_mode" ]]; then
+      apply_system_mode_theme || true
+      last_mode="$mode"
+    fi
 
-        sleep "$interval"
-    done
+    sleep "$interval"
+  done
 }
 
 load_theme() {
-    local theme="$1"
-    local theme_file="$THEMES_DIR/$theme/theme.env"
+  local theme="$1"
+  local theme_file="$THEMES_DIR/$theme/theme.env"
 
-    require_theme "$theme"
+  require_theme "$theme"
 
-    # Never inherit mappings or overlays from a previous theme or parent shell.
-    unset GHOSTTY_THEME KITTY_INCLUDE NVIM_THEME BAT_THEME FZF_THEME_FILE
-    unset GHOSTTY_THEME_FILE BAT_THEME_FILE BTOP_THEME LAZYGIT_THEME_FILE HERDR_THEME_FILE OPENCODE_THEME_FILE VSCODE_THEME TMUX_BACKGROUND
-    STARSHIP_CONFIG="$CONFIG_HOME/starship.toml"
-    THEME_DIR="$THEMES_DIR/$theme"
-    if [[ -f "$THEMES_DIR/$theme.json" ]]; then
-        command -v python3 >/dev/null 2>&1 || die "python3 is required to render themes."
-        THEME_DIR="$STATE_DIR/generated/$theme"
-        python3 "$SCRIPT_DIR/render-theme.py" "$ROOT" "$theme" "$THEME_DIR" "$CONFIG_HOME" || return 1
-        theme_file="$THEME_DIR/theme.env"
-    else
-        # Compatibility for personal themes that still use the old layout.
-        [[ ! -f "$THEME_DIR/starship.toml" ]] || STARSHIP_CONFIG="$THEME_DIR/starship.toml"
-    fi
-    # shellcheck disable=SC1090
-    source "$theme_file"
+  # Never inherit mappings or overlays from a previous theme or parent shell.
+  unset GHOSTTY_THEME KITTY_INCLUDE NVIM_THEME BAT_THEME FZF_THEME_FILE
+  unset GHOSTTY_THEME_FILE BAT_THEME_FILE BTOP_THEME LAZYGIT_THEME_FILE OPENCODE_THEME_FILE VSCODE_THEME TMUX_BACKGROUND
+  STARSHIP_CONFIG="$CONFIG_HOME/starship.toml"
+  THEME_DIR="$THEMES_DIR/$theme"
+  if [[ -f "$THEMES_DIR/$theme.json" ]]; then
+    command -v python3 >/dev/null 2>&1 || die "python3 is required to render themes."
+    THEME_DIR="$STATE_DIR/generated/$theme"
+    python3 "$SCRIPT_DIR/render-theme.py" "$ROOT" "$theme" "$THEME_DIR" "$CONFIG_HOME" || return 1
+    theme_file="$THEME_DIR/theme.env"
+  else
+    # Compatibility for personal themes that still use the old layout.
+    [[ ! -f "$THEME_DIR/starship.toml" ]] || STARSHIP_CONFIG="$THEME_DIR/starship.toml"
+  fi
+  # shellcheck disable=SC1090
+  source "$theme_file"
 }
 
 prepare_output() {
-    local file="$1"
-    mkdir -p "$(dirname "$file")"
-    # Detach old Stow links without touching their former targets (including
-    # dangling links left after pulling the removal of generated files).
-    [[ ! -L "$file" ]] || rm "$file"
+  local file="$1"
+  mkdir -p "$(dirname "$file")"
+  # Detach old Stow links without touching their former targets (including
+  # dangling links left after pulling the removal of generated files).
+  [[ ! -L "$file" ]] || rm "$file"
 }
 
 copy_if_present() {
-    local source_file="$1"
-    local target_file="$2"
+  local source_file="$1"
+  local target_file="$2"
 
-    if [[ -f "$source_file" ]]; then
-        prepare_output "$target_file"
-        cp "$source_file" "$target_file"
-    fi
+  if [[ -f "$source_file" ]]; then
+    prepare_output "$target_file"
+    cp "$source_file" "$target_file"
+  fi
 }
 
 copy_tmux_theme() {
-    local source_file="$1"
-    local target_file="$2"
+  local source_file="$1"
+  local target_file="$2"
 
-    [[ -f "$source_file" ]] || return 0
-    prepare_output "$target_file"
-    cp "$source_file" "$target_file"
+  [[ -f "$source_file" ]] || return 0
+  prepare_output "$target_file"
+  cp "$source_file" "$target_file"
 
-    # Keep the bar background tied to the selected theme's canonical value,
-    # rather than relying on a duplicated value in tmux.theme.conf.
-    if [[ -n "${TMUX_BACKGROUND:-}" ]]; then
-        sed -E -i.bak \
-            "s|^set -g @minimal_theme_bg_color .*|set -g @minimal_theme_bg_color \"$TMUX_BACKGROUND\"|" \
-            "$target_file"
-        rm -f "$target_file.bak"
-    fi
+  # Keep the bar background tied to the selected theme's canonical value,
+  # rather than relying on a duplicated value in tmux.theme.conf.
+  if [[ -n "${TMUX_BACKGROUND:-}" ]]; then
+    sed -E -i.bak \
+      "s|^set -g @minimal_theme_bg_color .*|set -g @minimal_theme_bg_color \"$TMUX_BACKGROUND\"|" \
+      "$target_file"
+    rm -f "$target_file.bak"
+  fi
 }
 
 refresh_tmux_theme() {
-    command -v tmux >/dev/null 2>&1 || return 0
-    tmux ls >/dev/null 2>&1 || return 0
+  command -v tmux >/dev/null 2>&1 || return 0
+  tmux ls >/dev/null 2>&1 || return 0
 
-    local color
-    for color in bg active inactive text accent border; do
-        tmux set-option -gu "@minimal_theme_${color}_color" || true
-    done
-    [[ -f "$TARGET_TMUX_THEME" ]] && tmux source-file "$TARGET_TMUX_THEME" || true
-    tmux run-shell "${DOTFILES_DIR:-$HOME/dotfiles}/scripts/tmux/minimal-theme/minimal.tmux" || true
+  local color
+  for color in bg active inactive text accent border; do
+    tmux set-option -gu "@minimal_theme_${color}_color" || true
+  done
+  [[ -f "$TARGET_TMUX_THEME" ]] && tmux source-file "$TARGET_TMUX_THEME" || true
+  tmux run-shell "${DOTFILES_DIR:-$HOME/dotfiles}/scripts/tmux/minimal-theme/minimal.tmux" || true
 }
 
 refresh_ghostty_theme() {
-    # SIGUSR2 makes Ghostty (>= 1.2) reload its configuration. kill is
-    # fire-and-forget, so this never blocks, no matter which terminal (if
-    # any) it runs from. pkill cannot target the app process on macOS, so
-    # discover PIDs via ps instead; ucomm is "ghostty" on both macOS and
-    # Linux. Never send any other signal: Ghostty only handles USR2.
-    command -v ps >/dev/null 2>&1 || return 0
-    local pid name
-    ps -axo pid=,ucomm= 2>/dev/null | while read -r pid name; do
-        if [[ "$name" == "ghostty" || "$name" == "Ghostty" ]]; then
-            kill -USR2 "$pid" 2>/dev/null || true
-        fi
-    done
-    return 0
+  # SIGUSR2 makes Ghostty (>= 1.2) reload its configuration. kill is
+  # fire-and-forget, so this never blocks, no matter which terminal (if
+  # any) it runs from. pkill cannot target the app process on macOS, so
+  # discover PIDs via ps instead; ucomm is "ghostty" on both macOS and
+  # Linux. Never send any other signal: Ghostty only handles USR2.
+  command -v ps >/dev/null 2>&1 || return 0
+  local pid name
+  ps -axo pid=,ucomm= 2>/dev/null | while read -r pid name; do
+    if [[ "$name" == "ghostty" || "$name" == "Ghostty" ]]; then
+      kill -USR2 "$pid" 2>/dev/null || true
+    fi
+  done
+  return 0
 }
 
 refresh_kitty_theme() {
-    command -v kitty >/dev/null 2>&1 || return 0
+  command -v kitty >/dev/null 2>&1 || return 0
 
-    local targets=()
-    local s
+  local targets=()
+  local s
 
-    [[ -n "${KITTY_LISTEN_ON:-}" ]] && targets+=("$KITTY_LISTEN_ON")
-    [[ -n "${THEME_SWITCHER_KITTY_LISTEN_ON:-}" ]] && targets+=("$THEME_SWITCHER_KITTY_LISTEN_ON")
-    targets+=("unix:/tmp/kitty")
-    [[ -n "${TMPDIR:-}" ]] && targets+=("unix:${TMPDIR%/}/kitty")
+  [[ -n "${KITTY_LISTEN_ON:-}" ]] && targets+=("$KITTY_LISTEN_ON")
+  [[ -n "${THEME_SWITCHER_KITTY_LISTEN_ON:-}" ]] && targets+=("$THEME_SWITCHER_KITTY_LISTEN_ON")
+  targets+=("unix:/tmp/kitty")
+  [[ -n "${TMPDIR:-}" ]] && targets+=("unix:${TMPDIR%/}/kitty")
 
-    for s in /tmp/kitty*; do
-        [[ -S "$s" ]] && targets+=("unix:$s")
-    done
+  for s in /tmp/kitty*; do
+    [[ -S "$s" ]] && targets+=("unix:$s")
+  done
 
-    local target
-    for target in "${targets[@]}"; do
-        # Only talk to an explicit socket. Without --to, kitty @ falls back to
-        # writing DCS escape sequences to the controlling terminal and blocks
-        # waiting for a response, which wedges any TUI sharing that terminal.
-        kitty @ --to "$target" load-config "$CONFIG_HOME/kitty/kitty.conf" >/dev/null 2>&1 && return 0
-    done
-    return 0
+  local target
+  for target in "${targets[@]}"; do
+    # Only talk to an explicit socket. Without --to, kitty @ falls back to
+    # writing DCS escape sequences to the controlling terminal and blocks
+    # waiting for a response, which wedges any TUI sharing that terminal.
+    kitty @ --to "$target" load-config "$CONFIG_HOME/kitty/kitty.conf" >/dev/null 2>&1 && return 0
+  done
+  return 0
 }
 
 ensure_bat_theme() {
-    [[ -n "${BAT_THEME:-}" ]] || return 0
-    command -v bat >/dev/null 2>&1 || return 0
+  [[ -n "${BAT_THEME:-}" ]] || return 0
+  command -v bat >/dev/null 2>&1 || return 0
 
-    if ! bat --list-themes 2>/dev/null | grep -Fxq "$BAT_THEME"; then
-        bat cache --build >/dev/null
-    fi
+  if ! bat --list-themes 2>/dev/null | grep -Fxq "$BAT_THEME"; then
+    bat cache --build >/dev/null
+  fi
 
-    if ! bat --list-themes 2>/dev/null | grep -Fxq "$BAT_THEME"; then
-        echo "warning: bat theme '$BAT_THEME' is not available" >&2
-    fi
+  if ! bat --list-themes 2>/dev/null | grep -Fxq "$BAT_THEME"; then
+    echo "warning: bat theme '$BAT_THEME' is not available" >&2
+  fi
 }
 
 apply_terminal_themes() {
-    # Ghostty and Kitty.
-    prepare_output "$TARGET_GHOSTTY"
-    if [[ -n "${GHOSTTY_THEME_FILE:-}" && -f "$GHOSTTY_THEME_FILE" ]]; then
-        cp "$GHOSTTY_THEME_FILE" "$TARGET_GHOSTTY"
-    else
-        printf 'theme = %s\n' "$GHOSTTY_THEME" >"$TARGET_GHOSTTY"
-    fi
-    refresh_ghostty_theme
-    copy_if_present "$KITTY_INCLUDE" "$TARGET_KITTY"
-    refresh_kitty_theme
+  # Ghostty and Kitty.
+  prepare_output "$TARGET_GHOSTTY"
+  if [[ -n "${GHOSTTY_THEME_FILE:-}" && -f "$GHOSTTY_THEME_FILE" ]]; then
+    cp "$GHOSTTY_THEME_FILE" "$TARGET_GHOSTTY"
+  else
+    printf 'theme = %s\n' "$GHOSTTY_THEME" >"$TARGET_GHOSTTY"
+  fi
+  refresh_ghostty_theme
+  copy_if_present "$KITTY_INCLUDE" "$TARGET_KITTY"
+  refresh_kitty_theme
 }
 
 apply_cli_themes() {
-    # Bat, btop, and Neovim theme state.
-    if [[ -n "${BAT_THEME_FILE:-}" && -f "$BAT_THEME_FILE" ]]; then
-        copy_if_present "$BAT_THEME_FILE" "$TARGET_BAT_THEMES/$(basename "$BAT_THEME_FILE")"
-        bat cache --build >/dev/null 2>&1 || true
-    fi
-    ensure_bat_theme
-    if [[ -n "${BTOP_THEME:-}" && -f "$BTOP_THEME" ]]; then
-        copy_if_present "$BTOP_THEME" "$TARGET_BTOP"
-    else
-        rm -f "$TARGET_BTOP"
-    fi
-    mkdir -p "$(dirname "$TARGET_NVIM_STATE")"
-    printf '%s\n' "$NVIM_THEME" >"$TARGET_NVIM_STATE"
-}
-
-refresh_herdr_theme() {
-    # Talks to the running server's API socket; fails fast when Herdr is
-    # not installed or no server is running, so it never blocks.
-    command -v herdr >/dev/null 2>&1 || return 0
-    herdr server reload-config >/dev/null 2>&1 || true
-    return 0
-}
-
-apply_herdr_theme() {
-    # Herdr's built-in terminal theme reads the active terminal palette. Do not
-    # override it with a guessed mapping from another theme's palette tokens.
-    local config="$TARGET_HERDR_CONFIG"
-    [[ -f "$config" ]] || return 0
-    if grep -q '^# theme-switcher:begin$' "$config"; then
-        local temporary
-        temporary="$(mktemp "${config}.theme-switcher.XXXXXX")" || return 0
-        if awk '
-            /^# theme-switcher:begin$/ { inside = 1; next }
-            /^# theme-switcher:end$/ { inside = 0; next }
-            !inside { print }
-        ' "$config" >"$temporary"; then
-            cat "$temporary" >"$config"
-        fi
-        rm -f "$temporary"
-    fi
-    refresh_herdr_theme
+  # Bat, btop, and Neovim theme state.
+  if [[ -n "${BAT_THEME_FILE:-}" && -f "$BAT_THEME_FILE" ]]; then
+    copy_if_present "$BAT_THEME_FILE" "$TARGET_BAT_THEMES/$(basename "$BAT_THEME_FILE")"
+    bat cache --build >/dev/null 2>&1 || true
+  fi
+  ensure_bat_theme
+  if [[ -n "${BTOP_THEME:-}" && -f "$BTOP_THEME" ]]; then
+    copy_if_present "$BTOP_THEME" "$TARGET_BTOP"
+  else
+    rm -f "$TARGET_BTOP"
+  fi
+  mkdir -p "$(dirname "$TARGET_NVIM_STATE")"
+  printf '%s\n' "$NVIM_THEME" >"$TARGET_NVIM_STATE"
 }
 
 apply_theme_overlays() {
-    # Optional overlays must not leak from the previously selected theme.
-    local theme_dir="$1"
-    rm -f "$TARGET_LAZYGIT" "$TARGET_YAZI_THEME" "$TARGET_EZA_THEME" "$TARGET_TMUX_THEME" "$TARGET_SQLMUX_THEME"
-    if [[ -n "${LAZYGIT_THEME_FILE:-}" ]]; then
-        copy_if_present "$LAZYGIT_THEME_FILE" "$TARGET_LAZYGIT"
-    else
-        copy_if_present "$theme_dir/lazygit.yml" "$TARGET_LAZYGIT"
-    fi
-    copy_if_present "$theme_dir/yazi.theme.toml" "$TARGET_YAZI_THEME"
-    copy_if_present "$theme_dir/eza.theme.yml" "$TARGET_EZA_THEME"
-    copy_tmux_theme "$theme_dir/tmux.theme.conf" "$TARGET_TMUX_THEME"
-    copy_if_present "$theme_dir/sqlmux.theme.toml" "$TARGET_SQLMUX_THEME"
-    if [[ -n "${OPENCODE_THEME_FILE:-}" ]]; then
-        copy_if_present "$OPENCODE_THEME_FILE" "$TARGET_OPENCODE_THEME"
-    else
-        rm -f "$TARGET_OPENCODE_THEME"
-    fi
-    refresh_tmux_theme
+  # Optional overlays must not leak from the previously selected theme.
+  local theme_dir="$1"
+  rm -f "$TARGET_LAZYGIT" "$TARGET_YAZI_THEME" "$TARGET_EZA_THEME" "$TARGET_TMUX_THEME" "$TARGET_SQLMUX_THEME"
+  if [[ -n "${LAZYGIT_THEME_FILE:-}" ]]; then
+    copy_if_present "$LAZYGIT_THEME_FILE" "$TARGET_LAZYGIT"
+  else
+    copy_if_present "$theme_dir/lazygit.yml" "$TARGET_LAZYGIT"
+  fi
+  copy_if_present "$theme_dir/yazi.theme.toml" "$TARGET_YAZI_THEME"
+  copy_if_present "$theme_dir/eza.theme.yml" "$TARGET_EZA_THEME"
+  copy_tmux_theme "$theme_dir/tmux.theme.conf" "$TARGET_TMUX_THEME"
+  copy_if_present "$theme_dir/sqlmux.theme.toml" "$TARGET_SQLMUX_THEME"
+  if [[ -n "${OPENCODE_THEME_FILE:-}" ]]; then
+    copy_if_present "$OPENCODE_THEME_FILE" "$TARGET_OPENCODE_THEME"
+  else
+    rm -f "$TARGET_OPENCODE_THEME"
+  fi
+  refresh_tmux_theme
 }
 
 apply_theme() {
-    local theme="$1"
+  local theme="$1"
 
-    load_theme "$theme" || return 1
-    if [[ ! -f "$KITTY_INCLUDE" ]]; then
-        printf 'Theme asset missing: %s. Run dotfiles-install plugins and links first.\n' "$KITTY_INCLUDE" >&2
-        return 1
-    fi
+  load_theme "$theme" || return 1
+  if [[ ! -f "$KITTY_INCLUDE" ]]; then
+    printf 'Theme asset missing: %s. Run dotfiles-install plugins and links first.\n' "$KITTY_INCLUDE" >&2
+    return 1
+  fi
 
-    apply_terminal_themes
-    apply_cli_themes
-    apply_theme_overlays "$THEME_DIR"
-    apply_herdr_theme
+  apply_terminal_themes
+  apply_cli_themes
+  apply_theme_overlays "$THEME_DIR"
 
-    write_current_env "$theme"
-    printf '%s\n' "$theme" >"$CURRENT_FILE"
+  write_current_env "$theme"
+  printf '%s\n' "$theme" >"$CURRENT_FILE"
 
-    echo "Applied theme: $theme"
+  echo "Applied theme: $theme"
 }
 
 set_theme() {
-    local theme="$1"
+  local theme="$1"
 
-    [[ -n "$theme" ]] || {
-        usage >&2
-        die "Missing theme name."
-    }
+  [[ -n "$theme" ]] || {
+    usage >&2
+    die "Missing theme name."
+  }
 
-    apply_theme "$theme"
+  apply_theme "$theme"
 }
 
 list_themes() {
-    [[ -d "$THEMES_DIR" ]] || return 0
-    for file in "$THEMES_DIR"/*.json "$THEMES_DIR"/*/theme.env; do
-        [[ -f "$file" ]] || continue
-        if [[ "$file" == *.json ]]; then
-            basename "$file" .json
-        else
-            basename "$(dirname "$file")"
-        fi
-    done | sort -u
+  [[ -d "$THEMES_DIR" ]] || return 0
+  for file in "$THEMES_DIR"/*.json "$THEMES_DIR"/*/theme.env; do
+    [[ -f "$file" ]] || continue
+    if [[ "$file" == *.json ]]; then
+      basename "$file" .json
+    else
+      basename "$(dirname "$file")"
+    fi
+  done | sort -u
 }
 
 current_theme() {
-    if [[ -f "$CURRENT_FILE" ]]; then
-        tr -d '\n' <"$CURRENT_FILE"
-    else
-        echo ""
-    fi
+  if [[ -f "$CURRENT_FILE" ]]; then
+    tr -d '\n' <"$CURRENT_FILE"
+  else
+    echo ""
+  fi
 }
 
 show_current() {
-    local theme
-    theme="$(current_theme)"
+  local theme
+  theme="$(current_theme)"
 
-    [[ -n "$theme" ]] || die "No current theme set."
+  [[ -n "$theme" ]] || die "No current theme set."
 
-    load_theme "$theme" || return 1
-    echo "theme: $theme"
-    echo "ghostty: $GHOSTTY_THEME"
-    echo "kitty include: $KITTY_INCLUDE"
-    echo "nvim: $NVIM_THEME"
-    echo "bat: $BAT_THEME"
-    echo "btop: ${BTOP_THEME:-<default>}"
-    echo "fzf file: ${FZF_THEME_FILE:-}"
-    echo "vscode: ${VSCODE_THEME:-<unset>}"
+  load_theme "$theme" || return 1
+  echo "theme: $theme"
+  echo "ghostty: $GHOSTTY_THEME"
+  echo "kitty include: $KITTY_INCLUDE"
+  echo "nvim: $NVIM_THEME"
+  echo "bat: $BAT_THEME"
+  echo "btop: ${BTOP_THEME:-<default>}"
+  echo "fzf file: ${FZF_THEME_FILE:-}"
+  echo "vscode: ${VSCODE_THEME:-<unset>}"
 }
 
 main() {
-    local cmd="${1:-tui}"
-    case "$cmd" in -h | --help | help)
-        usage
-        return 0
-        ;;
-    esac
-    ensure_dirs
+  local cmd="${1:-tui}"
+  case "$cmd" in -h | --help | help)
+    usage
+    return 0
+    ;;
+  esac
+  ensure_dirs
 
-    case "$cmd" in
-    tui)
-        if [[ -x "$HOME/.local/libexec/dotfiles/theme-switcher-tui" ]]; then
-            THEME_SWITCHER_ROOT="$ROOT" THEME_SWITCHER_COMMAND="$SCRIPT_DIR/theme-switcher.sh" "$HOME/.local/libexec/dotfiles/theme-switcher-tui"
-        else
-            (
-                cd "$SCRIPT_DIR/tui"
-                THEME_SWITCHER_ROOT="$ROOT" THEME_SWITCHER_COMMAND="$SCRIPT_DIR/theme-switcher.sh" go run .
-            )
-        fi
-        ;;
-    list)
-        list_themes
-        ;;
-    current)
-        show_current
-        ;;
-    set)
-        set_theme "${2:-}"
-        ;;
-    apply)
-        local theme
-        theme="$(current_theme)"
-        [[ -n "$theme" ]] || die "No current theme set. Use: theme-switcher set <theme>"
-        apply_theme "$theme"
-        ;;
-    mode-set)
-        set_mode_theme "${2:-}" "${3:-}"
-        ;;
-    mode-current)
-        show_mode_config
-        ;;
-    auto)
-        if [[ "${2:-}" == "--watch" ]]; then
-            local interval="${3:-5}"
-            watch_system_mode_theme "$interval"
-        else
-            apply_system_mode_theme
-        fi
-        ;;
-    *)
-        usage >&2
-        die "Unknown command: $cmd"
-        ;;
-    esac
+  case "$cmd" in
+  tui)
+    if [[ -x "$HOME/.local/libexec/dotfiles/theme-switcher-tui" ]]; then
+      THEME_SWITCHER_ROOT="$ROOT" THEME_SWITCHER_COMMAND="$SCRIPT_DIR/theme-switcher.sh" "$HOME/.local/libexec/dotfiles/theme-switcher-tui"
+    else
+      (
+        cd "$SCRIPT_DIR/tui"
+        THEME_SWITCHER_ROOT="$ROOT" THEME_SWITCHER_COMMAND="$SCRIPT_DIR/theme-switcher.sh" go run .
+      )
+    fi
+    ;;
+  list)
+    list_themes
+    ;;
+  current)
+    show_current
+    ;;
+  set)
+    set_theme "${2:-}"
+    ;;
+  apply)
+    local theme
+    theme="$(current_theme)"
+    [[ -n "$theme" ]] || die "No current theme set. Use: theme-switcher set <theme>"
+    apply_theme "$theme"
+    ;;
+  mode-set)
+    set_mode_theme "${2:-}" "${3:-}"
+    ;;
+  mode-current)
+    show_mode_config
+    ;;
+  auto)
+    if [[ "${2:-}" == "--watch" ]]; then
+      local interval="${3:-5}"
+      watch_system_mode_theme "$interval"
+    else
+      apply_system_mode_theme
+    fi
+    ;;
+  *)
+    usage >&2
+    die "Unknown command: $cmd"
+    ;;
+  esac
 }
 
 main "$@"

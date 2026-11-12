@@ -31,7 +31,8 @@
     "anthropic_retention": false
   },
   "agent": {
-    "dock": "right",
+    "flexible": true,
+    "dock": "left",
     "favorite_models": [],
     "model_parameters": [],
     "commit_message_model": {
@@ -61,9 +62,23 @@
         ]
       },
       "default_config_options": {
-        "model": "github-copilot/claude-haiku-5.5"
+        "model": "github-copilot/gpt-6.1-terra"
       },
       "type": "registry"
+    },
+    "pi-bolt": {
+          "favorite_config_option_values": {
+             "model": [
+                "openai/gpt-6.1-terra"
+             ]
+          },
+          "default_config_options": {
+             "model": "openai/gpt-6.1-terra"
+          },
+          "type": "custom",
+          "command": "/Users/mattis/.local/bin/pi-bolt",
+          "args": ["--acp"],
+          "env": {}
     },
     "opencode": {
       "default_config_options": {
@@ -85,7 +100,7 @@
   },
   "project_panel": {
     "hide_hidden": false,
-    "dock": "left",
+    "dock": "right",
     "hide_gitignore": true,
   },
   "file_scan_exclusions": [
@@ -102,7 +117,7 @@
     "dock": "left",
   },
   "git_panel": {
-    "dock": "left",
+    "dock": "right",
     "tree_view": true,
   },
   "relative_line_numbers": "enabled",
@@ -115,8 +130,8 @@
   "buffer_font_size": 15,
   "theme": {
     "mode": "dark",
-    "light": "One Light",
-    "dark": "Catppuccin Macchiato",
+    "light": "Dracula Light (Alucard",
+    "dark": "Catppuccin Mocha",
   },
   "format_on_save": "on",
   "languages": {

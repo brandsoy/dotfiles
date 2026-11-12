@@ -13,19 +13,20 @@ uv_venv_auto = true
 # each project's mise.toml (or that ecosystem's native manifest).
 gum = "latest"
 uv = "latest"
-"pipx:harlequin[odbc]" = "latest"
-"github:can1357/oh-my-pi" = "latest"
+pi = "latest"
 
 # Linux packages vary by distro/repository; avoid custom binary-download scripts.
 # Homebrew owns these on macOS.
 "github:jesseduffield/lazygit" = { version = "latest", os = ["linux"] }
 "github:jesseduffield/lazydocker" = { version = "latest", os = ["linux"] }
+
 node = "lts"
-biome = "latest"
+bun = "latest"
 go = "latest"
 python = "latest"
 aspire = "latest"
-pi = "latest"
 pnpm = "latest"
+
 fnox = { version = "latest", workflow = "release.yml" }
-bun = "latest"
+biome = "latest"
+opentofu = "1.13.9"
