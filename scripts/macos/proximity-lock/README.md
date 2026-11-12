@@ -9,9 +9,9 @@ the BLE address and the surrounding bytes rotate for privacy. When the
 fingerprint has not been seen for a grace period (default 30s), it runs
 `pmset displaysleepnow` to blank and lock the screen.
 
-For a real lock rather than just a display sleep, "Require password
-immediately" must be set in System Settings -> Lock Screen -> require
-password after display is turned off (the macOS default is immediate).
+Display sleep alone does not guarantee a password prompt. In System Settings ->
+Lock Screen, set the password requirement after the display turns off to
+**Immediately**. This is the macOS default.
 
 The old AirDrop beacon (TLV type `0x05`) is no longer emitted by current iOS,
 which is why this tool tracks the Nearby advert instead.

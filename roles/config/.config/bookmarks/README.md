@@ -66,10 +66,10 @@ bookmark-sync diff --profile work --endpoint ~/Downloads/work.html
 bookmark-sync sync --profile work --endpoint ~/Downloads/work.html
 ```
 
-The first sync requires every endpoint to equal the collection, then saves a
-baseline. For an existing HTML file, import its additions and export the merged
-source back to that file before the first sync. Multiple endpoints are supported
-by repeating `--endpoint`; changing the endpoint set requires bootstrapping again.
+Before the first sync, make each endpoint match the collection. The first sync
+then saves a baseline. For an existing HTML file, import its additions. Export
+the merged source back to that file before the first sync. Repeat `--endpoint`
+to specify multiple endpoints. If you change the endpoint set, bootstrap again.
 
 Subsequent syncs compare the source and endpoints to that baseline. One changed
 version propagates to all endpoints, including deletions. Different simultaneous

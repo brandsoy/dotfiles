@@ -6,7 +6,7 @@ Arch, Debian, RHEL, and the Linux server profile are no longer supported.
 ## Structure
 
 - `roles/config/`: shared `~/.config`, including Zsh, Neovim, and terminals
-- `roles/config/.pi/agent/`: versioned Pi notes and themes; credentials and runtime state stay machine-local
+- `roles/config/.config/pi/agent/`: versioned Pi notes and themes; credentials and runtime state stay machine-local
 - `roles/zshenv/`, `roles/git/`, `roles/tmux/`, `roles/bin/`: shared home files and commands
 - `roles/agents/.agents/`: shared agent skills; installed as one `~/.agents` symlink
 - `roles/macos-config/`, `roles/linux-config/`: platform configs and Git credential helpers
@@ -34,7 +34,7 @@ After installation, `dotfiles-install` exposes the same commands. Set
 `DOTFILES_DIR` if the repository is somewhere other than `~/dotfiles`.
 
 - Linking never installs packages, downloads plugins, or changes your login shell.
-- Building binaries requires Go and may download Go modules. Install Go first (or run `mise install` after linking); if `all` stops at this step, run `./install.sh binaries` afterward. `ai-scan` is available on PATH; `theme-switcher` uses its compiled TUI in `~/.local/libexec/dotfiles/` when installed, otherwise it falls back to `go run`.
+- Building binaries requires Go. It may download Go modules. Install Go first, or run `mise install` after linking. If `./install.sh all` stops at this step, run `./install.sh binaries` afterward. `ai-scan` is available on PATH. `theme-switcher` uses its compiled TUI in `~/.local/libexec/dotfiles/` when installed. Otherwise, it falls back to `go run`.
 - `plugins` installs Herdr plugins from `roles/config/.config/herdr/plugins.txt`, installs Herdr's Hermes integration when Hermes is available, applies maintained patches, preserves legacy plugin directories without Git metadata under `${XDG_STATE_HOME:-~/.local/state}/dotfiles/plugin-backup.*`, and initializes submodules. It prints each backup location; existing Git checkouts are left in place.
 - Stow uses file-level links for config roles, with explicit ignores for runtime files and credentials. Configs are deployed to `~/.config`; a custom `XDG_CONFIG_HOME` is not supported for Stow-managed configs. Agent skills are a single `~/.agents` symlink.
 - macOS bootstraps Homebrew if needed, then installs the Brewfile.
@@ -96,7 +96,7 @@ Themes are centralized in:
 
 `theme-switcher set` and `apply` render app files on demand using Python 3.9+ (standard
 library only). Edit colors in the JSON definition, not in generated app files.
-All 16 bundled themes are migrated; native Neovim/Bat themes stay native.
+Native Neovim and Bat themes stay native.
 See [theme-switcher documentation](roles/config/.config/theme-switcher/README.md) for the
 schema, app overrides, and legacy personal-theme compatibility.
 
@@ -218,9 +218,9 @@ Run a quick secret scan before pushing:
 
 This uses `gitleaks` if installed.
 
-Run all offline checks in one command — formatting (shfmt), lint (shellcheck),
-the gitleaks secret scan (when installed), and tests (Bash, Zsh, Git, Stow,
-and Python 3 required):
+Run the checks in one command — formatting (shfmt), lint (shellcheck),
+Go checks and a gitleaks scan when available, and regression tests (Bash, Zsh,
+Git, Stow, and Python 3 required). Go may download uncached modules:
 
 ```bash
 ./scripts/maintenance/check.sh

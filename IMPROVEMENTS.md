@@ -13,7 +13,7 @@ about maintainability, not new capabilities.
   Keep the why short; details go in the linked file or commit.
 - Reassess priorities when picking up work. Move stale items to **Dropped**
   with a reason instead of deleting them.
-- When an item is done, tick it and move it to **Done** with the date.
+- When you complete an item, tick it. Move it to **Done** and add the date.
 - If the doc grows past ~120 lines, archive older Done entries or move whole
   sections to `notes/`.
 

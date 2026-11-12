@@ -1,17 +1,18 @@
 # Credential rotation runbook
 
-**Completed 2026-09-26** — all credentials rotated or confirmed dead, and
-history scrubbed (single fresh commit; old branches deleted). Kept as a
-record and a template if this ever happens again.
+**Historical record:** Credential rotation and history cleanup were completed on
+2026-09-26. All credentials were rotated or confirmed dead. The cleanup replaced
+history with a single fresh commit and removed old branches. The sections below
+describe the original incident and provide a template for a future incident.
 
-Why: gitleaks (`./scripts/maintenance/security-scan.sh`) found real credentials in git
-history, and the repo is **public** (github.com/brandsoy/dotfiles). Sixteen
-commits between 2024-11 and 2026-03 contain them, under the old pre-`roles/`
-layout. The current tree is clean — the secrets exist only in history — but
-history is public, so **rotation is required**; scrubbing history later is
-optional and does not replace rotation.
+Gitleaks (`./scripts/maintenance/security-scan.sh`) found credentials in Git
+history when the repository was public (github.com/brandsoy/dotfiles). Sixteen
+commits between 2024-11 and 2026-03 contained credentials under the old
+pre-`roles/` layout. The current tree at the time was clean, but the credentials
+were still in public history. Rotation was required. History cleanup was optional
+and did not replace rotation.
 
-Work top to bottom. Do not skip step 2.
+For a future incident, work from top to bottom. Do not skip step 2.
 
 ## 1. Re-generate the findings (optional, for reference)
 

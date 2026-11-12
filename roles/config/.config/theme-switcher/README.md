@@ -60,11 +60,15 @@ RWTH's Ghostty and Kitty ANSI color 8, for example, intentionally differ.
 Existing GitHub monochrome FZF/btop overrides are retained rather than silently
 recolored. Remove an optional entry from `files` to stop generating that overlay.
 
-To add a theme, copy an existing JSON definition to `themes/<new-name>.json`,
-change its palette/mappings, then run `./install.sh links config` from the repo
-root to link the new definition, followed by `theme-switcher set <new-name>`. No
-registry needs updating. Reuse an existing template variant unless the app layout or
-settings actually differ. Templates contain app syntax, not theme color literals.
+To add a theme:
+
+1. Copy an existing JSON definition to `themes/<new-name>.json`.
+2. Change its palette and mappings.
+3. From the repository root, run `./install.sh links config` to link the definition.
+4. Run `theme-switcher set <new-name>`.
+
+No registry needs updating. Reuse an existing template variant unless the app
+layout or settings differ. Templates contain app syntax, not theme color literals.
 
 Neovim and built-in Bat syntax themes remain native mappings; their full
 highlight rules belong to their upstream plugins/themes. SupaTheme's custom

@@ -6,7 +6,6 @@ Plugins installed by this configuration via `vim.pack.add(...)`.
 
 - [neovim-ayu](https://github.com/Shatur/neovim-ayu): Ayu color scheme.
 - [nord.nvim](https://github.com/shaunsingh/nord.nvim): Nord color scheme.
-
 - [oc-2.nvim](https://github.com/0xleodevv/oc-2.nvim): OC-2 color scheme.
 - [catppuccin](https://github.com/catppuccin/nvim): Soothing pastel color scheme.
 - [nightfox.nvim](https://github.com/EdenEast/nightfox.nvim): Collection of dark and light color schemes.
@@ -23,13 +22,22 @@ Plugins installed by this configuration via `vim.pack.add(...)`.
 - [which-key.nvim](https://github.com/folke/which-key.nvim): Displays available keybindings as you type.
 - [nvim-web-devicons](https://github.com/nvim-tree/nvim-web-devicons): File-type icons for Neovim interfaces.
 - [fzf-lua](https://github.com/ibhagwan/fzf-lua): Fast fuzzy finder for files, buffers, search, and more.
-- [yazi.nvim](https://github.com/mikavilpas/yazi.nvim): Integrates the Yazi terminal file manager.
+- [tabout.nvim](https://github.com/abecodes/tabout.nvim): Moves out of surrounding brackets and quotes.
 - [nvim-tree.lua](https://github.com/nvim-tree/nvim-tree.lua): File-system tree and workspace navigation.
 
 ## Git
 
 - [gitsigns.nvim](https://github.com/lewis6991/gitsigns.nvim): Shows Git changes and provides buffer-level Git actions.
 - [diffview.nvim](https://github.com/sindrets/diffview.nvim): Side-by-side Git diffs and file history views.
+
+## Debugging
+
+- [nvim-dap](https://github.com/mfussenegger/nvim-dap): Debug Adapter Protocol client.
+- [nvim-dap-ui](https://github.com/rcarriga/nvim-dap-ui): Debugging interface.
+- [nvim-nio](https://github.com/nvim-neotest/nvim-nio): Async utilities used by nvim-dap-ui.
+- [nvim-dap-virtual-text](https://github.com/theHamsta/nvim-dap-virtual-text): Inline debug values.
+- [persistent-breakpoints.nvim](https://github.com/Weissle/persistent-breakpoints.nvim): Saves breakpoints between sessions.
+- [turbo-debug.nvim](https://github.com/swaits/turbo-debug.nvim): Debugging shortcuts.
 
 ## LSP And Code Quality
 
