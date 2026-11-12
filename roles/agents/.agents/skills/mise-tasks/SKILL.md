@@ -1,6 +1,6 @@
 ---
 name: mise-tasks
-description: Orchestrate multi-step project workflows using mise task definitions with dependency management and argument handling. Use whenever the user.
+description: Create or update mise tasks and workflows, including dependencies, arguments, and file tracking.
 allowed-tools: Read, Bash, Glob, Grep, Edit, Write
 ---
 
@@ -10,7 +10,7 @@ allowed-tools: Read, Bash, Glob, Grep, Edit, Write
 
 Orchestrate multi-step project workflows using mise `[tasks]` section with dependency management, argument handling, and file tracking.
 
-> **Self-Evolving Skill**: This skill improves through use. If instructions are wrong, parameters drifted, or a workaround was needed — fix this file immediately, don't defer. Only update for real, reproducible issues.
+> If instructions are wrong or parameters drifted, report the issue. Update this skill only when the request permits changes.
 
 ## When to Use This Skill
 
@@ -20,10 +20,6 @@ Orchestrate multi-step project workflows using mise `[tasks]` section with depen
 - User needs task dependencies: `depends`, `depends_post`
 - User wants workflow automation in `.mise.toml`
 - User mentions task arguments or `usage` spec
-
-**AI Discovery trigger** (prescriptive):
-
-> When `mise-configuration` skill detects multi-step workflows (test suites, build pipelines, migrations), **prescriptively invoke this skill** to generate appropriate `[tasks]` definitions.
 
 ## Quick Reference
 
@@ -163,21 +159,6 @@ For release-specific anti-patterns and patterns, see [Release Workflow Patterns]
 
 ---
 
-## Cross-Reference: mise-configuration
-
-**Prerequisites**: Before defining tasks, ensure `[env]` section is configured.
-
-> **PRESCRIPTIVE**: After defining tasks, invoke **[`mise-configuration` skill](../mise-configuration/SKILL.md)** to ensure [env] SSoT patterns are applied.
-
-The `mise-configuration` skill covers:
-
-- `[env]` - Environment variables with defaults
-- `[settings]` - mise behavior configuration
-- `[tools]` - Version pinning
-- Special directives: `_.file`, `_.path`, `_.python.venv`
-
----
-
 ## Additional Resources
 
 - [Task Levels Reference](./references/task-levels.md) - Levels 1-9: basic tasks, dependencies, hidden tasks, arguments, file tracking, advanced execution, watch mode
@@ -206,8 +187,6 @@ The `mise-configuration` skill covers:
 
 After this skill completes, check before closing:
 
-1. **Did the command succeed?** — If not, fix the instruction or error table that caused the failure.
-2. **Did parameters or output change?** — If the underlying tool's interface drifted, update Usage examples and Parameters table to match.
-3. **Was a workaround needed?** — If you had to improvise (different flags, extra steps), update this SKILL.md so the next invocation doesn't need the same workaround.
-
-Only update if the issue is real and reproducible — not speculative.
+1. **Did the command succeed?** — Note any instruction or error table that caused a failure.
+2. **Did parameters or output change?** — Note any drift in examples or parameters.
+3. **Was a workaround needed?** — Record real, reproducible issues in the response. Update this file only when the request permits changes.

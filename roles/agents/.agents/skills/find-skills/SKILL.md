@@ -1,6 +1,6 @@
 ---
 name: find-skills
-description: Helps users discover and install agent skills when they ask questions like "how do I do X", "find a skill for X", "is there a skill that can...", or express interest in extending capabilities. This skill should be used when the user is looking for functionality that might exist as an installable skill.
+description: Find and evaluate agent skills when the user asks to discover, compare, or extend their agent skills.
 ---
 
 # Find Skills
@@ -11,12 +11,10 @@ This skill helps you discover and install skills from the open agent skills ecos
 
 Use this skill when the user:
 
-- Asks "how do I do X" where X might be a common task with an existing skill
-- Says "find a skill for X" or "is there a skill for X"
-- Asks "can you do X" where X is a specialized capability
-- Expresses interest in extending agent capabilities
-- Wants to search for tools, templates, or workflows
-- Mentions they wish they had help with a specific domain (design, testing, deployment, etc.)
+- Asks to find, compare, or install a skill for a task
+- Expresses interest in extending agent capabilities with skills
+
+Do not search for skills merely because a user asks how to do a task.
 
 ## What is the Skills CLI?
 
@@ -95,13 +93,7 @@ Learn more: https://skills.sh/vercel-labs/agent-skills/react-best-practices
 
 ### Step 6: Offer to Install
 
-If the user wants to proceed, you can install the skill for them:
-
-```bash
-npx skills add <owner/repo@skill> -g -y
-```
-
-The `-g` flag installs globally (user-level) and `-y` skips confirmation prompts.
+Inspect the skill and its referenced files before recommending installation. Ask for approval before installing packages or changing live configuration. Follow the project's skill deployment conventions; do not assume global installation is appropriate.
 
 ## Common Skill Categories
 
