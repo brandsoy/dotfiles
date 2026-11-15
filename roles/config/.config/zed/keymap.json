@@ -83,5 +83,18 @@
       "space m l": ["workspace::SendKeystrokes", "i [ ] ( ) escape f [ a"],
       "space m p": "markdown::OpenPreview"
     }
-  }
+  },
+  {
+      "context": "VimControl && !menu",
+      "bindings": {
+        // 1. Unbind single-key 'space' so it acts as a persistent prefix
+        "space": null,
+
+        // 2. Add multi-key sequences under 'space'
+        "space f": "file_finder::Toggle",
+        "space e": "project_panel::ToggleFocus",
+        "space /": "pane::DeploySearch",
+        "space c a": "editor::ToggleCodeActions"
+      }
+    }
 ]

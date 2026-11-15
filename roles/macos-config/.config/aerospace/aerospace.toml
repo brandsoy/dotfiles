@@ -95,12 +95,12 @@ alt-1 = 'workspace w-web'
 alt-shift-1 = 'move-node-to-workspace w-web'
 
 # --- Workspace a-web ---
-alt-2 = 'workspace a-web'
-alt-shift-2 = 'move-node-to-workspace a-web'
+alt-2 = 'workspace p-web'
+alt-shift-2 = 'move-node-to-workspace p-web'
 
 # --- Workspace p-web ---
-alt-3 = 'workspace p-web'
-alt-shift-3 = 'move-node-to-workspace p-web'
+alt-3 = 'workspace a-web'
+alt-shift-3 = 'move-node-to-workspace a-web'
 
 # --- Workspace term ---
 alt-q = 'workspace term'

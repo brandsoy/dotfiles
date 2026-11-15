@@ -24,7 +24,6 @@ brew "tree"
 # Tool for generating GNU Standards-compliant Makefiles
 brew "automake"
 # Microsoft Azure CLI 2.0
-brew "azure-cli"
 # Bourne-Again SHell, a UNIX command interpreter
 brew "bash"
 # Programmable completion for Bash 4.2+
@@ -80,7 +79,6 @@ brew "glow"
 # Hugging Face CLI: download and manage models and datasets
 brew "hf"
 # The terminal for AI coding agents
-brew "herdr"
 # Improved top (interactive process viewer)
 brew "htop"
 # Tools and libraries to manipulate images in select formats
@@ -90,9 +88,7 @@ brew "imagemagick-full"
 # Lightweight and flexible command-line JSON processor
 brew "jq"
 # Kubernetes CLI To Manage Your Clusters In Style!
-brew "k9s"
 # Kubernetes command-line interface
-brew "kubernetes-cli"
 # Lazier way to manage everything docker
 brew "lazydocker"
 # Simple terminal UI for git commands
@@ -118,9 +114,7 @@ brew "noodle"
 # Ambitious Vim-fork focused on extensibility and agility
 brew "neovim"
 # Terminal UI to list, browse and run OpenAPI operations
-brew "openapi-tui"
 # Drop-in replacement for Terraform. Infrastructure as Code Tool
-brew "opentofu"
 # Terminal User Interface (TUI) to view & control docker containers
 brew "oxker"
 # Apache Parquet command-line tools and utilities
@@ -136,11 +130,9 @@ brew "powershell"
 # Framework for managing multi-language pre-commit hooks
 brew "pre-commit"
 # Database management TUI for PostgreSQL/MySQL/SQLite
-brew "rainfrog"
 # Range library for C++14/17/20
 brew "range-v3"
 # Terminal client for .http/.rest files with HTTP, GraphQL, and gRPC support
-brew "resterm"
 # SVG rendering tool and library
 brew "resvg"
 # Search tool like grep and The Silver Searcher
@@ -227,7 +219,6 @@ cask "helium-browser"
 # Web browser (beta channel)
 cask "firefox@beta"
 # Web browser with Chrome and Firefox extension support
-cask "orion"
 # Keyboard customiser
 cask "karabiner-elements"
 # See who's knocking at your Mac's door (security scanner)
@@ -272,3 +263,14 @@ cask "visual-studio-code"
 cask "windows-app"
 # Multiplayer code editor
 cask "zed"
+
+# Added by ./install.sh packages-sync on 2026-11-15; review and organize by hand.
+brew "autoconf-archive"
+brew "ccache"
+brew "nasm"
+brew "ninja"
+brew "rbw"
+cask "azure-cli"
+cask "codex"
+cask "copilot-cli"
+cask "microsoft-365-copilot"
