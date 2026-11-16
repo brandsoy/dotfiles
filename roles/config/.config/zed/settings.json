@@ -7,6 +7,7 @@
 // custom settings, run `zed: open default settings` from the
 // command palette (cmd-shift-p / ctrl-shift-p)
 {
+  "diff_view_style": "split",
   "soft_wrap": "editor_width",
   "which_key": {
     "enabled": true,
@@ -31,6 +32,17 @@
     "anthropic_retention": false
   },
   "agent": {
+    "sandbox_permissions": {
+          "network_hosts": [
+            "github.com",
+            "*.npmjs.org",
+            "crates.io"
+          ],
+          "write_paths": [
+            "/Users/mattis/.cache/cargo",
+            "/Users/mattis/.npm"
+          ]
+        },
     "flexible": true,
     "dock": "left",
     "favorite_models": [],
@@ -42,9 +54,24 @@
   },
   "agent_servers": {
     "mistral-vibe": {
+      "default_config_options": {
+        "model": "glm-5-3"
+      },
       "type": "registry"
     },
     "github-copilot-cli": {
+      "default_config_options": {
+        "allow_all": "on",
+        "model": "claude-haiku-5.5"
+      },
+      "favorite_config_option_values": {
+        "model": [
+          "gpt-6.1-terra",
+          "claude-haiku-5.5",
+          "gpt-6-luna",
+          "auto"
+        ]
+      },
       "type": "registry"
     },
     "codex-acp": {
@@ -73,7 +100,7 @@
              ]
           },
           "default_config_options": {
-             "model": "openai/gpt-6.1-terra"
+             "model": "github-copilot/gpt-6.1-terra"
           },
           "type": "custom",
           "command": "/Users/mattis/.local/bin/pi-bolt",
@@ -91,7 +118,21 @@
         ]
       },
       "type": "registry"
-    }
+    },
+    "safe-pi-bolt": {
+          "favorite_config_option_values": {
+             "model": [
+                "openai/gpt-6.1-terra"
+             ]
+          },
+          "default_config_options": {
+             "model": "github-copilot/claude-haiku-5.5"
+          },
+          "type": "custom",
+          "command": "/Users/mattis/.local/bin/safe-pi-bolt",
+          "args": ["--acp"],
+          "env": {}
+    },
   },
   "cli_default_open_behavior": "existing_window",
   "vim_mode": true,
@@ -131,7 +172,7 @@
   "theme": {
     "mode": "dark",
     "light": "Dracula Light (Alucard",
-    "dark": "Catppuccin Mocha",
+    "dark": "Carbonfox",
   },
   "format_on_save": "on",
   "languages": {

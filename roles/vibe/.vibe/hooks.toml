@@ -1,4 +1,1 @@
-# Report Vibe lifecycle state to the herdr server when running in a herdr pane.
-# The script is a no-op outside herdr (guards on HERDR_ENV/HERDR_SOCKET_PATH).
-
-[[hooks]]
+hooks = []

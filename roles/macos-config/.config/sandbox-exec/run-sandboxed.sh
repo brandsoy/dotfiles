@@ -1,130 +1,152 @@
 #!/bin/bash
 set -euo pipefail
 
-PROFILE="${HOME}/.config/sandbox-exec/agent.sb"
-WORKDIR=""
-ARGS=()
+profile="$HOME/.config/sandbox-exec/agent.sb"
+workdir=""
+if [[ "${1:-}" == --workdir=* ]]; then
+  workdir="${1#--workdir=}"
+  [[ -n "$workdir" ]] || {
+    echo "Empty workdir" >&2
+    exit 2
+  }
+  shift
+fi
+[[ "${1:-}" != -- ]] || shift
+[[ $# -gt 0 ]] || {
+  echo "Usage: $0 [--workdir=DIR] [--] command [args...]" >&2
+  exit 2
+}
+[[ -r "$profile" ]] || {
+  echo "Cannot read policy: $profile" >&2
+  exit 1
+}
+workdir="$(cd "${workdir:-.}" && pwd -P)" || exit 1
+home="$(cd "$HOME" && pwd -P)"
+[[ "$workdir" != / ]] || {
+  echo "Refusing to grant / as workdir" >&2
+  exit 1
+}
+case "$home/" in
+"$workdir/"*)
+  echo "Refusing to grant HOME or its ancestors" >&2
+  exit 1
+  ;;
+esac
 
-while (($#)); do
-    case "$1" in
-    --workdir=*)
-        WORKDIR="${1#--workdir=}"
-        shift
-        ;;
-    --workdir)
-        (($# >= 2)) || {
-            echo "Missing path after --workdir" >&2
-            exit 2
+umask 077
+policy="$(mktemp "${TMPDIR:-/tmp}/agent-policy.XXXXXXXX")"
+list=""
+cleanup() {
+  rm -f "$policy"
+  [[ -z "$list" ]] || rm -f "$list"
+}
+trap cleanup EXIT
+trap 'exit 130' INT
+trap 'exit 143' TERM
+cat "$profile" >"$policy"
+
+escape() {
+  local value="$1" LC_ALL=C
+  if [[ "$value" =~ [[:cntrl:]] ]]; then
+    echo "Control characters in a path are unsupported" >&2
+    return 1
+  fi
+  value="${value//\\/\\\\}"
+  value="${value//\"/\\\"}"
+  printf '%s' "$value"
+}
+grant() {
+  local path="$1" mode="$2" parent="/" component escaped
+  local -a parts
+  IFS=/ read -r -a parts <<<"${path#/}"
+  printf '\n;; %s: ancestor listings and path grant.\n(allow file-read* (literal "/")' "$mode"
+  for component in "${parts[@]}"; do
+    [[ -n "$component" ]] || continue
+    if [[ "$parent" == / ]]; then parent="/$component"; else parent="$parent/$component"; fi
+    escaped="$(escape "$parent")" || return 1
+    printf ' (literal "%s")' "$escaped"
+  done
+  printf ')\n'
+  escaped="$(escape "$path")" || return 1
+  if [[ "$mode" == rw ]]; then
+    printf '(allow file-read* file-write* (subpath "%s"))\n' "$escaped"
+  else
+    printf '(allow file-read* (subpath "%s"))\n' "$escaped"
+    printf '(deny file-write* (subpath "%s"))\n' "$escaped"
+  fi
+}
+
+common=""
+if git_root="$(git -C "$workdir" rev-parse --show-toplevel 2>/dev/null)"; then
+  git_root="$(cd "$git_root" && pwd -P)"
+  if [[ "$git_root" == "$workdir" ]]; then
+    list="$(mktemp "${TMPDIR:-/tmp}/agent-worktrees.XXXXXXXX")"
+    git -C "$workdir" worktree list --porcelain -z >"$list"
+    while IFS= read -r -d '' entry; do
+      case "$entry" in
+      'worktree '*)
+        sibling="${entry#worktree }"
+        [[ -d "$sibling" ]] || continue
+        sibling="$(cd "$sibling" && pwd -P)"
+        [[ "$sibling" != / ]] || {
+          echo "Refusing root sibling worktree" >&2
+          exit 1
         }
-        WORKDIR="$2"
-        shift 2
+        case "$home/" in
+        "$sibling/"*)
+          echo "Refusing broad sibling worktree: $sibling" >&2
+          exit 1
+          ;;
+        esac
+        [[ "$sibling" == "$workdir" ]] || grant "$sibling" ro >>"$policy"
         ;;
-    --)
-        shift
-        ARGS=("$@")
-        break
+      esac
+    done <"$list"
+    if [[ -f "$workdir/.git" ]]; then
+      common="$(git -C "$workdir" rev-parse --path-format=absolute --git-common-dir)"
+      common="$(cd "$common" && pwd -P)"
+      [[ "$common" != / ]] || {
+        echo "Refusing root Git common dir" >&2
+        exit 1
+      }
+      case "$home/" in
+      "$common/"*)
+        echo "Refusing broad Git common dir: $common" >&2
+        exit 1
         ;;
-    *)
-        ARGS=("$@")
-        break
-        ;;
-    esac
-done
-
-[[ -r "$PROFILE" ]] || {
-    echo "Cannot read profile: $PROFILE" >&2
-    exit 1
-}
-
-WORKDIR="${WORKDIR:-$(pwd -P)}"
-WORKDIR="$(cd "$WORKDIR" && pwd -P)" || {
-    echo "Invalid workdir: $WORKDIR" >&2
-    exit 1
-}
-
-# BSD mktemp requires its XXXXXX template at the end of the path.
-tmp="$(mktemp "${TMPDIR:-/tmp}/agent-sandbox.XXXXXX")"
-trap 'rm -f "$tmp"' EXIT HUP INT TERM
-cp "$PROFILE" "$tmp"
-
-# Quote an absolute path as a Scheme string.
-scheme_string() {
-    python3 -c 'import json,sys; print(json.dumps(sys.argv[1]))' "$1"
-}
-
-# Emit traversal metadata grants for every ancestor, then the requested rule.
-emit_ancestors() {
-    local path="$1" current="/"
-    local part
-    IFS='/' read -r -a parts <<<"${path#/}"
-    for part in "${parts[@]}"; do
-        [[ -n "$part" ]] || continue
-        current="${current%/}/$part"
-        printf '(allow file-read-metadata (literal %s))\n' \
-            "$(scheme_string "$current")" >>"$tmp"
-    done
-}
-
-emit_readonly_dir() {
-    local path="$1"
-    [[ -d "$path" ]] || return 0
-    path="$(cd "$path" && pwd -P)"
-    emit_ancestors "$path"
-    printf '(allow file-read* (subpath %s))\n' \
-        "$(scheme_string "$path")" >>"$tmp"
-}
-
-emit_readwrite_dir() {
-    local path="$1"
-    emit_ancestors "$path"
-    printf '(allow file-read* file-write* (subpath %s))\n' \
-        "$(scheme_string "$path")" >>"$tmp"
-}
-
-# The selected project is read/write.
-emit_readwrite_dir "$WORKDIR"
-
-# OpenCode uses a dedicated temporary subdirectory; grant only that child.
-TMP_BASE="$(cd "${TMPDIR:-/tmp}" && pwd -P)"
-emit_readwrite_dir "${TMP_BASE%/}/opencode"
-
-# TUI runtimes fstat the inherited terminal. Permit metadata on this TTY only.
-if TTY_DEVICE="$(tty 2>/dev/null)" && [[ "$TTY_DEVICE" == /dev/* ]]; then
-    emit_ancestors "$TTY_DEVICE"
-    printf '(allow file-read-metadata (literal %s))\n' \
-        "$(scheme_string "$TTY_DEVICE")" >>"$tmp"
-fi
-
-# If this is a linked worktree root, snapshot all other existing worktrees
-# as read-only paths. Git reports their absolute roots in porcelain output.
-if git -C "$WORKDIR" rev-parse --is-inside-work-tree >/dev/null 2>&1; then
-    top="$(git -C "$WORKDIR" rev-parse --show-toplevel 2>/dev/null || true)"
-    if [[ "$top" == "$WORKDIR" ]]; then
-        gitdir="$(git -C "$WORKDIR" rev-parse --absolute-git-dir 2>/dev/null ||
-            true)"
-        common="$(
-            git -C "$WORKDIR" rev-parse --path-format=absolute --git-common-dir
-            2>/dev/null || true
-        )"
-
-        if [[ -n "$gitdir" && -n "$common" && "$gitdir" != "$common" ]]; then
-            # A linked worktree's shared git metadata may be outside its root.
-            emit_readwrite_dir "$common"
-        fi
-
-        while IFS= read -r line; do
-            case "$line" in
-            "worktree "*)
-                sibling="${line#worktree }"
-                [[ "$sibling" == "$WORKDIR" ]] || emit_readonly_dir "$sibling"
-                ;;
-            esac
-        done < <(git -C "$WORKDIR" worktree list --porcelain 2>/dev/null || true)
+      esac
     fi
+  fi
+fi
+grant "$workdir" rw >>"$policy"
+if [[ -n "$common" ]]; then
+  case "$common/" in "$workdir/"*) ;; *) grant "$common" rw >>"$policy" ;; esac
 fi
 
-if ((${#ARGS[@]})); then
-    sandbox-exec -f "$tmp" "${ARGS[@]}"
-else
-    sandbox-exec -f "$tmp" "${SHELL:-/bin/zsh}"
-fi
+# Apply sensitive-path denies after the workdir and worktree grants.
+cat >>"$policy" <<'SB'
+(deny file-read* file-write* file-read-metadata
+  (home-subpath "/.ssh") (home-subpath "/Library/Keychains")
+  (home-subpath "/Library/Application Support/Google/Chrome")
+  (home-subpath "/Library/Application Support/Firefox")
+  (home-subpath "/Library/Safari")
+  (home-literal "/.zshenv") (home-literal "/.zprofile")
+  (home-literal "/.zshrc") (home-literal "/.bashrc")
+  (home-literal "/.bash_profile") (home-subpath "/.config/zsh")
+  (home-subpath "/.config/sandbox-exec")
+  (subpath "/Users/mattis/dotfiles/roles/config/.config/zsh")
+  (literal "/Users/mattis/dotfiles/roles/zshenv/.zshenv")
+  (literal "/var/run/docker.sock") (literal "/private/var/run/docker.sock")
+  (home-literal "/.docker/run/docker.sock")
+  (home-literal "/.rd/docker.sock")
+  (home-literal "/.orbstack/run/docker.sock")
+  (regex #"^/private/tmp/com\.apple\.launchd\.[^/]+/Listeners$")
+  (regex #"^/private/var/run/com\.apple\.launchd\.[^/]+/Listeners$"))
+(deny network-outbound
+  (remote unix-socket (path-literal "/var/run/docker.sock"))
+  (remote unix-socket (path-literal "/private/var/run/docker.sock"))
+  (remote unix-socket (path-regex #"^/private/tmp/com\.apple\.launchd\.[^/]+/Listeners$"))
+  (remote unix-socket (path-regex #"^/private/var/run/com\.apple\.launchd\.[^/]+/Listeners$")))
+SB
+cd "$workdir"
+sandbox-exec -f "$policy" "$@"

@@ -1,0 +1,2 @@
+#!/bin/bash
+exec "$HOME/.config/sandbox-exec/run-sandboxed.sh" -- vibe "$@"
