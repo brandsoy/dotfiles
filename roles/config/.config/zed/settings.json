@@ -116,7 +116,7 @@
       ],
       "env": {}
     },
-    "⚡safe-pi-bolt": {
+    "⚡ safe-pi-bolt": {
       "favorite_config_option_values": {
         "model": [
           "openai/gpt-6.1-terra"
@@ -132,7 +132,7 @@
       ],
       "env": {}
     },
-    "🫧safe-pi": {
+    "🫧 safe-pi": {
       "type": "custom",
       "command": "/Users/mattis/.local/bin/safe-pi",
       "args": [
@@ -142,7 +142,7 @@
         "model": "github-copilot/gpt-6.1-terra"
       }
     },
-    "🫥safe-vibe": {
+    "🫥 safe-vibe": {
       "type": "custom",
       "command": "/Users/mattis/.local/bin/safe-vibe",
       "args": [
@@ -152,7 +152,7 @@
         "model": "glm-5-3"
       }
     },
-    "✈️safe-copilot": {
+    "✈️ safe-copilot": {
       "type": "custom",
       "command": "/Users/mattis/.local/bin/safe-copilot",
       "args": [
@@ -163,7 +163,7 @@
         "model": "claude-haiku-5.5"
       }
     },
-    "💥safe-codex": {
+    "💥 safe-codex": {
       "type": "custom",
       "command": "npx",
       "args": [
