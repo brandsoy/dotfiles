@@ -11,8 +11,7 @@
   "soft_wrap": "editor_width",
   "which_key": {
     "enabled": true,
-    "delay_ms":500
-
+    "delay_ms": 500
   },
   "proxy": "",
   "agent_buffer_font_family": "JetBrainsMono Nerd Font",
@@ -33,24 +32,24 @@
   },
   "agent": {
     "sandbox_permissions": {
-          "network_hosts": [
-            "github.com",
-            "*.npmjs.org",
-            "crates.io"
-          ],
-          "write_paths": [
-            "/Users/mattis/.cache/cargo",
-            "/Users/mattis/.npm"
-          ]
-        },
+      "network_hosts": [
+        "github.com",
+        "*.npmjs.org",
+        "crates.io"
+      ],
+      "write_paths": [
+        "/Users/mattis/.cache/cargo",
+        "/Users/mattis/.npm"
+      ]
+    },
     "flexible": true,
     "dock": "left",
     "favorite_models": [],
     "model_parameters": [],
     "commit_message_model": {
-          "provider": "copilot_chat",
-          "model": "claude-haiku-5.5"
-        }
+      "provider": "copilot_chat",
+      "model": "claude-haiku-5.5"
+    }
   },
   "agent_servers": {
     "mistral-vibe": {
@@ -75,6 +74,14 @@
       "type": "registry"
     },
     "codex-acp": {
+      "default_config_options": {
+        "model": "gpt-6.2-sol"
+      },
+      "favorite_config_option_values": {
+        "model": [
+          "gpt-6.2-sol"
+        ]
+      },
       "type": "registry"
     },
     "pi-acp": {
@@ -94,44 +101,81 @@
       "type": "registry"
     },
     "pi-bolt": {
-          "favorite_config_option_values": {
-             "model": [
-                "openai/gpt-6.1-terra"
-             ]
-          },
-          "default_config_options": {
-             "model": "github-copilot/gpt-6.1-terra"
-          },
-          "type": "custom",
-          "command": "/Users/mattis/.local/bin/pi-bolt",
-          "args": ["--acp"],
-          "env": {}
+      "favorite_config_option_values": {
+        "model": [
+          "openai/gpt-6.1-terra"
+        ]
+      },
+      "default_config_options": {
+        "model": "github-copilot/gpt-6.1-terra"
+      },
+      "type": "custom",
+      "command": "/Users/mattis/.local/bin/pi-bolt",
+      "args": [
+        "--acp"
+      ],
+      "env": {}
     },
-    "opencode": {
+    "⚡safe-pi-bolt": {
+      "favorite_config_option_values": {
+        "model": [
+          "openai/gpt-6.1-terra"
+        ]
+      },
       "default_config_options": {
         "model": "github-copilot/claude-haiku-5.5"
       },
-      "favorite_config_option_values": {
-        "model": [
-          "openai/gpt-5.6-luna",
-          "openai/gpt-5.6-terra"
-        ]
-      },
-      "type": "registry"
+      "type": "custom",
+      "command": "/Users/mattis/.local/bin/safe-pi-bolt",
+      "args": [
+        "--acp"
+      ],
+      "env": {}
     },
-    "safe-pi-bolt": {
-          "favorite_config_option_values": {
-             "model": [
-                "openai/gpt-6.1-terra"
-             ]
-          },
-          "default_config_options": {
-             "model": "github-copilot/claude-haiku-5.5"
-          },
-          "type": "custom",
-          "command": "/Users/mattis/.local/bin/safe-pi-bolt",
-          "args": ["--acp"],
-          "env": {}
+    "🫧safe-pi": {
+      "type": "custom",
+      "command": "/Users/mattis/.local/bin/safe-pi",
+      "args": [
+        "--acp"
+      ],
+      "default_config_options": {
+        "model": "github-copilot/gpt-6.1-terra"
+      }
+    },
+    "🫥safe-vibe": {
+      "type": "custom",
+      "command": "/Users/mattis/.local/bin/safe-vibe",
+      "args": [
+        "--acp"
+      ],
+      "default_config_options": {
+        "model": "glm-5-3"
+      }
+    },
+    "✈️safe-copilot": {
+      "type": "custom",
+      "command": "/Users/mattis/.local/bin/safe-copilot",
+      "args": [
+        "--acp",
+        "--stdio"
+      ],
+      "default_config_options": {
+        "model": "claude-haiku-5.5"
+      }
+    },
+    "💥safe-codex": {
+      "type": "custom",
+      "command": "npx",
+      "args": [
+        "--yes",
+        "@agentclientprotocol/codex-acp@2.7.0"
+      ],
+      "env": {
+        "CODEX_PATH": "/Users/mattis/.local/bin/safe-codex"
+      },
+      "default_config_options": {
+        "model": "gpt-6.2-sol"
+      }
     },
   },
   "cli_default_open_behavior": "existing_window",
@@ -172,74 +216,93 @@
   "theme": {
     "mode": "dark",
     "light": "Dracula Light (Alucard",
-    "dark": "Carbonfox",
+    "dark": "Tokyo Night",
   },
   "format_on_save": "on",
   "languages": {
-      "Go": {
-        "language_servers": ["gopls", "!..."],
-        "formatter": {
-          "language_server": {
-            "name": "gopls"
-          }
-        }
-      },
-      "Svelte": {
-        "language_servers": ["svelte-language-server", "!..."],
-        "formatter": {
-          "language_server": {
-            "name": "svelte-language-server"
-          }
-        }
-      },
-      "TypeScript": {
-        "language_servers": ["biome", "typescript-language-server", "!..."],
-        "formatter": {
-          "language_server": {
-            "name": "biome"
-          }
-        }
-      },
-      "JavaScript": {
-        "language_servers": ["biome", "typescript-language-server", "!..."],
-        "formatter": {
-          "language_server": {
-            "name": "biome"
-          }
-        }
-      },
-      "JSON": {
-        "language_servers": ["biome", "!..."],
-        "formatter": {
-          "language_server": {
-            "name": "biome"
-          }
-        }
-      },
-      "JSONC": {
-        "language_servers": ["biome", "!..."],
-        "formatter": {
-          "language_server": {
-            "name": "biome"
-          }
+    "Go": {
+      "language_servers": [
+        "gopls",
+        "!..."
+      ],
+      "formatter": {
+        "language_server": {
+          "name": "gopls"
         }
       }
     },
-
-    "lsp": {
-      "gopls": {
-        "initialization_options": {
-          "gofumpt": true,
-          "analyses": {
-            "unusedparams": true,
-            "shadow": true
-          }
+    "Svelte": {
+      "language_servers": [
+        "svelte-language-server",
+        "!..."
+      ],
+      "formatter": {
+        "language_server": {
+          "name": "svelte-language-server"
         }
-      },
-      "biome": {
-        "settings": {
-          "require_config_file": true
+      }
+    },
+    "TypeScript": {
+      "language_servers": [
+        "biome",
+        "typescript-language-server",
+        "!..."
+      ],
+      "formatter": {
+        "language_server": {
+          "name": "biome"
+        }
+      }
+    },
+    "JavaScript": {
+      "language_servers": [
+        "biome",
+        "typescript-language-server",
+        "!..."
+      ],
+      "formatter": {
+        "language_server": {
+          "name": "biome"
+        }
+      }
+    },
+    "JSON": {
+      "language_servers": [
+        "biome",
+        "!..."
+      ],
+      "formatter": {
+        "language_server": {
+          "name": "biome"
+        }
+      }
+    },
+    "JSONC": {
+      "language_servers": [
+        "biome",
+        "!..."
+      ],
+      "formatter": {
+        "language_server": {
+          "name": "biome"
         }
       }
     }
+  },
+  "lsp": {
+    "gopls": {
+      "initialization_options": {
+        "gofumpt": true,
+        "analyses": {
+          "unusedparams": true,
+          "shadow": true
+        }
+      }
+    },
+    "biome": {
+      "settings": {
+        "require_config_file": true
+      }
+    }
+  }
 }

@@ -93,8 +93,3 @@ function fkill {
 	[[ -n "$pid" ]] || return
 	kill "$pid"
 }
-
-safe-opencode() { "$HOME/.config/sandbox-exec/run-sandboxed.sh" -- opencode "$@"; }
-safe-vibe() { "$HOME/.config/sandbox-exec/run-sandboxed.sh" -- vibe "$@"; }
-safe-pi() { "$HOME/.config/sandbox-exec/run-sandboxed.sh" -- pi "$@"; }
-safe-pi-bolt() { "$HOME/.config/sandbox-exec/run-sandboxed.sh" -- pi-bolt "$@"; }

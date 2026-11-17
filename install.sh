@@ -12,13 +12,15 @@ LINUX_ROLE=linux-config
 usage() {
   cat <<'EOF'
 Usage: ./install.sh <command>
+       dotfiles <command> (after linking)
 
   links [role ...]  Link configs only; default: shared + platform
                     Opposite-platform roles are always excluded
   packages         Install macOS or Fedora packages
-  packages-sync    Reconcile the Brewfile with installed Homebrew packages
+  packages-sync    Reconcile Brewfile packages and remove untapped repositories
   plugins          Initialize pinned submodules, TPM 
   binaries         Build the Go tools
+  update           Check or upgrade Homebrew and mise tools (see update --help)
   all              Install packages, plugins, links, and Go binaries
   -h, --help       Show this help without making changes
 
@@ -148,11 +150,13 @@ sync_packages() {
   # Manifest and machine names are compared by short name (last path
   # segment) so that tap-qualified entries ("tap/name") and bare names
   # both match the same installed package.
-  local manifest_brew manifest_cask installed_brew installed_cask
+  local manifest_brew manifest_cask manifest_taps installed_brew installed_cask installed_taps
   manifest_brew="$(awk '/^brew "/ { sub(/^brew "/, ""); sub(/".*/, ""); sub(/^.*\//, ""); print }' "$brewfile" | sort -u)"
   manifest_cask="$(awk '/^cask "/ { sub(/^cask "/, ""); sub(/".*/, ""); sub(/^.*\//, ""); print }' "$brewfile" | sort -u)"
+  manifest_taps="$(awk -F '"' '/^tap "/ { print $2 }' "$brewfile" | sort -u)"
   installed_brew="$(brew list --formula | sort -u)"
   installed_cask="$(brew list --cask | sort -u)"
+  installed_taps="$(brew tap | sort -u)"
   # Additions are deliberate installs only; transitive dependencies stay
   # implicit. Full names keep new entries resolvable on a fresh machine.
   local leaves_brew full_cask
@@ -165,9 +169,10 @@ sync_packages() {
     untracked="$(awk '!/^[[:space:]]*(#|$)/ { sub(/^.*\//, ""); print }' "$ROLES_DIR/packages-macos/untracked.txt" | sort -u)"
   fi
 
-  local removed_brew removed_cask added_brew added_cask added_shorts
+  local removed_brew removed_cask removed_taps added_brew added_cask added_shorts
   removed_brew="$(comm -23 <(sorted_lines "$manifest_brew") <(sorted_lines "$installed_brew"))"
   removed_cask="$(comm -23 <(sorted_lines "$manifest_cask") <(sorted_lines "$installed_cask"))"
+  removed_taps="$(comm -23 <(sorted_lines "$manifest_taps") <(sorted_lines "$installed_taps"))"
   added_shorts="$(comm -13 <(sorted_lines "$manifest_brew") <(short_sorted_lines "$leaves_brew"))"
   added_shorts="$(comm -23 <(sorted_lines "$added_shorts") <(sorted_lines "$untracked"))"
   added_brew="$(ADDED="$added_shorts" map_full_names "$leaves_brew")"
@@ -175,18 +180,20 @@ sync_packages() {
   added_shorts="$(comm -23 <(sorted_lines "$added_shorts") <(sorted_lines "$untracked"))"
   added_cask="$(ADDED="$added_shorts" map_full_names "$full_cask")"
 
-  if [[ -n "$removed_brew" || -n "$removed_cask" ]]; then
-    # Drop manifest lines whose package is no longer installed; keep
-    # comments, taps, ordering, and any per-entry args untouched.
-    REMOVE_BREW="$removed_brew" REMOVE_CASK="$removed_cask" awk '
+  if [[ -n "$removed_brew$removed_cask$removed_taps" ]]; then
+    # Keep comments, ordering, and per-entry arguments on retained lines.
+    REMOVE_BREW="$removed_brew" REMOVE_CASK="$removed_cask" REMOVE_TAPS="$removed_taps" awk -F '"' '
             BEGIN {
                 n = split(ENVIRON["REMOVE_BREW"], b, "\n")
                 for (i = 1; i <= n; i++) remove_brew[b[i]] = 1
                 n = split(ENVIRON["REMOVE_CASK"], c, "\n")
                 for (i = 1; i <= n; i++) remove_cask[c[i]] = 1
+                n = split(ENVIRON["REMOVE_TAPS"], t, "\n")
+                for (i = 1; i <= n; i++) remove_tap[t[i]] = 1
             }
             /^brew "/ { line = $0; sub(/^brew "/, "", line); sub(/".*/, "", line); sub(/^.*\//, "", line); if (line in remove_brew) next }
             /^cask "/ { line = $0; sub(/^cask "/, "", line); sub(/".*/, "", line); sub(/^.*\//, "", line); if (line in remove_cask) next }
+            /^tap "/ && ($2 in remove_tap) { next }
             { print }
         ' "$brewfile" >"$brewfile.tmp" && mv "$brewfile.tmp" "$brewfile"
   fi
@@ -199,14 +206,15 @@ sync_packages() {
     } >>"$brewfile"
   fi
 
-  if [[ -z "$removed_brew$removed_cask$added_brew$added_cask" ]]; then
-    echo "Brewfile already matches installed packages."
+  if [[ -z "$removed_brew$removed_cask$removed_taps$added_brew$added_cask" ]]; then
+    echo "No Brewfile changes needed."
     return 0
   fi
-  if [[ -n "$removed_brew$removed_cask" ]]; then
+  if [[ -n "$removed_brew$removed_cask$removed_taps" ]]; then
     echo "Removed (no longer installed):"
     print_prefixed brew "$removed_brew"
     print_prefixed cask "$removed_cask"
+    print_prefixed tap "$removed_taps"
   fi
   if [[ -n "$added_brew$added_cask" ]]; then
     echo "Added (installed but untracked):"
@@ -327,6 +335,11 @@ main() {
   -h | --help)
     usage
     return 0
+    ;;
+  update)
+    shift
+    "$DOTFILES_DIR/scripts/maintenance/update-tools.sh" "$@"
+    return
     ;;
   links)
     shift

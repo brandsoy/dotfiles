@@ -21,7 +21,8 @@ while [[ $# -gt 0 ]]; do
         ;;
     -h | --help)
         cat <<'EOF'
-Usage: update-tools.sh [--check] [--cleanup]
+Usage: dotfiles update [--check] [--cleanup]
+       ./install.sh update [--check] [--cleanup]
 
 Check or upgrade the tools declared in Homebrew and mise manifests.
 

@@ -17,8 +17,7 @@ SHELL_SCRIPTS=(
   "$REPO_DIR"/scripts/tmux/minimal-theme/*.tmux
   "$REPO_DIR"/scripts/tmux/minimal-theme/scripts/*.sh
   "$REPO_DIR"/roles/bin/.local/bin/ai-models
-  "$REPO_DIR"/roles/bin/.local/bin/dotfiles-install
-  "$REPO_DIR"/roles/bin/.local/bin/dotfiles-update
+  "$REPO_DIR"/roles/bin/.local/bin/dotfiles
   "$REPO_DIR"/roles/bin/.local/bin/keybinds
   "$REPO_DIR"/roles/bin/.local/bin/theme-switcher
   "$REPO_DIR"/roles/macos-config/.config/sandbox-exec/run-sandboxed.sh

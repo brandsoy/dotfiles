@@ -1,4 +1,4 @@
-# Pinned submodules; install/update them explicitly with dotfiles-install plugins.
+# Pinned submodules; install/update them explicitly with dotfiles plugins.
 # Shell startup never downloads, updates, or removes plugins.
 ZPLUGINDIR="$ZDOTDIR/plugins"
 for plugin in zsh-autosuggestions zsh-history-substring-search zsh-vi-mode; do

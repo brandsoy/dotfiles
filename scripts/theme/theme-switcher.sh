@@ -386,7 +386,7 @@ apply_theme() {
 
   load_theme "$theme" || return 1
   if [[ ! -f "$KITTY_INCLUDE" ]]; then
-    printf 'Theme asset missing: %s. Run dotfiles-install plugins and links first.\n' "$KITTY_INCLUDE" >&2
+    printf 'Theme asset missing: %s. Run dotfiles plugins and dotfiles links first.\n' "$KITTY_INCLUDE" >&2
     return 1
   fi
 

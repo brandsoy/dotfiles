@@ -4,11 +4,6 @@ roles/config/.config/github-copilot/apps.json
 roles/config/.config/github-copilot/hosts.json
 roles/config/.config/zsh/secrets.zsh
 
-# Herdr runtime state stays machine-local; config.toml is versioned.
-roles/config/.config/herdr/*
-!roles/config/.config/herdr/config.toml
-!roles/config/.config/herdr/plugins.txt
-
 # Generated/runtime directories
 roles/config/.config/github-copilot/rd/
 roles/config/.config/github-copilot/go/
@@ -85,5 +80,3 @@ roles/vibe/.vibe/vibehistory
 roles/vibe/.vibe/cache.toml
 roles/vibe/.vibe/trusted_folders.toml
 /roles/bin/.local/bin/bookmark-sync
-/roles/bin/.local/bin/herdr-agent-picker
-/roles/bin/.local/bin/herdr-agent-picker

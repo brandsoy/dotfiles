@@ -1,2 +1,6 @@
 #!/bin/bash
+if [[ "${1:-}" == --acp ]]; then
+  shift
+  exec "$HOME/.config/sandbox-exec/run-sandboxed.sh" -- vibe-acp "$@"
+fi
 exec "$HOME/.config/sandbox-exec/run-sandboxed.sh" -- vibe "$@"

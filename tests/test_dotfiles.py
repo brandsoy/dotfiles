@@ -152,6 +152,7 @@ def make_env(root, binaries):
         elif name == "bat":
             body += 'printf "Theme a\\nTheme b\\n"\n'
         elif name == "brew":
+            body += 'if [ "$#" = 1 ] && [ "$1" = tap ]; then printf "%s\\n" ${BREW_TAPS:-}; exit 0; fi\n'
             body += 'if [ "$1" = leaves ]; then printf "%s\\n" ${BREW_LEAVES:-}; exit 0; fi\n'
             body += 'if [ "$1" = list ] && [ "$2" = --cask ] && [ "$3" = --full-name ]; then printf "%s\\n" ${BREW_CASKS_FULL:-}; exit 0; fi\n'
             body += 'if [ "$1" = list ]; then case "$2" in --formula) printf "%s\\n" ${BREW_FORMULAE:-};; --cask) printf "%s\\n" ${BREW_CASKS:-};; esac; exit 0; fi\n'
@@ -239,41 +240,6 @@ def test_plugin_migration(binaries):
     )
 
 
-def test_herdr_hermes_integration(binaries):
-    """Install the official Herdr integration when Hermes is available."""
-    with tempfile.TemporaryDirectory(prefix="dotfiles-hermes-integration-") as temporary:
-        root = Path(temporary)
-        home, repo, mockbin = root / "home", root / "repo", root / "bin"
-        home.mkdir()
-        mockbin.mkdir()
-        copy("install.sh", repo)
-        put(repo / "roles/config/.config/herdr/plugins.txt", "# no third-party plugins\n")
-        log = root / "commands"
-        for name in ("herdr", "hermes"):
-            path = mockbin / name
-            body = 'printf "%s\\n" "$*" >> "$LOG"\n' if name == "herdr" else ":\n"
-            put(path, "#!/bin/sh\n" + body)
-            path.chmod(0o755)
-        env = {
-            "HOME": str(home),
-            "PATH": f"{mockbin}:/usr/bin:/bin",
-            "LOG": str(log),
-        }
-        run(
-            [
-                binaries["bash"],
-                "-c",
-                'source "$1"; install_herdr_plugins',
-                "test",
-                str(repo / "install.sh"),
-            ],
-            env,
-            root,
-        )
-        assert log.read_text().splitlines() == ["integration install hermes"]
-    print("OK: Hermes Herdr integration is installed with configured Herdr plugins")
-
-
 def test_installer_safety(root, binaries):
     """Help and rejected commands change nothing."""
     repo, env = make_repo(root), make_env(root, binaries)
@@ -289,6 +255,27 @@ def test_installer_safety(root, binaries):
     assert not (root / "commands").exists()
     assert not list((root / "home").iterdir())
     print("OK: no-args/help/error invocations leave the home untouched")
+
+
+def test_dotfiles_command(root, binaries):
+    repo, env = make_repo(root), make_env(root, binaries)
+    copy("roles/bin/.local/bin/dotfiles", repo)
+    copy("scripts/maintenance/update-tools.sh", repo)
+    install(repo, env, root, binaries, "links", "bin")
+    command = str(root / "home/.local/bin/dotfiles")
+    env["DOTFILES_DIR"] = str(repo)
+
+    assert "update" in run([command], env, root).stdout
+    assert "--check" in run([command, "update", "--help"], env, root).stdout
+    run([command, "links", "invalid"], env, root, ok=False)
+    assert not (root / "commands").exists()
+
+    run([command, "update", "--check"], env, root)
+    assert (root / "commands").read_text().splitlines() == [
+        "brew outdated --greedy",
+        "mise outdated",
+    ]
+    print("OK: linked dotfiles command routes setup and tool update arguments")
 
 
 def test_links(root, binaries):
@@ -370,7 +357,7 @@ def test_packages_sync(root, binaries):
     repo, env = make_repo(root), make_env(root, binaries)
     env["TEST_OS"] = "macos"
     env["BREW_FORMULAE"] = (
-        "kept dep-of-kept nested-kept"  # dep-of-kept: installed but not a leaf
+        "kept dep-of-kept nested-kept installed-only full-only excluded-only"
     )
     env["BREW_LEAVES"] = (
         "kept installed-only some/tap/nested-kept full-only excluded-only"
@@ -381,14 +368,16 @@ def test_packages_sync(root, binaries):
     )
     env["BREW_CASKS"] = "kept-cask nested-cask new-cask"
     env["BREW_CASKS_FULL"] = "kept-cask some/tap/nested-cask some/tap/new-cask"
+    env["BREW_TAPS"] = "some/tap other/local-tap"
     brewfile = repo / "roles/packages-macos/Brewfile"
     put(
         brewfile,
-        'tap "homebrew/core"\n# comment stays\nbrew "kept"\nbrew "gone"\nbrew "some/tap/nested-kept"\ncask "kept-cask"\ncask "some/tap/nested-cask"\n',
+        'tap "some/tap", trusted: true\n# comment stays\nbrew "kept"\nbrew "gone"\nbrew "some/tap/nested-kept"\ncask "kept-cask"\ncask "some/tap/nested-cask"\n',
     )
     install(repo, env, root, binaries, "packages-sync")
     text = brewfile.read_text()
-    assert 'tap "homebrew/core"' in text
+    assert 'tap "some/tap", trusted: true\n' in text
+    assert 'tap "other/local-tap"' not in text
     assert "# comment stays" in text
     assert 'brew "kept"' in text
     assert 'brew "gone"' not in text
@@ -403,6 +392,10 @@ def test_packages_sync(root, binaries):
     assert 'cask "new-cask"' not in text
     assert 'brew "dep-of-kept"' not in text  # transitive deps stay implicit
     assert 'brew "excluded-only"' not in text  # untracked.txt exclusions stick
+    put(brewfile, 'tap "old/tap", trusted: true\n' + text)
+    result = install(repo, env, root, binaries, "packages-sync")
+    assert "tap old/tap" in result.stdout
+    assert brewfile.read_text() == text
     # Empty categories and comment-only exclusions are valid manifests.
     put(repo / "roles/packages-macos/untracked.txt", "# no exclusions\n")
     for content in ('brew "kept"\n', 'cask "kept-cask"\n', '# empty\n'):
@@ -412,7 +405,7 @@ def test_packages_sync(root, binaries):
     env["TEST_OS"] = "fedora"
     install(repo, env, root, binaries, "packages-sync", ok=False)
     print(
-        "OK: Brewfile reconciled: uninstalled entries removed, leaves and casks appended"
+        "OK: Brewfile reconciled: uninstalled entries and taps removed, leaves and casks appended"
     )
 
 
@@ -711,9 +704,9 @@ def main():
     binaries = {name: shutil.which(name) for name in ("bash", "zsh", "git", "stow")}
     assert all(binaries.values()), "Install bash, zsh, git, and stow first"
     test_plugin_migration(binaries)
-    test_herdr_hermes_integration(binaries)
     tests = (
         test_installer_safety,
+        test_dotfiles_command,
         test_links,
         test_packages,
         test_packages_sync,

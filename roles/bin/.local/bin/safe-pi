@@ -1,2 +1,6 @@
 #!/bin/bash
+if [[ "${1:-}" == --acp ]]; then
+  shift
+  exec "$HOME/.config/sandbox-exec/run-sandboxed.sh" -- npx --yes pi-acp@0.0.34 "$@"
+fi
 exec "$HOME/.config/sandbox-exec/run-sandboxed.sh" -- pi "$@"
