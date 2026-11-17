@@ -1,0 +1,3 @@
+#!/bin/bash
+# Safehouse supplies the OS sandbox without changing Copilot's approval settings.
+exec safehouse -- copilot --no-sandbox "$@"

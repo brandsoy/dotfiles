@@ -1,0 +1,3 @@
+#!/bin/bash
+# Keep the app server inside Safehouse and avoid nesting Seatbelt sandboxes.
+exec safehouse -- codex --no-daemon --sandbox danger-full-access "$@"
