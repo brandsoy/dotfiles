@@ -61,13 +61,11 @@
     "github-copilot-cli": {
       "default_config_options": {
         "allow_all": "on",
-        "model": "claude-haiku-5.5"
+        "model": "gpt-6.2-sol"
       },
       "favorite_config_option_values": {
         "model": [
-          "gpt-6.1-terra",
           "claude-haiku-5.5",
-          "gpt-6-luna",
           "auto"
         ]
       },
@@ -216,7 +214,7 @@
   "theme": {
     "mode": "dark",
     "light": "Dracula Light (Alucard",
-    "dark": "Tokyo Night",
+    "dark": "Ayu Dark",
   },
   "format_on_save": "on",
   "languages": {

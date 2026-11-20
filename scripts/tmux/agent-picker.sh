@@ -16,7 +16,7 @@ rows=$(tmux list-panes -a -F '#{pane_id}	#{pane_tty}	#{session_name}:#{window_in
       terminal == tty {
         for (i = 2; i <= NF && i <= 4; i++) {
           name = $i; sub(/^.*\//, "", name); sub(/\.(js|mjs|cjs)$/, "", name)
-          if (name ~ /^(pi|claude|codex|opencode|gemini|aider)$/) { print name; exit }
+          if (name ~ /^(pi|claude|codex|opencode|gemini|aider|copilot|vibe)(-[a-z]+)*$/) { print name; exit }
           if (i == 2 && name !~ /^(node|bun|python|python3|env)$/) break
         }
       }')
