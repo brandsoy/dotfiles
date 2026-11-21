@@ -20,6 +20,7 @@ M.themes = {
 	{ name = 'github-monochrome-rosepine' },
 	{ name = 'github-monochrome-rosepine-dawn' },
 	{ name = 'github-monochrome-zenbones' },
+	{ name = 'vim' },
 }
 
 M.theme_names = {}

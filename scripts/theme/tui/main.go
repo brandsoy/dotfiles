@@ -13,14 +13,25 @@ import (
 	"github.com/charmbracelet/lipgloss"
 )
 
+const defaultTheme = "terminal-defaults"
+
 type theme struct {
 	name   string
 	colors map[string]string
 }
+
+func (t theme) label() string {
+	if t.name == defaultTheme {
+		return "Terminal defaults"
+	}
+	return t.name
+}
+
 type model struct {
 	themes        []theme
 	selected      int
 	current       string
+	appColors     string
 	root, command string
 	width, height int
 	message       string
@@ -43,16 +54,27 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 			if m.selected+1 < len(m.themes) {
 				m.selected++
 			}
+		case "a":
+			mode := "terminal"
+			if m.appColors == "terminal" {
+				mode = "themed"
+			}
+			out, err := exec.Command(m.command, "apps", mode).CombinedOutput()
+			if err != nil {
+				m.message = fmt.Sprintf("Could not set app colors: %s %s", err, strings.TrimSpace(string(out)))
+			} else {
+				m.appColors, m.message = mode, ""
+			}
 		case "enter":
 			if len(m.themes) == 0 {
 				break
 			}
-			name := m.themes[m.selected].name
-			cmd := exec.Command(m.command, "set", name)
+			selected := m.themes[m.selected]
+			cmd := exec.Command(m.command, "set", selected.name)
 			if out, err := cmd.CombinedOutput(); err != nil {
 				m.message = fmt.Sprintf("Apply failed: %s %s", err, strings.TrimSpace(string(out)))
 			} else {
-				m.current, m.message = name, "Applied "+name
+				m.current, m.message = selected.name, "Applied "+selected.label()
 			}
 		}
 	}
@@ -91,16 +113,31 @@ func (m model) View() string {
 	preview := lipgloss.NewStyle().Width(max(0, m.width-leftWidth-6)).Border(lipgloss.RoundedBorder()).BorderForeground(lipgloss.Color("8")).Padding(0, 1)
 	var rows []string
 	for i, t := range m.themes {
-		label := "  " + t.name
+		label := t.label()
 		if t.name == m.current {
 			label += "  •"
 		}
 		if i == m.selected {
-			label = lipgloss.NewStyle().Bold(true).Foreground(lipgloss.Color("0")).Background(lipgloss.Color("6")).Width(leftWidth - 4).Render("› " + t.name)
+			label = lipgloss.NewStyle().Bold(true).Foreground(lipgloss.Color("0")).Background(lipgloss.Color("6")).Width(leftWidth - 4).Render("› " + label)
+		} else {
+			label = "  " + label
 		}
 		rows = append(rows, label)
 	}
 	t := m.themes[m.selected]
+	right := preview.Render(themePreview(t, m.height))
+	content := lipgloss.JoinHorizontal(lipgloss.Top, list.Render(strings.Join(rows, "\n")), right)
+	footer := fmt.Sprintf("↑/↓ navigate  enter apply  a app colors for named themes (%s)  q quit", m.appColors)
+	if m.message != "" {
+		footer += "  |  " + m.message
+	}
+	return lipgloss.NewStyle().Padding(1, 2).Render("theme-switcher\n" + content + "\n" + lipgloss.NewStyle().Faint(true).Render(footer))
+}
+
+func themePreview(t theme, height int) string {
+	if t.name == defaultTheme {
+		return "Use the terminal’s default palette and ANSI colors in supported apps."
+	}
 	var colors []string
 	keys := make([]string, 0, len(t.colors))
 	for key := range t.colors {
@@ -114,17 +151,11 @@ func (m model) View() string {
 		colors = append(colors, fmt.Sprintf("%s  %-22s %s", block, key, value))
 	}
 	body := lipgloss.NewStyle().Foreground(lipgloss.Color(t.colors["foreground"])).Background(lipgloss.Color(t.colors["background"])).Padding(1, 2).Render("Code preview (approximate)\n\n" + codePreview(t.colors) + "\n\n" + strings.Join(colors, "\n"))
-	if m.height > 8 && lipgloss.Height(body) > m.height-6 {
-		body = lipgloss.NewStyle().Height(m.height - 6).MaxHeight(m.height - 6).Render(body)
+	if height > 8 && lipgloss.Height(body) > height-6 {
+		body = lipgloss.NewStyle().Height(height - 6).MaxHeight(height - 6).Render(body)
 	}
 	title := lipgloss.NewStyle().Bold(true).Render("Theme preview: " + t.name)
-	right := preview.Render(title + "\n\n" + body)
-	content := lipgloss.JoinHorizontal(lipgloss.Top, list.Render(strings.Join(rows, "\n")), right)
-	footer := "↑/↓ navigate  enter apply  q quit"
-	if m.message != "" {
-		footer += "  |  " + m.message
-	}
-	return lipgloss.NewStyle().Padding(1, 2).Render("theme-switcher\n" + content + "\n" + lipgloss.NewStyle().Faint(true).Render(footer))
+	return title + "\n\n" + body
 }
 func load(root string) ([]theme, error) {
 	files, err := filepath.Glob(filepath.Join(root, "themes", "*.json"))
@@ -150,12 +181,14 @@ func load(root string) ([]theme, error) {
 			}
 		}
 		name := strings.TrimSuffix(filepath.Base(file), ".json")
-		themes = append(themes, theme{name, colors})
+		if name != defaultTheme {
+			themes = append(themes, theme{name, colors})
+		}
 	}
 	sort.Slice(themes, func(i, j int) bool {
 		return strings.ToLower(themes[i].name) < strings.ToLower(themes[j].name)
 	})
-	return themes, nil
+	return append([]theme{{name: defaultTheme}}, themes...), nil
 }
 func main() {
 	root := os.Getenv("THEME_SWITCHER_ROOT")
@@ -188,7 +221,12 @@ func main() {
 			break
 		}
 	}
-	p := tea.NewProgram(model{themes: themes, current: current, root: root, command: command, selected: selected}, tea.WithAltScreen())
+	appColors, err := exec.Command(command, "apps").Output()
+	if err != nil {
+		fmt.Fprintln(os.Stderr, "Could not read app colors:", err)
+		os.Exit(1)
+	}
+	p := tea.NewProgram(model{themes: themes, current: current, appColors: strings.TrimSpace(string(appColors)), root: root, command: command, selected: selected}, tea.WithAltScreen())
 	if _, err := p.Run(); err != nil {
 		fmt.Fprintln(os.Stderr, err)
 		os.Exit(1)

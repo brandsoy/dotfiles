@@ -26,6 +26,7 @@ MOCKED_TOOLS = (
     "zoxide",
     "fzf",
     "kitty",
+    "ps",
     "tmux",
     "bat",
     "rpm",
@@ -506,7 +507,7 @@ VSCODE_THEME="Theme {name}"
         put(path, jsonc)
 
     theme_cmd = [binaries["bash"], str(repo / "scripts/theme/theme-switcher.sh")]
-    run(theme_cmd + ["current"], env, root)
+    assert "vscode:" not in run(theme_cmd + ["current"], env, root).stdout
     state = home / ".local/state/theme-switcher"
     assert (state / "current").read_text() == "a\n"
     assert "/old/machine" not in (state / "current.env").read_text()
@@ -550,7 +551,8 @@ def test_theme_generation(root, binaries):
     command = [binaries["bash"], str(repo / "scripts/theme/theme-switcher.sh")]
     themes = sorted(path.stem for path in (definitions / "themes").glob("*.json"))
     assert themes, "No themes found in definitions"
-    assert run(command + ["list"], env, root).stdout.splitlines() == themes
+    choices = sorted([*themes, "terminal-defaults"])
+    assert run(command + ["list"], env, root).stdout.splitlines() == choices
     before = {
         path: path.read_bytes() for path in definitions.rglob("*") if path.is_file()
     }
@@ -564,8 +566,6 @@ def test_theme_generation(root, binaries):
         "lazygit.yml": state / "lazygit.yml",
         "yazi.theme.toml": config / "yazi/theme.toml",
         "eza.theme.yml": config / "eza/theme.yml",
-        "opencode.theme.json": config / "opencode/theme.json",
-        "sqlmux.theme.toml": config / "sqlmux/themes/dotfiles.toml",
     }
     renderer = runpy.run_path(str(REPO / "scripts/theme/render-theme.py"))
     for theme in themes:
@@ -595,10 +595,48 @@ def test_theme_generation(root, binaries):
         assert exports.stdout.strip() == str(state / "generated" / theme / "fzf.sh")
     assert all(path.read_bytes() == content for path, content in before.items())
 
+    run(command + ["set", "terminal-defaults"], env, root)
+    assert "theme: terminal-defaults" in run(command + ["current"], env, root).stdout
+    run(command + ["apply"], env, root)
+    run(command + ["auto"], env, root)
+    assert (state / "current").read_text().strip() == "terminal-defaults"
+    assert not targets["ghostty"].exists()
+    assert targets["kitty.conf"].read_text() == ""
+    assert "export BAT_THEME=ansi\n" in (state / "current.env").read_text()
+
+    # Terminal mode keeps the emulator palette and replaces app-specific colors.
+    run(command + ["set", "SupaTheme"], env, root)
+    terminals = {key: targets[key].read_bytes() for key in ("ghostty", "kitty.conf")}
+    assert all(terminals.values())
+    assert run(command + ["apps"], env, root).stdout.strip() == "themed"
+    run(command + ["apps", "terminal"], env, root)
+    assert run(command + ["apps"], env, root).stdout.strip() == "terminal"
+    assert all(targets[key].read_bytes() == value for key, value in terminals.items())
+    for key in ("btop.theme", "yazi.theme.toml", "eza.theme.yml"):
+        assert not targets[key].exists(), key
+    assert (state / "fzf-ansi.sh").read_text().endswith(' --color=16"\n')
+    assert "export BAT_THEME=ansi\n" in (state / "current.env").read_text()
+    assert "brightblack" in targets["tmux.theme.conf"].read_text()
+    assert "[default]" in targets["lazygit.yml"].read_text()
+    assert (root / "home/.local/state/nvim/theme.txt").read_text() == "vim\n"
+    run(command + ["set", "rwth-dark"], env, root)
+    run(command + ["apply"], env, root)
+    assert not targets["btop.theme"].exists()
+    assert "export BAT_THEME=ansi\n" in (state / "current.env").read_text()
+    run(command + ["apps", "invalid"], env, root, ok=False)
+    assert run(command + ["apps"], env, root).stdout.strip() == "terminal"
+    run(command + ["apps", "themed"], env, root)
+    expected, _ = renderer["render"](definitions, "rwth-dark", config)
+    assert targets["btop.theme"].read_text() == expected["btop.theme"]
+    assert targets["tmux.theme.conf"].read_text() == expected["tmux.theme.conf"]
+
     # Editing one color propagates through all managed apps on re-apply.
     run(command + ["set", "rwth-dark"], env, root)
     theme_file = definitions / "themes/rwth-dark.json"
     definition = json.loads(theme_file.read_text())
+    definition["mappings"]["VSCODE_THEME"] = "Old suggestion"
+    for filename in ("opencode.theme.json", "sqlmux.theme.toml"):
+        definition["files"][filename] = {"template": "retired-template"}
     definition["palette"]["background"] = "@custom_background"
     definition["palette"]["custom_background"] = "#123456"
     put(theme_file, json.dumps(definition))
@@ -609,7 +647,12 @@ def test_theme_generation(root, binaries):
     assert "#123456" in (generated / "fzf.sh").read_text()
     assert "#123456" in (generated / "starship.toml").read_text()
     assert "#123456" in (generated / "yazi.theme.toml").read_text()
-    assert 'bg = "#123456"' in (generated / "sqlmux.theme.toml").read_text()
+    assert not (generated / "sqlmux.theme.toml").exists()
+    assert not (generated / "opencode.theme.json").exists()
+    assert not (config / "sqlmux/themes/dotfiles.toml").exists()
+    assert not (config / "opencode/theme.json").exists()
+    assert not (state / "opencode-ansi.json").exists()
+    assert "VSCODE_THEME" not in (generated / "theme.env").read_text()
     assert "color8 #9c9e9f" in targets["kitty.conf"].read_text()
     assert (
         "palette = 8=#000c17" in targets["ghostty"].read_text()
@@ -642,6 +685,9 @@ def test_theme_generation(root, binaries):
         put(theme_file, json.dumps(broken))
         run(command + ["apply"], env, root, ok=False)
         assert all(path.read_bytes() == content for path, content in stable.items())
+    run(command + ["apps", "terminal"], env, root, ok=False)
+    assert run(command + ["apps"], env, root).stdout.strip() == "themed"
+    assert all(path.read_bytes() == content for path, content in stable.items())
     run(command + ["set", "../rwth-dark"], env, root, ok=False)
 
     # Removed optional outputs cannot survive editing a theme definition.
@@ -658,7 +704,7 @@ def test_theme_generation(root, binaries):
     install(repo, env, root, binaries, "links", "config")
     del env["THEME_SWITCHER_ROOT"]
     assert (config / "theme-switcher/themes/rwth-dark.json").is_symlink()
-    assert run(command + ["list"], env, root).stdout.splitlines() == themes
+    assert run(command + ["list"], env, root).stdout.splitlines() == choices
     run(command + ["set", "carbonfox"], env, root)
     print(
         f"OK: all {len(themes)} themes, shared palette edits, app overrides, validation, overlay cleanup, Stow deployment"
@@ -697,6 +743,13 @@ def test_zsh_shell(root, binaries):
         line.startswith("curl ")
         for line in (root / "commands").read_text().splitlines()
     )
+    put(home / ".local/state/theme-switcher/current.env", "export THEME_SWITCHER_APPS=terminal\n")
+    result = run(
+        [binaries["zsh"], "-dfi", "-c", shell + "; alias btop"],
+        env,
+        root,
+    )
+    assert "btop='btop --tty'" in result.stdout
     print("OK: offline Zsh startup, lazydocker alias, default starship config")
 
 

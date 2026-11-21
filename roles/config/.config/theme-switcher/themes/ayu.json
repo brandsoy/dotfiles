@@ -17,8 +17,7 @@
   "mappings": {
     "GHOSTTY_THEME": "Ayu Dark",
     "NVIM_THEME": "ayu-dark",
-    "BAT_THEME": "TwoDark",
-    "VSCODE_THEME": "Ayu Dark"
+    "BAT_THEME": "TwoDark"
   },
   "files": {
     "btop.theme": {

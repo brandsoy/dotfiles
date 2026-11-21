@@ -1,12 +1,13 @@
 #!/usr/bin/env python3
 """Render theme-switcher definitions. Python standard library only."""
+
 import json
 import os
-from pathlib import Path
 import re
 import shlex
 import sys
 import tempfile
+from pathlib import Path
 
 TOKEN = re.compile(r"\{\{([a-zA-Z0-9_]+)\}\}")
 NAME = re.compile(r"[a-zA-Z0-9][a-zA-Z0-9_-]*")
@@ -17,14 +18,12 @@ OUTPUTS = {
     "btop.theme": "BTOP_THEME",
     "lazygit.yml": "LAZYGIT_THEME_FILE",
     "starship.toml": "STARSHIP_CONFIG",
-    "opencode.theme.json": "OPENCODE_THEME_FILE",
     "bat.tmTheme": "BAT_THEME_FILE",
     "tmux.theme.conf": None,
     "yazi.theme.toml": None,
     "eza.theme.yml": None,
-    "sqlmux.theme.toml": None,
 }
-MAPPINGS = {"GHOSTTY_THEME", "NVIM_THEME", "BAT_THEME", "BTOP_THEME", "VSCODE_THEME"}
+MAPPINGS = {"GHOSTTY_THEME", "NVIM_THEME", "BAT_THEME", "BTOP_THEME"}
 
 
 def render(root, name, config_home):
@@ -54,37 +53,43 @@ def render(root, name, config_home):
     mappings = definition["mappings"]
     if not isinstance(mappings, dict):
         raise ValueError("mappings must be an object")
+    # Older personal definitions can still contain retired integrations.
+    mappings.pop("VSCODE_THEME", None)
     if set(mappings) - MAPPINGS:
         raise ValueError("Unknown application mapping")
     for key in ("GHOSTTY_THEME", "NVIM_THEME", "BAT_THEME"):
         if key not in mappings:
             raise ValueError(f"Missing mapping: {key}")
-    env = {key: resolve(value).replace("{{config_home}}", str(config_home))
-           for key, value in mappings.items()}
+    env = {
+        key: resolve(value).replace("{{config_home}}", str(config_home))
+        for key, value in mappings.items()
+    }
     outputs = {}
     templates = root / "templates"
     for filename, spec in definition["files"].items():
+        if filename in ("opencode.theme.json", "sqlmux.theme.toml"):
+            continue
         if filename not in OUTPUTS:
             raise ValueError(f"Unknown output: {filename}")
         if not isinstance(spec, dict) or not isinstance(spec.get("values", {}), dict):
-            raise ValueError(f"Output {filename} must contain a template and a values object")
+            raise ValueError(
+                f"Output {filename} must contain a template and a values object"
+            )
         template_name = Path(spec["template"])
         if template_name.is_absolute() or ".." in template_name.parts:
             raise ValueError(f"Template outside templates directory: {template_name}")
         # Stow links individual files to the repository, outside this directory.
         # Reject path traversal, but allow those trusted template symlinks.
         template = templates / template_name
-        values = {**colors, **{key: resolve(value) for key, value in spec.get("values", {}).items()}}
-        outputs[filename] = TOKEN.sub(lambda match: values[match[1]], template.read_text())
+        values = {
+            **colors,
+            **{key: resolve(value) for key, value in spec.get("values", {}).items()},
+        }
+        outputs[filename] = TOKEN.sub(
+            lambda match: values[match[1]], template.read_text()
+        )
         if "{{" in outputs[filename]:
             raise ValueError(f"Invalid template variable in {filename}")
-    sqlmux_template = templates / "sqlmux/default.toml"
-    sqlmux_colors = {**colors}
-    for key, fallback in {"black": "background", "white": "foreground", "bright_black": "black", "cyan": "blue", "selection": "background"}.items():
-        sqlmux_colors.setdefault(key, sqlmux_colors[fallback])
-    outputs["sqlmux.theme.toml"] = TOKEN.sub(lambda match: sqlmux_colors[match[1]], sqlmux_template.read_text())
-    if "{{" in outputs["sqlmux.theme.toml"]:
-        raise ValueError("Invalid template variable in sqlmux.theme.toml")
     if "kitty.conf" not in outputs:
         raise ValueError("Theme must generate kitty.conf")
     return outputs, env
@@ -102,7 +107,9 @@ def generate(root, name, destination, config_home):
         bat_name = f"{name}.tmTheme"
         outputs[bat_name] = outputs.pop("bat.tmTheme")
         env["BAT_THEME_FILE"] = str(destination / bat_name)
-    outputs["theme.env"] = "".join(f"{key}={shlex.quote(value)}\n" for key, value in env.items())
+    outputs["theme.env"] = "".join(
+        f"{key}={shlex.quote(value)}\n" for key, value in env.items()
+    )
     with tempfile.TemporaryDirectory(prefix=".render-", dir=destination) as temporary:
         stage = Path(temporary)
         for filename, content in outputs.items():
@@ -118,7 +125,9 @@ def generate(root, name, destination, config_home):
 if __name__ == "__main__":
     try:
         if len(sys.argv) != 5:
-            raise ValueError("Usage: render-theme.py <root> <theme> <destination> <config-home>")
+            raise ValueError(
+                "Usage: render-theme.py <root> <theme> <destination> <config-home>"
+            )
         generate(Path(sys.argv[1]), sys.argv[2], Path(sys.argv[3]), Path(sys.argv[4]))
     except (OSError, ValueError, KeyError, TypeError) as error:
         sys.exit(f"error: Cannot render theme: {error}")

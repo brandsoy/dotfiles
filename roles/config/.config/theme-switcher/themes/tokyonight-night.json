@@ -38,8 +38,7 @@
   "mappings": {
     "GHOSTTY_THEME": "tokyonight_night",
     "NVIM_THEME": "tokyonight-night",
-    "BAT_THEME": "tokyonight_night",
-    "VSCODE_THEME": "Dracula"
+    "BAT_THEME": "tokyonight_night"
   },
   "files": {
     "eza.theme.yml": {

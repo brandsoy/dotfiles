@@ -42,6 +42,10 @@ alias vim='nvim'
 
 alias hermes-app='hermes desktop --cwd "$(pwd)"'
 
+if [[ "${THEME_SWITCHER_APPS:-}" == terminal ]]; then
+	alias btop='btop --tty'
+fi
+
 # =========================================================
 # Git
 # =========================================================

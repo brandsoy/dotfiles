@@ -12,7 +12,11 @@ theme-switcher                         # interactive menu
 theme-switcher list
 theme-switcher current
 theme-switcher set tokyonight-night
+theme-switcher set terminal-defaults   # remove the switcher's terminal palette
 theme-switcher apply                   # regenerate after editing the current theme
+theme-switcher apps terminal           # use the terminal's ANSI palette in apps
+theme-switcher apps themed             # restore per-app themes
+theme-switcher apps                    # show the saved app color setting
 theme-switcher mode-set light <theme>
 theme-switcher mode-set dark <theme>
 theme-switcher auto                     # macOS system appearance
@@ -22,12 +26,28 @@ theme-switcher auto --watch 5
 `THEME_SWITCHER_ROOT` overrides the definitions/templates root.
 `THEME_SWITCHER_LIGHT_THEME` and `THEME_SWITCHER_DARK_THEME` override saved mode choices.
 
+## App colors
+
+Select **Terminal defaults** in the picker and press Enter to use the terminal's
+default palette and ANSI colors in supported apps. This option stays active
+until you select a named theme, even if automatic light/dark switching is enabled.
+
+Press `a` in the interactive menu or run `theme-switcher apps terminal` to
+use terminal colors with a named theme. Ghostty and Kitty get their palettes
+from that theme. This app setting persists across theme switches, including automatic
+light/dark changes. The default is `themed`.
+
+Terminal mode uses ANSI colors for Neovim, Bat, FZF, Starship, lazygit and tmux,
+and drops the custom Yazi and eza overlays. In the configured Zsh shell, btop uses
+its 16-color TTY mode. Yazi can still use its own colors for icons and previews.
+Open a new shell and restart affected apps after toggling.
+
 ## Editing and adding themes
 
 Each JSON definition has three sections:
 
 - `palette`: named hex colors, or aliases such as `"surface": "@background"`.
-- `mappings`: native Neovim/Bat theme names and an optional VS Code suggestion.
+- `mappings`: native app theme names.
 - `files`: generated outputs, their shared template, and per-app variable bindings.
 
 For example, these bindings connect a Kitty template to the palette:
@@ -72,7 +92,7 @@ layout or settings differ. Templates contain app syntax, not theme color literal
 
 Neovim and built-in Bat syntax themes remain native mappings; their full
 highlight rules belong to their upstream plugins/themes. SupaTheme's custom
-Bat, terminal, prompt, lazygit and OpenCode files are generated from
+Bat, terminal, prompt and lazygit files are generated from
 `themes/SupaTheme.json`. Its upstream submodule is left unchanged and is not
 used as the renderer's color source. `scripts/theme/generate-supatheme.sh` is now a
 compatibility shortcut for `theme-switcher set SupaTheme`.
@@ -87,6 +107,7 @@ A JSON definition takes precedence when both layouts exist.
 - `current`: active theme name
 - `current.env`: shell exports for Bat, FZF, Starship, and lazygit
 - `mode.env`: preferred light/dark theme names
+- `apps`: preferred app color mode
 - `generated/<name>/`: rendered assets and machine-local `theme.env`
 - `lazygit.yml`: optional overlay, merged with the tracked lazygit config
 
@@ -116,7 +137,6 @@ Application preferences stay tracked. Theme-sync writes generated includes:
 - `~/.config/tmux/theme.conf`
 - `~/.config/yazi/theme.toml` (optional)
 - `~/.config/eza/theme.yml` (optional)
-- `~/.config/opencode/theme.json` (optional)
 - `~/.config/bat/themes/SupaTheme.tmTheme` (custom Bat theme; cache rebuilt)
 - `~/.local/state/nvim/theme.txt`
 
@@ -128,11 +148,6 @@ available. Other apps may require a reload or restart.
 Config/state paths respect `XDG_CONFIG_HOME` and `XDG_STATE_HOME`. Stow itself
 links application configs under `~/.config`. Generated output is not stowed or
 tracked.
-
-VS Code settings are never modified, including JSONC files with comments. Use
-`window.autoDetectColorScheme`, `workbench.preferredLightColorTheme`, and
-`workbench.preferredDarkColorTheme` instead. `VSCODE_THEME` mappings are retained
-only as suggestions shown by `theme-switcher current`.
 
 ## Checks
 

@@ -24,9 +24,7 @@
     "hint": "#b09080",
     "cursor_line": "#212121",
     "gutter_foreground": "#2f2b2b",
-    "keyword": "#e19067",
-    "diff_added_background": "#102018",
-    "diff_removed_background": "#241010"
+    "keyword": "#e19067"
   },
   "mappings": {
     "GHOSTTY_THEME": "SupaTheme",
@@ -163,27 +161,6 @@
         "unstagedChangesColor": "@red",
         "defaultFgColor": "@foreground",
         "searchingActiveBorderColor": "@bright_yellow"
-      }
-    },
-    "opencode.theme.json": {
-      "template": "opencode/default.json",
-      "values": {
-        "background": "@background",
-        "panel": "@surface",
-        "surface": "@selection",
-        "text": "@foreground",
-        "muted": "@bright_black",
-        "red": "@red",
-        "green": "@green",
-        "yellow": "@bright_yellow",
-        "orange": "@yellow",
-        "blue": "@blue",
-        "blue_bright": "@bright_blue",
-        "purple": "@magenta",
-        "diff_added_bg": "@diff_added_background",
-        "diff_removed_bg": "@diff_removed_background",
-        "diff_added_line_number_bg": "@diff_added_background",
-        "diff_removed_line_number_bg": "@diff_removed_background"
       }
     },
     "starship.toml": {

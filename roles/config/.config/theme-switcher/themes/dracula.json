@@ -22,8 +22,7 @@
   "mappings": {
     "GHOSTTY_THEME": "dracula",
     "NVIM_THEME": "dracula",
-    "BAT_THEME": "Dracula",
-    "VSCODE_THEME": "Dracula"
+    "BAT_THEME": "Dracula"
   },
   "files": {
     "btop.theme": {

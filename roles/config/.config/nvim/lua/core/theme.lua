@@ -39,13 +39,19 @@ function M.apply(name, opts)
 		end)
 	end
 
+	local was_terminal = vim.g.colors_name == 'vim'
 	local ok_colorscheme, err = pcall(vim.cmd.colorscheme, name)
 	if not ok_colorscheme then
 		notify(string.format('Failed to load %s: %s', name, err), vim.log.levels.ERROR)
 		return false
 	end
 
-	clear_bg()
+	if name == 'vim' or was_terminal then
+		vim.opt.termguicolors = name ~= 'vim'
+	end
+	if name ~= 'vim' then
+		clear_bg()
+	end
 
 	if not opts.silent then
 		notify(string.format('Switched to %s', name))

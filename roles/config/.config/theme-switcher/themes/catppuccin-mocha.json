@@ -29,8 +29,7 @@
   "mappings": {
     "GHOSTTY_THEME": "catppuccin-mocha",
     "NVIM_THEME": "catppuccin-mocha",
-    "BAT_THEME": "Catppuccin Mocha",
-    "VSCODE_THEME": "Catppuccin Mocha"
+    "BAT_THEME": "Catppuccin Mocha"
   },
   "files": {
     "btop.theme": {

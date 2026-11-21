@@ -27,8 +27,7 @@
   "mappings": {
     "GHOSTTY_THEME": "catppuccin-latte",
     "NVIM_THEME": "catppuccin-latte",
-    "BAT_THEME": "Catppuccin Latte",
-    "VSCODE_THEME": "Catppuccin Latte"
+    "BAT_THEME": "Catppuccin Latte"
   },
   "files": {
     "btop.theme": {

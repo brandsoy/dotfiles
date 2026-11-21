@@ -18,6 +18,8 @@ STATE_DIR="$STATE_HOME/theme-switcher"
 CURRENT_FILE="$STATE_DIR/current"
 CURRENT_ENV_FILE="$STATE_DIR/current.env"
 MODE_ENV_FILE="$STATE_DIR/mode.env"
+APPS_FILE="$STATE_DIR/apps"
+DEFAULT_THEME="terminal-defaults"
 
 TARGET_GHOSTTY="$CONFIG_HOME/ghostty/auto/theme.ghostty"
 TARGET_KITTY="$CONFIG_HOME/kitty/auto/theme.conf"
@@ -26,8 +28,6 @@ TARGET_LAZYGIT="$STATE_DIR/lazygit.yml"
 TARGET_YAZI_THEME="$CONFIG_HOME/yazi/theme.toml"
 TARGET_EZA_THEME="$CONFIG_HOME/eza/theme.yml"
 TARGET_TMUX_THEME="$CONFIG_HOME/tmux/theme.conf"
-TARGET_OPENCODE_THEME="$CONFIG_HOME/opencode/theme.json"
-TARGET_SQLMUX_THEME="$CONFIG_HOME/sqlmux/themes/dotfiles.toml"
 TARGET_BAT_THEMES="$CONFIG_HOME/bat/themes"
 TARGET_NVIM_STATE="$STATE_HOME/nvim/theme.txt"
 
@@ -39,8 +39,9 @@ Commands:
   tui                               Open interactive TUI
   list                              List available themes
   current                           Show current theme and resolved values
-  set <theme>                       Set current theme and apply it
+  set <theme|terminal-defaults>    Apply a theme or use terminal defaults
   apply                             Re-apply current theme
+  apps [terminal|themed]            Show or set how apps get their colors
   mode-set <light|dark> <theme>     Set preferred theme for a system mode
   mode-current                      Show configured light/dark mode themes
   auto [--watch [seconds]]          Apply theme from current system light/dark mode
@@ -84,7 +85,9 @@ ensure_dirs() {
   done
   if [[ ! -e "$CURRENT_ENV_FILE" && -f "$CURRENT_FILE" ]]; then
     theme="$(current_theme)"
-    if theme_exists "$theme"; then
+    if [[ "$theme" == "$DEFAULT_THEME" ]]; then
+      write_current_env "$theme" terminal
+    elif theme_exists "$theme"; then
       load_theme "$theme" || return 1
       write_current_env "$theme"
     fi
@@ -93,8 +96,18 @@ ensure_dirs() {
 
 write_current_env() {
   local theme="$1"
+  local apps="${2:-$(apps_mode)}"
+  if [[ "$apps" == terminal ]]; then
+    BAT_THEME=ansi
+    STARSHIP_CONFIG="$CONFIG_HOME/starship.toml"
+    FZF_THEME_FILE="$STATE_DIR/fzf-ansi.sh"
+    cat >"$FZF_THEME_FILE" <<'EOF'
+export FZF_DEFAULT_OPTS="${FZF_DEFAULT_OPTS:-} --color=16"
+EOF
+  fi
   {
     printf 'export TERMINAL_THEME=%q\n' "$theme"
+    printf 'export THEME_SWITCHER_APPS=%q\n' "$apps"
     printf 'export BAT_THEME=%q\n' "${BAT_THEME:-}"
     printf 'export FZF_THEME_FILE=%q\n' "${FZF_THEME_FILE:-}"
     printf 'export STARSHIP_CONFIG=%q\n' "$STARSHIP_CONFIG"
@@ -102,6 +115,29 @@ write_current_env() {
     [[ ! -f "$TARGET_LAZYGIT" ]] || lazygit_config+=",$TARGET_LAZYGIT"
     printf 'export LG_CONFIG_FILE=%q\n' "$lazygit_config"
   } >"$CURRENT_ENV_FILE"
+}
+
+apps_mode() {
+  if [[ -f "$APPS_FILE" ]]; then
+    cat "$APPS_FILE"
+  else
+    echo themed
+  fi
+}
+
+set_apps_mode() {
+  local apps="$1"
+  case "$apps" in
+  terminal | themed) ;;
+  *) die "App colors must be 'terminal' or 'themed'." ;;
+  esac
+
+  local theme
+  theme="$(current_theme)"
+  if [[ -n "$theme" ]]; then
+    apply_theme "$theme" "$apps"
+  fi
+  printf '%s\n' "$apps" >"$APPS_FILE"
 }
 
 load_mode_config() {
@@ -162,6 +198,12 @@ detect_system_mode() {
 }
 
 apply_system_mode_theme() {
+  local current
+  current="$(current_theme)"
+  if [[ "$current" == "$DEFAULT_THEME" ]]; then
+    echo "Using terminal defaults."
+    return 0
+  fi
   load_mode_config
 
   local mode
@@ -176,8 +218,6 @@ apply_system_mode_theme() {
 
   [[ -n "$theme" ]] || die "No theme configured for $mode mode. Use: theme-switcher mode-set $mode <theme>"
 
-  local current
-  current="$(current_theme)"
   if [[ "$current" == "$theme" ]]; then
     echo "System mode is $mode; theme already set: $theme"
     refresh_tmux_theme
@@ -213,7 +253,7 @@ load_theme() {
 
   # Never inherit mappings or overlays from a previous theme or parent shell.
   unset GHOSTTY_THEME KITTY_INCLUDE NVIM_THEME BAT_THEME FZF_THEME_FILE
-  unset GHOSTTY_THEME_FILE BAT_THEME_FILE BTOP_THEME LAZYGIT_THEME_FILE OPENCODE_THEME_FILE VSCODE_THEME TMUX_BACKGROUND
+  unset GHOSTTY_THEME_FILE BAT_THEME_FILE BTOP_THEME LAZYGIT_THEME_FILE TMUX_BACKGROUND
   STARSHIP_CONFIG="$CONFIG_HOME/starship.toml"
   THEME_DIR="$THEMES_DIR/$theme"
   if [[ -f "$THEMES_DIR/$theme.json" ]]; then
@@ -333,14 +373,21 @@ ensure_bat_theme() {
 
 apply_terminal_themes() {
   # Ghostty and Kitty.
-  prepare_output "$TARGET_GHOSTTY"
-  if [[ -n "${GHOSTTY_THEME_FILE:-}" && -f "$GHOSTTY_THEME_FILE" ]]; then
-    cp "$GHOSTTY_THEME_FILE" "$TARGET_GHOSTTY"
+  if [[ "$1" == "$DEFAULT_THEME" ]]; then
+    rm -f "$TARGET_GHOSTTY"
+    # Kitty's config includes this file even when it contains no colors.
+    prepare_output "$TARGET_KITTY"
+    : >"$TARGET_KITTY"
   else
-    printf 'theme = %s\n' "$GHOSTTY_THEME" >"$TARGET_GHOSTTY"
+    prepare_output "$TARGET_GHOSTTY"
+    if [[ -n "${GHOSTTY_THEME_FILE:-}" && -f "$GHOSTTY_THEME_FILE" ]]; then
+      cp "$GHOSTTY_THEME_FILE" "$TARGET_GHOSTTY"
+    else
+      printf 'theme = %s\n' "$GHOSTTY_THEME" >"$TARGET_GHOSTTY"
+    fi
+    copy_if_present "$KITTY_INCLUDE" "$TARGET_KITTY"
   fi
   refresh_ghostty_theme
-  copy_if_present "$KITTY_INCLUDE" "$TARGET_KITTY"
   refresh_kitty_theme
 }
 
@@ -363,7 +410,35 @@ apply_cli_themes() {
 apply_theme_overlays() {
   # Optional overlays must not leak from the previously selected theme.
   local theme_dir="$1"
-  rm -f "$TARGET_LAZYGIT" "$TARGET_YAZI_THEME" "$TARGET_EZA_THEME" "$TARGET_TMUX_THEME" "$TARGET_SQLMUX_THEME"
+  local apps="$2"
+  rm -f "$TARGET_LAZYGIT" "$TARGET_YAZI_THEME" "$TARGET_EZA_THEME" "$TARGET_TMUX_THEME"
+  if [[ "$apps" == terminal ]]; then
+    cat >"$TARGET_LAZYGIT" <<'EOF'
+gui:
+  theme:
+    activeBorderColor: [green, bold]
+    inactiveBorderColor: [default]
+    optionsTextColor: [blue]
+    selectedLineBgColor: [blue]
+    selectedRangeBgColor: [blue]
+    inactiveViewSelectedLineBgColor: [black]
+    cherryPickedCommitBgColor: [cyan]
+    cherryPickedCommitFgColor: [black]
+    unstagedChangesColor: [red]
+    defaultFgColor: [default]
+    searchingActiveBorderColor: [yellow, bold]
+EOF
+    prepare_output "$TARGET_TMUX_THEME"
+    cat >"$TARGET_TMUX_THEME" <<'EOF'
+set -g @minimal_theme_bg_color default
+set -g @minimal_theme_active_color green
+set -g @minimal_theme_inactive_color default
+set -g @minimal_theme_text_color default
+set -g @minimal_theme_accent_color cyan
+set -g @minimal_theme_border_color brightblack
+EOF
+    return 0
+  fi
   if [[ -n "${LAZYGIT_THEME_FILE:-}" ]]; then
     copy_if_present "$LAZYGIT_THEME_FILE" "$TARGET_LAZYGIT"
   else
@@ -372,29 +447,33 @@ apply_theme_overlays() {
   copy_if_present "$theme_dir/yazi.theme.toml" "$TARGET_YAZI_THEME"
   copy_if_present "$theme_dir/eza.theme.yml" "$TARGET_EZA_THEME"
   copy_tmux_theme "$theme_dir/tmux.theme.conf" "$TARGET_TMUX_THEME"
-  copy_if_present "$theme_dir/sqlmux.theme.toml" "$TARGET_SQLMUX_THEME"
-  if [[ -n "${OPENCODE_THEME_FILE:-}" ]]; then
-    copy_if_present "$OPENCODE_THEME_FILE" "$TARGET_OPENCODE_THEME"
-  else
-    rm -f "$TARGET_OPENCODE_THEME"
-  fi
-  refresh_tmux_theme
 }
 
 apply_theme() {
   local theme="$1"
+  local apps="${2:-$(apps_mode)}"
 
-  load_theme "$theme" || return 1
-  if [[ ! -f "$KITTY_INCLUDE" ]]; then
-    printf 'Theme asset missing: %s. Run dotfiles plugins and dotfiles links first.\n' "$KITTY_INCLUDE" >&2
-    return 1
+  if [[ "$theme" == "$DEFAULT_THEME" ]]; then
+    apps=terminal
+  else
+    load_theme "$theme" || return 1
+    if [[ ! -f "$KITTY_INCLUDE" ]]; then
+      printf 'Theme asset missing: %s. Run dotfiles plugins and dotfiles links first.\n' "$KITTY_INCLUDE" >&2
+      return 1
+    fi
   fi
 
-  apply_terminal_themes
+  apply_terminal_themes "$theme"
+  if [[ "$apps" == terminal ]]; then
+    NVIM_THEME=vim
+    BAT_THEME=ansi
+    unset BTOP_THEME BAT_THEME_FILE
+  fi
   apply_cli_themes
-  apply_theme_overlays "$THEME_DIR"
+  apply_theme_overlays "${THEME_DIR:-}" "$apps"
+  refresh_tmux_theme
 
-  write_current_env "$theme"
+  write_current_env "$theme" "$apps"
   printf '%s\n' "$theme" >"$CURRENT_FILE"
 
   echo "Applied theme: $theme"
@@ -412,15 +491,17 @@ set_theme() {
 }
 
 list_themes() {
-  [[ -d "$THEMES_DIR" ]] || return 0
-  for file in "$THEMES_DIR"/*.json "$THEMES_DIR"/*/theme.env; do
-    [[ -f "$file" ]] || continue
-    if [[ "$file" == *.json ]]; then
-      basename "$file" .json
-    else
-      basename "$(dirname "$file")"
-    fi
-  done | sort -u
+  {
+    printf '%s\n' "$DEFAULT_THEME"
+    for file in "$THEMES_DIR"/*.json "$THEMES_DIR"/*/theme.env; do
+      [[ -f "$file" ]] || continue
+      if [[ "$file" == *.json ]]; then
+        basename "$file" .json
+      else
+        basename "$(dirname "$file")"
+      fi
+    done
+  } | sort -u
 }
 
 current_theme() {
@@ -432,20 +513,26 @@ current_theme() {
 }
 
 show_current() {
-  local theme
+  local theme apps
   theme="$(current_theme)"
 
   [[ -n "$theme" ]] || die "No current theme set."
+  if [[ "$theme" == "$DEFAULT_THEME" ]]; then
+    printf 'theme: %s\napp colors: terminal\n' "$theme"
+    return 0
+  fi
 
   load_theme "$theme" || return 1
+  apps="$(apps_mode)"
   echo "theme: $theme"
+  echo "app colors: $apps"
   echo "ghostty: $GHOSTTY_THEME"
   echo "kitty include: $KITTY_INCLUDE"
+  [[ "$apps" != terminal ]] || return 0
   echo "nvim: $NVIM_THEME"
   echo "bat: $BAT_THEME"
   echo "btop: ${BTOP_THEME:-<default>}"
   echo "fzf file: ${FZF_THEME_FILE:-}"
-  echo "vscode: ${VSCODE_THEME:-<unset>}"
 }
 
 main() {
@@ -455,6 +542,10 @@ main() {
     return 0
     ;;
   esac
+  if [[ "$cmd" == apps && $# == 1 ]]; then
+    apps_mode
+    return 0
+  fi
   ensure_dirs
 
   case "$cmd" in
@@ -482,6 +573,10 @@ main() {
     theme="$(current_theme)"
     [[ -n "$theme" ]] || die "No current theme set. Use: theme-switcher set <theme>"
     apply_theme "$theme"
+    ;;
+  apps)
+    [[ $# == 2 ]] || die "Usage: theme-switcher apps [terminal|themed]"
+    set_apps_mode "$2"
     ;;
   mode-set)
     set_mode_theme "${2:-}" "${3:-}"

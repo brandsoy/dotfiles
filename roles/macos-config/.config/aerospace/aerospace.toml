@@ -94,11 +94,11 @@ alt-shift-equal = 'resize smart +100'
 alt-1 = 'workspace w-web'
 alt-shift-1 = 'move-node-to-workspace w-web'
 
-# --- Workspace a-web ---
-alt-2 = 'workspace p-web'
-alt-shift-2 = 'move-node-to-workspace p-web'
+# --- Workspace w-web2 ---
+alt-2 = 'workspace w-web2'
+alt-shift-2 = 'move-node-to-workspace w-web2'
 
-# --- Workspace p-web ---
+# --- Workspace a-web ---
 alt-3 = 'workspace a-web'
 alt-shift-3 = 'move-node-to-workspace a-web'
 
@@ -126,9 +126,9 @@ alt-shift-s = 'move-node-to-workspace w-mail'
 alt-d = 'workspace p-mail'
 alt-shift-d = 'move-node-to-workspace p-mail'
 
-# --- Workspace w-ai ---
-alt-z = 'workspace w-ai'
-alt-shift-z = 'move-node-to-workspace w-ai'
+# --- Workspace p-web ---
+alt-z = 'workspace p-web'
+alt-shift-z = 'move-node-to-workspace p-web'
 
 # --- Workspace p-ai1 ---
 alt-x = 'workspace p-ai1'
@@ -243,10 +243,10 @@ run = ['move-node-to-workspace w-mail']
 if.app-id = 'com.apple.mail'
 run = ['move-node-to-workspace p-mail']
 
-# --- Workspace w-ai ---
+# --- Workspace w-web (M365 Copilot) ---
 [[on-window-detected]]
 if.app-id = 'com.microsoft.m365copilot'
-run = ['move-node-to-workspace w-ai']
+run = ['move-node-to-workspace w-web']
 
 # --- Workspace p-ai1 ---
 [[on-window-detected]]
@@ -347,6 +347,9 @@ run = ['layout floating']
 # --- Workspace w-web ---
 w-web = ['main']
 
+# --- Workspace w-web2 ---
+w-web2 = ['main']
+
 # --- Workspace a-web ---
 a-web = ['main']
 
@@ -371,14 +374,11 @@ w-mail = ['built-in']
 # --- Workspace p-mail ---
 p-mail = ['built-in']
 
-# --- Workspace w-ai ---
-w-ai = ['built-in']
-
 # --- Workspace p-ai1 ---
-p-ai1 = ['built-in']
+p-ai1 = ['main']
 
 # --- Workspace p-ai2 ---
-p-ai2 = ['built-in']
+p-ai2 = ['main']
 
 # --- Workspace notes ---
 notes = ['main']

@@ -17,8 +17,7 @@
   "mappings": {
     "GHOSTTY_THEME": "Nord",
     "NVIM_THEME": "nord",
-    "BAT_THEME": "Nord",
-    "VSCODE_THEME": "Nord"
+    "BAT_THEME": "Nord"
   },
   "files": {
     "btop.theme": {

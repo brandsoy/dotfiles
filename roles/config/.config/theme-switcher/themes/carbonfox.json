@@ -28,8 +28,7 @@
   "mappings": {
     "GHOSTTY_THEME": "Carbonfox",
     "NVIM_THEME": "carbonfox",
-    "BAT_THEME": "carbonfox",
-    "VSCODE_THEME": "Dracula"
+    "BAT_THEME": "carbonfox"
   },
   "files": {
     "btop.theme": {

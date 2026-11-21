@@ -24,8 +24,7 @@
   "mappings": {
     "GHOSTTY_THEME": "zenwritten_dark",
     "NVIM_THEME": "zenwritten",
-    "BAT_THEME": "zenburn",
-    "VSCODE_THEME": "Dracula"
+    "BAT_THEME": "zenburn"
   },
   "files": {
     "fzf.sh": {

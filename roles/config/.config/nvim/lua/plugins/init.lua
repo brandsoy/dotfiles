@@ -42,6 +42,7 @@ function M.setup()
 		gh('idr4n/github-monochrome.nvim'),
 		gh('brandsoy/SupaTheme'),
 		gh('mryodo/rwth.nvim'),
+		gh('reklai/colorrex.nvim'),
 		-- Plugins
 		gh('echasnovski/mini.nvim'),
 		gh('abecodes/tabout.nvim'),

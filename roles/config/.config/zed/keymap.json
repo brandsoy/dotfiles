@@ -27,8 +27,12 @@
       "space b n": "pane::ActivateNextItem",
       "space b p": "pane::ActivatePreviousItem",
       "space b d": "pane::CloseActiveItem",
-      "space b o": ["pane::CloseOtherItems", { "close_pinned": false }],
-
+      "space b o": [
+        "pane::CloseOtherItems",
+        {
+          "close_pinned": false
+        }
+      ],
       // Splits, saving, and quitting
       "space s v": "pane::SplitRight",
       "space s h": "pane::SplitDown",
@@ -36,19 +40,22 @@
       "space w w": "workspace::Save",
       "space w a": "workspace::SaveAll",
       "space q q": "zed::Quit",
-
       // Search and symbols
       "space f f": "file_finder::Toggle",
-      "space f b": ["tab_switcher::Toggle", { "select_last": true }],
+      "space f b": [
+        "tab_switcher::Toggle",
+        {
+          "select_last": true
+        }
+      ],
       "space f s": "outline::Toggle",
       "space f S": "project_symbols::Toggle",
       "space f R": "workspace::ReopenLastPicker",
       "space f g": "pane::DeploySearch",
       "space /": "buffer_search::Deploy",
-      "space e": "project_panel::ToggleFocus",
+      "space e": "project_panel::Toggle",
       "space E": "project_panel::ToggleFocus",
       "space f e": "pane::RevealInProjectPanel",
-
       // Language server and diagnostics
       "shift-k": "editor::Hover",
       "g r": "editor::FindAllReferences",
@@ -61,40 +68,48 @@
       "[ d": "editor::GoToPreviousDiagnostic",
       "] d": "editor::GoToDiagnostic",
       "space l e": "diagnostics::Deploy",
-
       // UI and themes
       "space u w": "editor::ToggleSoftWrap",
       "space u t": "theme_selector::Toggle",
       "space u T": "theme::ToggleMode",
-
       // Git
       "space g g": "git_panel::ToggleFocus",
       "space g b": "git::Blame",
       "space g d": "git::Diff",
       "space d v": "git::ReviewDiff",
       "space g e": "git_panel::ToggleFocus",
-
     }
   },
   {
     "context": "Markdown && vim_mode == normal && !menu",
     "bindings": {
-      "space m t": ["workspace::SendKeystrokes", "0 i - [ ] escape"],
-      "space m l": ["workspace::SendKeystrokes", "i [ ] ( ) escape f [ a"],
+      "space m t": [
+        "workspace::SendKeystrokes",
+        "0 i - [ ] escape"
+      ],
+      "space m l": [
+        "workspace::SendKeystrokes",
+        "i [ ] ( ) escape f [ a"
+      ],
       "space m p": "markdown::OpenPreview"
     }
   },
   {
-      "context": "VimControl && !menu",
-      "bindings": {
-        // 1. Unbind single-key 'space' so it acts as a persistent prefix
-        "space": null,
-
-        // 2. Add multi-key sequences under 'space'
-        "space f": "file_finder::Toggle",
-        "space e": "project_panel::ToggleFocus",
-        "space /": "pane::DeploySearch",
-        "space c a": "editor::ToggleCodeActions"
-      }
+    "context": "VimControl && !menu",
+    "bindings": {
+      // 1. Unbind single-key 'space' so it acts as a persistent prefix
+      "space": null,
+      // 2. Add multi-key sequences under 'space'
+      "space f": "file_finder::Toggle",
+      "space e": "project_panel::Toggle",
+      "space /": "pane::DeploySearch",
+      "space c a": "editor::ToggleCodeActions"
     }
+  },
+  {
+    "context": "ProjectPanel && not_editing",
+    "bindings": {
+      "space e": "project_panel::Toggle"
+    }
+  }
 ]

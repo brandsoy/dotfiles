@@ -136,12 +136,6 @@ install, run `./install.sh links config` to link the new JSON definitions and
 templates, then `theme-switcher apply` to regenerate the includes. Open a new shell
 to load the updated Bat, FZF, Starship, and lazygit environment.
 
-VS Code settings are **never rewritten**. Set these in VS Code's Settings UI:
-
-- `window.autoDetectColorScheme`: enabled
-- `workbench.preferredLightColorTheme`: your light theme
-- `workbench.preferredDarkColorTheme`: your dark theme
-
 Before pulling this cleanup onto another machine, preserve its old `current` and
 `mode.env` files in `~/.local/state/theme-switcher/` if you want to retain its choices.
 The generated `current.env` will be rebuilt; do not copy machine-specific exports.
